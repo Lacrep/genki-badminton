@@ -1,0 +1,16 @@
+{
+  "name": "เกงกิเดสซ์ · จัดก๊วนแบดมินตัน",
+  "short_name": "เกงกิเดสซ์",
+  "description": "ระบบจัดก๊วนแบดมินตัน Genki Desu Badminton Society — จัดคิว แบ่งลำดับมือ ไม่ดองใคร",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#fbf7ef",
+  "theme_color": "#1d2447",
+  "lang": "th",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

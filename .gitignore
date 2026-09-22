@@ -1,0 +1,8 @@
+node_modules/
+dist/
+# ข้อมูลก๊วน (roster + sessions) — ของแต่ละเครื่อง ไม่ commit
+data/
+data.*/
+.env
+.env.local
+*.tsbuildinfo

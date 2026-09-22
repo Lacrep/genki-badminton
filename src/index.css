@@ -1,0 +1,249 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * งานภาพทั้งหมดอ้างจากโลโก้ก๊วน: กระดาษวาชิสีครีม, ลายคลื่นเซกาอิฮะ (青海波),
+ * วงแปรงจีน-ญี่ปุ่น, จุดฮิโนมารุสีแดง และเส้นทองบาง ๆ คั่นระหว่างส่วน
+ */
+
+@layer base {
+  :root {
+    --paper: 251 247 239; /* #fbf7ef washi */
+    --surface: 255 255 255;
+    --subtle: 245 240 231;
+    --line: 226 214 196;
+    --ink: 24 29 54;
+    --ink-soft: 76 84 115;
+    --ink-faint: 132 139 163;
+  }
+
+  .dark {
+    --paper: 14 19 43; /* กลางคืนในโรงยิม */
+    --surface: 24 30 58;
+    --subtle: 31 38 71;
+    --line: 51 60 100;
+    --ink: 238 240 248;
+    --ink-soft: 179 186 211;
+    --ink-faint: 130 139 170;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-paper text-ink font-body antialiased;
+    margin: 0;
+    line-height: 1.55;
+    overflow-x: hidden;
+    /* กระดาษวาชิ: ลายคลื่นบาง ๆ + ไล่สีอุ่นจากมุมบน */
+    background-image:
+      radial-gradient(1100px 520px at 12% -8%, rgba(191, 157, 101, 0.13), transparent 62%),
+      radial-gradient(900px 480px at 96% 4%, rgba(29, 36, 71, 0.08), transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' viewBox='0 0 120 40'%3E%3Cg fill='none' stroke='%23c9b696' stroke-opacity='0.32' stroke-width='1.1'%3E%3Cpath d='M0 40a20 20 0 0140 0M20 40a20 20 0 0140 0M40 40a20 20 0 0140 0M60 40a20 20 0 0140 0M80 40a20 20 0 0140 0'/%3E%3Cpath d='M0 40a13 13 0 0126 0M20 40a13 13 0 0126 0M40 40a13 13 0 0126 0M60 40a13 13 0 0126 0M80 40a13 13 0 0126 0M100 40a13 13 0 0126 0'/%3E%3Cpath d='M0 40a6 6 0 0112 0M20 40a6 6 0 0112 0M40 40a6 6 0 0112 0M60 40a6 6 0 0112 0M80 40a6 6 0 0112 0M100 40a6 6 0 0112 0'/%3E%3C/g%3E%3C/svg%3E");
+    background-repeat: no-repeat, no-repeat, repeat-x;
+    background-position: center top, center top, center bottom;
+    background-attachment: fixed, fixed, fixed;
+  }
+
+  .dark body {
+    background-image:
+      radial-gradient(1100px 520px at 12% -8%, rgba(191, 157, 101, 0.1), transparent 62%),
+      radial-gradient(900px 480px at 96% 4%, rgba(194, 34, 60, 0.09), transparent 58%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' viewBox='0 0 120 40'%3E%3Cg fill='none' stroke='%23bf9d65' stroke-opacity='0.16' stroke-width='1.1'%3E%3Cpath d='M0 40a20 20 0 0140 0M20 40a20 20 0 0140 0M40 40a20 20 0 0140 0M60 40a20 20 0 0140 0M80 40a20 20 0 0140 0'/%3E%3Cpath d='M0 40a13 13 0 0126 0M20 40a13 13 0 0126 0M40 40a13 13 0 0126 0M60 40a13 13 0 0126 0M80 40a13 13 0 0126 0M100 40a13 13 0 0126 0'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading;
+    letter-spacing: -0.005em;
+    line-height: 1.25;
+  }
+
+  /* ตัวเลขเวลา/คะแนน ต้องกว้างเท่ากันทุกหลัก ไม่กระพริบตอนนับ */
+  .nums {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+}
+
+@layer components {
+  /* ── การ์ดกระดาษ ── */
+  .card {
+    @apply rounded-washi border border-line/70 bg-surface shadow-card;
+  }
+
+  .card-pad {
+    @apply p-4 sm:p-5;
+  }
+
+  /* หัวข้อพร้อมเส้นทองคั่น แบบป้ายร้านญี่ปุ่น */
+  .section-title {
+    @apply flex items-center gap-2.5 font-heading text-[15px] font-semibold text-ink;
+  }
+  .section-title::after {
+    content: "";
+    @apply h-px flex-1 bg-gradient-to-r from-gold/60 to-transparent;
+  }
+
+  /* ── ปุ่ม ── */
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-heading
+      text-[14px] font-medium transition-all active:scale-[0.98] disabled:pointer-events-none disabled:opacity-45;
+  }
+  .btn-primary {
+    @apply btn bg-navy text-white shadow-card hover:bg-navy-soft;
+  }
+  .btn-red {
+    @apply btn bg-hinomaru text-white shadow-card hover:bg-hinomaru-deep;
+  }
+  .btn-gold {
+    @apply btn bg-gold text-navy-deep shadow-card hover:bg-gold-deep hover:text-white;
+  }
+  .btn-ghost {
+    @apply btn border border-line bg-surface text-ink hover:bg-subtle;
+  }
+  .btn-quiet {
+    @apply btn text-ink-soft hover:bg-subtle;
+  }
+  .btn-sm {
+    @apply px-3 py-1.5 text-[13px];
+  }
+  .btn-lg {
+    @apply px-5 py-3 text-[15px];
+  }
+
+  /* ── ฟอร์ม ── */
+  .input {
+    @apply w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-[14px] text-ink
+      outline-none transition placeholder:text-ink-faint focus:border-navy/60 focus:ring-2 focus:ring-navy/15;
+  }
+  .label {
+    @apply mb-1.5 block font-heading text-[12.5px] font-medium text-ink-soft;
+  }
+
+  /* ── ป้ายเล็ก ── */
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 font-heading text-[11.5px] font-medium;
+  }
+
+  /* ระดับมือ — ไล่จากน้ำเงินอ่อน (มือใหม่) ไปแดงเข้ม (มือแข่ง) */
+  .level-n {
+    @apply bg-navy-mist/15 text-navy-mist dark:bg-navy-mist/25 dark:text-sand;
+  }
+  .level-s {
+    @apply bg-navy/12 text-navy dark:bg-navy-soft/40 dark:text-sand;
+  }
+  .level-p {
+    @apply bg-gold/25 text-gold-deep dark:bg-gold/25 dark:text-gold-soft;
+  }
+  .level-c {
+    @apply bg-hinomaru/15 text-hinomaru-deep dark:bg-hinomaru/25 dark:text-hinomaru-soft;
+  }
+
+  /* ── ระดับความ "ดอง" ของคนนั่งรอ ── */
+  .tier-fresh {
+    @apply border-line/70 bg-surface;
+  }
+  .tier-waiting {
+    @apply border-navy/20 bg-navy/[0.035] dark:bg-navy-soft/20;
+  }
+  .tier-warn {
+    @apply border-gold/60 bg-gold/[0.12];
+  }
+  .tier-dong {
+    @apply border-hinomaru/70 bg-hinomaru/[0.11] animate-dong-pulse;
+  }
+
+  /* ── สนามในคอร์ต ── */
+  .court-floor {
+    background:
+      linear-gradient(180deg, rgba(29, 36, 71, 0.95), rgba(18, 23, 54, 0.98));
+    position: relative;
+    overflow: hidden;
+  }
+  /* เส้นสนามแบด + เน็ตกลาง */
+  .court-floor::before {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border: 1.5px solid rgba(237, 225, 209, 0.32);
+    border-radius: 4px;
+    pointer-events: none;
+  }
+  .court-floor::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    top: 50%;
+    border-top: 1.5px dashed rgba(237, 225, 209, 0.45);
+    pointer-events: none;
+  }
+
+  /* จุดฮิโนมารุ — ใช้เน้นตัวเลข/สถานะสำคัญ */
+  .hinomaru-dot {
+    @apply inline-block h-2 w-2 rounded-full bg-hinomaru;
+  }
+
+  /* วงแปรงล้อมโลโก้ */
+  .brush-ring {
+    position: relative;
+  }
+  .brush-ring::before {
+    content: "";
+    position: absolute;
+    inset: -9%;
+    border-radius: 50%;
+    border: 2.5px solid rgba(191, 157, 101, 0.4);
+    border-right-color: transparent;
+    border-bottom-color: rgba(191, 157, 101, 0.18);
+    transform: rotate(-18deg);
+    pointer-events: none;
+  }
+
+  /* แถบเมนูล่างบนมือถือ */
+  .tabbar {
+    @apply fixed inset-x-0 bottom-0 z-40 border-t border-line/80 bg-surface/95 backdrop-blur-md;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .tab-item {
+    @apply flex flex-1 flex-col items-center gap-0.5 py-2 font-heading text-[10.5px] font-medium text-ink-faint transition-colors;
+  }
+  .tab-item[data-active="true"] {
+    @apply text-navy dark:text-gold-soft;
+  }
+
+  /* ตารางบาง ๆ แบบใบเสร็จ */
+  .receipt-row {
+    @apply flex items-center justify-between gap-3 border-b border-dashed border-line/70 py-2 last:border-0;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  /* กันปุ่มสำคัญโดนแถบเมนูล่างทับ */
+  .pb-tabbar {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

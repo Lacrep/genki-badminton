@@ -1,0 +1,845 @@
+/**
+ * ที่เก็บข้อมูล — ไฟล์ JSON ธรรมดาในโฟลเดอร์ data/
+ *
+ * ตั้งใจเลือกแบบนี้เพราะก๊วนแบดคือข้อมูลเล็ก (คนไม่กี่สิบ เกมไม่กี่ร้อยต่อครั้ง)
+ * แต่ "ต้องไม่ล่ม" ตอนอยู่ในโรงยิม → ไม่มี native module, ไม่มี migration,
+ * ย้ายเครื่องแค่ก็อปโฟลเดอร์ data/ ไป และเปิดดูย้อนหลังด้วย text editor ได้เลย
+ *
+ * การเขียนไฟล์ใช้ write-to-temp + rename (atomic) กันไฟล์พังตอนไฟดับ
+ */
+
+import fs from "node:fs"
+import path from "node:path"
+import {
+  type Bill,
+  type BillLine,
+  type Court,
+  type CourtView,
+  type Fees,
+  type Match,
+  type MatchType,
+  type QueueEntry,
+  type RosterPlayer,
+  type Session,
+  type SessionEvent,
+  type SessionPlayer,
+  type SessionSettings,
+  type SessionView,
+  DEFAULT_FEES,
+  DEFAULT_SETTINGS,
+  displayName,
+  playersPerMatch,
+  priorityOf,
+  thaiDateKey,
+  thaiTime,
+  waitTier,
+} from "@shared/types"
+import { forecastQueue } from "./matching"
+
+const DATA_DIR = path.resolve(process.cwd(), process.env.DATA_DIR || "./data")
+const ROSTER_FILE = path.join(DATA_DIR, "roster.json")
+const SESSION_DIR = path.join(DATA_DIR, "sessions")
+const POINTER_FILE = path.join(DATA_DIR, "current.json")
+
+function ensureDirs() {
+  fs.mkdirSync(SESSION_DIR, { recursive: true })
+}
+
+function readJson<T>(file: string, fallback: T): T {
+  try {
+    return JSON.parse(fs.readFileSync(file, "utf8")) as T
+  } catch {
+    return fallback
+  }
+}
+
+function writeJson(file: string, value: unknown) {
+  ensureDirs()
+  const tmp = `${file}.${process.pid}.tmp`
+  fs.writeFileSync(tmp, JSON.stringify(value, null, 2))
+  fs.renameSync(tmp, file)
+}
+
+export function id(prefix = ""): string {
+  return prefix + Math.random().toString(36).slice(2, 8) + Date.now().toString(36).slice(-4)
+}
+
+/** รหัสลิงก์ดูคิว — ตัดตัวที่อ่านสับสน (0/O, 1/I) ออก */
+export function sessionCode(): string {
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+  let out = ""
+  for (let i = 0; i < 4; i++) out += alphabet[Math.floor(Math.random() * alphabet.length)]
+  return out
+}
+
+export class StoreError extends Error {
+  status: number
+  constructor(message: string, status = 400) {
+    super(message)
+    this.status = status
+  }
+}
+
+// ── ทะเบียนผู้เล่น ────────────────────────────────────────────────────────────
+
+export function getRoster(): RosterPlayer[] {
+  return readJson<RosterPlayer[]>(ROSTER_FILE, [])
+}
+
+function saveRoster(list: RosterPlayer[]) {
+  writeJson(ROSTER_FILE, list)
+}
+
+export function rosterMap(): Map<string, RosterPlayer> {
+  return new Map(getRoster().map((p) => [p.id, p]))
+}
+
+export function addPlayer(input: Omit<RosterPlayer, "id" | "createdAt">): RosterPlayer {
+  const list = getRoster()
+  const player: RosterPlayer = { ...input, id: id("p_"), createdAt: Date.now() }
+  list.push(player)
+  saveRoster(list)
+  return player
+}
+
+export function updatePlayer(playerId: string, patch: Partial<RosterPlayer>): RosterPlayer {
+  const list = getRoster()
+  const i = list.findIndex((p) => p.id === playerId)
+  if (i < 0) throw new StoreError("ไม่พบผู้เล่นคนนี้ในทะเบียน", 404)
+  list[i] = { ...list[i], ...patch, id: list[i].id, createdAt: list[i].createdAt }
+  saveRoster(list)
+  return list[i]
+}
+
+export function deletePlayer(playerId: string) {
+  const list = getRoster()
+  const next = list.filter((p) => p.id !== playerId)
+  if (next.length === list.length) throw new StoreError("ไม่พบผู้เล่นคนนี้ในทะเบียน", 404)
+  saveRoster(next)
+}
+
+// ── ก๊วน ─────────────────────────────────────────────────────────────────────
+
+function sessionFile(sessionId: string) {
+  return path.join(SESSION_DIR, `${sessionId}.json`)
+}
+
+export function listSessions(): Session[] {
+  ensureDirs()
+  return fs
+    .readdirSync(SESSION_DIR)
+    .filter((f) => f.endsWith(".json"))
+    .map((f) => readJson<Session | null>(path.join(SESSION_DIR, f), null))
+    .filter((s): s is Session => !!s)
+    .sort((a, b) => b.startAt - a.startAt)
+}
+
+export function getSession(sessionId: string): Session {
+  const s = readJson<Session | null>(sessionFile(sessionId), null)
+  if (!s) throw new StoreError("ไม่พบก๊วนนี้", 404)
+  return s
+}
+
+export function findSessionByCode(code: string): Session | null {
+  const up = code.trim().toUpperCase()
+  return listSessions().find((s) => s.code === up) ?? null
+}
+
+export function currentSessionId(): string | null {
+  return readJson<{ id: string | null }>(POINTER_FILE, { id: null }).id
+}
+
+export function currentSession(): Session | null {
+  const sid = currentSessionId()
+  if (!sid) return null
+  try {
+    return getSession(sid)
+  } catch {
+    return null
+  }
+}
+
+function setCurrent(sessionId: string | null) {
+  writeJson(POINTER_FILE, { id: sessionId })
+}
+
+// ── undo: เก็บสแนปช็อตในหน่วยความจำ (พอสำหรับ "กดผิด" หน้างาน) ────────────────
+
+const undoStacks = new Map<string, string[]>()
+const UNDO_DEPTH = 25
+
+function snapshot(session: Session) {
+  const stack = undoStacks.get(session.id) ?? []
+  stack.push(JSON.stringify(session))
+  if (stack.length > UNDO_DEPTH) stack.shift()
+  undoStacks.set(session.id, stack)
+}
+
+export function undoDepth(sessionId: string): number {
+  return undoStacks.get(sessionId)?.length ?? 0
+}
+
+export function undo(sessionId: string): Session {
+  const stack = undoStacks.get(sessionId)
+  if (!stack || stack.length === 0) throw new StoreError("ไม่มีอะไรให้ย้อนกลับแล้ว", 400)
+  const prev = JSON.parse(stack.pop()!) as Session
+  undoStacks.set(sessionId, stack)
+  prev.events.push(event("undo", "ย้อนการกระทำล่าสุด"))
+  writeJson(sessionFile(prev.id), prev)
+  return prev
+}
+
+function event(kind: SessionEvent["kind"], text: string, extra: Partial<SessionEvent> = {}): SessionEvent {
+  return { at: Date.now(), kind, text, ...extra }
+}
+
+/** อ่าน-แก้-เขียน โดยเก็บสแนปช็อตไว้ให้ undo อัตโนมัติ */
+function mutate<T>(sessionId: string, fn: (s: Session) => T): { session: Session; result: T } {
+  const session = getSession(sessionId)
+  snapshot(session)
+  const result = fn(session)
+  writeJson(sessionFile(session.id), session)
+  return { session, result }
+}
+
+export interface CreateSessionInput {
+  name?: string
+  venue?: string
+  courtCount?: number
+  courtNames?: string[]
+  settings?: Partial<SessionSettings>
+  fees?: Partial<Fees>
+  notes?: string
+}
+
+export function createSession(input: CreateSessionInput): Session {
+  const now = Date.now()
+  const count = Math.max(1, Math.min(20, input.courtCount ?? 2))
+  const courts: Court[] = Array.from({ length: count }, (_, i) => ({
+    index: i,
+    name: input.courtNames?.[i]?.trim() || `คอร์ต ${i + 1}`,
+    currentMatchId: null,
+  }))
+
+  const session: Session = {
+    id: id("s_"),
+    name: input.name?.trim() || `ก๊วนวันที่ ${thaiDateKey(now)}`,
+    date: thaiDateKey(now),
+    venue: input.venue?.trim() || "",
+    startAt: now,
+    status: "live",
+    code: sessionCode(),
+    courts,
+    players: [],
+    matches: [],
+    events: [event("session.start", "เปิดก๊วน")],
+    settings: { ...DEFAULT_SETTINGS, ...input.settings },
+    fees: { ...DEFAULT_FEES, ...input.fees },
+    shuttlesExtra: 0,
+    notes: input.notes,
+  }
+  writeJson(sessionFile(session.id), session)
+  setCurrent(session.id)
+  return session
+}
+
+export function updateSession(
+  sessionId: string,
+  patch: {
+    name?: string
+    venue?: string
+    notes?: string
+    settings?: Partial<SessionSettings>
+    fees?: Partial<Fees>
+  },
+): Session {
+  return mutate(sessionId, (s) => {
+    if (patch.name !== undefined) s.name = patch.name
+    if (patch.venue !== undefined) s.venue = patch.venue
+    if (patch.notes !== undefined) s.notes = patch.notes
+    if (patch.settings) s.settings = { ...s.settings, ...patch.settings }
+    if (patch.fees) s.fees = { ...s.fees, ...patch.fees }
+  }).session
+}
+
+export function setCourtCount(sessionId: string, count: number): Session {
+  return mutate(sessionId, (s) => {
+    const next = Math.max(1, Math.min(20, count))
+    if (next < s.courts.length) {
+      const dropping = s.courts.slice(next)
+      if (dropping.some((c) => c.currentMatchId)) {
+        throw new StoreError("ลดคอร์ตไม่ได้ — คอร์ตที่จะเอาออกยังมีเกมอยู่", 400)
+      }
+      s.courts = s.courts.slice(0, next)
+    } else {
+      for (let i = s.courts.length; i < next; i++) {
+        s.courts.push({ index: i, name: `คอร์ต ${i + 1}`, currentMatchId: null })
+      }
+    }
+  }).session
+}
+
+export function renameCourt(sessionId: string, index: number, name: string): Session {
+  return mutate(sessionId, (s) => {
+    const court = s.courts[index]
+    if (!court) throw new StoreError("ไม่พบคอร์ตนี้", 404)
+    court.name = name.trim() || `คอร์ต ${index + 1}`
+  }).session
+}
+
+export function toggleCourt(sessionId: string, index: number, disabled: boolean): Session {
+  return mutate(sessionId, (s) => {
+    const court = s.courts[index]
+    if (!court) throw new StoreError("ไม่พบคอร์ตนี้", 404)
+    if (disabled && court.currentMatchId) throw new StoreError("ปิดคอร์ตไม่ได้ — ยังมีเกมอยู่", 400)
+    court.disabled = disabled
+  }).session
+}
+
+export function endSession(sessionId: string): Session {
+  return mutate(sessionId, (s) => {
+    const live = s.matches.filter((m) => !m.endedAt)
+    if (live.length > 0) throw new StoreError("ยังมีเกมค้างในคอร์ต — จบเกมให้ครบก่อนปิดก๊วน", 400)
+    s.status = "ended"
+    s.endAt = Date.now()
+    for (const sp of s.players) {
+      if (sp.status !== "left") {
+        closeWait(sp, s.endAt)
+        sp.status = "left"
+        sp.leftAt = s.endAt
+      }
+    }
+    s.events.push(event("session.end", "ปิดก๊วน"))
+  }).session
+}
+
+export function reopenSession(sessionId: string): Session {
+  const s = getSession(sessionId)
+  if (s.status === "live") {
+    setCurrent(s.id)
+    return s
+  }
+  return mutate(sessionId, (x) => {
+    x.status = "live"
+    x.endAt = undefined
+    setCurrent(x.id)
+  }).session
+}
+
+// ── เช็คอิน / พัก / กลับบ้าน ───────────────────────────────────────────────────
+
+function closeWait(sp: SessionPlayer, now: number) {
+  if (sp.queueSince == null) return
+  const waited = Math.max(0, now - sp.queueSince)
+  sp.waitedMs += waited
+  sp.longestWaitMs = Math.max(sp.longestWaitMs, waited)
+  sp.queueSince = null
+}
+
+export function checkIn(sessionId: string, playerId: string): Session {
+  return mutate(sessionId, (s) => {
+    const roster = rosterMap()
+    const player = roster.get(playerId)
+    if (!player) throw new StoreError("ไม่พบผู้เล่นคนนี้ในทะเบียน", 404)
+    const now = Date.now()
+    const existing = s.players.find((p) => p.playerId === playerId)
+    if (existing) {
+      if (existing.status !== "left") throw new StoreError(`${displayName(player)} เช็คอินอยู่แล้ว`, 400)
+      existing.status = "queue"
+      existing.queueSince = now
+      existing.leftAt = undefined
+    } else {
+      s.players.push({
+        playerId,
+        status: "queue",
+        checkInAt: now,
+        queueSince: now,
+        gamesPlayed: 0,
+        playedMs: 0,
+        waitedMs: 0,
+        longestWaitMs: 0,
+        wins: 0,
+        losses: 0,
+        boost: 0,
+        paid: false,
+      })
+    }
+    s.events.push(event("player.checkin", `${displayName(player)} เช็คอิน`, { playerId }))
+  }).session
+}
+
+export function checkOut(sessionId: string, playerId: string): Session {
+  return mutate(sessionId, (s) => {
+    const sp = s.players.find((p) => p.playerId === playerId)
+    if (!sp) throw new StoreError("คนนี้ยังไม่ได้เช็คอิน", 404)
+    if (sp.status === "playing") throw new StoreError("คนนี้อยู่ในคอร์ต — จบเกมก่อน", 400)
+    const now = Date.now()
+    closeWait(sp, now)
+    sp.status = "left"
+    sp.leftAt = now
+    const name = rosterMap().get(playerId)
+    s.events.push(event("player.checkout", `${name ? displayName(name) : playerId} กลับบ้าน`, { playerId }))
+  }).session
+}
+
+export function setRest(sessionId: string, playerId: string, resting: boolean): Session {
+  return mutate(sessionId, (s) => {
+    const sp = s.players.find((p) => p.playerId === playerId)
+    if (!sp) throw new StoreError("คนนี้ยังไม่ได้เช็คอิน", 404)
+    if (sp.status === "playing") throw new StoreError("คนนี้อยู่ในคอร์ต — จบเกมก่อน", 400)
+    const now = Date.now()
+    const name = rosterMap().get(playerId)
+    const label = name ? displayName(name) : playerId
+    if (resting) {
+      closeWait(sp, now)
+      sp.status = "resting"
+      s.events.push(event("player.rest", `${label} ขอพัก`, { playerId }))
+    } else {
+      sp.status = "queue"
+      sp.queueSince = now
+      s.events.push(event("player.resume", `${label} กลับเข้าคิว`, { playerId }))
+    }
+  }).session
+}
+
+export function setBoost(sessionId: string, playerId: string, boost: number): Session {
+  return mutate(sessionId, (s) => {
+    const sp = s.players.find((p) => p.playerId === playerId)
+    if (!sp) throw new StoreError("คนนี้ยังไม่ได้เช็คอิน", 404)
+    sp.boost = Math.max(-3, Math.min(3, Math.round(boost)))
+  }).session
+}
+
+export function setPaid(sessionId: string, playerId: string, paid: boolean): Session {
+  return mutate(sessionId, (s) => {
+    const sp = s.players.find((p) => p.playerId === playerId)
+    if (!sp) throw new StoreError("คนนี้ยังไม่ได้เช็คอิน", 404)
+    sp.paid = paid
+    sp.paidAt = paid ? Date.now() : undefined
+    const name = rosterMap().get(playerId)
+    s.events.push(
+      event("pay", `${name ? displayName(name) : playerId} ${paid ? "จ่ายแล้ว" : "ยกเลิกการจ่าย"}`, { playerId }),
+    )
+  }).session
+}
+
+// ── เกม ──────────────────────────────────────────────────────────────────────
+
+export function startMatch(
+  sessionId: string,
+  input: { courtIndex: number; type: MatchType; teamA: string[]; teamB: string[]; createdBy?: "auto" | "manual" },
+): { session: Session; match: Match } {
+  const out = mutate(sessionId, (s) => {
+    if (s.status !== "live") throw new StoreError("ก๊วนนี้ปิดแล้ว", 400)
+    const court = s.courts[input.courtIndex]
+    if (!court) throw new StoreError("ไม่พบคอร์ตนี้", 404)
+    if (court.disabled) throw new StoreError("คอร์ตนี้ถูกปิดอยู่", 400)
+    if (court.currentMatchId) throw new StoreError("คอร์ตนี้มีเกมอยู่แล้ว", 400)
+
+    const ids = [...input.teamA, ...input.teamB]
+    const need = playersPerMatch(input.type)
+    if (ids.length !== need) throw new StoreError(`เกมนี้ต้องมี ${need} คน (ส่งมา ${ids.length} คน)`, 400)
+    if (new Set(ids).size !== ids.length) throw new StoreError("มีชื่อซ้ำในเกมเดียวกัน", 400)
+
+    const now = Date.now()
+    let maxWait = 0
+    for (const pid of ids) {
+      const sp = s.players.find((p) => p.playerId === pid)
+      if (!sp) throw new StoreError("มีคนในเกมที่ยังไม่ได้เช็คอิน", 400)
+      if (sp.status === "playing") throw new StoreError("มีคนในเกมที่กำลังเล่นอยู่คอร์ตอื่น", 400)
+      if (sp.status === "left") throw new StoreError("มีคนในเกมที่กลับบ้านแล้ว", 400)
+      if (sp.queueSince != null) maxWait = Math.max(maxWait, now - sp.queueSince)
+    }
+
+    const roster = rosterMap()
+    const levels = ids.map((pid) => roster.get(pid)?.level ?? 1)
+    const match: Match = {
+      id: id("m_"),
+      courtIndex: input.courtIndex,
+      type: input.type,
+      teamA: input.teamA,
+      teamB: input.teamB,
+      startedAt: now,
+      shuttles: 0,
+      createdBy: input.createdBy ?? "manual",
+      levelGap: Math.max(...levels) - Math.min(...levels),
+      maxWaitAtStart: maxWait,
+    }
+
+    for (const pid of ids) {
+      const sp = s.players.find((p) => p.playerId === pid)!
+      closeWait(sp, now)
+      sp.status = "playing"
+    }
+    s.matches.push(match)
+    court.currentMatchId = match.id
+    s.events.push(
+      event(
+        "match.start",
+        `${court.name}: ${ids.map((pid) => (roster.get(pid) ? displayName(roster.get(pid)!) : pid)).join(", ")}`,
+        { matchId: match.id },
+      ),
+    )
+    return match
+  })
+  return { session: out.session, match: out.result }
+}
+
+export function finishMatch(
+  sessionId: string,
+  input: { matchId: string; scoreA?: number; scoreB?: number; shuttles?: number; winner?: "A" | "B" },
+): Session {
+  return mutate(sessionId, (s) => {
+    const match = s.matches.find((m) => m.id === input.matchId)
+    if (!match) throw new StoreError("ไม่พบเกมนี้", 404)
+    if (match.endedAt) throw new StoreError("เกมนี้จบไปแล้ว", 400)
+
+    const now = Date.now()
+    match.endedAt = now
+    if (typeof input.shuttles === "number") match.shuttles = Math.max(0, input.shuttles)
+    if (typeof input.scoreA === "number" && typeof input.scoreB === "number") {
+      match.scoreA = input.scoreA
+      match.scoreB = input.scoreB
+      if (input.scoreA !== input.scoreB) match.winner = input.scoreA > input.scoreB ? "A" : "B"
+    } else if (input.winner) {
+      // ก๊วนส่วนใหญ่ไม่จดคะแนน — บอกแค่ว่าฝั่งไหนชนะก็พอสำหรับสถิติ
+      match.winner = input.winner
+    }
+
+    const dur = now - match.startedAt
+    for (const team of ["A", "B"] as const) {
+      for (const pid of team === "A" ? match.teamA : match.teamB) {
+        const sp = s.players.find((p) => p.playerId === pid)
+        if (!sp) continue
+        sp.gamesPlayed += 1
+        sp.playedMs += dur
+        if (match.winner) {
+          if (match.winner === team) sp.wins += 1
+          else sp.losses += 1
+        }
+        // กลับเข้าคิว → เริ่มจับเวลารอใหม่ทันที (คนที่เพิ่งลงจึงอยู่ท้ายคิวเอง)
+        if (sp.status === "playing") {
+          sp.status = "queue"
+          sp.queueSince = now
+        }
+      }
+    }
+
+    const court = s.courts[match.courtIndex]
+    if (court && court.currentMatchId === match.id) court.currentMatchId = null
+
+    const score = match.scoreA != null ? ` ${match.scoreA}-${match.scoreB}` : ""
+    s.events.push(
+      event("match.end", `จบเกม ${court?.name ?? `คอร์ต ${match.courtIndex + 1}`}${score}`, { matchId: match.id }),
+    )
+  }).session
+}
+
+export function cancelMatch(sessionId: string, matchId: string): Session {
+  return mutate(sessionId, (s) => {
+    const idx = s.matches.findIndex((m) => m.id === matchId)
+    if (idx < 0) throw new StoreError("ไม่พบเกมนี้", 404)
+    const match = s.matches[idx]
+    if (match.endedAt) throw new StoreError("เกมนี้จบไปแล้ว ยกเลิกไม่ได้ (ใช้ปุ่มย้อนกลับ)", 400)
+
+    const now = Date.now()
+    for (const pid of [...match.teamA, ...match.teamB]) {
+      const sp = s.players.find((p) => p.playerId === pid)
+      if (!sp || sp.status !== "playing") continue
+      sp.status = "queue"
+      // คืนเวลารอเดิมให้ (ถูกเรียกลงแล้วไม่ได้เล่น ไม่ควรเสียคิว)
+      sp.queueSince = now - match.maxWaitAtStart
+    }
+    const court = s.courts[match.courtIndex]
+    if (court && court.currentMatchId === match.id) court.currentMatchId = null
+    s.matches.splice(idx, 1)
+    s.events.push(event("match.cancel", `ยกเลิกเกม ${court?.name ?? ""}`.trim(), { matchId }))
+  }).session
+}
+
+/** สลับคนในเกมที่กำลังเล่น (เจ็บ/มีคนขอเปลี่ยน) */
+export function swapPlayer(
+  sessionId: string,
+  input: { matchId: string; outPlayerId: string; inPlayerId: string },
+): Session {
+  return mutate(sessionId, (s) => {
+    const match = s.matches.find((m) => m.id === input.matchId)
+    if (!match) throw new StoreError("ไม่พบเกมนี้", 404)
+    if (match.endedAt) throw new StoreError("เกมนี้จบไปแล้ว", 400)
+
+    const inSp = s.players.find((p) => p.playerId === input.inPlayerId)
+    const outSp = s.players.find((p) => p.playerId === input.outPlayerId)
+    if (!inSp || !outSp) throw new StoreError("ไม่พบผู้เล่นที่จะสลับ", 404)
+    if (inSp.status === "playing") throw new StoreError("คนที่จะใส่เข้าไปกำลังเล่นอยู่คอร์ตอื่น", 400)
+    if (inSp.status === "left") throw new StoreError("คนที่จะใส่เข้าไปกลับบ้านแล้ว", 400)
+
+    const now = Date.now()
+    const replace = (team: string[]) => {
+      const i = team.indexOf(input.outPlayerId)
+      if (i >= 0) team[i] = input.inPlayerId
+      return i >= 0
+    }
+    if (!replace(match.teamA) && !replace(match.teamB)) {
+      throw new StoreError("คนที่จะเอาออกไม่ได้อยู่ในเกมนี้", 400)
+    }
+
+    outSp.status = "queue"
+    outSp.queueSince = now
+    closeWait(inSp, now)
+    inSp.status = "playing"
+
+    const roster = rosterMap()
+    const nameOf = (pid: string) => (roster.get(pid) ? displayName(roster.get(pid)!) : pid)
+    s.events.push(
+      event("match.swap", `สลับ ${nameOf(input.outPlayerId)} ออก ${nameOf(input.inPlayerId)} ลง`, {
+        matchId: match.id,
+      }),
+    )
+  }).session
+}
+
+export function addShuttles(sessionId: string, delta: number, matchId?: string): Session {
+  return mutate(sessionId, (s) => {
+    if (matchId) {
+      const match = s.matches.find((m) => m.id === matchId)
+      if (!match) throw new StoreError("ไม่พบเกมนี้", 404)
+      match.shuttles = Math.max(0, match.shuttles + delta)
+    } else {
+      s.shuttlesExtra = Math.max(0, s.shuttlesExtra + delta)
+    }
+    if (delta !== 0) {
+      s.events.push(event("shuttle.add", `${delta > 0 ? "เพิ่ม" : "ลด"}ลูกแบด ${Math.abs(delta)} ลูก`, { matchId }))
+    }
+  }).session
+}
+
+// ── ค่าใช้จ่าย ────────────────────────────────────────────────────────────────
+
+function roundUpTo(value: number, step: number): number {
+  const s = step > 0 ? step : 1
+  return Math.ceil(value / s) * s
+}
+
+export function computeBill(session: Session, roster: Map<string, RosterPlayer>): Bill {
+  const fees = session.fees
+  const shuttlesUsed = session.matches.reduce((n, m) => n + m.shuttles, 0) + session.shuttlesExtra
+  const shuttleCost = shuttlesUsed * fees.shuttlePrice
+  const courtCost = fees.courtCost
+  const extraCost = fees.extraCost
+  const total = courtCost + shuttleCost + extraCost
+
+  // ทุกคนที่เช็คอินวันนี้ (รวมคนที่กลับไปแล้ว — เขาก็ใช้คอร์ตไปแล้ว)
+  const people = session.players
+  const totalGames = people.reduce((n, p) => n + p.gamesPlayed, 0)
+  const n = people.length || 1
+
+  const lines: BillLine[] = people.map((sp) => {
+    const player = roster.get(sp.playerId)
+    let amount = 0
+    switch (fees.mode) {
+      case "equal":
+        amount = total / n
+        break
+      case "byGames":
+        amount = totalGames > 0 ? (total * sp.gamesPlayed) / totalGames : total / n
+        break
+      case "split": {
+        const perHead = (courtCost + extraCost) / n
+        const byGame = totalGames > 0 ? (shuttleCost * sp.gamesPlayed) / totalGames : shuttleCost / n
+        amount = perHead + byGame
+        break
+      }
+      case "flat":
+        amount = player?.member === false ? fees.guestFee : fees.memberFee
+        break
+    }
+    return {
+      playerId: sp.playerId,
+      name: player ? displayName(player) : sp.playerId,
+      games: sp.gamesPlayed,
+      member: player?.member ?? true,
+      amount: roundUpTo(amount, fees.roundTo),
+      paid: sp.paid,
+    }
+  })
+
+  const billed = lines.reduce((sum, l) => sum + l.amount, 0)
+  const collected = lines.filter((l) => l.paid).reduce((sum, l) => sum + l.amount, 0)
+
+  return {
+    courtCost,
+    shuttleCost,
+    shuttlesUsed,
+    extraCost,
+    total,
+    collected,
+    mode: fees.mode,
+    lines: lines.sort((a, b) => b.games - a.games || a.name.localeCompare(b.name, "th")),
+    balance: billed - total,
+  }
+}
+
+// ── ประกอบข้อมูลให้หน้าเว็บ ───────────────────────────────────────────────────
+
+export function buildView(session: Session, now = Date.now()): SessionView {
+  const roster = getRoster()
+  const rmap = new Map(roster.map((p) => [p.id, p]))
+  const maxGames = session.players.reduce((m, p) => (p.status === "left" ? m : Math.max(m, p.gamesPlayed)), 0)
+  const forecast = forecastQueue(session, now)
+
+  const entry = (sp: SessionPlayer): QueueEntry | null => {
+    const player = rmap.get(sp.playerId)
+    if (!player) return null
+    const waitMs = sp.queueSince == null ? 0 : Math.max(0, now - sp.queueSince)
+    return {
+      player,
+      sp,
+      waitMs,
+      priority: priorityOf(sp, now, maxGames, session.settings),
+      tier: waitTier(waitMs, session.settings),
+      queueAhead: forecast.ahead.get(sp.playerId) ?? 0,
+      etaMinutes: forecast.eta.get(sp.playerId) ?? null,
+    }
+  }
+
+  const queue = session.players
+    .filter((p) => p.status === "queue")
+    .map(entry)
+    .filter((q): q is QueueEntry => !!q)
+    .sort((a, b) => b.priority - a.priority)
+
+  const resting = session.players
+    .filter((p) => p.status === "resting")
+    .map(entry)
+    .filter((q): q is QueueEntry => !!q)
+
+  const courts: CourtView[] = session.courts.map((court) => {
+    const match = court.currentMatchId ? session.matches.find((m) => m.id === court.currentMatchId) ?? null : null
+    const players: CourtView["players"] = []
+    if (match) {
+      for (const team of ["A", "B"] as const) {
+        for (const pid of team === "A" ? match.teamA : match.teamB) {
+          const player = rmap.get(pid)
+          const sp = session.players.find((p) => p.playerId === pid)
+          if (player && sp) players.push({ player, sp, team })
+        }
+      }
+    }
+    return { court, match, players, elapsedMs: match ? now - match.startedAt : 0 }
+  })
+
+  const waits = queue.map((q) => q.waitMs)
+  const dongAlerts = queue
+    .filter((q) => q.tier === "dong")
+    .map((q) => `${displayName(q.player)} รอมา ${Math.round(q.waitMs / 60_000)} นาที`)
+
+  return {
+    session,
+    roster,
+    courts,
+    queue,
+    resting,
+    bill: computeBill(session, rmap),
+    now,
+    dongAlerts,
+    stats: {
+      checkedIn: session.players.filter((p) => p.status !== "left").length,
+      playing: session.players.filter((p) => p.status === "playing").length,
+      waiting: queue.length,
+      matchesDone: session.matches.filter((m) => m.endedAt).length,
+      avgWaitMs: waits.length ? waits.reduce((a, b) => a + b, 0) / waits.length : 0,
+      maxWaitMs: waits.length ? Math.max(...waits) : 0,
+      shuttlesUsed: session.matches.reduce((n, m) => n + m.shuttles, 0) + session.shuttlesExtra,
+    },
+  }
+}
+
+// ── สรุปส่งกลุ่มไลน์ ──────────────────────────────────────────────────────────
+
+export function summaryText(session: Session): string {
+  const rmap = rosterMap()
+  const bill = computeBill(session, rmap)
+  const lines: string[] = []
+  const end = session.endAt ?? Date.now()
+
+  lines.push(`🏸 ${session.name}`)
+  if (session.venue) lines.push(`📍 ${session.venue}`)
+  lines.push(`🕒 ${thaiTime(session.startAt)} - ${thaiTime(end)}`)
+  lines.push(`👥 ${session.players.length} คน · 🎮 ${session.matches.filter((m) => m.endedAt).length} เกม · 🏸 ลูกที่ใช้ ${bill.shuttlesUsed} ลูก`)
+  lines.push("")
+  lines.push(`💰 ค่าใช้จ่ายรวม ${bill.total.toLocaleString("th-TH")} บาท`)
+  if (bill.courtCost) lines.push(`   • ค่าคอร์ต ${bill.courtCost.toLocaleString("th-TH")}`)
+  if (bill.shuttleCost) lines.push(`   • ค่าลูก ${bill.shuttleCost.toLocaleString("th-TH")} (${bill.shuttlesUsed} ลูก)`)
+  if (bill.extraCost) lines.push(`   • อื่น ๆ ${bill.extraCost.toLocaleString("th-TH")}${session.fees.extraNote ? ` (${session.fees.extraNote})` : ""}`)
+  lines.push("")
+  lines.push("💸 คนละ")
+  for (const l of bill.lines) {
+    lines.push(`   ${l.paid ? "✅" : "⬜"} ${l.name} ${l.amount.toLocaleString("th-TH")} บาท (${l.games} เกม)`)
+  }
+  if (session.fees.promptPay) {
+    lines.push("")
+    lines.push(`📲 พร้อมเพย์: ${session.fees.promptPay}`)
+  }
+  const top = [...session.players].sort((a, b) => b.gamesPlayed - a.gamesPlayed)[0]
+  if (top && top.gamesPlayed > 0) {
+    const p = rmap.get(top.playerId)
+    if (p) {
+      lines.push("")
+      lines.push(`🔥 ลงเยอะสุด: ${displayName(p)} ${top.gamesPlayed} เกม`)
+    }
+  }
+  const patient = [...session.players].sort((a, b) => b.longestWaitMs - a.longestWaitMs)[0]
+  if (patient && patient.longestWaitMs > 0) {
+    const p = rmap.get(patient.playerId)
+    if (p) lines.push(`🧘 ใจเย็นสุด: ${displayName(p)} รอนานสุด ${Math.round(patient.longestWaitMs / 60_000)} นาที`)
+  }
+  return lines.join("\n")
+}
+
+// ── สถิติรวมทุกครั้ง ──────────────────────────────────────────────────────────
+
+export interface AllTimeStat {
+  playerId: string
+  name: string
+  level: number
+  sessions: number
+  games: number
+  wins: number
+  losses: number
+  playedMs: number
+  waitedMs: number
+  longestWaitMs: number
+}
+
+export function allTimeStats(): AllTimeStat[] {
+  const rmap = rosterMap()
+  const acc = new Map<string, AllTimeStat>()
+  for (const s of listSessions()) {
+    for (const sp of s.players) {
+      const player = rmap.get(sp.playerId)
+      const cur =
+        acc.get(sp.playerId) ??
+        ({
+          playerId: sp.playerId,
+          name: player ? displayName(player) : sp.playerId,
+          level: player?.level ?? 1,
+          sessions: 0,
+          games: 0,
+          wins: 0,
+          losses: 0,
+          playedMs: 0,
+          waitedMs: 0,
+          longestWaitMs: 0,
+        } satisfies AllTimeStat)
+      cur.sessions += 1
+      cur.games += sp.gamesPlayed
+      cur.wins += sp.wins
+      cur.losses += sp.losses
+      cur.playedMs += sp.playedMs
+      cur.waitedMs += sp.waitedMs
+      cur.longestWaitMs = Math.max(cur.longestWaitMs, sp.longestWaitMs)
+      acc.set(sp.playerId, cur)
+    }
+  }
+  return [...acc.values()].sort((a, b) => b.games - a.games)
+}
