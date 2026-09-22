@@ -6,7 +6,11 @@ import { api } from "@/lib/api"
 import { useApp, useSession } from "@/lib/app"
 import { Modal, Segmented, Stat, Stepper } from "@/components/ui"
 import { PlayerAvatar } from "@/components/player"
+import { PromptPayQr } from "@/components/PromptPayQr"
 import { baht, cn, copyText } from "@/lib/util"
+
+/** ตัวเลขที่เชื่อถือได้ — ถ้าเซิร์ฟเวอร์ (เวอร์ชันเก่า) ไม่ได้ส่งมา ให้เป็น 0 แทนที่จะพังทั้งหน้า */
+const nz = (v: number | undefined | null): number => (typeof v === "number" && Number.isFinite(v) ? v : 0)
 
 export function BillPage() {
   const { view, sessionId } = useSession()
@@ -237,7 +241,7 @@ export function BillPage() {
                       {l.games} เกม
                       {sp && sp.wins + sp.losses > 0 ? ` · ชนะ ${sp.wins} แพ้ ${sp.losses}` : ""}
                       {view.session.fees.mode === "club"
-                        ? ` · สนาม ${baht(l.courtPart)} + ลูก ${l.shuttlePart.toFixed(2).replace(/\.00$/, "")}`
+                        ? ` · สนาม ${baht(nz(l.courtPart))} + ลูก ${nz(l.shuttlePart).toFixed(2).replace(/\.00$/, "")}`
                         : ""}
                     </span>
                   </span>
@@ -384,16 +388,16 @@ function CollectModal({
           </p>
           {mode === "club" ? (
             <p className="mt-1 text-[12px] text-ink-faint">
-              ค่าสนาม {baht(line.courtPart)} + ค่าลูก {line.shuttlePart.toFixed(2).replace(/\.00$/, "")}
-              {line.extraPart > 0 ? ` + อื่น ๆ ${baht(line.extraPart)}` : ""}
+              ค่าสนาม {baht(nz(line.courtPart))} + ค่าลูก {nz(line.shuttlePart).toFixed(2).replace(/\.00$/, "")}
+              {nz(line.extraPart) > 0 ? ` + อื่น ๆ ${baht(nz(line.extraPart))}` : ""}
             </p>
           ) : null}
         </div>
 
-        <img src={CLUB.payment.qrImage} alt="QR พร้อมเพย์" className="w-full max-w-[280px] rounded-washi shadow-card" />
+        <PromptPayQr amount={line.amount} size={250} />
         <p className="text-center font-heading text-[13.5px] font-medium text-ink">{promptPay}</p>
-        <p className="text-center text-[12px] text-ink-faint">
-          สแกนแล้วใส่ยอดเอง — พร้อมเพย์ไม่ได้ผูกจำนวนเงินไว้ใน QR
+        <p className="text-center text-[12px] leading-snug text-ink-faint">
+          QR นี้ผูกยอด {baht(line.amount)} บาทไว้แล้ว — สแกนแล้วแอปธนาคารขึ้นจำนวนเงินให้เลย
         </p>
       </div>
     </Modal>

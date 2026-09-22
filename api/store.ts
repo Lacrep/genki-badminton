@@ -15,7 +15,9 @@ import {
   type BillLine,
   type Court,
   type CourtView,
+  type FeeMode,
   type Fees,
+  type Level,
   type Match,
   type MatchType,
   type QueueEntry,
@@ -27,6 +29,7 @@ import {
   type SessionView,
   DEFAULT_FEES,
   DEFAULT_SETTINGS,
+  MAX_LEVEL,
   displayName,
   playersPerMatch,
   priorityOf,
@@ -82,10 +85,118 @@ export class StoreError extends Error {
   }
 }
 
+// ── แปลงข้อมูลรุ่นเก่าให้เข้ากับระบบปัจจุบัน ────────────────────────────────────
+//
+// ก๊วนที่เปิดไว้ก่อนเปลี่ยนระบบ (ระดับมือ 10 ขั้น, มีเพศ/สมาชิก, ค่าก๊วน 4 แบบ)
+// ยังเปิดดูได้ตามปกติ — แปลงให้ตอนอ่านไฟล์แล้วเขียนกลับครั้งเดียว
+
+/** คีย์ที่มีเฉพาะข้อมูลรุ่นเก่า ใช้เป็นตัวสังเกตว่าเรคอร์ดนี้ยังไม่ถูกแปลง */
+type LegacyPlayerFields = {
+  nickname?: string
+  gender?: string
+  member?: boolean
+  phone?: string
+}
+
+/** ระดับมือเดิม 1..10 → สเกลใหม่ 1..7 (หน้าบ้าน..OPEN) */
+function mapLegacyLevel(level: number): Level {
+  const mapped = Math.round((Number(level) || 1) * 0.7)
+  return Math.max(1, Math.min(MAX_LEVEL, mapped)) as Level
+}
+
+function migrateRoster(list: RosterPlayer[]): { list: RosterPlayer[]; changed: boolean } {
+  let changed = false
+  const next = list.map((raw) => {
+    const legacy = raw as RosterPlayer & LegacyPlayerFields
+    const isLegacy =
+      legacy.nickname !== undefined ||
+      legacy.gender !== undefined ||
+      legacy.member !== undefined ||
+      legacy.phone !== undefined
+    if (!isLegacy) return raw
+
+    changed = true
+    return {
+      id: legacy.id,
+      // เดิมเก็บชื่อจริง + ชื่อเล่น ตอนนี้ใช้ชื่อที่เรียกกันในก๊วนอย่างเดียว
+      name: legacy.nickname?.trim() || legacy.name,
+      level: mapLegacyLevel(legacy.level),
+      note: legacy.note,
+      archived: legacy.archived,
+      createdAt: legacy.createdAt,
+    } satisfies RosterPlayer
+  })
+  return { list: next, changed }
+}
+
+const FEE_MODES: FeeMode[] = ["club", "equal"]
+const MATCH_TYPES: MatchType[] = ["D", "S"]
+
+function migrateSession(session: Session): { session: Session; changed: boolean } {
+  let changed = false
+  const fees = session.fees as Fees & { memberFee?: number; guestFee?: number }
+
+  if (!FEE_MODES.includes(fees.mode)) {
+    // split/byGames/flat ของเดิม ใกล้กับ "ระบบก๊วน" ที่สุด
+    fees.mode = fees.mode === ("equal" as FeeMode) ? "equal" : "club"
+    changed = true
+  }
+  if (typeof fees.courtFeePerHead !== "number") {
+    fees.courtFeePerHead = typeof fees.memberFee === "number" ? fees.memberFee : DEFAULT_FEES.courtFeePerHead
+    changed = true
+  }
+  if (fees.memberFee !== undefined || fees.guestFee !== undefined) {
+    delete fees.memberFee
+    delete fees.guestFee
+    changed = true
+  }
+  for (const key of ["shuttlePrice", "courtCost", "extraCost", "roundTo"] as const) {
+    if (typeof fees[key] !== "number") {
+      fees[key] = DEFAULT_FEES[key]
+      changed = true
+    }
+  }
+
+  const settings = session.settings as SessionSettings & { autoFill?: boolean }
+  if (settings.defaultMatchType !== "auto" && !MATCH_TYPES.includes(settings.defaultMatchType)) {
+    settings.defaultMatchType = "auto"
+    changed = true
+  }
+  if (settings.autoFill !== undefined) {
+    delete settings.autoFill
+    changed = true
+  }
+  if (settings.maxLevelGap > MAX_LEVEL - 1) {
+    settings.maxLevelGap = DEFAULT_SETTINGS.maxLevelGap
+    changed = true
+  }
+
+  for (const m of session.matches) {
+    if (!MATCH_TYPES.includes(m.type)) {
+      m.type = m.teamA.length <= 1 ? "S" : "D"
+      changed = true
+    }
+  }
+
+  // ฟิลด์ที่เพิ่มมาทีหลัง — เติมให้ครบกันหน้าเว็บคำนวณไม่ได้
+  for (const p of session.players) {
+    for (const key of ["gamesPlayed", "playedMs", "waitedMs", "longestWaitMs", "wins", "losses", "boost"] as const) {
+      if (typeof p[key] !== "number") {
+        p[key] = 0
+        changed = true
+      }
+    }
+  }
+
+  return { session, changed }
+}
+
 // ── ทะเบียนผู้เล่น ────────────────────────────────────────────────────────────
 
 export function getRoster(): RosterPlayer[] {
-  return readJson<RosterPlayer[]>(ROSTER_FILE, [])
+  const { list, changed } = migrateRoster(readJson<RosterPlayer[]>(ROSTER_FILE, []))
+  if (changed) saveRoster(list)
+  return list
 }
 
 function saveRoster(list: RosterPlayer[]) {
@@ -133,13 +244,16 @@ export function listSessions(): Session[] {
     .filter((f) => f.endsWith(".json"))
     .map((f) => readJson<Session | null>(path.join(SESSION_DIR, f), null))
     .filter((s): s is Session => !!s)
+    .map((s) => migrateSession(s).session)
     .sort((a, b) => b.startAt - a.startAt)
 }
 
 export function getSession(sessionId: string): Session {
-  const s = readJson<Session | null>(sessionFile(sessionId), null)
-  if (!s) throw new StoreError("ไม่พบก๊วนนี้", 404)
-  return s
+  const raw = readJson<Session | null>(sessionFile(sessionId), null)
+  if (!raw) throw new StoreError("ไม่พบก๊วนนี้", 404)
+  const { session, changed } = migrateSession(raw)
+  if (changed) writeJson(sessionFile(session.id), session)
+  return session
 }
 
 export function findSessionByCode(code: string): Session | null {

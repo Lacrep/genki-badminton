@@ -2,7 +2,7 @@
  * Service worker เบา ๆ — แคชเฉพาะไฟล์หน้าเว็บ (app shell)
  * ข้อมูลคิว/เกม (/api/*) ไม่แคชเด็ดขาด เพราะต้องสด ๆ เสมอ
  */
-const CACHE = "genki-shell-v1"
+const CACHE = "genki-shell-v3"
 const SHELL = ["/", "/index.html", "/logo.webp", "/favicon.png", "/manifest.webmanifest"]
 
 self.addEventListener("install", (event) => {
