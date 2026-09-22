@@ -8,13 +8,7 @@
 import { Hono } from "hono"
 import type { HttpBindings } from "@hono/node-server"
 import { z } from "zod"
-import {
-  type Gender,
-  type Level,
-  type MatchType,
-  displayName,
-  thaiTime,
-} from "@shared/types"
+import { type Level, type MatchType, MAX_LEVEL, displayName, thaiTime } from "@shared/types"
 import { suggestMatch } from "./matching"
 import {
   type CreateSessionInput,
@@ -133,12 +127,9 @@ app.get("/api/q/:code", (c) => {
 // ── ทะเบียนผู้เล่น ────────────────────────────────────────────────────────────
 
 const playerSchema = z.object({
-  name: z.string().trim().min(1, "ต้องมีชื่อ").max(40),
-  nickname: z.string().trim().max(20).optional(),
-  gender: z.enum(["m", "f"]),
-  level: z.number().int().min(1).max(10),
-  member: z.boolean().default(true),
-  phone: z.string().trim().max(20).optional(),
+  /** ชื่อที่ใช้เรียกในก๊วน — ไม่ต้องเป็นชื่อจริง */
+  name: z.string().trim().min(1, "ต้องมีชื่อ").max(24),
+  level: z.number().int().min(1).max(MAX_LEVEL),
   note: z.string().trim().max(200).optional(),
   archived: z.boolean().optional(),
 })
@@ -147,11 +138,7 @@ app.get("/api/players", (c) => c.json({ roster: getRoster() }))
 
 app.post("/api/players", async (c) => {
   const input = await body(c, playerSchema)
-  const player = addPlayer({
-    ...input,
-    level: input.level as Level,
-    gender: input.gender as Gender,
-  })
+  const player = addPlayer({ ...input, level: input.level as Level })
   return c.json({ player, roster: getRoster() })
 })
 
@@ -160,7 +147,6 @@ app.patch("/api/players/:id", async (c) => {
   const player = updatePlayer(c.req.param("id"), {
     ...input,
     level: input.level as Level | undefined,
-    gender: input.gender as Gender | undefined,
   })
   return c.json({ player, roster: getRoster() })
 })
@@ -173,7 +159,7 @@ app.delete("/api/players/:id", (c) => {
 // ── ก๊วน ─────────────────────────────────────────────────────────────────────
 
 const settingsSchema = z.object({
-  maxLevelGap: z.number().int().min(0).max(9).optional(),
+  maxLevelGap: z.number().int().min(0).max(MAX_LEVEL - 1).optional(),
   waitWeight: z.number().min(0).max(20).optional(),
   gamesBehindWeight: z.number().min(0).max(60).optional(),
   varietyWeight: z.number().min(0).max(60).optional(),
@@ -181,21 +167,19 @@ const settingsSchema = z.object({
   warnWaitMinutes: z.number().min(1).max(120).optional(),
   dongWaitMinutes: z.number().min(1).max(180).optional(),
   targetGameMinutes: z.number().min(3).max(60).optional(),
-  defaultMatchType: z.enum(["auto", "D", "MD", "WD", "XD", "MS", "WS", "S"]).optional(),
+  defaultMatchType: z.enum(["auto", "D", "S"]).optional(),
   callSound: z.boolean().optional(),
-  autoFill: z.boolean().optional(),
 })
 
 const feesSchema = z.object({
-  courtCost: z.number().min(0).max(1_000_000).optional(),
+  mode: z.enum(["club", "equal"]).optional(),
+  courtFeePerHead: z.number().min(0).max(100_000).optional(),
   shuttlePrice: z.number().min(0).max(10_000).optional(),
+  courtCost: z.number().min(0).max(1_000_000).optional(),
   extraCost: z.number().min(0).max(1_000_000).optional(),
   extraNote: z.string().trim().max(80).optional(),
-  mode: z.enum(["equal", "byGames", "split", "flat"]).optional(),
-  memberFee: z.number().min(0).max(100_000).optional(),
-  guestFee: z.number().min(0).max(100_000).optional(),
   roundTo: z.number().min(1).max(100).optional(),
-  promptPay: z.string().trim().max(40).optional(),
+  promptPay: z.string().trim().max(60).optional(),
 })
 
 app.post("/api/session", async (c) => {
@@ -268,11 +252,10 @@ app.post("/api/session/:id/checkin", async (c) => {
     z.union([playerIdSchema, z.object({ newPlayer: playerSchema })]),
   )
   const sessionId = c.req.param("id")
-  const playerId = "playerId" in input ? input.playerId : addPlayer({
-    ...input.newPlayer,
-    level: input.newPlayer.level as Level,
-    gender: input.newPlayer.gender as Gender,
-  }).id
+  const playerId =
+    "playerId" in input
+      ? input.playerId
+      : addPlayer({ ...input.newPlayer, level: input.newPlayer.level as Level }).id
   const session = checkIn(sessionId, playerId)
   return c.json(view(session.id))
 })
@@ -320,7 +303,7 @@ app.post("/api/session/:id/paid", async (c) => {
 
 // ── จัดเกม ───────────────────────────────────────────────────────────────────
 
-const matchTypeSchema = z.enum(["D", "MD", "WD", "XD", "MS", "WS", "S"])
+const matchTypeSchema = z.enum(["D", "S"])
 
 app.post("/api/session/:id/suggest", async (c) => {
   const input = await body(

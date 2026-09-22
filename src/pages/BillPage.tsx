@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react"
-import { Check, ClipboardList, Download, Receipt, Wallet } from "lucide-react"
-import { type FeeMode, FEE_MODE_LABEL } from "@shared/types"
+import { Check, ClipboardList, Download, QrCode, Receipt, Wallet } from "lucide-react"
+import { type BillLine, type FeeMode, FEE_MODE_LABEL } from "@shared/types"
+import { CLUB } from "@shared/club"
 import { api } from "@/lib/api"
 import { useApp, useSession } from "@/lib/app"
-import { Segmented, Stat, Stepper } from "@/components/ui"
+import { Modal, Segmented, Stat, Stepper } from "@/components/ui"
+import { PlayerAvatar } from "@/components/player"
 import { baht, cn, copyText } from "@/lib/util"
 
 export function BillPage() {
@@ -13,20 +15,22 @@ export function BillPage() {
   const bill = view.bill
   const canControl = !needPin
 
-  const [courtCost, setCourtCost] = useState(String(fees.courtCost))
+  const [courtFeePerHead, setCourtFeePerHead] = useState(String(fees.courtFeePerHead))
   const [shuttlePrice, setShuttlePrice] = useState(String(fees.shuttlePrice))
+  const [courtCost, setCourtCost] = useState(String(fees.courtCost))
   const [extraCost, setExtraCost] = useState(String(fees.extraCost))
   const [extraNote, setExtraNote] = useState(fees.extraNote ?? "")
-  const [promptPay, setPromptPay] = useState(fees.promptPay ?? "")
+  const [collecting, setCollecting] = useState<BillLine | null>(null)
+  const [showQr, setShowQr] = useState(false)
 
   // ถ้าเครื่องอื่นแก้ค่าใช้จ่าย ให้ช่องกรอกตามไปด้วย
   useEffect(() => {
-    setCourtCost(String(fees.courtCost))
+    setCourtFeePerHead(String(fees.courtFeePerHead))
     setShuttlePrice(String(fees.shuttlePrice))
+    setCourtCost(String(fees.courtCost))
     setExtraCost(String(fees.extraCost))
     setExtraNote(fees.extraNote ?? "")
-    setPromptPay(fees.promptPay ?? "")
-  }, [fees.courtCost, fees.shuttlePrice, fees.extraCost, fees.extraNote, fees.promptPay])
+  }, [fees.courtFeePerHead, fees.shuttlePrice, fees.courtCost, fees.extraCost, fees.extraNote])
 
   const saveFees = (patch: Record<string, unknown>) =>
     void run("บันทึกค่าใช้จ่ายแล้ว", () => api.updateSession(sessionId, { fees: patch }), { silent: true })
@@ -37,50 +41,90 @@ export function BillPage() {
   }
 
   const unpaid = bill.lines.filter((l) => !l.paid)
-  const billed = bill.lines.reduce((sum, l) => sum + l.amount, 0)
+  const setPaid = (playerId: string, paid: boolean) =>
+    run(paid ? "รับเงินแล้ว" : "ยกเลิกการจ่าย", () => api.paid(sessionId, playerId, paid), { silent: true })
 
   return (
     <div className="flex flex-col gap-4">
       {/* สรุปเงิน */}
       <div className="card card-pad">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <Stat label="ต้นทุนรวม" value={`${baht(bill.total)} ฿`} hint={`ลูกที่ใช้ ${bill.shuttlesUsed} ลูก`} />
-          <Stat label="เก็บได้แล้ว" value={`${baht(bill.collected)} ฿`} hint={`${bill.lines.length - unpaid.length}/${bill.lines.length} คน`} />
-          <Stat label="ยังไม่จ่าย" value={`${baht(billed - bill.collected)} ฿`} tone="red" hint={`${unpaid.length} คน`} />
           <Stat
-            label={bill.balance >= 0 ? "เหลือเข้าก๊วน" : "ขาดอยู่"}
-            value={`${baht(Math.abs(bill.balance))} ฿`}
-            tone={bill.balance >= 0 ? "gold" : "red"}
-            hint="ยอดที่เรียกเก็บ − ต้นทุน"
+            label="ต้องเก็บรวม"
+            value={`${baht(bill.billed)} ฿`}
+            hint={`${bill.lines.length} คน · ลูกที่ใช้ ${bill.shuttlesUsed}`}
+          />
+          <Stat
+            label="เก็บแล้ว"
+            value={`${baht(bill.collected)} ฿`}
+            hint={`${bill.lines.length - unpaid.length}/${bill.lines.length} คน`}
+            tone="gold"
+          />
+          <Stat label="ยังไม่จ่าย" value={`${baht(bill.billed - bill.collected)} ฿`} tone="red" hint={`${unpaid.length} คน`} />
+          {/* เทียบกับต้นทุนจริงได้ต่อเมื่อกรอกค่าคอร์ตที่จ่ายสนามไว้ */}
+          <Stat
+            label={bill.courtCost === 0 ? "เหลือเข้าก๊วน" : bill.balance >= 0 ? "เหลือเข้าก๊วน" : "ขาดอยู่"}
+            value={bill.courtCost === 0 ? "—" : `${baht(Math.abs(bill.balance))} ฿`}
+            tone={bill.courtCost > 0 && bill.balance < 0 ? "red" : "gold"}
+            hint={bill.courtCost > 0 ? "ยอดที่เก็บ − ต้นทุนจริง" : "กรอกค่าคอร์ตที่จ่ายสนามเพื่อดูยอดนี้"}
           />
         </div>
       </div>
 
-      {/* ตั้งค่าเงิน */}
+      {/* วิธีคิดเงิน */}
       <section className="card card-pad flex flex-col gap-3.5">
         <h2 className="section-title">
           <Wallet size={15} className="text-gold-deep" />
-          ค่าใช้จ่ายวันนี้
+          วิธีคิดเงิน
         </h2>
 
+        <Segmented
+          value={fees.mode}
+          onChange={(mode: FeeMode) => saveFees({ mode })}
+          options={(Object.keys(FEE_MODE_LABEL) as FeeMode[]).map((m) => ({ value: m, label: FEE_MODE_LABEL[m] }))}
+        />
+        <p className="text-[12px] leading-snug text-ink-faint">
+          {fees.mode === "club"
+            ? `เก็บค่าสนามเท่ากันทุกคน ส่วนค่าลูกคิดเฉพาะคนที่ลงเกมนั้น (ลูกละ ${baht(fees.shuttlePrice)} หาร 4 คนในเกม) — ตรงกับที่โปสเตอร์ก๊วนเขียนไว้`
+            : "รวมต้นทุนทั้งหมด (ค่าสนาม + ค่าลูก + ค่าอื่น ๆ) แล้วหารจำนวนคนเท่า ๆ กัน ไม่สนว่าใครลงกี่เกม"}
+        </p>
+
         <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <label className="label" htmlFor="b-court">
-              ค่าเช่าคอร์ตรวม (บาท)
-            </label>
-            <input
-              id="b-court"
-              className="input nums"
-              inputMode="numeric"
-              value={courtCost}
-              disabled={!canControl}
-              onChange={(e) => setCourtCost(e.target.value)}
-              onBlur={() => saveFees({ courtCost: num(courtCost) })}
-            />
-          </div>
+          {fees.mode === "club" ? (
+            <div>
+              <label className="label" htmlFor="b-perhead">
+                ค่าสนาม คนละ (บาท)
+              </label>
+              <input
+                id="b-perhead"
+                className="input nums"
+                inputMode="numeric"
+                value={courtFeePerHead}
+                disabled={!canControl}
+                onChange={(e) => setCourtFeePerHead(e.target.value)}
+                onBlur={() => saveFees({ courtFeePerHead: num(courtFeePerHead) })}
+              />
+            </div>
+          ) : (
+            <div>
+              <label className="label" htmlFor="b-courttotal">
+                ค่าสนามรวมทั้งวัน (บาท)
+              </label>
+              <input
+                id="b-courttotal"
+                className="input nums"
+                inputMode="numeric"
+                value={courtCost}
+                disabled={!canControl}
+                onChange={(e) => setCourtCost(e.target.value)}
+                onBlur={() => saveFees({ courtCost: num(courtCost) })}
+              />
+            </div>
+          )}
+
           <div>
             <label className="label" htmlFor="b-shuttle">
-              ราคาลูกแบด (บาท/ลูก)
+              ค่าลูกแบด ลูกละ (บาท)
             </label>
             <input
               id="b-shuttle"
@@ -91,7 +135,28 @@ export function BillPage() {
               onChange={(e) => setShuttlePrice(e.target.value)}
               onBlur={() => saveFees({ shuttlePrice: num(shuttlePrice) })}
             />
+            <p className="mt-1 text-[11.5px] text-ink-faint">ลูกที่ก๊วนใช้: {CLUB.shuttle}</p>
           </div>
+
+          {fees.mode === "club" ? (
+            <div>
+              <label className="label" htmlFor="b-courtreal">
+                ค่าคอร์ตที่จ่ายสนามจริง (ใส่หรือไม่ใส่ก็ได้)
+              </label>
+              <input
+                id="b-courtreal"
+                className="input nums"
+                inputMode="numeric"
+                placeholder="0"
+                value={courtCost}
+                disabled={!canControl}
+                onChange={(e) => setCourtCost(e.target.value)}
+                onBlur={() => saveFees({ courtCost: num(courtCost) })}
+              />
+              <p className="mt-1 text-[11.5px] text-ink-faint">ใส่แล้วจะเห็นว่าเก็บได้เกินหรือขาดเท่าไร</p>
+            </div>
+          ) : null}
+
           <div>
             <label className="label" htmlFor="b-extra">
               ค่าอื่น ๆ (บาท)
@@ -106,6 +171,7 @@ export function BillPage() {
               onBlur={() => saveFees({ extraCost: num(extraCost) })}
             />
           </div>
+
           <div>
             <label className="label" htmlFor="b-note">
               ค่าอื่น ๆ คืออะไร
@@ -122,62 +188,11 @@ export function BillPage() {
           </div>
         </div>
 
-        <div>
-          <span className="label">วิธีหารเงิน</span>
-          <Segmented
-            value={fees.mode}
-            onChange={(mode: FeeMode) => saveFees({ mode })}
-            size="sm"
-            options={(Object.keys(FEE_MODE_LABEL) as FeeMode[]).map((m) => ({ value: m, label: FEE_MODE_LABEL[m] }))}
-          />
-          <p className="mt-1.5 text-[12px] leading-snug text-ink-faint">
-            {fees.mode === "split"
-              ? "ค่าคอร์ตหารเท่ากันทุกคน ส่วนค่าลูกคิดตามจำนวนเกมที่ลง — คนมาสายหรือลงน้อยจ่ายน้อยลง"
-              : fees.mode === "byGames"
-                ? "ทุกอย่างคิดตามจำนวนเกมที่ลง คนที่ไม่ได้ลงเลยไม่ต้องจ่าย"
-                : fees.mode === "equal"
-                  ? "หารเท่ากันทุกคนที่เช็คอินวันนี้"
-                  : "เก็บเรทคงที่ต่อหัว (สมาชิก/ขาจร) แล้วดูว่ายอดรวมขาดหรือเกินต้นทุน"}
-          </p>
-        </div>
-
-        {fees.mode === "flat" ? (
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="flex items-center justify-between gap-2">
-              <span className="font-heading text-[13.5px] text-ink">เรทสมาชิก</span>
-              <Stepper
-                value={fees.memberFee}
-                onChange={(memberFee) => saveFees({ memberFee })}
-                step={10}
-                max={2000}
-                suffix="฿"
-              />
-            </div>
-            <div className="flex items-center justify-between gap-2">
-              <span className="font-heading text-[13.5px] text-ink">เรทขาจร</span>
-              <Stepper
-                value={fees.guestFee}
-                onChange={(guestFee) => saveFees({ guestFee })}
-                step={10}
-                max={2000}
-                suffix="฿"
-              />
-            </div>
-          </div>
-        ) : null}
-
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="flex items-center justify-between gap-2">
             <span>
-              <span className="block font-heading text-[13.5px] text-ink">ปัดเศษขึ้นทีละ</span>
-              <span className="block text-[11.5px] text-ink-faint">เก็บเงินง่าย ไม่ต้องทอนเศษ</span>
-            </span>
-            <Stepper value={fees.roundTo} onChange={(roundTo) => saveFees({ roundTo })} min={1} max={50} step={1} suffix="฿" />
-          </div>
-          <div className="flex items-center justify-between gap-2">
-            <span>
-              <span className="block font-heading text-[13.5px] text-ink">ลูกที่ใช้เพิ่ม (นอกเกม)</span>
-              <span className="block text-[11.5px] text-ink-faint">เช่น ลูกที่เปิดไว้ซ้อมก่อนเริ่ม</span>
+              <span className="block font-heading text-[13.5px] text-ink">ลูกที่ใช้นอกเกม</span>
+              <span className="block text-[11.5px] text-ink-faint">เช่น ลูกที่เปิดไว้ซ้อมก่อนเริ่ม (หารเท่ากันทุกคน)</span>
             </span>
             <Stepper
               value={view.session.shuttlesExtra}
@@ -186,69 +201,98 @@ export function BillPage() {
               suffix="ลูก"
             />
           </div>
-        </div>
-
-        <div>
-          <label className="label" htmlFor="b-pp">
-            พร้อมเพย์ที่ให้โอน (เบอร์/ชื่อบัญชี)
-          </label>
-          <input
-            id="b-pp"
-            className="input"
-            placeholder="08x-xxx-xxxx (ชื่อหัวก๊วน)"
-            value={promptPay}
-            disabled={!canControl}
-            onChange={(e) => setPromptPay(e.target.value)}
-            onBlur={() => saveFees({ promptPay })}
-          />
+          <div className="flex items-center justify-between gap-2">
+            <span>
+              <span className="block font-heading text-[13.5px] text-ink">ปัดเศษขึ้นทีละ</span>
+              <span className="block text-[11.5px] text-ink-faint">เก็บเงินง่าย ไม่ต้องทอนเศษ</span>
+            </span>
+            <Stepper value={fees.roundTo} onChange={(roundTo) => saveFees({ roundTo })} min={1} max={50} suffix="฿" />
+          </div>
         </div>
       </section>
 
-      {/* ใบเสร็จ */}
+      {/* ใบเสร็จรายคน */}
       <section className="card card-pad">
-        <h2 className="section-title mb-3">
+        <h2 className="section-title mb-1">
           <Receipt size={15} className="text-gold-deep" />
           คนละเท่าไร ({bill.lines.length} คน)
         </h2>
+        <p className="mb-3 text-[11.5px] text-ink-faint">แตะที่ชื่อเพื่อเปิด QR พร้อมยอดของคนนั้น</p>
 
         <div className="flex flex-col">
-          {bill.lines.map((l) => (
-            <div key={l.playerId} className="receipt-row">
-              <span className="min-w-0 flex-1">
-                <span className="block truncate font-heading text-[14px] font-medium text-ink">{l.name}</span>
-                <span className="block text-[11.5px] text-ink-faint">
-                  {l.games} เกม{l.member ? "" : " · ขาจร"}
-                </span>
-              </span>
-              <span className="nums font-heading text-[15px] font-semibold text-ink">{baht(l.amount)} ฿</span>
-              <button
-                type="button"
-                disabled={!canControl}
-                onClick={() => void run(l.paid ? "ยกเลิกการจ่าย" : "รับเงินแล้ว", () => api.paid(sessionId, l.playerId, !l.paid), { silent: true })}
-                className={cn(
-                  "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-all",
-                  l.paid
-                    ? "border-gold bg-gold text-navy-deep"
-                    : "border-line bg-surface text-ink-faint hover:bg-subtle",
-                )}
-                aria-label={l.paid ? "จ่ายแล้ว" : "ยังไม่จ่าย"}
-              >
-                <Check size={16} />
-              </button>
-            </div>
-          ))}
+          {bill.lines.map((l) => {
+            const player = view.roster.find((p) => p.id === l.playerId)
+            const sp = view.session.players.find((p) => p.playerId === l.playerId)
+            return (
+              <div key={l.playerId} className="receipt-row">
+                <button
+                  type="button"
+                  className="flex min-w-0 flex-1 items-center gap-2.5 text-left"
+                  onClick={() => setCollecting(l)}
+                >
+                  {player ? <PlayerAvatar player={player} size={30} /> : null}
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate font-heading text-[14px] font-medium text-ink">{l.name}</span>
+                    <span className="block truncate text-[11.5px] text-ink-faint">
+                      {l.games} เกม
+                      {sp && sp.wins + sp.losses > 0 ? ` · ชนะ ${sp.wins} แพ้ ${sp.losses}` : ""}
+                      {view.session.fees.mode === "club"
+                        ? ` · สนาม ${baht(l.courtPart)} + ลูก ${l.shuttlePart.toFixed(2).replace(/\.00$/, "")}`
+                        : ""}
+                    </span>
+                  </span>
+                </button>
+                <span className="nums font-heading text-[15px] font-semibold text-ink">{baht(l.amount)} ฿</span>
+                <button
+                  type="button"
+                  disabled={!canControl}
+                  onClick={() => void setPaid(l.playerId, !l.paid)}
+                  className={cn(
+                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-all",
+                    l.paid ? "border-gold bg-gold text-navy-deep" : "border-line bg-surface text-ink-faint hover:bg-subtle",
+                  )}
+                  aria-label={l.paid ? "จ่ายแล้ว" : "ยังไม่จ่าย"}
+                >
+                  <Check size={16} />
+                </button>
+              </div>
+            )
+          })}
           {bill.lines.length === 0 ? (
             <p className="py-4 text-center text-[13px] text-ink-faint">ยังไม่มีใครเช็คอิน</p>
           ) : null}
         </div>
 
         <div className="mt-3 flex flex-col gap-1 border-t border-line pt-3 text-[13px]">
-          <Row label="ค่าคอร์ต" value={`${baht(bill.courtCost)} ฿`} />
-          <Row label={`ค่าลูก (${bill.shuttlesUsed} ลูก)`} value={`${baht(bill.shuttleCost)} ฿`} />
+          {fees.mode === "club" ? (
+            <Row label={`ค่าสนาม ${baht(fees.courtFeePerHead)} × ${bill.lines.length} คน`} value={`${baht(fees.courtFeePerHead * bill.lines.length)} ฿`} />
+          ) : (
+            <Row label="ค่าสนามรวม" value={`${baht(bill.courtCost)} ฿`} />
+          )}
+          <Row label={`ค่าลูก (${bill.shuttlesUsed} ลูก × ${baht(fees.shuttlePrice)})`} value={`${baht(bill.shuttleCost)} ฿`} />
           {bill.extraCost > 0 ? <Row label={fees.extraNote || "ค่าอื่น ๆ"} value={`${baht(bill.extraCost)} ฿`} /> : null}
-          <Row label="ต้นทุนรวม" value={`${baht(bill.total)} ฿`} bold />
-          <Row label="ยอดที่เรียกเก็บรวม" value={`${baht(billed)} ฿`} />
+          <Row label="ยอดที่ต้องเก็บรวม" value={`${baht(bill.billed)} ฿`} bold />
+          {bill.courtCost > 0 ? (
+            <Row label="ต้นทุนจริงที่จ่ายไป" value={`${baht(bill.total)} ฿`} />
+          ) : null}
         </div>
+      </section>
+
+      {/* QR พร้อมเพย์ */}
+      <section className="card card-pad flex flex-col items-center gap-2">
+        <h2 className="section-title w-full">
+          <QrCode size={15} className="text-gold-deep" />
+          สแกนจ่ายค่าก๊วน
+        </h2>
+        <button type="button" onClick={() => setShowQr(true)} className="mt-1">
+          <img
+            src={CLUB.payment.qrImage}
+            alt="QR พร้อมเพย์ของก๊วน"
+            className="w-56 rounded-washi border border-line shadow-card transition-transform hover:scale-[1.02]"
+          />
+        </button>
+        <p className="text-center font-heading text-[13.5px] font-medium text-ink">{fees.promptPay || CLUB.payment.name}</p>
+        <p className="text-center text-[12px] text-ink-faint">{CLUB.payment.bank} · แตะรูปเพื่อขยาย</p>
       </section>
 
       {/* ส่งออก */}
@@ -273,7 +317,86 @@ export function BillPage() {
           ดาวน์โหลด CSV
         </a>
       </div>
+
+      {/* เก็บเงินรายคน */}
+      {collecting ? (
+        <CollectModal
+          line={collecting}
+          promptPay={fees.promptPay || CLUB.payment.name}
+          mode={fees.mode}
+          canControl={canControl}
+          onClose={() => setCollecting(null)}
+          onPaid={async () => {
+            await setPaid(collecting.playerId, !collecting.paid)
+            setCollecting(null)
+          }}
+        />
+      ) : null}
+
+      {showQr ? (
+        <Modal open onClose={() => setShowQr(false)} title="QR พร้อมเพย์ของก๊วน" subtitle={CLUB.payment.bank}>
+          <div className="flex flex-col items-center gap-2">
+            <img src={CLUB.payment.qrImage} alt="QR พร้อมเพย์ของก๊วน" className="w-full max-w-sm rounded-washi" />
+            <p className="font-heading text-[14px] font-medium text-ink">{fees.promptPay || CLUB.payment.name}</p>
+          </div>
+        </Modal>
+      ) : null}
     </div>
+  )
+}
+
+function CollectModal({
+  line,
+  promptPay,
+  mode,
+  canControl,
+  onClose,
+  onPaid,
+}: {
+  line: BillLine
+  promptPay: string
+  mode: FeeMode
+  canControl: boolean
+  onClose: () => void
+  onPaid: () => void
+}) {
+  return (
+    <Modal
+      open
+      onClose={onClose}
+      title={`เก็บเงิน ${line.name}`}
+      subtitle={`ลง ${line.games} เกม`}
+      footer={
+        canControl ? (
+          <button className={cn("btn-lg w-full", line.paid ? "btn-ghost" : "btn-gold")} onClick={onPaid}>
+            <Check size={18} />
+            {line.paid ? "ยกเลิกว่าจ่ายแล้ว" : "รับเงินแล้ว"}
+          </button>
+        ) : null
+      }
+    >
+      <div className="flex flex-col items-center gap-3">
+        <div className="text-center">
+          <p className="font-heading text-[12.5px] text-ink-soft">ยอดที่ต้องจ่าย</p>
+          <p className="nums font-heading text-[42px] font-bold leading-none text-navy dark:text-gold-soft">
+            {baht(line.amount)}
+            <span className="ml-1 text-[18px] font-medium">บาท</span>
+          </p>
+          {mode === "club" ? (
+            <p className="mt-1 text-[12px] text-ink-faint">
+              ค่าสนาม {baht(line.courtPart)} + ค่าลูก {line.shuttlePart.toFixed(2).replace(/\.00$/, "")}
+              {line.extraPart > 0 ? ` + อื่น ๆ ${baht(line.extraPart)}` : ""}
+            </p>
+          ) : null}
+        </div>
+
+        <img src={CLUB.payment.qrImage} alt="QR พร้อมเพย์" className="w-full max-w-[280px] rounded-washi shadow-card" />
+        <p className="text-center font-heading text-[13.5px] font-medium text-ink">{promptPay}</p>
+        <p className="text-center text-[12px] text-ink-faint">
+          สแกนแล้วใส่ยอดเอง — พร้อมเพย์ไม่ได้ผูกจำนวนเงินไว้ใน QR
+        </p>
+      </div>
+    </Modal>
   )
 }
 

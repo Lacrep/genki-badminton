@@ -3,79 +3,64 @@
  *
  * แนวคิดหลัก 3 อย่าง
  *  1) คิว (queue)      — ใครรออยู่ รอมานานแค่ไหน (queueSince)
- *  2) ลำดับมือ (level) — 1..10 ตามระดับมือแบบก๊วนไทย (N → B/A)
+ *  2) ระดับมือ (level) — หน้าบ้าน → BG → N- → N → S → P → OPEN
  *  3) ความเป็นธรรม     — priority = เวลารอ + จำนวนเกมที่ตามหลังคนอื่น
  *                        ทำให้ "คนถูกดอง" ลอยขึ้นหัวคิวเองโดยไม่ต้องจำ
+ *
+ * ข้อมูลผู้เล่นเก็บน้อยที่สุดเท่าที่ระบบต้องใช้จริง: ชื่อที่ใช้เรียกในก๊วน + ระดับมือ
+ * (ไม่เก็บชื่อจริง ไม่เก็บเพศ ไม่แบ่งประเภทสมาชิก)
  */
 
-export type Gender = "m" | "f"
+import { CLUB } from "./club"
 
-/** ประเภทเกมที่จัดลงคอร์ตได้ */
-export type MatchType =
-  | "D" // คู่ทั่วไป (ไม่สนเพศ)
-  | "MD" // ชายคู่
-  | "WD" // หญิงคู่
-  | "XD" // คู่ผสม
-  | "MS" // ชายเดี่ยว
-  | "WS" // หญิงเดี่ยว
-  | "S" // เดี่ยวทั่วไป
+/** ประเภทเกม — ก๊วนนี้เล่นคู่เป็นหลัก มีเดี่ยวไว้เผื่อคนเหลือ 2-3 คน */
+export type MatchType = "D" | "S"
 
 export const MATCH_TYPE_LABEL: Record<MatchType, string> = {
-  D: "คู่ทั่วไป",
-  MD: "ชายคู่",
-  WD: "หญิงคู่",
-  XD: "คู่ผสม",
-  MS: "ชายเดี่ยว",
-  WS: "หญิงเดี่ยว",
-  S: "เดี่ยวทั่วไป",
+  D: "คู่",
+  S: "เดี่ยว",
 }
 
 export function playersPerMatch(type: MatchType): 2 | 4 {
-  return type === "S" || type === "MS" || type === "WS" ? 2 : 4
+  return type === "S" ? 2 : 4
 }
 
-// ── ลำดับมือ ─────────────────────────────────────────────────────────────────
-// เทียบเคียงระดับมือที่ก๊วนไทยใช้กัน: มือใหม่ → N → S → P → C → B/A
+// ── ระดับมือ ─────────────────────────────────────────────────────────────────
 
-export type Level = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
+export type Level = 1 | 2 | 3 | 4 | 5 | 6 | 7
 
 export interface LevelInfo {
   level: Level
   code: string
   name: string
   hint: string
-  /** สีประจำระดับ (tailwind class) */
+  /** สีประจำระดับ (คลาสใน index.css) */
   tone: string
 }
 
 export const LEVELS: LevelInfo[] = [
-  { level: 1, code: "N", name: "มือใหม่", hint: "เพิ่งเริ่มเล่น ตีโต้ยังไม่ต่อเนื่อง", tone: "level-n" },
-  { level: 2, code: "N+", name: "มือใหม่+", hint: "ตีโต้ได้ เริ่มเล่นคู่เป็น", tone: "level-n" },
-  { level: 3, code: "S-", name: "มือ S-", hint: "รู้ตำแหน่งยืน ตบ/ดรอปพอได้", tone: "level-s" },
-  { level: 4, code: "S", name: "มือ S", hint: "เล่นคู่ได้ลื่น ลูกหน้าเน็ตเริ่มคม", tone: "level-s" },
-  { level: 5, code: "S+", name: "มือ S+", hint: "เกมคู่แน่น สลับหน้า-หลังคล่อง", tone: "level-s" },
-  { level: 6, code: "P-", name: "มือ P-", hint: "ตบหนัก คุมจังหวะเกมได้", tone: "level-p" },
-  { level: 7, code: "P", name: "มือ P", hint: "ระดับก๊วนแข่ง ทุกลูกครบเครื่อง", tone: "level-p" },
-  { level: 8, code: "P+", name: "มือ P+", hint: "แข่งรายการสมัครเล่นระดับต้น", tone: "level-p" },
-  { level: 9, code: "C", name: "มือ C", hint: "แข่งรายการจริงจัง", tone: "level-c" },
-  { level: 10, code: "B/A", name: "มือ B/A", hint: "ระดับนักกีฬา / อดีตเยาวชนทีมชาติ", tone: "level-c" },
+  { level: 1, code: "หน้าบ้าน", name: "มือหน้าบ้าน", hint: "ตีสนุก ๆ ยังไม่เคยเล่นในก๊วนจริงจัง", tone: "level-n" },
+  { level: 2, code: "BG", name: "มือ BG", hint: "เริ่มเล่นในก๊วน ตีโต้ได้ เริ่มจับตำแหน่งยืน", tone: "level-n" },
+  { level: 3, code: "N-", name: "มือ N-", hint: "เล่นคู่ได้ ลูกยังไม่นิ่งตลอดเกม", tone: "level-s" },
+  { level: 4, code: "N", name: "มือ N", hint: "เล่นคู่ลื่น รู้จังหวะสลับหน้า-หลัง", tone: "level-s" },
+  { level: 5, code: "S", name: "มือ S", hint: "ตบ/ดรอป/หน้าเน็ตคม คุมเกมได้", tone: "level-p" },
+  { level: 6, code: "P", name: "มือ P", hint: "ระดับก๊วนแข่ง ครบเครื่องทุกลูก", tone: "level-p" },
+  { level: 7, code: "OPEN", name: "มือ OPEN", hint: "ระดับแข่งรายการ / มือเปิด", tone: "level-c" },
 ]
 
+export const MAX_LEVEL = LEVELS.length
+
 export function levelInfo(level: number): LevelInfo {
-  return LEVELS[Math.min(LEVELS.length, Math.max(1, Math.round(level))) - 1]
+  return LEVELS[Math.min(MAX_LEVEL, Math.max(1, Math.round(level))) - 1]
 }
 
 // ── ผู้เล่นในทะเบียนก๊วน (อยู่ข้ามครั้ง) ──────────────────────────────────────
 
 export interface RosterPlayer {
   id: string
+  /** ชื่อที่ใช้เรียกกันในก๊วน (ไม่ต้องเป็นชื่อจริง) */
   name: string
-  nickname?: string
-  gender: Gender
   level: Level
-  /** สมาชิกก๊วน (จ่ายเรทสมาชิก) หรือขาจร */
-  member: boolean
-  phone?: string
   note?: string
   /** เก็บเข้ากรุ — ไม่โชว์ในรายชื่อเช็คอิน แต่สถิติเก่ายังอยู่ */
   archived?: boolean
@@ -107,8 +92,6 @@ export interface SessionPlayer {
   boost: number
   paid: boolean
   paidAt?: number
-  /** ผู้เล่นที่เพิ่มสดหน้างาน ไม่ต้องอยู่ในทะเบียนถาวร */
-  guestOnly?: boolean
 }
 
 // ── คอร์ตและเกม ───────────────────────────────────────────────────────────────
@@ -132,7 +115,7 @@ export interface Match {
   scoreA?: number
   scoreB?: number
   winner?: "A" | "B"
-  /** ลูกที่ใช้ในเกมนี้ */
+  /** ลูกที่ใช้ในเกมนี้ — ใช้คิดค่าลูกให้คนที่ลงเกมนี้ */
   shuttles: number
   createdBy: "auto" | "manual"
   /** ค่าความสูสีที่ระบบคาดไว้ตอนจัด (0 = เท่ากันเป๊ะ, ยิ่งมากยิ่งห่าง) */
@@ -144,34 +127,33 @@ export interface Match {
 // ── ค่าใช้จ่าย ────────────────────────────────────────────────────────────────
 
 /**
- * equal   — หารเท่ากันทุกคน (ค่าคอร์ต + ค่าลูก)
- * byGames — หารตามจำนวนเกมที่ลง (คนมาช้า/ลงน้อย จ่ายน้อย)
- * split   — ค่าคอร์ตหารเท่า + ค่าลูกหารตามเกมที่ลง (นิยมที่สุด)
- * flat    — เก็บหัวละเท่าไรก็ว่าไป (เรทสมาชิก/ขาจร) แล้วดูว่าขาดหรือเกิน
+ * club  — ระบบก๊วน: ค่าสนามคนละ X + ค่าลูกคิดตามเกมที่ลง (ลูกละ Y หารกันในเกมนั้น)
+ * equal — หารเท่ากันทุกคน: (ค่าสนามรวม + ค่าลูกทั้งหมด + ค่าอื่น) ÷ จำนวนคน
  */
-export type FeeMode = "equal" | "byGames" | "split" | "flat"
+export type FeeMode = "club" | "equal"
 
 export const FEE_MODE_LABEL: Record<FeeMode, string> = {
+  club: "ระบบก๊วน",
   equal: "หารเท่ากันทุกคน",
-  byGames: "หารตามเกมที่ลง",
-  split: "ค่าคอร์ตหารเท่า + ค่าลูกตามเกม",
-  flat: "เก็บหัวละเท่าไรก็ว่าไป",
 }
 
 export interface Fees {
-  /** ค่าเช่าคอร์ตรวมทั้งวัน (บาท) */
-  courtCost: number
-  /** ราคาลูกละ (บาท) */
+  mode: FeeMode
+  /** ค่าสนามที่เก็บต่อหัว (โหมดระบบก๊วน) */
+  courtFeePerHead: number
+  /** ค่าลูกต่อลูก — ในโหมดระบบก๊วนจะหารกันเฉพาะคนที่ลงเกมนั้น */
   shuttlePrice: number
-  /** ค่าอื่น ๆ เช่น น้ำ/ขนม (บาท) */
+  /**
+   * ค่าเช่าคอร์ตที่จ่ายสนามจริงทั้งวัน — โหมดหารเท่าใช้ตัวนี้เป็นตัวตั้ง
+   * โหมดระบบก๊วนใส่ไว้เพื่อดูว่าเก็บได้เกินหรือขาดเท่าไร (ใส่ 0 ได้)
+   */
+  courtCost: number
+  /** ค่าอื่น ๆ เช่น น้ำ/ขนม — หารเท่ากันทุกคนทั้งสองโหมด */
   extraCost: number
   extraNote?: string
-  mode: FeeMode
-  /** ใช้เมื่อ mode = flat */
-  memberFee: number
-  guestFee: number
   /** ปัดเศษขึ้นเป็นกี่บาท (5 = ปัดขึ้นทีละ 5 บาท) */
   roundTo: number
+  /** ชื่อบัญชี/พร้อมเพย์ที่โชว์ใต้ QR */
   promptPay?: string
 }
 
@@ -198,12 +180,12 @@ export interface SessionSettings {
   defaultMatchType: MatchType | "auto"
   /** เรียกชื่อด้วยเสียงเมื่อจัดลงคอร์ต */
   callSound: boolean
-  /** ให้ระบบเติมคอร์ตว่างเองทันทีที่มีคนพอ */
-  autoFill: boolean
 }
 
 export const DEFAULT_SETTINGS: SessionSettings = {
-  maxLevelGap: 2,
+  // 7 ระดับมือ แต่ละขั้นห่างกันจริง → ค่าเริ่มต้นคุมไว้ที่ 1 ขั้น
+  // (ถ้าคนในคิวไม่พอ ระบบผ่อนเป็น 2-3 ขั้นให้เองแล้วบอกในเหตุผล)
+  maxLevelGap: 1,
   waitWeight: 1,
   gamesBehindWeight: 4,
   varietyWeight: 6,
@@ -213,18 +195,16 @@ export const DEFAULT_SETTINGS: SessionSettings = {
   targetGameMinutes: 14,
   defaultMatchType: "auto",
   callSound: true,
-  autoFill: false,
 }
 
 export const DEFAULT_FEES: Fees = {
+  mode: "club",
+  courtFeePerHead: CLUB.courtFeePerHead,
+  shuttlePrice: CLUB.shuttlePrice,
   courtCost: 0,
-  shuttlePrice: 90,
   extraCost: 0,
-  mode: "split",
-  memberFee: 100,
-  guestFee: 120,
-  roundTo: 5,
-  promptPay: "",
+  roundTo: 1,
+  promptPay: CLUB.payment.name,
 }
 
 // ── ก๊วนหนึ่งครั้ง ────────────────────────────────────────────────────────────
@@ -302,21 +282,32 @@ export interface BillLine {
   playerId: string
   name: string
   games: number
-  member: boolean
+  /** ค่าสนามส่วนของคนนี้ */
+  courtPart: number
+  /** ค่าลูกส่วนของคนนี้ */
+  shuttlePart: number
+  /** ค่าอื่น ๆ ส่วนของคนนี้ */
+  extraPart: number
+  /** ยอดที่ต้องจ่าย (ปัดเศษแล้ว) */
   amount: number
   paid: boolean
 }
 
 export interface Bill {
+  mode: FeeMode
+  /** ค่าเช่าคอร์ตที่จ่ายสนามจริง (ถ้ากรอก) */
   courtCost: number
   shuttleCost: number
   shuttlesUsed: number
   extraCost: number
+  /** ต้นทุนจริงรวม */
   total: number
+  /** ยอดที่เรียกเก็บรวมจากทุกคน */
+  billed: number
+  /** ยอดที่เก็บได้แล้ว */
   collected: number
-  mode: FeeMode
   lines: BillLine[]
-  /** ยอดที่เก็บได้ลบต้นทุน (บวก = เหลือเข้าก๊วน, ลบ = ขาด) */
+  /** ยอดที่เรียกเก็บ − ต้นทุน (บวก = เหลือเข้าก๊วน, ลบ = ขาด) */
   balance: number
 }
 
@@ -344,7 +335,7 @@ export interface SessionView {
 // ── ฟังก์ชันร่วม ──────────────────────────────────────────────────────────────
 
 export function displayName(p: RosterPlayer): string {
-  return p.nickname?.trim() ? p.nickname.trim() : p.name
+  return p.name
 }
 
 /** คะแนนความควรได้ลงเล่น — สูตรเดียวกันทั้งฝั่งจัดคิวและฝั่งแสดงผล */
@@ -391,4 +382,11 @@ export function thaiDateKey(at: number = Date.now()): string {
 export function thaiTime(at: number): string {
   const d = new Date(at + 7 * 3600_000)
   return `${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}`
+}
+
+const THAI_WEEKDAYS = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสฯ", "ศุกร์", "เสาร์"]
+
+/** ชื่อวันไทยของเวลาที่ให้มา (ตาม UTC+7) */
+export function thaiWeekday(at: number = Date.now()): string {
+  return THAI_WEEKDAYS[new Date(at + 7 * 3600_000).getUTCDay()]
 }

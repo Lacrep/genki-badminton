@@ -1,4 +1,4 @@
-import type { Gender, Level, MatchType, RosterPlayer, SessionView } from "@shared/types"
+import type { Level, MatchType, RosterPlayer, SessionView } from "@shared/types"
 
 export interface SessionSummary {
   id: string
@@ -100,12 +100,9 @@ const post = <T>(path: string, json?: unknown) => request<T>(path, { method: "PO
 const patch = <T>(path: string, json: unknown) => request<T>(path, { method: "PATCH", json })
 
 export interface PlayerInput {
+  /** ชื่อที่ใช้เรียกในก๊วน */
   name: string
-  nickname?: string
-  gender: Gender
   level: Level
-  member: boolean
-  phone?: string
   note?: string
   archived?: boolean
 }

@@ -14,10 +14,10 @@ const NOW = 1_700_000_000_000
 
 interface Spec {
   id: string
+  /** ระดับมือ 1 = หน้าบ้าน … 7 = OPEN */
   level: Level
   /** รออยู่กี่นาที */
   wait: number
-  gender?: "m" | "f"
   games?: number
   status?: SessionPlayer["status"]
 }
@@ -27,14 +27,7 @@ function makeSession(specs: Spec[], overrides: Partial<Session> = {}) {
   const players: SessionPlayer[] = []
 
   for (const s of specs) {
-    roster.set(s.id, {
-      id: s.id,
-      name: s.id,
-      gender: s.gender ?? "m",
-      level: s.level,
-      member: true,
-      createdAt: NOW - 86_400_000,
-    })
+    roster.set(s.id, { id: s.id, name: s.id, level: s.level, createdAt: NOW - 86_400_000 })
     const status = s.status ?? "queue"
     players.push({
       playerId: s.id,
@@ -112,7 +105,7 @@ describe("suggestMatch — ความเป็นธรรม (ไม่ดอ
 
   it("คนที่รอเกินเพดาน 'ถูกดอง' ต้องได้ลง แม้มือจะห่างจากคนอื่น", () => {
     const { session, roster } = makeSession([
-      // มือ 1 รอ 25 นาที — ถูกดองชัดเจน
+      // มือหน้าบ้าน รอ 25 นาที — ถูกดองชัดเจน
       { id: "dong", level: 1, wait: 25 },
       { id: "a", level: 5, wait: 3 },
       { id: "b", level: 5, wait: 2 },
@@ -155,16 +148,16 @@ describe("suggestMatch — ความเป็นธรรม (ไม่ดอ
 })
 
 describe("suggestMatch — ระดับมือใกล้เคียง", () => {
-  it("ไม่จับมือ 1 ไปเล่นกับมือ 9 ถ้ามีตัวเลือกที่มือใกล้กัน", () => {
+  it("ไม่จับมือหน้าบ้านไปเล่นกับมือ OPEN ถ้ามีตัวเลือกที่มือใกล้กัน", () => {
     const { session, roster } = makeSession([
-      { id: "n1", level: 1, wait: 10 },
-      { id: "n2", level: 1, wait: 9 },
-      { id: "n3", level: 2, wait: 8 },
-      { id: "n4", level: 2, wait: 7 },
-      { id: "pro1", level: 9, wait: 12 },
-      { id: "pro2", level: 9, wait: 11 },
-      { id: "pro3", level: 9, wait: 6 },
-      { id: "pro4", level: 10, wait: 5 },
+      { id: "home1", level: 1, wait: 10 },
+      { id: "home2", level: 1, wait: 9 },
+      { id: "bg1", level: 2, wait: 8 },
+      { id: "bg2", level: 2, wait: 7 },
+      { id: "p1", level: 6, wait: 12 },
+      { id: "p2", level: 6, wait: 11 },
+      { id: "open1", level: 7, wait: 6 },
+      { id: "open2", level: 7, wait: 5 },
     ])
     const s = ok(suggestMatch({ session, roster, now: NOW, type: "D" }))
     const levels = [...s.teamA, ...s.teamB].map((id) => roster.get(id)!.level)
@@ -175,43 +168,28 @@ describe("suggestMatch — ระดับมือใกล้เคียง",
     const { session, roster } = makeSession([
       { id: "a", level: 1, wait: 10 },
       { id: "b", level: 3, wait: 9 },
-      { id: "c", level: 6, wait: 8 },
-      { id: "d", level: 9, wait: 7 },
+      { id: "c", level: 5, wait: 8 },
+      { id: "d", level: 7, wait: 7 },
     ])
     const s = ok(suggestMatch({ session, roster, now: NOW, type: "D" }))
     expect([...s.teamA, ...s.teamB].sort()).toEqual(["a", "b", "c", "d"])
     expect(s.reasons.some((r) => r.includes("ผ่อนเพดาน"))).toBe(true)
   })
+
+  it("มือเท่ากันหมดจะบอกว่าเท่ากัน ไม่ใช่ห่างกัน 0 ขั้น", () => {
+    const { session, roster } = makeSession([
+      { id: "a", level: 5, wait: 9 },
+      { id: "b", level: 5, wait: 8 },
+      { id: "c", level: 5, wait: 7 },
+      { id: "d", level: 5, wait: 6 },
+    ])
+    const s = ok(suggestMatch({ session, roster, now: NOW, type: "D" }))
+    expect(s.levelGap).toBe(0)
+    expect(s.reasons.some((r) => r.includes("มือเท่ากันหมด (S)"))).toBe(true)
+  })
 })
 
-describe("suggestMatch — ประเภทเกมและเงื่อนไข", () => {
-  it("ชายคู่เลือกผู้ชายเท่านั้น", () => {
-    const { session, roster } = makeSession([
-      { id: "m1", level: 4, wait: 5, gender: "m" },
-      { id: "m2", level: 4, wait: 5, gender: "m" },
-      { id: "m3", level: 4, wait: 5, gender: "m" },
-      { id: "m4", level: 4, wait: 5, gender: "m" },
-      { id: "f1", level: 4, wait: 30, gender: "f" },
-      { id: "f2", level: 4, wait: 30, gender: "f" },
-    ])
-    const s = ok(suggestMatch({ session, roster, now: NOW, type: "MD" }))
-    for (const pid of [...s.teamA, ...s.teamB]) expect(roster.get(pid)!.gender).toBe("m")
-  })
-
-  it("คู่ผสมได้ทีมละ ช.1 + ญ.1", () => {
-    const { session, roster } = makeSession([
-      { id: "m1", level: 4, wait: 9, gender: "m" },
-      { id: "m2", level: 4, wait: 8, gender: "m" },
-      { id: "f1", level: 4, wait: 7, gender: "f" },
-      { id: "f2", level: 4, wait: 6, gender: "f" },
-      { id: "m3", level: 4, wait: 5, gender: "m" },
-    ])
-    const s = ok(suggestMatch({ session, roster, now: NOW, type: "XD" }))
-    for (const team of [s.teamA, s.teamB]) {
-      expect(team.map((id) => roster.get(id)!.gender).sort()).toEqual(["f", "m"])
-    }
-  })
-
+describe("suggestMatch — เงื่อนไขและกรณีคนไม่พอ", () => {
   it("บอกเหตุผลเมื่อคนไม่พอ ไม่ใช่โยน error", () => {
     const { session, roster } = makeSession([
       { id: "a", level: 4, wait: 5 },
@@ -236,6 +214,23 @@ describe("suggestMatch — ประเภทเกมและเงื่อ�
     expect(s.teamA.length).toBe(1)
     expect(s.teamB.length).toBe(1)
     expect([...s.teamA, ...s.teamB].sort()).toEqual(["a", "b"])
+  })
+
+  it("auto: คิวถึง 4 คนจัดเป็นคู่ ถ้าเหลือ 2-3 คนจัดเดี่ยว", () => {
+    const four = makeSession([
+      { id: "a", level: 4, wait: 9 },
+      { id: "b", level: 4, wait: 8 },
+      { id: "c", level: 4, wait: 7 },
+      { id: "d", level: 4, wait: 6 },
+    ])
+    expect(ok(suggestMatch({ ...four, now: NOW, type: "auto" })).type).toBe("D")
+
+    const three = makeSession([
+      { id: "a", level: 4, wait: 9 },
+      { id: "b", level: 4, wait: 8 },
+      { id: "c", level: 4, wait: 7 },
+    ])
+    expect(ok(suggestMatch({ ...three, now: NOW, type: "auto" })).type).toBe("S")
   })
 
   it("include = ปักหมุดให้ลงแน่นอน, exclude = ข้ามคนนั้น", () => {
@@ -303,17 +298,16 @@ describe("การไม่ซ้ำคู่เดิม", () => {
 describe("splitTeams — แบ่งฝั่งให้สูสี", () => {
   it("แบ่งให้ผลรวมระดับมือสองฝั่งต่างกันน้อยที่สุด", () => {
     const { session, roster } = makeSession([
-      { id: "hi1", level: 7, wait: 1 },
-      { id: "hi2", level: 7, wait: 1 },
-      { id: "lo1", level: 3, wait: 1 },
-      { id: "lo2", level: 3, wait: 1 },
+      { id: "hi1", level: 6, wait: 1 },
+      { id: "hi2", level: 6, wait: 1 },
+      { id: "lo1", level: 2, wait: 1 },
+      { id: "lo2", level: 2, wait: 1 },
     ])
-    const split = splitTeams(["hi1", "hi2", "lo1", "lo2"], "D", session, roster)
+    const split = splitTeams(["hi1", "hi2", "lo1", "lo2"], session, roster)
     expect(split.diff).toBe(0)
     // แต่ละฝั่งต้องมีมือสูง 1 + มือต่ำ 1
     for (const team of [split.teamA, split.teamB]) {
-      const levels = team.map((id) => roster.get(id)!.level).sort()
-      expect(levels).toEqual([3, 7])
+      expect(team.map((id) => roster.get(id)!.level).sort()).toEqual([2, 6])
     }
   })
 
@@ -322,7 +316,7 @@ describe("splitTeams — แบ่งฝั่งให้สูสี", () => {
       { id: "a", level: 5, wait: 1 },
       { id: "b", level: 3, wait: 1 },
     ])
-    const split = splitTeams(["a", "b"], "S", session, roster)
+    const split = splitTeams(["a", "b"], session, roster)
     expect(split.teamA).toEqual(["a"])
     expect(split.teamB).toEqual(["b"])
     expect(split.diff).toBe(2)

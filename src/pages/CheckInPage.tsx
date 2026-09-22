@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react"
 import { Check, Pencil, Search, Trash2, UserPlus, Users } from "lucide-react"
-import { type Gender, type Level, type RosterPlayer, LEVELS, displayName, levelInfo } from "@shared/types"
+import { type Level, type RosterPlayer, LEVELS, displayName, levelInfo } from "@shared/types"
 import { api, type PlayerInput } from "@/lib/api"
 import { useApp, useSession } from "@/lib/app"
 import { LevelBadge, PlayerAvatar } from "@/components/player"
-import { EmptyState, Modal, Segmented } from "@/components/ui"
+import { EmptyState, Modal } from "@/components/ui"
 import { cn } from "@/lib/util"
 
 export function CheckInPage() {
@@ -21,7 +21,7 @@ export function CheckInPage() {
     const q = term.trim().toLowerCase()
     return view.roster
       .filter((p) => !p.archived && !inSession.has(p.id))
-      .filter((p) => !q || p.name.toLowerCase().includes(q) || (p.nickname ?? "").toLowerCase().includes(q))
+      .filter((p) => !q || p.name.toLowerCase().includes(q))
       .sort((a, b) => b.level - a.level || a.name.localeCompare(b.name, "th"))
   }, [view.roster, term, inSession])
 
@@ -76,7 +76,7 @@ export function CheckInPage() {
           <div className="card">
             <EmptyState
               title={term ? "ไม่เจอชื่อนี้ในทะเบียน" : "ทุกคนในทะเบียนเช็คอินครบแล้ว"}
-              hint={term ? "กด “เพิ่มคน” เพื่อสร้างสมาชิกใหม่ แล้วเช็คอินได้เลย" : undefined}
+              hint={term ? "กด “เพิ่มคน” เพื่อสร้างชื่อใหม่ แล้วเช็คอินได้เลย" : undefined}
               action={
                 canControl ? (
                   <button className="btn-ghost" onClick={() => setEditing("new")}>
@@ -110,10 +110,7 @@ export function CheckInPage() {
                       <span className="block truncate font-heading text-[14px] font-medium text-ink">
                         {displayName(p)}
                       </span>
-                      <span className="block truncate text-[11px] text-ink-faint">
-                        {levelInfo(p.level).name}
-                        {p.member ? "" : " · ขาจร"}
-                      </span>
+                      <span className="block truncate text-[11px] text-ink-faint">{levelInfo(p.level).name}</span>
                     </span>
                     <LevelBadge level={p.level} />
                     {on ? <Check size={16} className="text-gold-deep" /> : null}
@@ -145,7 +142,9 @@ export function CheckInPage() {
                     {displayName(player)}
                   </span>
                   <span className="block text-[11px] text-ink-faint">
-                    {sp.gamesPlayed} เกม{sp.paid ? " · จ่ายแล้ว" : ""}
+                    {sp.gamesPlayed} เกม
+                    {sp.wins + sp.losses > 0 ? ` · ${sp.wins}-${sp.losses}` : ""}
+                    {sp.paid ? " · จ่ายแล้ว" : ""}
                   </span>
                 </span>
                 <LevelBadge level={player.level} />
@@ -187,7 +186,7 @@ export function CheckInPage() {
   )
 }
 
-// ── ฟอร์มเพิ่ม/แก้ผู้เล่น ──────────────────────────────────────────────────────
+// ── ฟอร์มเพิ่ม/แก้ผู้เล่น — เก็บแค่ชื่อที่ใช้เรียกกับระดับมือ ────────────────────
 
 export function PlayerForm({
   player,
@@ -202,20 +201,11 @@ export function PlayerForm({
 }) {
   const { run, setRoster } = useApp()
   const [name, setName] = useState(player?.name ?? "")
-  const [nickname, setNickname] = useState(player?.nickname ?? "")
-  const [gender, setGender] = useState<Gender>(player?.gender ?? "m")
-  const [level, setLevel] = useState<Level>(player?.level ?? 4)
-  const [member, setMember] = useState(player?.member ?? true)
+  const [level, setLevel] = useState<Level>(player?.level ?? 3)
   const [busy, setBusy] = useState(false)
 
   const save = async () => {
-    const input: PlayerInput = {
-      name: name.trim(),
-      nickname: nickname.trim() || undefined,
-      gender,
-      level,
-      member,
-    }
+    const input: PlayerInput = { name: name.trim(), level }
     if (!input.name) return
     setBusy(true)
     if (player) {
@@ -245,7 +235,7 @@ export function PlayerForm({
       open
       onClose={onClose}
       title={player ? `แก้ข้อมูล ${displayName(player)}` : "เพิ่มผู้เล่นใหม่"}
-      subtitle={player ? undefined : "ใส่ระดับมือให้ใกล้ความจริง ระบบจะจับคู่ให้สนุกขึ้นเอง"}
+      subtitle="ใช้ชื่อที่เรียกกันในก๊วนได้เลย ไม่ต้องเป็นชื่อจริง"
       footer={
         <div className="flex items-center gap-2">
           {player ? (
@@ -264,43 +254,31 @@ export function PlayerForm({
         </div>
       }
     >
-      <div className="flex flex-col gap-3.5">
+      <div className="flex flex-col gap-4">
         <div>
           <label className="label" htmlFor="pf-name">
-            ชื่อ-นามสกุล
+            ชื่อที่ใช้เรียกในก๊วน
           </label>
-          <input id="pf-name" className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="สมชาย ใจดี" />
-        </div>
-        <div>
-          <label className="label" htmlFor="pf-nick">
-            ชื่อเล่น (ใช้เรียกในก๊วน)
-          </label>
-          <input id="pf-nick" className="input" value={nickname} onChange={(e) => setNickname(e.target.value)} placeholder="ชาย" />
-        </div>
-
-        <div>
-          <span className="label">เพศ (ใช้จัดชายคู่ / หญิงคู่ / คู่ผสม)</span>
-          <Segmented
-            value={gender}
-            onChange={setGender}
-            options={[
-              { value: "m", label: "ชาย" },
-              { value: "f", label: "หญิง" },
-            ]}
-            size="sm"
+          <input
+            id="pf-name"
+            className="input"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="เช่น ต้น, พี่หมู, แนน"
+            autoFocus
           />
         </div>
 
         <div>
           <span className="label">ระดับมือ — {levelInfo(level).name}</span>
-          <div className="grid grid-cols-5 gap-1.5">
+          <div className="grid grid-cols-4 gap-1.5">
             {LEVELS.map((l) => (
               <button
                 key={l.level}
                 type="button"
                 onClick={() => setLevel(l.level)}
                 className={cn(
-                  "rounded-lg border px-1 py-2 font-heading text-[12.5px] font-semibold transition-all",
+                  "rounded-lg border px-1 py-2.5 font-heading text-[13px] font-semibold transition-all",
                   l.level === level
                     ? "border-navy bg-navy text-white"
                     : "border-line bg-surface text-ink-soft hover:bg-subtle",
@@ -311,19 +289,6 @@ export function PlayerForm({
             ))}
           </div>
           <p className="mt-1.5 text-[12px] leading-snug text-ink-faint">{levelInfo(level).hint}</p>
-        </div>
-
-        <div>
-          <span className="label">ประเภทสมาชิก</span>
-          <Segmented
-            value={member ? "member" : "guest"}
-            onChange={(v) => setMember(v === "member")}
-            options={[
-              { value: "member", label: "สมาชิกก๊วน" },
-              { value: "guest", label: "ขาจร" },
-            ]}
-            size="sm"
-          />
         </div>
       </div>
     </Modal>

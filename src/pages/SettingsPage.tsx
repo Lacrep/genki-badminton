@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { ChevronDown, Flag, Gauge, LayoutGrid, Settings2, Volume2 } from "lucide-react"
-import { type MatchType, type SessionSettings, DEFAULT_SETTINGS } from "@shared/types"
+import { type MatchType, type SessionSettings, DEFAULT_SETTINGS, MAX_LEVEL } from "@shared/types"
 import { api } from "@/lib/api"
 import { useApp } from "@/lib/app"
 import { EmptyState, Segmented, Stepper, Toggle } from "@/components/ui"
@@ -8,10 +8,8 @@ import { cn } from "@/lib/util"
 
 const TYPE_OPTIONS: { value: MatchType | "auto"; label: string }[] = [
   { value: "auto", label: "อัตโนมัติ" },
-  { value: "D", label: "คู่ทั่วไป" },
-  { value: "MD", label: "ชายคู่" },
-  { value: "WD", label: "หญิงคู่" },
-  { value: "XD", label: "คู่ผสม" },
+  { value: "D", label: "คู่" },
+  { value: "S", label: "เดี่ยว" },
 ]
 
 export function SettingsPage({ navigate }: { navigate: (to: string) => void }) {
@@ -143,9 +141,9 @@ export function SettingsPage({ navigate }: { navigate: (to: string) => void }) {
 
         <Field
           title="ระดับมือห่างกันได้ไม่เกิน"
-          hint="0 = ต้องมือเท่ากันเป๊ะ · 2 = ยืดหยุ่นพอดีสำหรับก๊วนทั่วไป (ถ้าคนในคิวไม่พอ ระบบจะผ่อนให้เองชั่วคราว)"
+          hint="0 = ต้องมือเท่ากันเป๊ะ · 1 = ห่างได้ขั้นเดียว เช่น N กับ S (ถ้าคนในคิวไม่พอ ระบบจะผ่อนให้เองชั่วคราว)"
         >
-          <Stepper value={s.maxLevelGap} onChange={(maxLevelGap) => patch({ maxLevelGap })} min={0} max={9} suffix="ขั้น" />
+          <Stepper value={s.maxLevelGap} onChange={(maxLevelGap) => patch({ maxLevelGap })} min={0} max={MAX_LEVEL - 1} suffix="ขั้น" />
         </Field>
 
         <Field title="รอเกินเท่านี้ = เริ่มเตือน (สีทอง)" hint="การ์ดในคิวจะเปลี่ยนสีให้เห็นชัดว่าเริ่มรอนาน">

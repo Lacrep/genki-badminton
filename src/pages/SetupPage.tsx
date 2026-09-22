@@ -1,6 +1,7 @@
 import { useState } from "react"
-import { CalendarDays, MapPin, PlayCircle, RotateCcw } from "lucide-react"
-import { DEFAULT_FEES, thaiDateKey, thaiTime } from "@shared/types"
+import { CalendarDays, Clock, MapPin, PlayCircle, RotateCcw } from "lucide-react"
+import { DEFAULT_FEES, thaiTime } from "@shared/types"
+import { CLUB } from "@shared/club"
 import { api } from "@/lib/api"
 import { useApp } from "@/lib/app"
 import { BrushDivider, Logo, Stepper } from "@/components/ui"
@@ -9,11 +10,16 @@ import { cn } from "@/lib/util"
 export function SetupPage() {
   const { run, sessions, needPin, pinRequired } = useApp()
   const [name, setName] = useState("")
-  const [venue, setVenue] = useState("")
-  const [courtCount, setCourtCount] = useState(2)
-  const [courtCost, setCourtCost] = useState("")
+  const [venue, setVenue] = useState<string>(CLUB.venue)
+  const [courtCount, setCourtCount] = useState<number>(CLUB.courtCount)
+  const [courtFeePerHead, setCourtFeePerHead] = useState(String(DEFAULT_FEES.courtFeePerHead))
   const [shuttlePrice, setShuttlePrice] = useState(String(DEFAULT_FEES.shuttlePrice))
   const [busy, setBusy] = useState(false)
+
+  const num = (s: string, fallback: number) => {
+    const n = Number(s.replace(/[^0-9.]/g, ""))
+    return Number.isFinite(n) && n > 0 ? n : fallback
+  }
 
   const open = async () => {
     setBusy(true)
@@ -23,8 +29,8 @@ export function SetupPage() {
         venue: venue.trim() || undefined,
         courtCount,
         fees: {
-          courtCost: Number(courtCost.replace(/[^0-9.]/g, "")) || 0,
-          shuttlePrice: Number(shuttlePrice.replace(/[^0-9.]/g, "")) || DEFAULT_FEES.shuttlePrice,
+          courtFeePerHead: num(courtFeePerHead, DEFAULT_FEES.courtFeePerHead),
+          shuttlePrice: num(shuttlePrice, DEFAULT_FEES.shuttlePrice),
         },
       }),
     )
@@ -38,11 +44,21 @@ export function SetupPage() {
       {/* ป้ายร้าน */}
       <div className="card card-pad flex flex-col items-center gap-2 py-7 text-center">
         <Logo size={128} ring />
-        <h1 className="mt-2 font-heading text-[22px] font-bold text-ink">เกงกิเดสซ์</h1>
-        <p className="font-jp text-[15px] text-gold-deep dark:text-gold-soft">元気です · Badminton Society</p>
+        <h1 className="mt-2 font-heading text-[22px] font-bold text-ink">{CLUB.name}</h1>
+        <p className="font-jp text-[15px] text-gold-deep dark:text-gold-soft">{CLUB.nameJp} · Badminton Society</p>
         <BrushDivider className="my-1 w-40" />
-        <p className="max-w-sm text-[13px] leading-relaxed text-ink-soft">
-          ระบบจัดก๊วน: จัดคิวตามเวลารอจริง จับคู่มือใกล้เคียง สลับคู่ไม่ให้ซ้ำ
+        <div className="flex flex-col gap-1 text-[13px] text-ink-soft">
+          <p className="flex items-center justify-center gap-1.5">
+            <Clock size={13} className="text-gold-deep" />
+            {CLUB.schedule}
+          </p>
+          <p className="flex items-center justify-center gap-1.5">
+            <MapPin size={13} className="text-gold-deep" />
+            {CLUB.venue} · {CLUB.venueNote}
+          </p>
+        </div>
+        <p className="mt-1 max-w-sm text-[13px] leading-relaxed text-ink-soft">
+          จัดคิวตามเวลารอจริง จับคู่มือใกล้เคียง สลับคู่ไม่ให้ซ้ำ
           และ<span className="font-medium text-ink"> ไม่ดองใครไว้เฉย ๆ</span>
         </p>
       </div>
@@ -61,7 +77,7 @@ export function SetupPage() {
           <input
             id="su-name"
             className="input"
-            placeholder={`ก๊วนวันที่ ${thaiDateKey()}`}
+            placeholder={`ก๊วน${CLUB.scheduleShort}`}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -74,13 +90,7 @@ export function SetupPage() {
               สนามที่เล่น
             </span>
           </label>
-          <input
-            id="su-venue"
-            className="input"
-            placeholder="เช่น สนามแบด ABC คอร์ต 5-6"
-            value={venue}
-            onChange={(e) => setVenue(e.target.value)}
-          />
+          <input id="su-venue" className="input" value={venue} onChange={(e) => setVenue(e.target.value)} />
         </div>
 
         <div className="flex items-center justify-between gap-3">
@@ -93,21 +103,20 @@ export function SetupPage() {
 
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
-            <label className="label" htmlFor="su-court">
-              ค่าคอร์ตรวม (บาท)
+            <label className="label" htmlFor="su-perhead">
+              ค่าสนาม คนละ (บาท)
             </label>
             <input
-              id="su-court"
+              id="su-perhead"
               className="input nums"
               inputMode="numeric"
-              placeholder="0"
-              value={courtCost}
-              onChange={(e) => setCourtCost(e.target.value)}
+              value={courtFeePerHead}
+              onChange={(e) => setCourtFeePerHead(e.target.value)}
             />
           </div>
           <div>
             <label className="label" htmlFor="su-shuttle">
-              ราคาลูกแบด (บาท/ลูก)
+              ค่าลูกแบด ลูกละ (บาท)
             </label>
             <input
               id="su-shuttle"
@@ -118,6 +127,9 @@ export function SetupPage() {
             />
           </div>
         </div>
+        <p className="-mt-1 text-[11.5px] text-ink-faint">
+          ค่าเริ่มต้นตามโปสเตอร์ก๊วน — ค่าลูกจะคิดเฉพาะคนที่ลงเกมนั้น (หาร 4 คนในเกม) เปลี่ยนวิธีคิดได้ในหน้า “ค่าก๊วน”
+        </p>
 
         <button className="btn-primary btn-lg" onClick={open} disabled={busy || (pinRequired && needPin)}>
           <PlayCircle size={18} />

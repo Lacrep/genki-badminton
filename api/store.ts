@@ -32,8 +32,10 @@ import {
   priorityOf,
   thaiDateKey,
   thaiTime,
+  thaiWeekday,
   waitTier,
 } from "@shared/types"
+import { CLUB } from "@shared/club"
 import { forecastQueue } from "./matching"
 
 const DATA_DIR = path.resolve(process.cwd(), process.env.DATA_DIR || "./data")
@@ -212,9 +214,16 @@ export interface CreateSessionInput {
   notes?: string
 }
 
+/** ชื่อก๊วนเริ่มต้น — ตรงวันประจำก๊วนก็ใช้ชื่อตารางประจำไปเลย */
+function defaultSessionName(now: number): string {
+  const weekday = thaiWeekday(now)
+  const onSchedule = new Date(now + 7 * 3600_000).getUTCDay() === CLUB.scheduleWeekday
+  return onSchedule ? `ก๊วน${CLUB.scheduleShort}` : `ก๊วนวัน${weekday}`
+}
+
 export function createSession(input: CreateSessionInput): Session {
   const now = Date.now()
-  const count = Math.max(1, Math.min(20, input.courtCount ?? 2))
+  const count = Math.max(1, Math.min(20, input.courtCount ?? CLUB.courtCount))
   const courts: Court[] = Array.from({ length: count }, (_, i) => ({
     index: i,
     name: input.courtNames?.[i]?.trim() || `คอร์ต ${i + 1}`,
@@ -223,9 +232,9 @@ export function createSession(input: CreateSessionInput): Session {
 
   const session: Session = {
     id: id("s_"),
-    name: input.name?.trim() || `ก๊วนวันที่ ${thaiDateKey(now)}`,
+    name: input.name?.trim() || defaultSessionName(now),
     date: thaiDateKey(now),
-    venue: input.venue?.trim() || "",
+    venue: input.venue?.trim() || CLUB.venue,
     startAt: now,
     status: "live",
     code: sessionCode(),
@@ -624,41 +633,44 @@ export function computeBill(session: Session, roster: Map<string, RosterPlayer>)
   const fees = session.fees
   const shuttlesUsed = session.matches.reduce((n, m) => n + m.shuttles, 0) + session.shuttlesExtra
   const shuttleCost = shuttlesUsed * fees.shuttlePrice
-  const courtCost = fees.courtCost
-  const extraCost = fees.extraCost
-  const total = courtCost + shuttleCost + extraCost
+  // ต้นทุนจริงที่ก๊วนจ่ายออกไป (ค่าคอร์ตกรอกเองได้ ใส่ 0 ถ้าไม่อยากกรอก)
+  const total = fees.courtCost + shuttleCost + fees.extraCost
 
   // ทุกคนที่เช็คอินวันนี้ (รวมคนที่กลับไปแล้ว — เขาก็ใช้คอร์ตไปแล้ว)
   const people = session.players
-  const totalGames = people.reduce((n, p) => n + p.gamesPlayed, 0)
   const n = people.length || 1
+
+  /**
+   * ค่าลูกแบบระบบก๊วน: ลูกที่ใช้ในเกมไหน หารกันเฉพาะ 4 คนที่ลงเกมนั้น
+   * (ตรงกับที่โปสเตอร์เขียนว่า "ลูกละ 25 ต่อเกม")
+   */
+  const shuttleShare = new Map<string, number>()
+  for (const m of session.matches) {
+    const ids = [...m.teamA, ...m.teamB]
+    if (ids.length === 0 || m.shuttles <= 0) continue
+    const per = (m.shuttles * fees.shuttlePrice) / ids.length
+    for (const id of ids) shuttleShare.set(id, (shuttleShare.get(id) ?? 0) + per)
+  }
+  // ลูกที่เปิดใช้นอกเกม (ซ้อมก่อนเริ่ม ฯลฯ) และค่าอื่น ๆ หารเท่ากันทุกคน
+  const loosePerHead = (session.shuttlesExtra * fees.shuttlePrice) / n
+  const extraPerHead = fees.extraCost / n
+
+  const round2 = (v: number) => Math.round(v * 100) / 100
 
   const lines: BillLine[] = people.map((sp) => {
     const player = roster.get(sp.playerId)
-    let amount = 0
-    switch (fees.mode) {
-      case "equal":
-        amount = total / n
-        break
-      case "byGames":
-        amount = totalGames > 0 ? (total * sp.gamesPlayed) / totalGames : total / n
-        break
-      case "split": {
-        const perHead = (courtCost + extraCost) / n
-        const byGame = totalGames > 0 ? (shuttleCost * sp.gamesPlayed) / totalGames : shuttleCost / n
-        amount = perHead + byGame
-        break
-      }
-      case "flat":
-        amount = player?.member === false ? fees.guestFee : fees.memberFee
-        break
-    }
+    const courtPart = fees.mode === "club" ? fees.courtFeePerHead : fees.courtCost / n
+    const shuttlePart =
+      fees.mode === "club" ? (shuttleShare.get(sp.playerId) ?? 0) + loosePerHead : shuttleCost / n
+
     return {
       playerId: sp.playerId,
       name: player ? displayName(player) : sp.playerId,
       games: sp.gamesPlayed,
-      member: player?.member ?? true,
-      amount: roundUpTo(amount, fees.roundTo),
+      courtPart: round2(courtPart),
+      shuttlePart: round2(shuttlePart),
+      extraPart: round2(extraPerHead),
+      amount: roundUpTo(courtPart + shuttlePart + extraPerHead, fees.roundTo),
       paid: sp.paid,
     }
   })
@@ -667,16 +679,81 @@ export function computeBill(session: Session, roster: Map<string, RosterPlayer>)
   const collected = lines.filter((l) => l.paid).reduce((sum, l) => sum + l.amount, 0)
 
   return {
-    courtCost,
+    mode: fees.mode,
+    courtCost: fees.courtCost,
     shuttleCost,
     shuttlesUsed,
-    extraCost,
+    extraCost: fees.extraCost,
     total,
+    billed,
     collected,
-    mode: fees.mode,
     lines: lines.sort((a, b) => b.games - a.games || a.name.localeCompare(b.name, "th")),
     balance: billed - total,
   }
+}
+
+// ── สรุปส่งกลุ่มไลน์ ──────────────────────────────────────────────────────────
+
+export function summaryText(session: Session): string {
+  const rmap = rosterMap()
+  const bill = computeBill(session, rmap)
+  const fees = session.fees
+  const lines: string[] = []
+  const end = session.endAt ?? Date.now()
+  const baht = (v: number) => v.toLocaleString("th-TH", { maximumFractionDigits: 0 })
+
+  lines.push(`🏸 ${session.name}`)
+  if (session.venue) lines.push(`📍 ${session.venue}`)
+  lines.push(`🕒 ${thaiTime(session.startAt)} - ${thaiTime(end)}`)
+  lines.push(
+    `👥 ${session.players.length} คน · 🎮 ${session.matches.filter((m) => m.endedAt).length} เกม · 🏸 ลูกที่ใช้ ${bill.shuttlesUsed} ลูก`,
+  )
+  lines.push("")
+
+  if (fees.mode === "club") {
+    lines.push(`💰 ค่าสนามคนละ ${baht(fees.courtFeePerHead)} + ค่าลูกลูกละ ${baht(fees.shuttlePrice)} (หารกันในเกมที่ลง)`)
+  } else {
+    lines.push(`💰 หารเท่ากันทุกคน — ต้นทุนรวม ${baht(bill.total)} บาท`)
+  }
+  if (bill.extraCost > 0) {
+    lines.push(`   • อื่น ๆ ${baht(bill.extraCost)} บาท${fees.extraNote ? ` (${fees.extraNote})` : ""}`)
+  }
+  lines.push("")
+
+  lines.push("💸 คนละ")
+  for (const l of bill.lines) {
+    const detail = fees.mode === "club" ? ` [สนาม ${baht(l.courtPart)} + ลูก ${baht(l.shuttlePart)}]` : ""
+    lines.push(`   ${l.paid ? "✅" : "⬜"} ${l.name} ${baht(l.amount)} บาท · ${l.games} เกม${detail}`)
+  }
+  lines.push("")
+  lines.push(`รวมที่ต้องเก็บ ${baht(bill.billed)} บาท · เก็บแล้ว ${baht(bill.collected)} บาท`)
+
+  lines.push("")
+  lines.push("📲 สแกนจ่ายพร้อมเพย์ในหน้า “ค่าก๊วน” ของเว็บ")
+  if (fees.promptPay) lines.push(`   ${fees.promptPay}`)
+
+  // สถิติสนุก ๆ ปิดท้าย
+  const top = [...session.players].sort((a, b) => b.gamesPlayed - a.gamesPlayed)[0]
+  if (top && top.gamesPlayed > 0) {
+    const p = rmap.get(top.playerId)
+    if (p) {
+      lines.push("")
+      lines.push(`🔥 ลงเยอะสุด: ${displayName(p)} ${top.gamesPlayed} เกม`)
+    }
+  }
+  const bestWin = [...session.players]
+    .filter((p) => p.wins + p.losses >= 2)
+    .sort((a, b) => b.wins / (b.wins + b.losses) - a.wins / (a.wins + a.losses))[0]
+  if (bestWin) {
+    const p = rmap.get(bestWin.playerId)
+    if (p) lines.push(`🏆 ชนะเยอะสุด: ${displayName(p)} ${bestWin.wins} ชนะ / ${bestWin.losses} แพ้`)
+  }
+  const patient = [...session.players].sort((a, b) => b.longestWaitMs - a.longestWaitMs)[0]
+  if (patient && patient.longestWaitMs > 0) {
+    const p = rmap.get(patient.playerId)
+    if (p) lines.push(`🧘 ใจเย็นสุด: ${displayName(p)} รอนานสุด ${Math.round(patient.longestWaitMs / 60_000)} นาที`)
+  }
+  return lines.join("\n")
 }
 
 // ── ประกอบข้อมูลให้หน้าเว็บ ───────────────────────────────────────────────────
@@ -752,48 +829,6 @@ export function buildView(session: Session, now = Date.now()): SessionView {
       shuttlesUsed: session.matches.reduce((n, m) => n + m.shuttles, 0) + session.shuttlesExtra,
     },
   }
-}
-
-// ── สรุปส่งกลุ่มไลน์ ──────────────────────────────────────────────────────────
-
-export function summaryText(session: Session): string {
-  const rmap = rosterMap()
-  const bill = computeBill(session, rmap)
-  const lines: string[] = []
-  const end = session.endAt ?? Date.now()
-
-  lines.push(`🏸 ${session.name}`)
-  if (session.venue) lines.push(`📍 ${session.venue}`)
-  lines.push(`🕒 ${thaiTime(session.startAt)} - ${thaiTime(end)}`)
-  lines.push(`👥 ${session.players.length} คน · 🎮 ${session.matches.filter((m) => m.endedAt).length} เกม · 🏸 ลูกที่ใช้ ${bill.shuttlesUsed} ลูก`)
-  lines.push("")
-  lines.push(`💰 ค่าใช้จ่ายรวม ${bill.total.toLocaleString("th-TH")} บาท`)
-  if (bill.courtCost) lines.push(`   • ค่าคอร์ต ${bill.courtCost.toLocaleString("th-TH")}`)
-  if (bill.shuttleCost) lines.push(`   • ค่าลูก ${bill.shuttleCost.toLocaleString("th-TH")} (${bill.shuttlesUsed} ลูก)`)
-  if (bill.extraCost) lines.push(`   • อื่น ๆ ${bill.extraCost.toLocaleString("th-TH")}${session.fees.extraNote ? ` (${session.fees.extraNote})` : ""}`)
-  lines.push("")
-  lines.push("💸 คนละ")
-  for (const l of bill.lines) {
-    lines.push(`   ${l.paid ? "✅" : "⬜"} ${l.name} ${l.amount.toLocaleString("th-TH")} บาท (${l.games} เกม)`)
-  }
-  if (session.fees.promptPay) {
-    lines.push("")
-    lines.push(`📲 พร้อมเพย์: ${session.fees.promptPay}`)
-  }
-  const top = [...session.players].sort((a, b) => b.gamesPlayed - a.gamesPlayed)[0]
-  if (top && top.gamesPlayed > 0) {
-    const p = rmap.get(top.playerId)
-    if (p) {
-      lines.push("")
-      lines.push(`🔥 ลงเยอะสุด: ${displayName(p)} ${top.gamesPlayed} เกม`)
-    }
-  }
-  const patient = [...session.players].sort((a, b) => b.longestWaitMs - a.longestWaitMs)[0]
-  if (patient && patient.longestWaitMs > 0) {
-    const p = rmap.get(patient.playerId)
-    if (p) lines.push(`🧘 ใจเย็นสุด: ${displayName(p)} รอนานสุด ${Math.round(patient.longestWaitMs / 60_000)} นาที`)
-  }
-  return lines.join("\n")
 }
 
 // ── สถิติรวมทุกครั้ง ──────────────────────────────────────────────────────────

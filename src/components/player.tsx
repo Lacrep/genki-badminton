@@ -23,13 +23,21 @@ export function LevelBadge({ level, showName = false }: { level: number; showNam
 
 // ── ชื่อ + วงกลมตัวอักษรแรก ───────────────────────────────────────────────────
 
+/** สีวงกลมไล่ตามระดับมือ — กวาดตาดูคิวทีเดียวก็รู้ว่ามือประมาณไหน */
+function avatarTone(level: number): string {
+  if (level >= 7) return "bg-hinomaru/90"
+  if (level >= 5) return "bg-gold-deep/90"
+  if (level >= 3) return "bg-navy/90"
+  return "bg-navy-mist/90"
+}
+
 export function PlayerAvatar({ player, size = 34 }: { player: RosterPlayer; size?: number }) {
   const label = displayName(player).trim().slice(0, 2)
   return (
     <span
       className={cn(
         "inline-flex shrink-0 items-center justify-center rounded-full font-heading font-semibold text-white",
-        player.gender === "f" ? "bg-hinomaru/90" : "bg-navy/90",
+        avatarTone(player.level),
       )}
       style={{ width: size, height: size, fontSize: Math.round(size * 0.4) }}
       aria-hidden
@@ -53,11 +61,8 @@ export function PlayerTag({
   return (
     <span className={cn("flex min-w-0 items-center gap-2", className)}>
       <PlayerAvatar player={player} size={size} />
-      <span className="min-w-0 flex-1">
-        <span className="block truncate font-heading text-[14px] font-medium text-ink">{displayName(player)}</span>
-        {player.nickname && player.nickname !== player.name ? (
-          <span className="block truncate text-[11px] text-ink-faint">{player.name}</span>
-        ) : null}
+      <span className="min-w-0 flex-1 truncate font-heading text-[14px] font-medium text-ink">
+        {displayName(player)}
       </span>
       {right}
     </span>

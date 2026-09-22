@@ -12,7 +12,6 @@
  */
 
 import {
-  type Gender,
   type Match,
   type MatchType,
   type RosterPlayer,
@@ -81,12 +80,6 @@ function combinations<T>(items: T[], k: number): T[][] {
   return out
 }
 
-function genderOk(type: MatchType, g: Gender): boolean {
-  if (type === "MD" || type === "MS") return g === "m"
-  if (type === "WD" || type === "WS") return g === "f"
-  return true
-}
-
 /** เกมล่าสุดย้อนหลัง LOOKBACK เกม เรียงใหม่สุดมาก่อน */
 function recentMatches(session: Session): Match[] {
   return [...session.matches]
@@ -134,11 +127,10 @@ export interface TeamSplit {
 
 /**
  * แบ่ง 4 คนเป็น 2 ทีมให้ผลรวมระดับมือใกล้กันที่สุด
- * (คู่ผสมบังคับทีมละ ช.1 + ญ.1) ถ้าเสมอกันให้เลือกแบบที่ไม่ซ้ำคู่เดิม
+ * ถ้าสูสีเท่ากันหลายแบบ ให้เลือกแบบที่ไม่ซ้ำคู่เดิม
  */
 export function splitTeams(
   ids: string[],
-  type: MatchType,
   session: Session,
   roster: Map<string, RosterPlayer>,
 ): TeamSplit {
@@ -169,11 +161,6 @@ export function splitTeams(
     const teamA = [ids[pa[0]], ids[pa[1]]]
     const teamB = [ids[pb[0]], ids[pb[1]]]
 
-    if (type === "XD") {
-      const mixed = (t: string[]) => new Set(t.map((id) => roster.get(id)?.gender)).size === 2
-      if (!mixed(teamA) || !mixed(teamB)) continue
-    }
-
     const sum = (t: string[]) => levelsOf(t, roster).reduce((x, y) => x + y, 0)
     const diff = Math.abs(sum(teamA) - sum(teamB))
     // ซ้ำ "คู่" เดิมน่าเบื่อกว่าเจอคู่แข่งเดิม จึงคิดโทษเฉพาะคู่
@@ -184,8 +171,8 @@ export function splitTeams(
     }
   }
 
-  // คู่ผสมที่แบ่งไม่ลงตัว (เช่น ช.3 ญ.1) — ถอยไปแบ่งแบบสูสีธรรมดา
-  if (!best) return splitTeams(ids, "D", session, roster)
+  // ป้องกันไว้เท่านั้น — วนครบ 3 แบบย่อมได้คำตอบเสมอ
+  if (!best) return { teamA: [ids[0], ids[1]], teamB: [ids[2], ids[3]], diff: 0 }
   return best
 }
 
@@ -200,7 +187,7 @@ interface Candidate {
   dong: boolean
 }
 
-function buildCandidates(input: SuggestInput, type: MatchType): Candidate[] {
+function buildCandidates(input: SuggestInput): Candidate[] {
   const { session, roster, now } = input
   const exclude = new Set(input.exclude ?? [])
   const maxGames = session.players.reduce(
@@ -214,7 +201,6 @@ function buildCandidates(input: SuggestInput, type: MatchType): Candidate[] {
     if (exclude.has(sp.playerId)) continue
     const player = roster.get(sp.playerId)
     if (!player) continue
-    if (!genderOk(type, player.gender)) continue
     const waitMs = sp.queueSince == null ? 0 : Math.max(0, now - sp.queueSince)
     out.push({
       id: sp.playerId,
@@ -260,16 +246,16 @@ export function suggestMatch(input: SuggestInput): SuggestResult {
   const type = resolveType(input, rawQueue)
   const need = playersPerMatch(type)
 
-  const candidates = buildCandidates(input, type)
+  const candidates = buildCandidates(input)
   const byId = new Map(candidates.map((c) => [c.id, c]))
 
   if (candidates.length < need) {
     return {
       ok: false,
       reason:
-        rawQueue < need
+        candidates.length === rawQueue
           ? `คนในคิวไม่พอ (ต้องมี ${need} คน มี ${rawQueue} คน)`
-          : `คนในคิวที่เข้าเงื่อนไขไม่พอ (ต้องมี ${need} คน เข้าเงื่อนไข ${candidates.length} คน)`,
+          : `คนในคิวที่เลือกได้ไม่พอ (ต้องมี ${need} คน เลือกได้ ${candidates.length} คน)`,
       needed: need,
       available: candidates.length,
     }
@@ -342,7 +328,6 @@ export function suggestMatch(input: SuggestInput): SuggestResult {
     for (const combo of combinations(shortlist, k)) {
       const g = [...forced, ...combo]
       if (spreadOf(g.map((c) => c.id), roster) > gap && gap !== 99) continue
-      if (!typeFeasible(type, g)) continue
       scored.push({ group: g, ...scoreGroup(g, session, roster, input.jitter ?? 0) })
     }
 
@@ -358,10 +343,7 @@ export function suggestMatch(input: SuggestInput): SuggestResult {
   if (found.length === 0) {
     return {
       ok: false,
-      reason:
-        type === "XD"
-          ? "คู่ผสมไม่ได้ — ต้องมีชายและหญิงในคิวอย่างน้อย 2 คนที่มือใกล้กัน"
-          : "หาชุดที่ลงด้วยกันได้ไม่เจอ ลองผ่อนเพดานระดับมือในหน้าตั้งค่า",
+      reason: "หาชุดที่ลงด้วยกันได้ไม่เจอ ลองผ่อนเพดานระดับมือในหน้าตั้งค่า",
       needed: need,
       available: candidates.length,
     }
@@ -374,7 +356,7 @@ export function suggestMatch(input: SuggestInput): SuggestResult {
   /** ประกอบชุดที่เลือกเป็นข้อเสนอ พร้อมคำอธิบายเป็นภาษาคน */
   const build = (picked: Scored): Suggestion => {
     const ids = picked.group.map((c) => c.id)
-    const split = splitTeams(ids, type, session, roster)
+    const split = splitTeams(ids, session, roster)
     const ls = levelsOf(ids, roster)
     const lo = levelInfo(Math.min(...ls))
     const hi = levelInfo(Math.max(...ls))
@@ -409,15 +391,8 @@ export function suggestMatch(input: SuggestInput): SuggestResult {
   return { ok: true, suggestion: best, alternatives: rest }
 }
 
-function typeFeasible(type: MatchType, group: Candidate[]): boolean {
-  if (type !== "XD") return true
-  const m = group.filter((c) => c.player.gender === "m").length
-  const f = group.length - m
-  return m === 2 && f === 2
-}
-
 function shortName(p: RosterPlayer): string {
-  return p.nickname?.trim() ? p.nickname.trim() : p.name
+  return p.name
 }
 
 // ── ประเมินคิว: อีกกี่คิวถึงตา / อีกกี่นาที ────────────────────────────────────

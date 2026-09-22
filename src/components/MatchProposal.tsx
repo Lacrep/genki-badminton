@@ -18,10 +18,7 @@ import { LevelBadge, PlayerAvatar } from "./player"
 
 const TYPE_OPTIONS: { value: MatchType | "auto"; label: string }[] = [
   { value: "auto", label: "อัตโนมัติ" },
-  { value: "D", label: "คู่ทั่วไป" },
-  { value: "MD", label: "ชายคู่" },
-  { value: "WD", label: "หญิงคู่" },
-  { value: "XD", label: "คู่ผสม" },
+  { value: "D", label: "คู่" },
   { value: "S", label: "เดี่ยว" },
 ]
 
