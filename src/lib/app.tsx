@@ -190,9 +190,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const tick = async () => {
       if (document.visibilityState === "visible") {
         try {
-          const sid = state.view?.session.id
-          if (sid) applyView(await api.view(sid))
-          else applyBootstrap(await api.bootstrap())
+          // ดึงสถานะรวมเสมอ (ไม่ใช่เจาะจง id ของก๊วนที่ถืออยู่) — เครื่องนี้จะได้รู้
+          // ทันทีถ้าอีกเครื่องเปิดก๊วนใหม่หรือสลับก๊วน ไม่ค้างอยู่กับก๊วนเก่า
+          applyBootstrap(await api.bootstrap())
         } catch {
           setState((s) => ({ ...s, offline: true }))
         }
@@ -208,7 +208,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       if (timer) window.clearTimeout(timer)
       document.removeEventListener("visibilitychange", onVisible)
     }
-  }, [state.view?.session.id, applyView, applyBootstrap, refresh])
+  }, [applyBootstrap, refresh])
 
   const value = useMemo<AppApi>(
     () => ({

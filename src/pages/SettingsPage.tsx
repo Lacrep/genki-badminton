@@ -104,6 +104,7 @@ export function SettingsPage({ navigate }: { navigate: (to: string) => void }) {
           {view.session.courts.map((c) => (
             <div key={c.index} className="flex items-center gap-2">
               <input
+                key={c.name}
                 className="input flex-1"
                 defaultValue={c.name}
                 disabled={!canControl}
@@ -293,12 +294,12 @@ function Field({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex items-center justify-between gap-4">
+    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
       <span className="min-w-0">
         <span className="block font-heading text-[14px] font-medium text-ink">{title}</span>
         {hint ? <span className="block text-[12px] leading-snug text-ink-soft">{hint}</span> : null}
       </span>
-      <span className="shrink-0">{children}</span>
+      <span className="shrink-0 self-end sm:self-auto">{children}</span>
     </div>
   )
 }

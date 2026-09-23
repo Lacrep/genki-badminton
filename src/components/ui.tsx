@@ -71,11 +71,16 @@ export function Modal({
   wide?: boolean
 }) {
   const panel = useRef<HTMLDivElement>(null)
+  // เก็บ onClose ไว้ใน ref — ผู้เรียกส่ง arrow function ใหม่ทุก render (หน้าเว็บ
+  // re-render ทุกวินาทีเพราะนาฬิกาเดิน) ถ้าใส่ใน deps ตรง ๆ effect จะถอด/ตั้งใหม่
+  // ทุกวินาที ทำให้ body overflow สลับไปมาจนจอกระตุก
+  const closeRef = useRef(onClose)
+  closeRef.current = onClose
 
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose()
+      if (e.key === "Escape") closeRef.current()
     }
     document.addEventListener("keydown", onKey)
     const prev = document.body.style.overflow
@@ -84,7 +89,7 @@ export function Modal({
       document.removeEventListener("keydown", onKey)
       document.body.style.overflow = prev
     }
-  }, [open, onClose])
+  }, [open])
 
   if (!open) return null
 
@@ -230,14 +235,24 @@ export function Stepper({
   const clamp = (v: number) => Math.max(min, Math.min(max, v))
   return (
     <div className="inline-flex items-center gap-1 rounded-xl border border-line bg-surface p-1">
-      <button type="button" className="btn-quiet !px-2.5 !py-1" onClick={() => onChange(clamp(value - step))}>
+      <button
+        type="button"
+        aria-label="ลด"
+        className="btn-quiet flex h-8 w-8 items-center justify-center !p-0 text-[17px] leading-none"
+        onClick={() => onChange(clamp(value - step))}
+      >
         −
       </button>
       <span className="nums min-w-[3.25rem] text-center font-heading text-[15px] font-semibold text-ink">
         {value}
         {suffix ? <span className="ml-0.5 text-[11px] font-normal text-ink-faint">{suffix}</span> : null}
       </span>
-      <button type="button" className="btn-quiet !px-2.5 !py-1" onClick={() => onChange(clamp(value + step))}>
+      <button
+        type="button"
+        aria-label="เพิ่ม"
+        className="btn-quiet flex h-8 w-8 items-center justify-center !p-0 text-[17px] leading-none"
+        onClick={() => onChange(clamp(value + step))}
+      >
         +
       </button>
     </div>

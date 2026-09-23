@@ -32,6 +32,13 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  html {
+    /* เว้นที่สกรอลล์บาร์ไว้เสมอ — ไม่งั้นพอเปิดหน้าต่างซ้อน (ที่ล็อกสกรอลล์)
+       เนื้อหาทั้งหน้าจะกระโดดไปทางขวา ~15px ทุกครั้ง */
+    scrollbar-gutter: stable;
+    background-color: rgb(var(--paper));
+  }
+
   body {
     @apply bg-paper text-ink font-body antialiased;
     margin: 0;
@@ -43,8 +50,9 @@
       radial-gradient(900px 480px at 96% 4%, rgba(29, 36, 71, 0.08), transparent 60%),
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' viewBox='0 0 120 40'%3E%3Cg fill='none' stroke='%23c9b696' stroke-opacity='0.32' stroke-width='1.1'%3E%3Cpath d='M0 40a20 20 0 0140 0M20 40a20 20 0 0140 0M40 40a20 20 0 0140 0M60 40a20 20 0 0140 0M80 40a20 20 0 0140 0'/%3E%3Cpath d='M0 40a13 13 0 0126 0M20 40a13 13 0 0126 0M40 40a13 13 0 0126 0M60 40a13 13 0 0126 0M80 40a13 13 0 0126 0M100 40a13 13 0 0126 0'/%3E%3Cpath d='M0 40a6 6 0 0112 0M20 40a6 6 0 0112 0M40 40a6 6 0 0112 0M60 40a6 6 0 0112 0M80 40a6 6 0 0112 0M100 40a6 6 0 0112 0'/%3E%3C/g%3E%3C/svg%3E");
     background-repeat: no-repeat, no-repeat, repeat-x;
-    background-position: center top, center top, center bottom;
-    background-attachment: fixed, fixed, fixed;
+    background-position: center top, center top, bottom;
+    /* ไม่ใช้ background-attachment: fixed — บนมือถือทำให้สกรอลล์กระตุกและลายค้าง */
+    background-size: auto, auto, 120px 40px;
   }
 
   .dark body {

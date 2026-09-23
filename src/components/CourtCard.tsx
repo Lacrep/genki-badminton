@@ -119,7 +119,7 @@ export function CourtCard({
       {match ? (
         <>
           {/* พื้นสนาม + รายชื่อสองฝั่ง */}
-          <div className="court-floor px-3 py-3">
+          <div className="court-floor px-3 py-2.5">
             <div className="relative z-10 flex flex-col gap-1.5">
               <TeamRow players={teamA} sum={sum(teamA)} side="A" />
               <div className="flex items-center gap-2 px-1">
@@ -193,7 +193,7 @@ function TeamRow({
   side: "A" | "B"
 }) {
   return (
-    <div className="flex items-center gap-2 rounded-lg bg-navy-deep/35 px-2.5 py-2">
+    <div className="flex items-center gap-2 rounded-lg bg-navy-deep/35 px-2.5 py-1.5">
       <span
         className={cn(
           "flex h-5 w-5 shrink-0 items-center justify-center rounded font-heading text-[10.5px] font-semibold",

@@ -14,8 +14,15 @@ export function TvPage({ navigate }: { navigate: (to: string) => void }) {
 
   if (!view) {
     return (
-      <div className="flex min-h-dvh items-center justify-center bg-navy-deep text-sand">
+      <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-navy-deep text-sand">
+        <Logo size={96} plate />
         <p className="font-heading text-xl">ยังไม่มีก๊วนที่เปิดอยู่</p>
+        <button
+          className="rounded-xl border border-sand/40 px-4 py-2 font-heading text-[14px] text-sand transition-colors hover:bg-sand/10"
+          onClick={() => navigate("/")}
+        >
+          กลับหน้าหลัก
+        </button>
       </div>
     )
   }

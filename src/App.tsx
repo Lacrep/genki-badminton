@@ -3,7 +3,7 @@ import { AppProvider, useApp } from "@/lib/app"
 import { queueCodeFromPath, useRoute } from "@/lib/router"
 import { applyTheme, loadTheme } from "@/lib/util"
 import { Shell } from "@/components/Shell"
-import { Logo, Wordmark } from "@/components/ui"
+import { EmptyState, Logo, Wordmark } from "@/components/ui"
 import { BillPage } from "@/pages/BillPage"
 import { CheckInPage } from "@/pages/CheckInPage"
 import { LivePage } from "@/pages/LivePage"
@@ -48,8 +48,11 @@ function Organizer({ path, navigate }: { path: string; navigate: (to: string) =>
           <StatsPage />
         ) : path === "/settings" ? (
           <SettingsPage navigate={navigate} />
-        ) : (
+        ) : path === "/" ? (
           <SetupPage />
+        ) : (
+          // แท็บอื่นยังใช้ไม่ได้ถ้ายังไม่เปิดก๊วน — บอกให้ชัดแทนที่จะเด้งหน้าอื่นเงียบ ๆ
+          <NoSession navigate={navigate} tab={path} />
         )
       ) : path === "/queue" ? (
         <QueuePage />
@@ -65,6 +68,29 @@ function Organizer({ path, navigate }: { path: string; navigate: (to: string) =>
         <LivePage navigate={navigate} />
       )}
     </Shell>
+  )
+}
+
+const TAB_NAME: Record<string, string> = {
+  "/queue": "คิวรอ",
+  "/checkin": "เช็คอิน",
+  "/bill": "ค่าก๊วน",
+}
+
+function NoSession({ navigate, tab }: { navigate: (to: string) => void; tab: string }) {
+  return (
+    <div className="card">
+      <EmptyState
+        icon={<Logo size={64} />}
+        title={`ยังไม่ได้เปิดก๊วนวันนี้`}
+        hint={`หน้า “${TAB_NAME[tab] ?? "นี้"}” จะใช้ได้หลังเปิดก๊วนแล้ว — กดปุ่มด้านล่างเพื่อเปิดก๊วน แล้วค่อยกลับมา`}
+        action={
+          <button className="btn-primary btn-lg" onClick={() => navigate("/")}>
+            ไปหน้าเปิดก๊วน
+          </button>
+        }
+      />
+    </div>
   )
 }
 

@@ -32,7 +32,8 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
     <div className="flex flex-col gap-4">
       {/* สรุปสถานะก๊วนวันนี้ */}
       <div className="card card-pad">
-        <div className="grid grid-cols-3 gap-3 sm:grid-cols-5">
+        {/* 4 ช่อง — ลงตัวทั้งจอมือถือ (2×2) และจอคอม (1×4) ไม่ตกบรรทัดแหว่ง */}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <Stat label="มาวันนี้" value={view.stats.checkedIn} hint={`${view.roster.length} คนในทะเบียน`} />
           <Stat label="อยู่ในคอร์ต" value={view.stats.playing} hint={`ว่าง ${freeCourts} คอร์ต`} />
           <Stat
@@ -41,10 +42,10 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
             hint={view.stats.waiting > 0 ? `รอเฉลี่ย ${Math.round(view.stats.avgWaitMs / 60_000)} นาที` : "ไม่มีใครรอ"}
             tone={view.dongAlerts.length > 0 ? "red" : "navy"}
           />
-          <Stat label="เกมที่จบแล้ว" value={view.stats.matchesDone} hint={`ลูกที่ใช้ ${view.stats.shuttlesUsed}`} />
           <Stat
             label="รอนานสุด"
             value={view.stats.maxWaitMs > 0 ? formatDuration(view.stats.maxWaitMs) : "—"}
+            hint={`จบไปแล้ว ${view.stats.matchesDone} เกม · ลูก ${view.stats.shuttlesUsed}`}
             tone={view.dongAlerts.length > 0 ? "red" : "gold"}
           />
         </div>

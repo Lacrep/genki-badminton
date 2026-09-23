@@ -28,14 +28,20 @@ export function FinishSheet({
   const [shuttles, setShuttles] = useState(1)
   const [busy, setBusy] = useState(false)
 
+  const matchId = cv?.match?.id
+  const matchShuttles = cv?.match?.shuttles ?? 0
+
+  // ล้างฟอร์มเฉพาะตอนเปิดหน้าต่างหรือเปลี่ยนเกม — ห้ามผูกกับ cv ทั้งก้อน
+  // เพราะข้อมูลถูกดึงใหม่ทุก 3 วินาที จะรีเซ็ตสิ่งที่ผู้ใช้เพิ่งกดทิ้ง
   useEffect(() => {
-    if (!open || !cv?.match) return
+    if (!open || !matchId) return
     setWinner("none")
     setWithScore(false)
     setScoreA(21)
     setScoreB(15)
-    setShuttles(cv.match.shuttles || 1)
-  }, [open, cv])
+    setShuttles(matchShuttles || 1)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, matchId])
 
   if (!cv?.match) return null
   const match = cv.match

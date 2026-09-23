@@ -4,20 +4,25 @@ import { useCallback, useEffect, useState } from "react"
  * เราเตอร์จิ๋ว — แอปนี้มีไม่กี่หน้า และอยากให้ไฟล์ที่ต้องโหลดบนมือถือเล็กที่สุด
  * จึงใช้ History API ตรง ๆ แทนไลบรารีเราเตอร์
  */
+/** ตัด / ท้ายลิงก์ออก เพื่อให้ /bill กับ /bill/ เปิดหน้าเดียวกัน */
+function normalize(pathname: string): string {
+  return pathname.length > 1 ? pathname.replace(/\/+$/, "") || "/" : pathname
+}
+
 export function useRoute() {
-  const [path, setPath] = useState(() => window.location.pathname)
+  const [path, setPath] = useState(() => normalize(window.location.pathname))
 
   useEffect(() => {
-    const onPop = () => setPath(window.location.pathname)
+    const onPop = () => setPath(normalize(window.location.pathname))
     window.addEventListener("popstate", onPop)
     return () => window.removeEventListener("popstate", onPop)
   }, [])
 
   const navigate = useCallback((to: string, opts?: { replace?: boolean }) => {
-    if (to === window.location.pathname) return
+    if (normalize(to) === normalize(window.location.pathname)) return
     if (opts?.replace) window.history.replaceState(null, "", to)
     else window.history.pushState(null, "", to)
-    setPath(to)
+    setPath(normalize(to))
     window.scrollTo({ top: 0 })
   }, [])
 

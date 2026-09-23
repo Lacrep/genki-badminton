@@ -53,7 +53,7 @@ export function CheckInPage() {
           {canControl ? (
             <button className="btn-primary shrink-0" onClick={() => setEditing("new")}>
               <UserPlus size={16} />
-              <span className="hidden sm:inline">เพิ่มคน</span>
+              เพิ่มคน
             </button>
           ) : null}
         </div>
