@@ -41,6 +41,15 @@ function Organizer({ path, navigate }: { path: string; navigate: (to: string) =>
   // จอใหญ่เต็มหน้าจอ ไม่มีแถบเมนู
   if (path === "/tv") return <TvPage navigate={navigate} />
 
+  // เปิดก๊วนใหม่ — เข้าได้เสมอ ถึงจะมีก๊วนเก่าเปิด/ปิดค้างอยู่ก็ตาม
+  if (path === "/new") {
+    return (
+      <Shell path={path} navigate={navigate}>
+        <SetupPage navigate={navigate} />
+      </Shell>
+    )
+  }
+
   return (
     <Shell path={path} navigate={navigate}>
       {!view ? (
@@ -49,7 +58,7 @@ function Organizer({ path, navigate }: { path: string; navigate: (to: string) =>
         ) : path === "/settings" ? (
           <SettingsPage navigate={navigate} />
         ) : path === "/" ? (
-          <SetupPage />
+          <SetupPage navigate={navigate} />
         ) : (
           // แท็บอื่นยังใช้ไม่ได้ถ้ายังไม่เปิดก๊วน — บอกให้ชัดแทนที่จะเด้งหน้าอื่นเงียบ ๆ
           <NoSession navigate={navigate} tab={path} />

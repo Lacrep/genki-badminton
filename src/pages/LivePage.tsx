@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { History, ListOrdered, Plus, Sparkles, Users } from "lucide-react"
-import { displayName, formatDuration, formatMinutes, thaiTime } from "@shared/types"
+import { displayName, formatDuration, formatMinutes, scoreLabel, thaiTime } from "@shared/types"
 import { api } from "@/lib/api"
 import { useApp, useNow, useSession } from "@/lib/app"
 import { CourtCard } from "@/components/CourtCard"
@@ -30,6 +30,30 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
 
   return (
     <div className="flex flex-col gap-4">
+      {/* ก๊วนปิดแล้ว — ต้องมีทางไปต่อ ไม่ใช่ค้างอยู่หน้านี้ */}
+      {view.session.status === "ended" ? (
+        <div className="card card-pad flex flex-col gap-3">
+          <div>
+            <p className="font-heading text-[15px] font-semibold text-ink">ก๊วนนี้ปิดแล้ว</p>
+            <p className="text-[12.5px] leading-snug text-ink-soft">
+              ข้อมูลทั้งหมดถูกเก็บไว้แล้ว — ดูค่าก๊วนกับสถิติย้อนหลังได้ หรือเปิดก๊วนครั้งใหม่ได้เลย
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button className="btn-primary" onClick={() => navigate("/new")}>
+              <Plus size={16} />
+              เปิดก๊วนใหม่
+            </button>
+            <button className="btn-ghost" onClick={() => navigate("/bill")}>
+              ดูค่าก๊วนครั้งนี้
+            </button>
+            <button className="btn-ghost" onClick={() => navigate("/stats")}>
+              ดูสถิติ
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       {/* สรุปสถานะก๊วนวันนี้ */}
       <div className="card card-pad">
         {/* 4 ช่อง — ลงตัวทั้งจอมือถือ (2×2) และจอคอม (1×4) ไม่ตกบรรทัดแหว่ง */}
@@ -144,12 +168,10 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
                     <span className="mx-1.5 text-ink-faint">vs</span>
                     {m.teamB.map(nameOf).join(" + ")}
                   </span>
-                  {m.scoreA != null ? (
-                    <span className="nums chip bg-subtle text-ink-soft">
-                      {m.scoreA}-{m.scoreB}
-                    </span>
+                  {scoreLabel(m) ? (
+                    <span className="nums chip shrink-0 bg-subtle text-ink-soft">{scoreLabel(m)}</span>
                   ) : m.winner ? (
-                    <span className="chip bg-gold/20 text-gold-deep">ฝั่ง {m.winner} ชนะ</span>
+                    <span className="chip shrink-0 bg-gold/20 text-gold-deep">ฝั่ง {m.winner} ชนะ</span>
                   ) : null}
                   <span className="nums shrink-0 text-[11.5px] text-ink-faint">
                     {formatMinutes((m.endedAt ?? m.startedAt) - m.startedAt)}

@@ -8,7 +8,7 @@
 import { Hono } from "hono"
 import type { HttpBindings } from "@hono/node-server"
 import { z } from "zod"
-import { type Level, type MatchType, MAX_LEVEL, displayName, thaiTime } from "@shared/types"
+import { type Level, type MatchType, MAX_LEVEL, displayName, scoreLabel, thaiTime } from "@shared/types"
 import { suggestMatch } from "./matching"
 import {
   type CreateSessionInput,
@@ -361,8 +361,11 @@ app.post("/api/session/:id/finish", async (c) => {
     c,
     z.object({
       matchId: z.string().min(1),
-      scoreA: z.number().int().min(0).max(99).optional(),
-      scoreB: z.number().int().min(0).max(99).optional(),
+      /** คะแนนรายเซ็ต — ปกติ 2 เซ็ต (21 แต้ม) ถ้าเสมอมีเซ็ตที่ 3 */
+      sets: z
+        .array(z.object({ a: z.number().int().min(0).max(99), b: z.number().int().min(0).max(99) }))
+        .max(5)
+        .optional(),
       shuttles: z.number().min(0).max(30).optional(),
       winner: z.enum(["A", "B"]).optional(),
     }),
@@ -419,7 +422,7 @@ app.get("/api/session/:id/matches.csv", (c) => {
     return p ? displayName(p) : pid
   }
   const rows = [
-    ["court", "type", "start", "end", "minutes", "teamA", "teamB", "scoreA", "scoreB", "shuttles", "levelGap"],
+    ["court", "type", "start", "end", "minutes", "teamA", "teamB", "score", "winner", "shuttles", "levelGap"],
     ...session.matches.map((m) => [
       session.courts[m.courtIndex]?.name ?? `คอร์ต ${m.courtIndex + 1}`,
       m.type,
@@ -428,8 +431,8 @@ app.get("/api/session/:id/matches.csv", (c) => {
       m.endedAt ? String(Math.round((m.endedAt - m.startedAt) / 60_000)) : "",
       m.teamA.map(nameOf).join(" + "),
       m.teamB.map(nameOf).join(" + "),
-      m.scoreA != null ? String(m.scoreA) : "",
-      m.scoreB != null ? String(m.scoreB) : "",
+      scoreLabel(m),
+      m.winner ?? "",
       String(m.shuttles),
       String(m.levelGap),
     ]),

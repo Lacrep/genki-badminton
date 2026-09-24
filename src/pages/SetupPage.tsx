@@ -7,8 +7,8 @@ import { useApp } from "@/lib/app"
 import { BrushDivider, Logo, Stepper } from "@/components/ui"
 import { cn } from "@/lib/util"
 
-export function SetupPage() {
-  const { run, sessions, needPin, pinRequired } = useApp()
+export function SetupPage({ navigate }: { navigate?: (to: string) => void }) {
+  const { run, sessions, needPin, pinRequired, view } = useApp()
   const [name, setName] = useState("")
   const [venue, setVenue] = useState<string>(CLUB.venue)
   const [courtCount, setCourtCount] = useState<number>(CLUB.courtCount)
@@ -38,9 +38,30 @@ export function SetupPage() {
   }
 
   const past = sessions.slice(0, 5)
+  const current = view?.session
 
   return (
     <div className="flex flex-col gap-5">
+      {/* มีก๊วนค้างอยู่ — บอกให้ชัดว่ากลับไปได้ หรือจะเปิดใหม่ทับก็ได้ */}
+      {current && navigate ? (
+        <div className="card card-pad flex flex-col gap-2 border-gold/60 bg-gold/[0.08] sm:flex-row sm:items-center">
+          <span className="min-w-0 flex-1">
+            <span className="block truncate font-heading text-[14px] font-semibold text-ink">
+              {current.status === "live" ? "ยังมีก๊วนเปิดอยู่: " : "ก๊วนล่าสุดที่ปิดไปแล้ว: "}
+              {current.name}
+            </span>
+            <span className="block text-[12px] text-ink-soft">
+              {current.status === "live"
+                ? "ถ้าเปิดก๊วนใหม่ ก๊วนนี้จะถูกเก็บเข้าประวัติ (ข้อมูลไม่หาย)"
+                : "ดูค่าก๊วน/สถิติย้อนหลังได้ หรือเปิดก๊วนใหม่ด้านล่าง"}
+            </span>
+          </span>
+          <button className="btn-ghost btn-sm shrink-0" onClick={() => navigate("/")}>
+            กลับไปดูก๊วนนั้น
+          </button>
+        </div>
+      ) : null}
+
       {/* ป้ายร้าน */}
       <div className="card card-pad flex flex-col items-center gap-2 py-7 text-center">
         <Logo size={128} ring />

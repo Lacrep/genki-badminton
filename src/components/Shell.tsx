@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from "react"
 import {
   AlertTriangle,
   BarChart3,
+  CalendarPlus,
   KeyRound,
   LayoutGrid,
   ListOrdered,
@@ -97,6 +98,14 @@ export function Shell({
               <>
                 <div className="fixed inset-0 z-10" onClick={() => setMenu(false)} />
                 <div className="absolute right-0 top-full z-20 mt-1.5 w-52 overflow-hidden rounded-xl border border-line bg-surface py-1 shadow-lift">
+                  <Item
+                    icon={<CalendarPlus size={15} />}
+                    label="เปิดก๊วนใหม่"
+                    onClick={() => {
+                      setMenu(false)
+                      navigate("/new")
+                    }}
+                  />
                   {session ? (
                     <>
                       <Item

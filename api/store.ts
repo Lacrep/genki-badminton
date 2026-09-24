@@ -19,6 +19,7 @@ import {
   type Fees,
   type Level,
   type Match,
+  type MatchSet,
   type MatchType,
   type QueueEntry,
   type RosterPlayer,
@@ -35,8 +36,10 @@ import {
   priorityOf,
   thaiDateKey,
   thaiTime,
+  scoreLabel,
   thaiWeekday,
   waitTier,
+  winnerFromSets,
 } from "@shared/types"
 import { CLUB } from "@shared/club"
 import { forecastQueue } from "./matching"
@@ -610,7 +613,7 @@ export function startMatch(
 
 export function finishMatch(
   sessionId: string,
-  input: { matchId: string; scoreA?: number; scoreB?: number; shuttles?: number; winner?: "A" | "B" },
+  input: { matchId: string; sets?: MatchSet[]; shuttles?: number; winner?: "A" | "B" },
 ): Session {
   return mutate(sessionId, (s) => {
     const match = s.matches.find((m) => m.id === input.matchId)
@@ -620,10 +623,11 @@ export function finishMatch(
     const now = Date.now()
     match.endedAt = now
     if (typeof input.shuttles === "number") match.shuttles = Math.max(0, input.shuttles)
-    if (typeof input.scoreA === "number" && typeof input.scoreB === "number") {
-      match.scoreA = input.scoreA
-      match.scoreB = input.scoreB
-      if (input.scoreA !== input.scoreB) match.winner = input.scoreA > input.scoreB ? "A" : "B"
+    // บันทึกคะแนนรายเซ็ตถ้ามี (ก๊วนนี้เล่น 21 แต้ม สองเซ็ต) แล้วสรุปผู้ชนะจากเซ็ตที่ได้
+    const sets = (input.sets ?? []).filter((x) => x.a > 0 || x.b > 0)
+    if (sets.length > 0) {
+      match.sets = sets
+      match.winner = winnerFromSets(sets) ?? undefined
     } else if (input.winner) {
       // ก๊วนส่วนใหญ่ไม่จดคะแนน — บอกแค่ว่าฝั่งไหนชนะก็พอสำหรับสถิติ
       match.winner = input.winner
@@ -651,7 +655,8 @@ export function finishMatch(
     const court = s.courts[match.courtIndex]
     if (court && court.currentMatchId === match.id) court.currentMatchId = null
 
-    const score = match.scoreA != null ? ` ${match.scoreA}-${match.scoreB}` : ""
+    const label = scoreLabel(match)
+    const score = label ? ` ${label}` : ""
     s.events.push(
       event("match.end", `จบเกม ${court?.name ?? `คอร์ต ${match.courtIndex + 1}`}${score}`, { matchId: match.id }),
     )

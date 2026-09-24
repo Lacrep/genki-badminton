@@ -358,13 +358,15 @@ describe("forecastQueue — อีกกี่คิวถึงตา", () => {
     ])
     const m1 = finishedMatch(["x1", "x2"], ["x3", "x4"], NOW)
     m1.endedAt = undefined
-    m1.startedAt = NOW - 10 * 60_000 // เล่นไป 10 นาที จากเป้า 14 นาที
+    const played = 10
+    m1.startedAt = NOW - played * 60_000 // เล่นไปแล้ว 10 นาที
     const m2 = { ...m1, id: "m_other", courtIndex: 1, startedAt: NOW - 2 * 60_000 }
     session.matches = [m1, m2]
     session.courts[0].currentMatchId = m1.id
     session.courts[1].currentMatchId = m2.id
     const f = forecastQueue(session, NOW)
-    expect(f.eta.get("a")).toBe(4) // คอร์ตที่ใกล้จบที่สุดเหลือ ~4 นาที
+    // คอร์ตที่ใกล้จบที่สุด = เป้าเวลาต่อเกม ลบเวลาที่เล่นไปแล้ว
+    expect(f.eta.get("a")).toBe(DEFAULT_SETTINGS.targetGameMinutes - played)
   })
 })
 

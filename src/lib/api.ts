@@ -1,4 +1,4 @@
-import type { Level, MatchType, RosterPlayer, SessionView } from "@shared/types"
+import type { Level, MatchSet, MatchType, RosterPlayer, SessionView } from "@shared/types"
 
 export interface SessionSummary {
   id: string
@@ -173,7 +173,7 @@ export const api = {
   ) => post<ViewReply>(`/api/session/${id}/start`, input),
   finish: (
     id: string,
-    input: { matchId: string; scoreA?: number; scoreB?: number; shuttles?: number; winner?: "A" | "B" },
+    input: { matchId: string; sets?: MatchSet[]; shuttles?: number; winner?: "A" | "B" },
   ) =>
     post<ViewReply>(`/api/session/${id}/finish`, input),
   cancelMatch: (id: string, matchId: string) => post<ViewReply>(`/api/session/${id}/cancel`, { matchId }),

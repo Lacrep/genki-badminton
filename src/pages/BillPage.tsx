@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { Check, ClipboardList, Download, QrCode, Receipt, Wallet } from "lucide-react"
-import { type BillLine, type FeeMode, FEE_MODE_LABEL } from "@shared/types"
+import { Check, ClipboardList, Download, QrCode, Receipt, Volleyball, Wallet } from "lucide-react"
+import { type BillLine, type FeeMode, FEE_MODE_LABEL, displayName, thaiTime } from "@shared/types"
 import { CLUB } from "@shared/club"
 import { api } from "@/lib/api"
 import { useApp, useSession } from "@/lib/app"
@@ -45,6 +45,10 @@ export function BillPage() {
   }
 
   const unpaid = bill.lines.filter((l) => !l.paid)
+  const playedMatches = [...view.session.matches]
+    .filter((m) => m.endedAt)
+    .sort((a, b) => (b.endedAt ?? 0) - (a.endedAt ?? 0))
+  const missingShuttles = playedMatches.filter((m) => m.shuttles === 0).length
   const setPaid = (playerId: string, paid: boolean) =>
     run(paid ? "รับเงินแล้ว" : "ยกเลิกการจ่าย", () => api.paid(sessionId, playerId, paid), { silent: true })
 
@@ -281,6 +285,72 @@ export function BillPage() {
           ) : null}
         </div>
       </section>
+
+      {/* ค่าลูกรายเกม — ให้เห็นว่าเงินค่าลูกไปลงที่ใครบ้าง และแก้ย้อนหลังได้ */}
+      {fees.mode === "club" ? (
+        <section className="card card-pad">
+          <h2 className="section-title mb-1">
+            <Volleyball size={15} className="text-gold-deep" />
+            ค่าลูกรายเกม ({playedMatches.length} เกม)
+          </h2>
+          <p className="mb-3 text-[11.5px] leading-snug text-ink-faint">
+            ลูกละ {baht(fees.shuttlePrice)} บาท หารเฉพาะคนที่ลงเกมนั้น — เกมละ 1 ลูกคือคนละ{" "}
+            {(fees.shuttlePrice / 4).toFixed(2).replace(/\.00$/, "")} บาท · แก้จำนวนลูกย้อนหลังได้ที่นี่
+          </p>
+
+          {missingShuttles > 0 ? (
+            <div className="mb-3 rounded-xl border border-gold/60 bg-gold/[0.12] px-3 py-2.5 text-[12.5px] leading-snug text-ink">
+              มี {missingShuttles} เกมที่ยังไม่ได้ใส่จำนวนลูก — ค่าลูกของเกมนั้นจะยังไม่ถูกคิดให้ใคร
+              ใส่จำนวนได้ที่รายการด้านล่าง
+            </div>
+          ) : null}
+
+          <div className="flex flex-col divide-y divide-line/60">
+            {playedMatches.map((m) => {
+              const names = [...m.teamA, ...m.teamB].map((pid) => {
+                const p = view.roster.find((r) => r.id === pid)
+                return p ? displayName(p) : "—"
+              })
+              return (
+                <div key={m.id} className="flex items-center gap-2.5 py-2">
+                  <span className="nums shrink-0 text-[11.5px] text-ink-faint">{thaiTime(m.endedAt ?? m.startedAt)}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-[13px] text-ink">
+                      {names.slice(0, 2).join(" + ")}
+                      <span className="mx-1 text-ink-faint">vs</span>
+                      {names.slice(2).join(" + ")}
+                    </span>
+                    <span className="block text-[11px] text-ink-faint">
+                      {m.shuttles > 0
+                        ? `คนละ ${((m.shuttles * fees.shuttlePrice) / Math.max(1, names.length)).toFixed(2).replace(/\.00$/, "")} บาท`
+                        : "ยังไม่ได้ใส่จำนวนลูก"}
+                    </span>
+                  </span>
+                  <Stepper
+                    value={m.shuttles}
+                    onChange={(v) =>
+                      void run("", () => api.shuttles(sessionId, v - m.shuttles, m.id), { silent: true })
+                    }
+                    max={20}
+                    suffix="ลูก"
+                  />
+                </div>
+              )
+            })}
+            {playedMatches.length === 0 ? (
+              <p className="py-3 text-center text-[13px] text-ink-faint">ยังไม่มีเกมที่จบ</p>
+            ) : null}
+          </div>
+
+          {view.session.shuttlesExtra > 0 ? (
+            <p className="mt-3 rounded-xl bg-subtle/70 px-3 py-2 text-[12px] leading-snug text-ink-soft">
+              มีลูกนอกเกมอีก {view.session.shuttlesExtra} ลูก (
+              {baht(view.session.shuttlesExtra * fees.shuttlePrice)} บาท) — ส่วนนี้<b>หารเท่ากันทุกคน</b>{" "}
+              เพราะไม่ได้ผูกกับเกมไหน ถ้าอยากให้คิดตามเกม ให้ย้ายไปใส่ในเกมด้านบนแทน
+            </p>
+          ) : null}
+        </section>
+      ) : null}
 
       {/* QR พร้อมเพย์ */}
       <section className="card card-pad flex flex-col items-center gap-2">

@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react"
-import { ArrowLeftRight, CheckCircle2, Trophy } from "lucide-react"
-import { type CourtView, type SessionView, displayName, formatDuration } from "@shared/types"
+import { ArrowLeftRight, CheckCircle2, Plus, Trophy } from "lucide-react"
+import {
+  type CourtView,
+  type MatchSet,
+  type SessionView,
+  displayName,
+  formatDuration,
+  setsWon,
+  winnerFromSets,
+} from "@shared/types"
 import { api } from "@/lib/api"
 import { useApp } from "@/lib/app"
 import { cn } from "@/lib/util"
@@ -21,10 +29,12 @@ export function FinishSheet({
   sessionId: string
 }) {
   const { run } = useApp()
-  const [winner, setWinner] = useState<"A" | "B" | "none">("none")
-  const [withScore, setWithScore] = useState(false)
-  const [scoreA, setScoreA] = useState(21)
-  const [scoreB, setScoreB] = useState(15)
+  const [mode, setMode] = useState<"score" | "quick">("score")
+  const [sets, setSets] = useState<MatchSet[]>([
+    { a: 0, b: 0 },
+    { a: 0, b: 0 },
+  ])
+  const [quickWinner, setQuickWinner] = useState<"A" | "B" | "none">("none")
   const [shuttles, setShuttles] = useState(1)
   const [busy, setBusy] = useState(false)
 
@@ -35,18 +45,34 @@ export function FinishSheet({
   // เพราะข้อมูลถูกดึงใหม่ทุก 3 วินาที จะรีเซ็ตสิ่งที่ผู้ใช้เพิ่งกดทิ้ง
   useEffect(() => {
     if (!open || !matchId) return
-    setWinner("none")
-    setWithScore(false)
-    setScoreA(21)
-    setScoreB(15)
+    setMode("score")
+    setSets([
+      { a: 0, b: 0 },
+      { a: 0, b: 0 },
+    ])
+    setQuickWinner("none")
     setShuttles(matchShuttles || 1)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, matchId])
+
+  // เซ็ตที่มีคะแนนแล้วเท่านั้นที่นับ — กรอกไม่ครบก็จบเกมได้
+  const filled = sets.filter((x) => x.a > 0 || x.b > 0)
+  const won = setsWon(filled)
+  const decided = winnerFromSets(filled)
+  const needsThirdSet = filled.length === 2 && won.a === won.b
 
   if (!cv?.match) return null
   const match = cv.match
   const teamA = cv.players.filter((p) => p.team === "A")
   const teamB = cv.players.filter((p) => p.team === "B")
+  const highlight = mode === "score" ? decided : quickWinner === "none" ? null : quickWinner
+
+  const setScore = (index: number, side: "a" | "b", value: number) => {
+    setSets((prev) => {
+      const next = prev.map((x, i) => (i === index ? { ...x, [side]: Math.max(0, Math.min(99, value)) } : x))
+      return next
+    })
+  }
 
   const submit = async () => {
     setBusy(true)
@@ -54,10 +80,10 @@ export function FinishSheet({
       api.finish(sessionId, {
         matchId: match.id,
         shuttles,
-        ...(withScore
-          ? { scoreA, scoreB }
-          : winner !== "none"
-            ? { winner }
+        ...(mode === "score" && filled.length > 0
+          ? { sets: filled }
+          : mode === "quick" && quickWinner !== "none"
+            ? { winner: quickWinner }
             : {}),
       }),
     )
@@ -79,17 +105,61 @@ export function FinishSheet({
       }
     >
       <div className="flex flex-col gap-4">
-        <div>
-          <span className="label">ฝั่งไหนชนะ (ข้ามได้ถ้าไม่ได้จด)</span>
+        <div className="flex flex-col gap-2 rounded-xl border border-line/70 bg-subtle/40 p-3">
+          <TeamLine label="A" players={teamA} highlight={highlight === "A"} />
+          <TeamLine label="B" players={teamB} highlight={highlight === "B"} />
+        </div>
+
+        <Segmented
+          value={mode}
+          onChange={setMode}
+          options={[
+            { value: "score", label: "จดคะแนน (21 แต้ม 2 เซ็ต)" },
+            { value: "quick", label: "ไม่จดคะแนน" },
+          ]}
+          size="sm"
+        />
+
+        {mode === "score" ? (
+          <div className="flex flex-col gap-2">
+            {sets.map((set, i) => (
+              <SetRow
+                key={i}
+                index={i}
+                set={set}
+                onChange={(side, v) => setScore(i, side, v)}
+                onQuick={(winnerSide) => {
+                  setScore(i, winnerSide, 21)
+                  setScore(i, winnerSide === "a" ? "b" : "a", set[winnerSide === "a" ? "b" : "a"] || 0)
+                }}
+              />
+            ))}
+
+            {needsThirdSet && sets.length === 2 ? (
+              <button className="btn-ghost btn-sm self-start" onClick={() => setSets((p) => [...p, { a: 0, b: 0 }])}>
+                <Plus size={14} />
+                เสมอ 1-1 · เพิ่มเซ็ตที่ 3
+              </button>
+            ) : null}
+
+            <p className="text-center text-[12.5px] text-ink-soft">
+              {filled.length === 0
+                ? "ใส่คะแนนแต่ละเซ็ต หรือข้ามไปก็ได้"
+                : decided
+                  ? `ฝั่ง ${decided} ชนะ ${Math.max(won.a, won.b)}-${Math.min(won.a, won.b)} เซ็ต`
+                  : `ตอนนี้เสมอกัน ${won.a}-${won.b} เซ็ต`}
+            </p>
+          </div>
+        ) : (
           <div className="grid grid-cols-3 gap-2">
             {(["A", "B", "none"] as const).map((k) => (
               <button
                 key={k}
                 type="button"
-                onClick={() => setWinner(k)}
+                onClick={() => setQuickWinner(k)}
                 className={cn(
                   "rounded-xl border px-2 py-2.5 text-center font-heading text-[13px] font-medium transition-all",
-                  winner === k
+                  quickWinner === k
                     ? k === "none"
                       ? "border-line bg-subtle text-ink"
                       : "border-navy bg-navy text-white"
@@ -100,55 +170,76 @@ export function FinishSheet({
                   "ไม่บันทึก"
                 ) : (
                   <span className="flex items-center justify-center gap-1">
-                    {winner === k ? <Trophy size={13} /> : null}
+                    {quickWinner === k ? <Trophy size={13} /> : null}
                     ฝั่ง {k}
                   </span>
                 )}
               </button>
             ))}
           </div>
-        </div>
+        )}
 
-        <div className="flex flex-col gap-2 rounded-xl border border-line/70 bg-subtle/40 p-3">
-          <TeamLine label="A" players={teamA} highlight={winner === "A"} />
-          <TeamLine label="B" players={teamB} highlight={winner === "B"} />
-        </div>
-
-        <div>
-          <span className="label">คะแนน</span>
-          <Segmented
-            value={withScore ? "yes" : "no"}
-            onChange={(v) => setWithScore(v === "yes")}
-            options={[
-              { value: "no", label: "ไม่จดคะแนน" },
-              { value: "yes", label: "จดคะแนน" },
-            ]}
-            size="sm"
-          />
-          {withScore ? (
-            <div className="mt-2.5 flex items-center justify-center gap-3">
-              <div className="flex flex-col items-center gap-1">
-                <span className="font-heading text-[11.5px] text-ink-faint">ฝั่ง A</span>
-                <Stepper value={scoreA} onChange={setScoreA} max={40} />
-              </div>
-              <span className="pt-4 font-heading text-lg text-ink-faint">:</span>
-              <div className="flex flex-col items-center gap-1">
-                <span className="font-heading text-[11.5px] text-ink-faint">ฝั่ง B</span>
-                <Stepper value={scoreB} onChange={setScoreB} max={40} />
-              </div>
-            </div>
-          ) : null}
-        </div>
-
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center justify-between gap-3 rounded-xl border border-gold/50 bg-gold/[0.08] px-3 py-2.5">
           <span>
             <span className="block font-heading text-[14px] font-medium text-ink">ลูกที่ใช้ในเกมนี้</span>
-            <span className="block text-[12px] text-ink-soft">ใช้คิดค่าลูกตอนหารเงินตอนท้าย</span>
+            <span className="block text-[12px] text-ink-soft">
+              ค่าลูกจะถูกหารเฉพาะ {cv.players.length} คนที่ลงเกมนี้
+            </span>
           </span>
           <Stepper value={shuttles} onChange={setShuttles} max={20} suffix="ลูก" />
         </div>
       </div>
     </Modal>
+  )
+}
+
+/** แถวกรอกคะแนนหนึ่งเซ็ต — กดปุ่ม 21 เพื่อใส่ไวตอนอยู่ข้างสนาม */
+function SetRow({
+  index,
+  set,
+  onChange,
+  onQuick,
+}: {
+  index: number
+  set: MatchSet
+  onChange: (side: "a" | "b", value: number) => void
+  onQuick: (side: "a" | "b") => void
+}) {
+  const num = (v: string) => {
+    const n = Number(v.replace(/[^0-9]/g, ""))
+    return Number.isFinite(n) ? n : 0
+  }
+  return (
+    <div className="flex items-center gap-2 rounded-xl border border-line/70 bg-surface px-3 py-2">
+      <span className="w-12 shrink-0 font-heading text-[12.5px] font-medium text-ink-soft">เซ็ต {index + 1}</span>
+      <div className="flex flex-1 items-center justify-center gap-2">
+        <input
+          className="input nums w-[72px] py-1.5 text-center text-[17px] font-semibold"
+          inputMode="numeric"
+          value={set.a || ""}
+          placeholder="0"
+          aria-label={`คะแนนฝั่ง A เซ็ต ${index + 1}`}
+          onChange={(e) => onChange("a", num(e.target.value))}
+        />
+        <span className="font-heading text-[15px] text-ink-faint">:</span>
+        <input
+          className="input nums w-[72px] py-1.5 text-center text-[17px] font-semibold"
+          inputMode="numeric"
+          value={set.b || ""}
+          placeholder="0"
+          aria-label={`คะแนนฝั่ง B เซ็ต ${index + 1}`}
+          onChange={(e) => onChange("b", num(e.target.value))}
+        />
+      </div>
+      <div className="flex shrink-0 gap-1">
+        <button type="button" className="btn-quiet btn-sm !px-2" onClick={() => onQuick("a")} title="ฝั่ง A ได้ 21">
+          A 21
+        </button>
+        <button type="button" className="btn-quiet btn-sm !px-2" onClick={() => onQuick("b")} title="ฝั่ง B ได้ 21">
+          B 21
+        </button>
+      </div>
+    </div>
   )
 }
 

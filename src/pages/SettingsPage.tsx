@@ -43,6 +43,9 @@ export function SettingsPage({ navigate }: { navigate: (to: string) => void }) {
   const s = view.session.settings
   const canControl = !needPin
 
+  // ปิดก๊วนได้ต่อเมื่อไม่มีเกมค้างในคอร์ต — บอกล่วงหน้าดีกว่าให้กดแล้วเด้ง error
+  const liveMatches = view.courts.filter((c) => c.match).length
+
   const patch = (settings: Partial<SessionSettings>) =>
     void run("บันทึกการตั้งค่าแล้ว", () => api.updateSession(sessionId, { settings }), { silent: true })
 
@@ -252,11 +255,16 @@ export function SettingsPage({ navigate }: { navigate: (to: string) => void }) {
           ปิดก๊วนแล้วทุกคนจะถูกเช็คเอาต์ให้อัตโนมัติ ตัวเลขค่าใช้จ่ายจะหยุดนิ่ง
           และก๊วนนี้จะไปอยู่ในประวัติ (เปิดกลับมาแก้ได้ถ้ากดผิด)
         </p>
+        {view.session.status === "live" && liveMatches > 0 ? (
+          <p className="rounded-xl border border-gold/60 bg-gold/[0.12] px-3 py-2 text-[12.5px] leading-snug text-ink">
+            ยังมี {liveMatches} เกมเล่นอยู่ในคอร์ต — กดจบเกมให้ครบก่อนถึงจะปิดก๊วนได้
+          </p>
+        ) : null}
         <div className="flex flex-wrap gap-2">
           {view.session.status === "live" ? (
             <button
               className="btn-red"
-              disabled={!canControl}
+              disabled={!canControl || liveMatches > 0}
               onClick={() => {
                 if (!window.confirm("ปิดก๊วนวันนี้เลยไหม?")) return
                 void run("ปิดก๊วนแล้ว", () => api.endSession(sessionId))

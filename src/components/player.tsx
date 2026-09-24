@@ -1,4 +1,4 @@
-import { Clock, Flame, Hourglass, Star } from "lucide-react"
+import { ChevronRight, Clock, Flame, Hourglass, Star } from "lucide-react"
 import {
   type QueueEntry,
   type RosterPlayer,
@@ -43,28 +43,6 @@ export function PlayerAvatar({ player, size = 34 }: { player: RosterPlayer; size
       aria-hidden
     >
       {label}
-    </span>
-  )
-}
-
-export function PlayerTag({
-  player,
-  size = 30,
-  className,
-  right,
-}: {
-  player: RosterPlayer
-  size?: number
-  className?: string
-  right?: React.ReactNode
-}) {
-  return (
-    <span className={cn("flex min-w-0 items-center gap-2", className)}>
-      <PlayerAvatar player={player} size={size} />
-      <span className="min-w-0 flex-1 truncate font-heading text-[14px] font-medium text-ink">
-        {displayName(player)}
-      </span>
-      {right}
     </span>
   )
 }
@@ -122,12 +100,16 @@ export function QueueRow({
   compact?: boolean
 }) {
   const { player, sp, waitMs, tier, queueAhead, etaMinutes } = entry
+  const Row = onMenu ? "button" : "div"
   return (
-    <div
+    <Row
+      type={onMenu ? "button" : undefined}
+      onClick={onMenu}
       className={cn(
-        "flex items-center gap-2.5 rounded-xl border px-2.5 py-2 transition-colors",
+        "flex w-full items-center gap-2.5 rounded-xl border px-2.5 py-2 text-left transition-colors",
         `tier-${tier}`,
         pinned && "ring-2 ring-gold",
+        onMenu && "active:scale-[0.995]",
       )}
     >
       <span
@@ -139,7 +121,17 @@ export function QueueRow({
         {index + 1}
       </span>
 
-      <PlayerTag player={player} size={compact ? 28 : 32} className="flex-1" />
+      {/* ชื่อ + คิวของคนนี้ — ต้องเห็นบนมือถือด้วย ไม่ใช่เฉพาะจอกว้าง */}
+      <span className="flex min-w-0 flex-1 items-center gap-2">
+        <PlayerAvatar player={player} size={compact ? 28 : 32} />
+        <span className="min-w-0 flex-1">
+          <span className="block truncate font-heading text-[14px] font-medium text-ink">{displayName(player)}</span>
+          <span className="nums block truncate text-[11px] text-ink-faint">
+            {etaText(queueAhead, etaMinutes)} · ลงไป {sp.gamesPlayed} เกม
+            {sp.wins + sp.losses > 0 ? ` · ${sp.wins}-${sp.losses}` : ""}
+          </span>
+        </span>
+      </span>
 
       <span className="flex shrink-0 items-center gap-1.5">
         {sp.boost > 0 ? (
@@ -149,18 +141,8 @@ export function QueueRow({
         ) : null}
         <LevelBadge level={player.level} />
         <WaitClock waitMs={waitMs} tier={tier} />
-        {!compact ? (
-          <span className="hidden w-16 flex-col items-end text-right sm:flex">
-            <span className="nums text-[11px] font-medium text-ink-soft">{sp.gamesPlayed} เกม</span>
-            <span className="text-[10.5px] text-ink-faint">{etaText(queueAhead, etaMinutes)}</span>
-          </span>
-        ) : null}
-        {onMenu ? (
-          <button type="button" onClick={onMenu} className="btn-sm btn-quiet !px-2" title="ตัวเลือก">
-            ⋯
-          </button>
-        ) : null}
+        {onMenu ? <ChevronRight size={16} className="shrink-0 text-ink-faint" /> : null}
       </span>
-    </div>
+    </Row>
   )
 }

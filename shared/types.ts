@@ -104,6 +104,12 @@ export interface Court {
   currentMatchId: string | null
 }
 
+/** คะแนนหนึ่งเซ็ต (ก๊วนนี้เล่น 21 แต้ม สองเซ็ต ถ้าเสมอต่อเซ็ตที่ 3) */
+export interface MatchSet {
+  a: number
+  b: number
+}
+
 export interface Match {
   id: string
   courtIndex: number
@@ -112,6 +118,9 @@ export interface Match {
   teamB: string[]
   startedAt: number
   endedAt?: number
+  /** คะแนนรายเซ็ต — ปกติ 2 เซ็ต ถ้าเสมอกันจะมีเซ็ตที่ 3 */
+  sets?: MatchSet[]
+  /** คะแนนแบบเซ็ตเดียวของข้อมูลรุ่นเก่า (ยังอ่านได้ ไม่ได้ใช้บันทึกใหม่แล้ว) */
   scoreA?: number
   scoreB?: number
   winner?: "A" | "B"
@@ -174,7 +183,7 @@ export interface SessionSettings {
   warnWaitMinutes: number
   /** เกินกี่นาทีถือว่า "ถูกดอง" (การ์ดแดงกระพริบ + ระบบบังคับจัดลง) */
   dongWaitMinutes: number
-  /** เกมหนึ่งใช้เวลาประมาณกี่นาที (ใช้ประเมินคิวถัดไป) */
+  /** เกมหนึ่ง (2 เซ็ต) ใช้เวลาประมาณกี่นาที — ใช้ประเมินคิวถัดไป */
   targetGameMinutes: number
   /** ประเภทเกมเริ่มต้นเวลากดสุ่ม */
   defaultMatchType: MatchType | "auto"
@@ -192,7 +201,7 @@ export const DEFAULT_SETTINGS: SessionSettings = {
   levelWeight: 8,
   warnWaitMinutes: 8,
   dongWaitMinutes: 15,
-  targetGameMinutes: 14,
+  targetGameMinutes: 20,
   defaultMatchType: "auto",
   callSound: true,
 }
@@ -336,6 +345,32 @@ export interface SessionView {
 
 export function displayName(p: RosterPlayer): string {
   return p.name
+}
+
+/** นับว่าฝั่งไหนชนะกี่เซ็ต */
+export function setsWon(sets: MatchSet[]): { a: number; b: number } {
+  return sets.reduce(
+    (acc, s) => {
+      if (s.a > s.b) acc.a += 1
+      else if (s.b > s.a) acc.b += 1
+      return acc
+    },
+    { a: 0, b: 0 },
+  )
+}
+
+/** ฝั่งที่ชนะเกม = ฝั่งที่ได้เซ็ตมากกว่า (null = ยังไม่ชี้ขาด) */
+export function winnerFromSets(sets: MatchSet[]): "A" | "B" | null {
+  const w = setsWon(sets)
+  if (w.a === w.b) return null
+  return w.a > w.b ? "A" : "B"
+}
+
+/** ข้อความคะแนนสำหรับแสดงผล เช่น "21-15, 19-21, 21-18" */
+export function scoreLabel(match: Match): string {
+  if (match.sets?.length) return match.sets.map((s) => `${s.a}-${s.b}`).join(", ")
+  if (match.scoreA != null && match.scoreB != null) return `${match.scoreA}-${match.scoreB}`
+  return ""
 }
 
 /** คะแนนความควรได้ลงเล่น — สูตรเดียวกันทั้งฝั่งจัดคิวและฝั่งแสดงผล */
