@@ -199,7 +199,18 @@ describe("ชีตค่าก๊วนรายคน", () => {
   it("แถวรวมใส่สูตร SUM ไว้ด้วย เผื่อหัวก๊วนแก้ตัวเลขเองในไฟล์", () => {
     const { sheets, session } = workbookOf()
     const xml = sheets.get("xl/worksheets/sheet1.xml")!
-    expect(xml).toContain(`<f>SUM(L2:L${session.players.length + 1})</f>`)
+    const last = session.players.length + 1
+    // M = คอลัมน์ "รวมต้องจ่าย"
+    expect(xml).toContain(`<f>SUM(M2:M${last})</f>`)
+  })
+
+  it("แยกค่าลูกในเกมกับค่าลูกนอกเกมเป็นคนละคอลัมน์", () => {
+    const { session, roster } = makeSession()
+    session.shuttlesExtra = 2
+    const sheets = unzip(billWorkbook(session, computeBill(session, roster), roster))
+    const texts = textsOf(sheets, 1)
+    expect(texts).toContain("ค่าลูกในเกม")
+    expect(texts).toContain("ค่าลูกนอกเกม")
   })
 
   it("ตรึงหัวตารางและใส่ปุ่มกรองให้", () => {

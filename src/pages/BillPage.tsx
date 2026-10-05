@@ -12,6 +12,30 @@ import { baht, cn, copyText } from "@/lib/util"
 /** ตัวเลขที่เชื่อถือได้ — ถ้าเซิร์ฟเวอร์ (เวอร์ชันเก่า) ไม่ได้ส่งมา ให้เป็น 0 แทนที่จะพังทั้งหน้า */
 const nz = (v: number | undefined | null): number => (typeof v === "number" && Number.isFinite(v) ? v : 0)
 
+/** ตัดทศนิยมที่ไม่จำเป็นออก — 100.00 → 100 แต่ 14.29 ยังเป็น 14.29 */
+const money = (v: number): string => v.toFixed(2).replace(/\.00$/, "")
+
+/**
+ * ที่มาของยอดคนนี้ แยกเป็นก้อน ๆ
+ *
+ * ค่าลูกในเกมเป็นจำนวนเต็มเสมอ (คนละ 25 ต่อลูก) เศษสตางค์มาจาก "ลูกนอกเกม" ที่หาร
+ * เท่ากันทุกคนเท่านั้น จึงต้องแยกให้เห็น ไม่งั้นเลข 114.29 ลอยมาโดยไม่มีใครรู้ที่มา
+ */
+function feeBreakdown(line: BillLine, long = false): string {
+  const court = long ? "ค่าสนาม" : "สนาม"
+  const inGame = nz(line.shuttlePart) - nz(line.looseShuttlePart)
+  const parts = [`${court} ${baht(nz(line.courtPart))}`]
+
+  if (nz(line.looseShuttlePart) > 0) {
+    parts.push(`ลูกในเกม ${money(inGame)}`, `ลูกนอกเกม ${money(nz(line.looseShuttlePart))}`)
+  } else if (nz(line.shuttlePart) > 0) {
+    parts.push(`${long ? "ค่าลูก" : "ลูก"} ${money(nz(line.shuttlePart))}`)
+  }
+  if (nz(line.extraPart) > 0) parts.push(`${long ? "อื่น ๆ" : "อื่น"} ${baht(nz(line.extraPart))}`)
+
+  return parts.join(" + ")
+}
+
 export function BillPage() {
   const { view, sessionId } = useSession()
   const { run, toast, needPin } = useApp()
@@ -267,10 +291,11 @@ export function BillPage() {
                     <span className="block truncate text-[11.5px] text-ink-faint">
                       {l.games} เกม
                       {sp && sp.wins + sp.losses > 0 ? ` · ชนะ ${sp.wins} แพ้ ${sp.losses}` : ""}
-                      {view.session.fees.mode === "club"
-                        ? ` · สนาม ${baht(nz(l.courtPart))} + ลูก ${nz(l.shuttlePart).toFixed(2).replace(/\.00$/, "")}`
-                        : ""}
                     </span>
+                    {/* ที่มาของยอดอยู่บรรทัดของตัวเอง — ยัดรวมบรรทัดเดียวแล้วโดนตัดหายบนจอมือถือ */}
+                    {view.session.fees.mode === "club" ? (
+                      <span className="block text-[11px] leading-snug text-ink-faint/80">{feeBreakdown(l)}</span>
+                    ) : null}
                   </span>
                 </button>
                 <span className="nums font-heading text-[15px] font-semibold text-ink">{baht(l.amount)} ฿</span>
@@ -367,9 +392,10 @@ export function BillPage() {
 
           {view.session.shuttlesExtra > 0 ? (
             <p className="mt-3 rounded-xl bg-subtle/70 px-3 py-2 text-[12px] leading-snug text-ink-soft">
-              มีลูกนอกเกมอีก {view.session.shuttlesExtra} ลูก (
-              {baht(view.session.shuttlesExtra * fees.shuttlePrice * 4)} บาท) — ส่วนนี้<b>หารเท่ากันทุกคน</b>{" "}
-              เพราะไม่ได้ผูกกับเกมไหน (คิดราคาเต็มลูกละ {baht(fees.shuttlePrice * 4)} บาท เท่าที่เก็บได้ต่อลูกในเกมปกติ)
+              มีลูกนอกเกมอีก {view.session.shuttlesExtra} ลูก คิดราคาเต็มลูกละ {baht(fees.shuttlePrice * 4)} บาท
+              = {baht(view.session.shuttlesExtra * fees.shuttlePrice * 4)} บาท — ส่วนนี้<b>หารเท่ากันทุกคน</b>{" "}
+              เพราะไม่ได้ผูกกับเกมไหน <b>ตกคนละ {(bill.lines[0]?.looseShuttlePart ?? 0).toFixed(2)} บาท</b>{" "}
+              (นี่คือที่มาของเศษสตางค์ในค่าลูกของทุกคน — ค่าลูกในเกมเป็นจำนวนเต็มเสมอ)
               ถ้าอยากให้คิดตามเกม ให้ย้ายไปใส่ในเกมด้านบนแทน
             </p>
           ) : null}
@@ -488,10 +514,7 @@ function CollectModal({
             <span className="ml-1 text-[18px] font-medium">บาท</span>
           </p>
           {mode === "club" ? (
-            <p className="mt-1 text-[12px] text-ink-faint">
-              ค่าสนาม {baht(nz(line.courtPart))} + ค่าลูก {nz(line.shuttlePart).toFixed(2).replace(/\.00$/, "")}
-              {nz(line.extraPart) > 0 ? ` + อื่น ๆ ${baht(nz(line.extraPart))}` : ""}
-            </p>
+            <p className="mt-1 text-[12px] text-ink-faint">{feeBreakdown(line, true)}</p>
           ) : null}
         </div>
 

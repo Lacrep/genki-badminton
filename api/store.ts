@@ -863,6 +863,7 @@ export function computeBill(session: Session, roster: Map<string, RosterPlayer>)
       games: sp.gamesPlayed,
       courtPart: round2(courtPart),
       shuttlePart: round2(shuttlePart),
+      looseShuttlePart: fees.mode === "club" ? round2(loosePerHead) : 0,
       extraPart: round2(extraPerHead),
       amount: roundUpTo(courtPart + shuttlePart + extraPerHead, fees.roundTo),
       paid: sp.paid,
