@@ -4,6 +4,7 @@ import {
   type RosterPlayer,
   type WaitTier,
   displayName,
+  recordLabel,
   formatDuration,
   levelInfo,
 } from "@shared/types"
@@ -128,7 +129,7 @@ export function QueueRow({
           <span className="block truncate font-heading text-[14px] font-medium text-ink">{displayName(player)}</span>
           <span className="nums block truncate text-[11px] text-ink-faint">
             {etaText(queueAhead, etaMinutes)} · ลงไป {sp.gamesPlayed} เกม
-            {sp.wins + sp.losses > 0 ? ` · ${sp.wins}-${sp.losses}` : ""}
+            {sp.wins + sp.losses + sp.draws > 0 ? ` · ${recordLabel(sp)}` : ""}
           </span>
         </span>
       </span>

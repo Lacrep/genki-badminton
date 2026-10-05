@@ -88,6 +88,8 @@ export interface SessionPlayer {
   longestWaitMs: number
   wins: number
   losses: number
+  /** เสมอ — เล่น 2 เซ็ตแล้วได้กันคนละเซ็ต ก็จบที่เสมอ */
+  draws: number
   /** ดันคิวด้วยมือ (+1 = ขอให้ได้ลงก่อน, -1 = ยอมถอยให้คนอื่น) */
   boost: number
   paid: boolean
@@ -123,7 +125,8 @@ export interface Match {
   /** คะแนนแบบเซ็ตเดียวของข้อมูลรุ่นเก่า (ยังอ่านได้ ไม่ได้ใช้บันทึกใหม่แล้ว) */
   scoreA?: number
   scoreB?: number
-  winner?: "A" | "B"
+  /** "draw" = ได้กันคนละเซ็ต (เล่น 2 เซ็ตจึงเสมอกันได้) */
+  winner?: "A" | "B" | "draw"
   /** ลูกที่ใช้ในเกมนี้ — ใช้คิดค่าลูกให้คนที่ลงเกมนี้ */
   shuttles: number
   createdBy: "auto" | "manual"
@@ -245,6 +248,9 @@ export interface SessionEvent {
     | "match.cancel"
     | "match.swap"
     | "shuttle.add"
+    | "plan.add"
+    | "plan.remove"
+    | "plan.move"
     | "pay"
     | "undo"
   text: string
@@ -267,12 +273,28 @@ export interface Session {
   courts: Court[]
   players: SessionPlayer[]
   matches: Match[]
+  /** คิวเกมที่จัดไว้ล่วงหน้า เรียงตามลำดับที่จะได้ลง */
+  planned: PlannedMatch[]
   events: SessionEvent[]
   settings: SessionSettings
   fees: Fees
-  /** ลูกที่เปิดใช้นอกเกม (ซ้อมก่อนเริ่ม) — ก๊วนออกให้ ไม่เก็บจากใคร */
-  shuttlesExtra: number
   notes?: string
+}
+
+/**
+ * เกมที่จัดไว้ล่วงหน้า — ยังไม่ได้ลงคอร์ต รอคอร์ตว่างแล้วกดลงได้เลย
+ *
+ * หัวก๊วนจัดคู่ไว้ตอนว่างได้ ไม่ต้องมายืนจัดตอนคอร์ตว่างพอดีซึ่งเป็นช่วงที่วุ่นที่สุด
+ */
+export interface PlannedMatch {
+  id: string
+  type: MatchType
+  teamA: string[]
+  teamB: string[]
+  createdAt: number
+  createdBy: "auto" | "manual"
+  /** ระดับมือห่างกันกี่ขั้นตอนที่จัด */
+  levelGap: number
 }
 
 // ── ค่าที่คำนวณให้หน้าเว็บ (ฝั่งเซิร์ฟเวอร์ประกอบให้เสร็จ) ────────────────────
@@ -323,8 +345,6 @@ export interface Bill {
   /** ต้นทุนลูกจริงที่ก๊วนจ่ายไป — 0 ถ้ายังไม่ได้กรอกราคาลูกที่ซื้อมา */
   shuttleCost: number
   shuttlesUsed: number
-  /** ลูกที่ใช้ในเกม (ไม่รวมลูกที่เปิดใช้นอกเกม) */
-  shuttlesInGames: number
   extraCost: number
   /** ต้นทุนจริงรวม */
   total: number
@@ -339,10 +359,21 @@ export interface Bill {
   balance: number
 }
 
+/** เกมที่จัดไว้ พร้อมข้อมูลคนและสถานะว่าลงได้เลยไหม */
+export interface PlannedView {
+  planned: PlannedMatch
+  players: { player: RosterPlayer; sp: SessionPlayer; team: "A" | "B" }[]
+  /** ลงคอร์ตได้เลยไหม — ทุกคนต้องยังอยู่และไม่ติดคอร์ตอื่น */
+  ready: boolean
+  /** ถ้ายังไม่พร้อม ติดอะไรอยู่ */
+  blockers: string[]
+}
+
 export interface SessionView {
   session: Session
   roster: RosterPlayer[]
   courts: CourtView[]
+  planned: PlannedView[]
   queue: QueueEntry[]
   resting: QueueEntry[]
   bill: Bill
@@ -378,11 +409,28 @@ export function setsWon(sets: MatchSet[]): { a: number; b: number } {
   )
 }
 
-/** ฝั่งที่ชนะเกม = ฝั่งที่ได้เซ็ตมากกว่า (null = ยังไม่ชี้ขาด) */
-export function winnerFromSets(sets: MatchSet[]): "A" | "B" | null {
+/**
+ * ผลเกมจากคะแนนรายเซ็ต — ฝั่งที่ได้เซ็ตมากกว่าเป็นผู้ชนะ
+ *
+ * ก๊วนนี้ตีกันไปกลับ 2 เซ็ต ได้กันคนละเซ็ตก็คือ "เสมอ" ไม่ใช่ผลที่ยังไม่ชี้ขาด
+ * (null = ยังไม่ได้กรอกคะแนนสักเซ็ต จึงยังไม่มีผล)
+ */
+export function winnerFromSets(sets: MatchSet[]): "A" | "B" | "draw" | null {
+  if (sets.length === 0) return null
   const w = setsWon(sets)
-  if (w.a === w.b) return null
+  if (w.a === w.b) return "draw"
   return w.a > w.b ? "A" : "B"
+}
+
+/** ป้ายผลเกมสำหรับแสดงผล */
+export function resultLabel(winner: Match["winner"]): string {
+  if (winner === "draw") return "เสมอ"
+  return winner ? `ทีม ${winner}` : ""
+}
+
+/** สถิติแพ้ชนะแบบสั้น เช่น "3-1-2" (ชนะ-เสมอ-แพ้) */
+export function recordLabel(sp: { wins: number; losses: number; draws?: number }): string {
+  return `${sp.wins}-${sp.draws ?? 0}-${sp.losses}`
 }
 
 /** ข้อความคะแนนสำหรับแสดงผล เช่น "21-15, 19-21, 21-18" */

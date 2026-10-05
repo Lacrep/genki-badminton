@@ -230,18 +230,6 @@ export function BillPage() {
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="flex items-center justify-between gap-2">
             <span>
-              <span className="block font-heading text-[13.5px] text-ink">ลูกซ้อม (ก๊วนออกให้)</span>
-              <span className="block text-[11.5px] text-ink-faint">ลูกที่เปิดไว้ซ้อมก่อนเริ่ม — ไม่เก็บเงินใคร</span>
-            </span>
-            <Stepper
-              value={view.session.shuttlesExtra}
-              onChange={(v) => void run("", () => api.shuttles(sessionId, v - view.session.shuttlesExtra), { silent: true })}
-              max={99}
-              suffix="ลูก"
-            />
-          </div>
-          <div className="flex items-center justify-between gap-2">
-            <span>
               <span className="block font-heading text-[13.5px] text-ink">ปัดเศษขึ้นทีละ</span>
               <span className="block text-[11.5px] text-ink-faint">เก็บเงินง่าย ไม่ต้องทอนเศษ</span>
             </span>
@@ -274,7 +262,9 @@ export function BillPage() {
                     <span className="block truncate font-heading text-[14px] font-medium text-ink">{l.name}</span>
                     <span className="block truncate text-[11.5px] text-ink-faint">
                       {l.games} เกม
-                      {sp && sp.wins + sp.losses > 0 ? ` · ชนะ ${sp.wins} แพ้ ${sp.losses}` : ""}
+                      {sp && sp.wins + sp.losses + sp.draws > 0
+                        ? ` · ชนะ ${sp.wins}${sp.draws > 0 ? ` เสมอ ${sp.draws}` : ""} แพ้ ${sp.losses}`
+                        : ""}
                     </span>
                     {/* ที่มาของยอดอยู่บรรทัดของตัวเอง — ยัดรวมบรรทัดเดียวแล้วโดนตัดหายบนจอมือถือ */}
                     {view.session.fees.mode === "club" ? (
@@ -373,14 +363,6 @@ export function BillPage() {
               <p className="py-3 text-center text-[13px] text-ink-faint">ยังไม่มีเกมที่จบ</p>
             ) : null}
           </div>
-
-          {view.session.shuttlesExtra > 0 ? (
-            <p className="mt-3 rounded-xl bg-subtle/70 px-3 py-2 text-[12px] leading-snug text-ink-soft">
-              มีลูกซ้อมอีก {view.session.shuttlesExtra} ลูก — <b>ก๊วนออกให้ ไม่ได้เก็บจากใคร</b>{" "}
-              นับไว้เฉย ๆ ให้รู้ว่าวันนี้ใช้ลูกไปทั้งหมดกี่ลูก
-              ถ้าลูกไหนควรเก็บเงิน ให้ย้ายไปใส่ในเกมด้านบนแทน
-            </p>
-          ) : null}
         </section>
       ) : null}
 

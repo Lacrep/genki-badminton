@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { CheckCheck, Dices, Info, Play, Users } from "lucide-react"
+import { CheckCheck, Dices, Info, ListPlus, Play, Users } from "lucide-react"
 import {
   type MatchType,
   type SessionView,
@@ -32,13 +32,15 @@ export function MatchProposal({
   open: boolean
   onClose: () => void
   view: SessionView
-  courtIndex: number
+  /** null = จัดเข้าคิวไว้ก่อน ยังไม่ลงคอร์ต */
+  courtIndex: number | null
   /** "auto" = ให้ระบบจัด · "manual" = เลือกคนเอง */
   startMode: "auto" | "manual"
 }) {
   const { run, toast } = useApp()
   const sessionId = view.session.id
-  const courtName = view.session.courts[courtIndex]?.name ?? `คอร์ต ${courtIndex + 1}`
+  const planning = courtIndex === null
+  const courtName = courtIndex === null ? "" : (view.session.courts[courtIndex]?.name ?? `คอร์ต ${courtIndex + 1}`)
 
   const [mode, setMode] = useState<"auto" | "manual">(startMode)
   const [type, setType] = useState<MatchType | "auto">(view.session.settings.defaultMatchType)
@@ -123,18 +125,15 @@ export function MatchProposal({
   const start = async () => {
     if (!suggestion) return
     setBusy(true)
-    const reply = await run(
-      "เริ่มเกมแล้ว",
-      () =>
-        api.start(sessionId, {
-          courtIndex,
-          type: suggestion.type,
-          teamA: suggestion.teamA,
-          teamB: suggestion.teamB,
-          createdBy: mode === "auto" ? "auto" : "manual",
-        }),
-      { silent: true },
-    )
+    const payload = {
+      type: suggestion.type,
+      teamA: suggestion.teamA,
+      teamB: suggestion.teamB,
+      createdBy: (mode === "auto" ? "auto" : "manual") as "auto" | "manual",
+    }
+    const reply = planning
+      ? await run("เพิ่มเข้าคิวเกมแล้ว", () => api.plan(sessionId, payload))
+      : await run("เริ่มเกมแล้ว", () => api.start(sessionId, { courtIndex, ...payload }), { silent: true })
     setBusy(false)
     if (reply && "callText" in reply && reply.callText) {
       if (view.session.settings.callSound) speak(reply.callText)
@@ -153,11 +152,13 @@ export function MatchProposal({
       open={open}
       onClose={onClose}
       wide
-      title={`จัดเกมลง ${courtName}`}
+      title={planning ? "จัดเกมเข้าคิวไว้ก่อน" : `จัดเกมลง ${courtName}`}
       subtitle={
-        mode === "auto"
-          ? "ระบบเลือกคนที่รอนานสุด + มือใกล้เคียง + ไม่ซ้ำคู่เดิม"
-          : `เลือกผู้เล่นเอง ${picked.length}/${need} คน แล้วระบบจะแบ่งฝั่งให้สูสี`
+        planning
+          ? "เกมนี้จะไปต่อท้ายคิว — คอร์ตไหนว่างก่อนก็กดลงได้เลย ไม่ต้องมาจัดใหม่ตอนนั้น"
+          : mode === "auto"
+            ? "ระบบเลือกคนที่รอนานสุด + มือใกล้เคียง + ไม่ซ้ำคู่เดิม"
+            : `เลือกผู้เล่นเอง ${picked.length}/${need} คน แล้วระบบจะแบ่งฝั่งให้สูสี`
       }
       footer={
         <div className="flex items-center gap-2">
@@ -170,8 +171,8 @@ export function MatchProposal({
             ยกเลิก
           </button>
           <button className="btn-primary" onClick={start} disabled={!suggestion || busy}>
-            <Play size={16} />
-            เริ่มเกม
+            {planning ? <ListPlus size={16} /> : <Play size={16} />}
+            {planning ? "เพิ่มเข้าคิว" : "เริ่มเกม"}
           </button>
         </div>
       }

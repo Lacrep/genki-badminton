@@ -21,6 +21,7 @@ import {
   cancelMatch,
   checkIn,
   checkOut,
+  committedPlayerIds,
   computeBill,
   createSession,
   currentSession,
@@ -31,6 +32,8 @@ import {
   getRoster,
   getSession,
   listSessions,
+  movePlanned,
+  planMatch,
   renameCourt,
   reopenSession,
   rosterMap,
@@ -39,11 +42,13 @@ import {
   setPaid,
   setRest,
   startMatch,
+  startPlanned,
   summaryText,
   swapPlayer,
   toggleCourt,
   undo,
   undoDepth,
+  unplanMatch,
   updatePlayer,
   updateSession,
 } from "./store"
@@ -320,13 +325,15 @@ app.post("/api/session/:id/suggest", async (c) => {
     }),
   )
   const session = getSession(c.req.param("id"))
+  // คนที่ถูกจัดไว้ในคิวเกมแล้ว ไม่ควรถูกเสนอซ้ำ ไม่งั้นจะลงสองคอร์ตพร้อมกัน
+  const taken = committedPlayerIds(session).filter((pid) => !input.include?.includes(pid))
   const result = suggestMatch({
     session,
     roster: rosterMap(),
     now: Date.now(),
     type: input.type ?? session.settings.defaultMatchType,
     include: input.include,
-    exclude: input.exclude,
+    exclude: [...new Set([...(input.exclude ?? []), ...taken])],
     jitter: input.shuffle ? 4 : 0,
   })
   return c.json(result)
@@ -370,7 +377,7 @@ app.post("/api/session/:id/finish", async (c) => {
         .max(5)
         .optional(),
       shuttles: z.number().min(0).max(30).optional(),
-      winner: z.enum(["A", "B"]).optional(),
+      winner: z.enum(["A", "B", "draw"]).optional(),
     }),
   )
   const session = finishMatch(c.req.param("id"), input)
@@ -399,10 +406,54 @@ app.post("/api/session/:id/swap", async (c) => {
 app.post("/api/session/:id/shuttles", async (c) => {
   const { delta, matchId } = await body(
     c,
-    z.object({ delta: z.number().int().min(-30).max(30), matchId: z.string().optional() }),
+    z.object({ delta: z.number().int().min(-30).max(30), matchId: z.string().min(1) }),
   )
   const session = addShuttles(c.req.param("id"), delta, matchId)
   return c.json(view(session.id))
+})
+
+// ── คิวเกมที่จัดไว้ล่วงหน้า ───────────────────────────────────────────────────
+
+app.post("/api/session/:id/plan", async (c) => {
+  const input = await body(
+    c,
+    z.object({
+      type: matchTypeSchema,
+      teamA: z.array(z.string().min(1)).min(1).max(2),
+      teamB: z.array(z.string().min(1)).min(1).max(2),
+      createdBy: z.enum(["auto", "manual"]).optional(),
+    }),
+  )
+  const { session } = planMatch(c.req.param("id"), { ...input, type: input.type as MatchType })
+  return c.json(view(session.id))
+})
+
+app.delete("/api/session/:id/plan/:plannedId", (c) => {
+  const session = unplanMatch(c.req.param("id"), c.req.param("plannedId"))
+  return c.json(view(session.id))
+})
+
+app.post("/api/session/:id/plan/:plannedId/move", async (c) => {
+  const { direction } = await body(c, z.object({ direction: z.enum(["up", "down"]) }))
+  const session = movePlanned(c.req.param("id"), c.req.param("plannedId"), direction)
+  return c.json(view(session.id))
+})
+
+app.post("/api/session/:id/plan/:plannedId/start", async (c) => {
+  const { courtIndex } = await body(c, z.object({ courtIndex: z.number().int().min(0).max(19) }))
+  const sessionId = c.req.param("id")
+  const { match } = startPlanned(sessionId, c.req.param("plannedId"), courtIndex)
+  const roster = rosterMap()
+  const court = getSession(sessionId).courts[courtIndex]
+  const names = [...match.teamA, ...match.teamB].map((pid) => {
+    const p = roster.get(pid)
+    return p ? displayName(p) : pid
+  })
+  return c.json({
+    ...view(sessionId),
+    match,
+    callText: `${court?.name ?? `คอร์ต ${courtIndex + 1}`} เชิญ ${names.join(", ")} ลงสนามครับ`,
+  })
 })
 
 app.post("/api/session/:id/undo", (c) => {
@@ -435,7 +486,7 @@ app.get("/api/session/:id/matches.csv", (c) => {
       m.teamA.map(nameOf).join(" + "),
       m.teamB.map(nameOf).join(" + "),
       scoreLabel(m),
-      m.winner ?? "",
+      m.winner === "draw" ? "เสมอ" : (m.winner ?? ""),
       String(m.shuttles),
       String(m.levelGap),
     ]),
@@ -481,7 +532,7 @@ app.get("/api/sessions", (c) =>
       code: s.code,
       players: s.players.length,
       matches: s.matches.filter((m) => m.endedAt).length,
-      shuttles: s.matches.reduce((n, m) => n + m.shuttles, 0) + s.shuttlesExtra,
+      shuttles: s.matches.reduce((n, m) => n + m.shuttles, 0),
       startAt: s.startAt,
       endAt: s.endAt,
     })),

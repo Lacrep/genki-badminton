@@ -24,13 +24,18 @@ describe("คะแนนแบบ 21 แต้ม สองเซ็ต", () =>
     expect(winnerFromSets(sets)).toBe("A")
   })
 
-  it("แบ่งกันคนละเซ็ต → ยังไม่มีผู้ชนะจนกว่าจะมีเซ็ตที่ 3", () => {
+  it("ได้กันคนละเซ็ต = เสมอ (ก๊วนนี้ตีไปกลับ 2 เซ็ต จึงเสมอกันได้)", () => {
     const tied = [
       { a: 21, b: 15 },
       { a: 19, b: 21 },
     ]
-    expect(winnerFromSets(tied)).toBeNull()
+    expect(winnerFromSets(tied)).toBe("draw")
+    // ถ้าตัดเซ็ตสามก็ได้ผู้ชนะตามปกติ
     expect(winnerFromSets([...tied, { a: 18, b: 21 }])).toBe("B")
+  })
+
+  it("ยังไม่ได้กรอกคะแนนสักเซ็ต = ยังไม่มีผล (ไม่ใช่เสมอ)", () => {
+    expect(winnerFromSets([])).toBeNull()
   })
 
   it("เซ็ตเดียวก็ตัดสินได้ (เผื่อเล่นเซ็ตเดียวจบ)", () => {

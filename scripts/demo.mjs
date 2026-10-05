@@ -77,7 +77,7 @@ const { view } = await post("/api/session", {})
 const sid = view.session.id
 await post(`/api/session/${sid}/checkin-many`, { playerIds: players.map((p) => p.id) })
 
-console.log("▸ เล่นไป 10 เกม (มีเกมที่ลืมกดลูกไว้ให้ดูด้วย 1 เกม)")
+console.log("▸ เล่นไป 10 เกม (มีเกมเสมอ และเกมที่ลืมกดลูกไว้ให้ดูด้วย)")
 let games = 0
 for (let round = 0; round < 5; round++) {
   for (const courtIndex of [0, 1]) {
@@ -94,9 +94,11 @@ for (let round = 0; round < 5; round++) {
       teamB: suggestion.suggestion.teamB,
     })
     const sets =
-      games % 3 === 0
-        ? [{ a: 21, b: 18 }, { a: 19, b: 21 }, { a: 21, b: 15 }] // สูสีจนต้องตัดเซ็ตสาม
-        : [{ a: 21, b: 15 }, { a: 21, b: 17 }]
+      games % 4 === 1
+        ? [{ a: 21, b: 18 }, { a: 19, b: 21 }] // ได้กันคนละเซ็ต = เสมอ
+        : games % 3 === 0
+          ? [{ a: 21, b: 18 }, { a: 19, b: 21 }, { a: 21, b: 15 }] // ตัดเซ็ตสาม
+          : [{ a: 21, b: 15 }, { a: 21, b: 17 }]
     await post(`/api/session/${sid}/finish`, {
       matchId: match.id,
       sets,
@@ -105,7 +107,17 @@ for (let round = 0; round < 5; round++) {
     games++
   }
 }
-await post(`/api/session/${sid}/shuttles`, { delta: 2 }) // ลูกที่ตีซ้อมก่อนเริ่ม
+console.log("▸ จัดเกมเข้าคิวไว้ล่วงหน้า 2 เกม")
+for (let i = 0; i < 2; i++) {
+  const suggestion = await post(`/api/session/${sid}/suggest`, { type: "D" })
+  if (!suggestion.ok) break
+  await post(`/api/session/${sid}/plan`, {
+    type: suggestion.suggestion.type,
+    teamA: suggestion.suggestion.teamA,
+    teamB: suggestion.suggestion.teamB,
+    createdBy: "auto",
+  })
+}
 
 console.log("▸ เก็บเงินไป 9 คน เหลือค้าง 5 คน")
 const before = await viewOf(sid)
@@ -119,8 +131,8 @@ const owed = final.bill.billed - final.bill.collected
 console.log(`
 ✅ ก๊วนตัวอย่างพร้อมแล้ว
 
-   เปิดหน้าค่าก๊วน    ${BASE}/bill
-   แล้วกดปุ่ม        "ไฟล์ Excel"
+   หน้าคอร์ต         ${BASE}/        ← มีคิวเกมจัดไว้ ลองกด "ลงคอร์ตนี้เลย"
+   หน้าค่าก๊วน       ${BASE}/bill    ← ลองกดปุ่ม "ไฟล์ Excel"
 
    ${final.bill.lines.length} คน · ${final.session.matches.filter((m) => m.endedAt).length} เกม · ${final.bill.shuttlesUsed} ลูก
    เรียกเก็บ ${final.bill.billed} บาท · เก็บได้แล้ว ${final.bill.collected} · ค้างอยู่ ${owed.toFixed(2)}

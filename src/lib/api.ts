@@ -123,6 +123,7 @@ export const api = {
         games: number
         wins: number
         losses: number
+        draws: number
         playedMs: number
         waitedMs: number
         longestWaitMs: number
@@ -173,14 +174,24 @@ export const api = {
   ) => post<ViewReply>(`/api/session/${id}/start`, input),
   finish: (
     id: string,
-    input: { matchId: string; sets?: MatchSet[]; shuttles?: number; winner?: "A" | "B" },
+    input: { matchId: string; sets?: MatchSet[]; shuttles?: number; winner?: "A" | "B" | "draw" },
   ) =>
     post<ViewReply>(`/api/session/${id}/finish`, input),
   cancelMatch: (id: string, matchId: string) => post<ViewReply>(`/api/session/${id}/cancel`, { matchId }),
   swap: (id: string, input: { matchId: string; outPlayerId: string; inPlayerId: string }) =>
     post<ViewReply>(`/api/session/${id}/swap`, input),
-  shuttles: (id: string, delta: number, matchId?: string) =>
+  shuttles: (id: string, delta: number, matchId: string) =>
     post<ViewReply>(`/api/session/${id}/shuttles`, { delta, matchId }),
+
+  // ── คิวเกมที่จัดไว้ล่วงหน้า ──
+  plan: (id: string, input: { type: MatchType; teamA: string[]; teamB: string[]; createdBy?: "auto" | "manual" }) =>
+    post<ViewReply>(`/api/session/${id}/plan`, input),
+  unplan: (id: string, plannedId: string) =>
+    request<ViewReply>(`/api/session/${id}/plan/${plannedId}`, { method: "DELETE" }),
+  movePlan: (id: string, plannedId: string, direction: "up" | "down") =>
+    post<ViewReply>(`/api/session/${id}/plan/${plannedId}/move`, { direction }),
+  startPlan: (id: string, plannedId: string, courtIndex: number) =>
+    post<ViewReply>(`/api/session/${id}/plan/${plannedId}/start`, { courtIndex }),
   undo: (id: string) => post<ViewReply>(`/api/session/${id}/undo`),
   summary: (id: string) => request<{ text: string }>(`/api/session/${id}/summary`),
 }

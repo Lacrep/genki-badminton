@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { CheckCircle2, Hand, MoreVertical, Plus, Shuffle, Sparkles, Trash2 } from "lucide-react"
+import { CheckCircle2, Hand, MoreVertical, Play, Plus, Shuffle, Sparkles, Trash2 } from "lucide-react"
 import {
   type CourtView,
   type SessionSettings,
@@ -24,6 +24,7 @@ export function CourtCard({
   canControl,
   onAuto,
   onManual,
+  nextPlanned,
   onFinish,
   onCancel,
   onSwap,
@@ -35,6 +36,8 @@ export function CourtCard({
   canControl: boolean
   onAuto: () => void
   onManual: () => void
+  /** เกมถัดไปในคิวที่จัดไว้ — คอร์ตว่างเมื่อไรกดลงได้ทันที */
+  nextPlanned?: { names: string[]; onStart: () => void } | null
   onFinish: () => void
   onCancel: () => void
   onSwap: () => void
@@ -160,12 +163,28 @@ export function CourtCard({
             <p className="text-[13px] text-ink-faint">คอร์ตนี้ปิดอยู่</p>
           ) : (
             <>
-              <p className="text-center text-[12.5px] text-ink-soft">
-                คอร์ตว่าง — กดให้ระบบจัดคนที่รอนานสุดและมือใกล้กันลงเล่น
-              </p>
+              {/* จัดคิวไว้แล้วก็ไม่ต้องมานั่งจัดใหม่ตอนคอร์ตว่าง — กดทีเดียวลงเลย */}
+              {canControl && nextPlanned ? (
+                <div className="w-full rounded-xl border border-gold/60 bg-gold/[0.1] p-2.5">
+                  <p className="text-center font-heading text-[11.5px] text-gold-deep dark:text-gold-soft">
+                    เกมถัดไปในคิว
+                  </p>
+                  <p className="mb-2 text-center text-[12.5px] leading-snug text-ink">
+                    {nextPlanned.names.join(" · ")}
+                  </p>
+                  <button className="btn-primary w-full" onClick={nextPlanned.onStart}>
+                    <Play size={16} />
+                    ลงคอร์ตนี้เลย
+                  </button>
+                </div>
+              ) : (
+                <p className="text-center text-[12.5px] text-ink-soft">
+                  คอร์ตว่าง — กดให้ระบบจัดคนที่รอนานสุดและมือใกล้กันลงเล่น
+                </p>
+              )}
               {canControl ? (
                 <div className="flex w-full gap-2">
-                  <button className="btn-primary flex-1" onClick={onAuto}>
+                  <button className={cn(nextPlanned ? "btn-ghost" : "btn-primary", "flex-1")} onClick={onAuto}>
                     <Sparkles size={16} />
                     สุ่มจัดเกม
                   </button>

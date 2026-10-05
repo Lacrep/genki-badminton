@@ -20,6 +20,8 @@ import {
   type Level,
   type Match,
   type MatchSet,
+  type PlannedMatch,
+  type PlannedView,
   type MatchType,
   type QueueEntry,
   type RosterPlayer,
@@ -219,6 +221,17 @@ function migrateSession(session: Session): { session: Session; changed: boolean 
     }
   }
 
+  if (!Array.isArray(session.planned)) {
+    session.planned = []
+    changed = true
+  }
+  // ก๊วนรุ่นเก่าเคยเก็บ "ลูกนอกเกม" ไว้ — ตอนนี้ไม่คิดเงินแล้ว ลบทิ้งได้เลย
+  const legacy = session as Session & { shuttlesExtra?: number }
+  if (legacy.shuttlesExtra !== undefined) {
+    delete legacy.shuttlesExtra
+    changed = true
+  }
+
   const settings = session.settings as SessionSettings & { autoFill?: boolean }
   if (settings.defaultMatchType !== "auto" && !MATCH_TYPES.includes(settings.defaultMatchType)) {
     settings.defaultMatchType = "auto"
@@ -242,7 +255,7 @@ function migrateSession(session: Session): { session: Session; changed: boolean 
 
   // ฟิลด์ที่เพิ่มมาทีหลัง — เติมให้ครบกันหน้าเว็บคำนวณไม่ได้
   for (const p of session.players) {
-    for (const key of ["gamesPlayed", "playedMs", "waitedMs", "longestWaitMs", "wins", "losses", "boost"] as const) {
+    for (const key of ["gamesPlayed", "playedMs", "waitedMs", "longestWaitMs", "wins", "losses", "draws", "boost"] as const) {
       if (typeof p[key] !== "number") {
         p[key] = 0
         changed = true
@@ -417,10 +430,10 @@ export function createSession(input: CreateSessionInput): Session {
     courts,
     players: [],
     matches: [],
+    planned: [],
     events: [event("session.start", "เปิดก๊วน")],
     settings: { ...DEFAULT_SETTINGS, ...input.settings },
     fees: { ...DEFAULT_FEES, ...input.fees },
-    shuttlesExtra: 0,
     notes: input.notes,
   }
   writeJson(sessionFile(session.id), session)
@@ -545,6 +558,7 @@ export function checkIn(sessionId: string, playerId: string): Session {
         longestWaitMs: 0,
         wins: 0,
         losses: 0,
+        draws: 0,
         boost: 0,
         paid: false,
       })
@@ -670,9 +684,114 @@ export function startMatch(
   return { session: out.session, match: out.result }
 }
 
+// ── เกมที่จัดไว้ล่วงหน้า ─────────────────────────────────────────────────────
+
+/** คนที่ "ไม่ว่าง" สำหรับจัดเกมใหม่ — อยู่ในคอร์ต หรือถูกจัดไว้ในคิวเกมแล้ว */
+export function committedPlayerIds(session: Session): string[] {
+  const ids = new Set<string>()
+  for (const p of session.planned) for (const pid of [...p.teamA, ...p.teamB]) ids.add(pid)
+  for (const court of session.courts) {
+    const match = court.currentMatchId ? session.matches.find((m) => m.id === court.currentMatchId) : null
+    if (match) for (const pid of [...match.teamA, ...match.teamB]) ids.add(pid)
+  }
+  return [...ids]
+}
+
+export function planMatch(
+  sessionId: string,
+  input: { type: MatchType; teamA: string[]; teamB: string[]; createdBy?: "auto" | "manual" },
+): { session: Session; planned: PlannedMatch } {
+  const out = mutate(sessionId, (s) => {
+    if (s.status !== "live") throw new StoreError("ก๊วนนี้ปิดแล้ว", 400)
+
+    const ids = [...input.teamA, ...input.teamB]
+    const need = playersPerMatch(input.type)
+    if (ids.length !== need) throw new StoreError(`เกมนี้ต้องมี ${need} คน (ส่งมา ${ids.length} คน)`, 400)
+    if (new Set(ids).size !== ids.length) throw new StoreError("มีชื่อซ้ำในเกมเดียวกัน", 400)
+
+    const alreadyPlanned = new Set<string>()
+    for (const p of s.planned) for (const pid of [...p.teamA, ...p.teamB]) alreadyPlanned.add(pid)
+    for (const pid of ids) {
+      const sp = s.players.find((p) => p.playerId === pid)
+      if (!sp) throw new StoreError("มีคนในเกมที่ยังไม่ได้เช็คอิน", 400)
+      if (sp.status === "left") throw new StoreError("มีคนในเกมที่กลับบ้านแล้ว", 400)
+      // กันจัดคนเดิมซ้ำสองเกม — พอถึงคิวจะลงพร้อมกันไม่ได้
+      if (alreadyPlanned.has(pid)) throw new StoreError("มีคนที่ถูกจัดไว้ในคิวเกมอื่นแล้ว", 400)
+    }
+
+    const roster = rosterMap()
+    const levels = ids.map((pid) => roster.get(pid)?.level ?? 1)
+    const planned: PlannedMatch = {
+      id: id("pl_"),
+      type: input.type,
+      teamA: input.teamA,
+      teamB: input.teamB,
+      createdAt: Date.now(),
+      createdBy: input.createdBy ?? "manual",
+      levelGap: Math.max(...levels) - Math.min(...levels),
+    }
+    s.planned.push(planned)
+    s.events.push(
+      event("plan.add", `จัดเกมเข้าคิว: ${ids.map((pid) => nameOf(roster, pid)).join(", ")}`, {}),
+    )
+    return planned
+  })
+  return { session: out.session, planned: out.result }
+}
+
+export function unplanMatch(sessionId: string, plannedId: string): Session {
+  return mutate(sessionId, (s) => {
+    const index = s.planned.findIndex((p) => p.id === plannedId)
+    if (index < 0) throw new StoreError("ไม่พบเกมที่จัดไว้", 404)
+    const [removed] = s.planned.splice(index, 1)
+    const roster = rosterMap()
+    const ids = removed ? [...removed.teamA, ...removed.teamB] : []
+    s.events.push(event("plan.remove", `เอาเกมออกจากคิว: ${ids.map((pid) => nameOf(roster, pid)).join(", ")}`, {}))
+  }).session
+}
+
+/** เลื่อนลำดับคิวขึ้น/ลง — หัวก๊วนสลับได้เองว่าจะให้เกมไหนได้ลงก่อน */
+export function movePlanned(sessionId: string, plannedId: string, direction: "up" | "down"): Session {
+  return mutate(sessionId, (s) => {
+    const index = s.planned.findIndex((p) => p.id === plannedId)
+    if (index < 0) throw new StoreError("ไม่พบเกมที่จัดไว้", 404)
+    const target = direction === "up" ? index - 1 : index + 1
+    if (target < 0 || target >= s.planned.length) return
+    const [moved] = s.planned.splice(index, 1)
+    if (moved) s.planned.splice(target, 0, moved)
+    s.events.push(event("plan.move", `สลับลำดับคิวเกม`, {}))
+  }).session
+}
+
+/** เอาเกมที่จัดไว้ลงคอร์ต — ตรวจก่อนว่าทุกคนยังลงได้จริง */
+export function startPlanned(
+  sessionId: string,
+  plannedId: string,
+  courtIndex: number,
+): { session: Session; match: Match } {
+  const session = getSession(sessionId)
+  const planned = session.planned.find((p) => p.id === plannedId)
+  if (!planned) throw new StoreError("ไม่พบเกมที่จัดไว้", 404)
+
+  const out = startMatch(sessionId, {
+    courtIndex,
+    type: planned.type,
+    teamA: planned.teamA,
+    teamB: planned.teamB,
+    createdBy: planned.createdBy,
+  })
+  // ลงสนามแล้วค่อยเอาออกจากคิว — ถ้า startMatch โยน error คิวต้องไม่หาย
+  return { session: unplanMatch(sessionId, plannedId), match: out.match }
+}
+
+function nameOf(roster: Map<string, RosterPlayer>, playerId: string): string {
+  const p = roster.get(playerId)
+  return p ? displayName(p) : playerId
+}
+
 export function finishMatch(
   sessionId: string,
-  input: { matchId: string; sets?: MatchSet[]; shuttles?: number; winner?: "A" | "B" },
+  input: { matchId: string; sets?: MatchSet[]; shuttles?: number; winner?: "A" | "B" | "draw" },
 ): Session {
   return mutate(sessionId, (s) => {
     const match = s.matches.find((m) => m.id === input.matchId)
@@ -699,10 +818,9 @@ export function finishMatch(
         if (!sp) continue
         sp.gamesPlayed += 1
         sp.playedMs += dur
-        if (match.winner) {
-          if (match.winner === team) sp.wins += 1
-          else sp.losses += 1
-        }
+        if (match.winner === "draw") sp.draws += 1
+        else if (match.winner === team) sp.wins += 1
+        else if (match.winner) sp.losses += 1
         // กลับเข้าคิว → เริ่มจับเวลารอใหม่ทันที (คนที่เพิ่งลงจึงอยู่ท้ายคิวเอง)
         if (sp.status === "playing") {
           sp.status = "queue"
@@ -785,15 +903,12 @@ export function swapPlayer(
   }).session
 }
 
-export function addShuttles(sessionId: string, delta: number, matchId?: string): Session {
+/** ลูกแบดผูกกับเกมเสมอ — ไม่มีถังลูกลอย ๆ ที่ไม่รู้ว่าใครใช้ */
+export function addShuttles(sessionId: string, delta: number, matchId: string): Session {
   return mutate(sessionId, (s) => {
-    if (matchId) {
-      const match = s.matches.find((m) => m.id === matchId)
-      if (!match) throw new StoreError("ไม่พบเกมนี้", 404)
-      match.shuttles = Math.max(0, match.shuttles + delta)
-    } else {
-      s.shuttlesExtra = Math.max(0, s.shuttlesExtra + delta)
-    }
+    const match = s.matches.find((m) => m.id === matchId)
+    if (!match) throw new StoreError("ไม่พบเกมนี้", 404)
+    match.shuttles = Math.max(0, match.shuttles + delta)
     if (delta !== 0) {
       s.events.push(event("shuttle.add", `${delta > 0 ? "เพิ่ม" : "ลด"}ลูกแบด ${Math.abs(delta)} ลูก`, { matchId }))
     }
@@ -809,8 +924,7 @@ function roundUpTo(value: number, step: number): number {
 
 export function computeBill(session: Session, roster: Map<string, RosterPlayer>): Bill {
   const fees = session.fees
-  const shuttlesInGames = session.matches.reduce((n, m) => n + m.shuttles, 0)
-  const shuttlesUsed = shuttlesInGames + session.shuttlesExtra
+  const shuttlesUsed = session.matches.reduce((n, m) => n + m.shuttles, 0)
 
   /**
    * ต้นทุนลูกจริง = จำนวนลูก × ราคาที่ก๊วนซื้อลูกมา (ไม่ใช่อัตราที่เก็บต่อคน)
@@ -874,7 +988,6 @@ export function computeBill(session: Session, roster: Map<string, RosterPlayer>)
     shuttleCharged: round2(shuttleCharged),
     shuttleCost,
     shuttlesUsed,
-    shuttlesInGames,
     extraCost: fees.extraCost,
     total,
     costTracked,
@@ -937,11 +1050,14 @@ export function summaryText(session: Session): string {
     }
   }
   const bestWin = [...session.players]
-    .filter((p) => p.wins + p.losses >= 2)
-    .sort((a, b) => b.wins / (b.wins + b.losses) - a.wins / (a.wins + a.losses))[0]
+    .filter((p) => p.wins + p.losses + p.draws >= 2)
+    .sort((a, b) => b.wins / (b.wins + b.losses + b.draws) - a.wins / (a.wins + a.losses + a.draws))[0]
   if (bestWin) {
     const p = rmap.get(bestWin.playerId)
-    if (p) lines.push(`🏆 ชนะเยอะสุด: ${displayName(p)} ${bestWin.wins} ชนะ / ${bestWin.losses} แพ้`)
+    if (p) {
+      const drawPart = bestWin.draws > 0 ? ` / ${bestWin.draws} เสมอ` : ""
+      lines.push(`🏆 ชนะเยอะสุด: ${displayName(p)} ${bestWin.wins} ชนะ${drawPart} / ${bestWin.losses} แพ้`)
+    }
   }
   const patient = [...session.players].sort((a, b) => b.longestWaitMs - a.longestWaitMs)[0]
   if (patient && patient.longestWaitMs > 0) {
@@ -1000,6 +1116,31 @@ export function buildView(session: Session, now = Date.now()): SessionView {
     return { court, match, players, elapsedMs: match ? now - match.startedAt : 0 }
   })
 
+  /**
+   * คิวเกมที่จัดไว้ — คนอาจกลับบ้านหรือถูกดึงไปลงคอร์ตอื่นหลังจากจัดไว้แล้ว
+   * จึงต้องบอกตรงนี้เลยว่าเกมไหนยังลงได้ ไม่ใช่ปล่อยให้กดแล้วค่อยเด้ง error
+   */
+  const planned: PlannedView[] = session.planned.map((p) => {
+    const players: PlannedView["players"] = []
+    const blockers: string[] = []
+
+    for (const team of ["A", "B"] as const) {
+      for (const pid of team === "A" ? p.teamA : p.teamB) {
+        const player = rmap.get(pid)
+        const sp = session.players.find((x) => x.playerId === pid)
+        if (!player || !sp) {
+          blockers.push("มีคนที่ไม่อยู่ในก๊วนแล้ว")
+          continue
+        }
+        players.push({ player, sp, team })
+        if (sp.status === "left") blockers.push(`${displayName(player)} กลับบ้านแล้ว`)
+        else if (sp.status === "playing") blockers.push(`${displayName(player)} อยู่ในคอร์ตอื่น`)
+      }
+    }
+
+    return { planned: p, players, ready: blockers.length === 0, blockers: [...new Set(blockers)] }
+  })
+
   const waits = queue.map((q) => q.waitMs)
   const dongAlerts = queue
     .filter((q) => q.tier === "dong")
@@ -1009,6 +1150,7 @@ export function buildView(session: Session, now = Date.now()): SessionView {
     session,
     roster,
     courts,
+    planned,
     queue,
     resting,
     bill: computeBill(session, rmap),
@@ -1021,7 +1163,7 @@ export function buildView(session: Session, now = Date.now()): SessionView {
       matchesDone: session.matches.filter((m) => m.endedAt).length,
       avgWaitMs: waits.length ? waits.reduce((a, b) => a + b, 0) / waits.length : 0,
       maxWaitMs: waits.length ? Math.max(...waits) : 0,
-      shuttlesUsed: session.matches.reduce((n, m) => n + m.shuttles, 0) + session.shuttlesExtra,
+      shuttlesUsed: session.matches.reduce((n, m) => n + m.shuttles, 0),
     },
   }
 }
@@ -1036,6 +1178,7 @@ export interface AllTimeStat {
   games: number
   wins: number
   losses: number
+  draws: number
   playedMs: number
   waitedMs: number
   longestWaitMs: number
@@ -1057,6 +1200,7 @@ export function allTimeStats(): AllTimeStat[] {
           games: 0,
           wins: 0,
           losses: 0,
+          draws: 0,
           playedMs: 0,
           waitedMs: 0,
           longestWaitMs: 0,
@@ -1065,6 +1209,7 @@ export function allTimeStats(): AllTimeStat[] {
       cur.games += sp.gamesPlayed
       cur.wins += sp.wins
       cur.losses += sp.losses
+      cur.draws += sp.draws
       cur.playedMs += sp.playedMs
       cur.waitedMs += sp.waitedMs
       cur.longestWaitMs = Math.max(cur.longestWaitMs, sp.longestWaitMs)

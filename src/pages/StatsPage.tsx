@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Award, BarChart3, Clock, Flame, History, Trophy } from "lucide-react"
-import { displayName, formatMinutes, levelInfo, thaiTime } from "@shared/types"
+import { displayName, formatMinutes, levelInfo, recordLabel, thaiTime } from "@shared/types"
 import { api, type SessionSummary } from "@/lib/api"
 import { useApp } from "@/lib/app"
 import { LevelBadge, PlayerAvatar } from "@/components/player"
@@ -15,6 +15,7 @@ interface AllTime {
   games: number
   wins: number
   losses: number
+  draws: number
   playedMs: number
   waitedMs: number
   longestWaitMs: number
@@ -67,8 +68,11 @@ function TodayStats() {
   const mostGames = rows[0]
   const mostPatient = [...rows].sort((a, b) => b.sp.longestWaitMs - a.sp.longestWaitMs)[0]
   const bestWin = [...rows]
-    .filter((r) => r.sp.wins + r.sp.losses >= 2)
-    .sort((a, b) => b.sp.wins / (b.sp.wins + b.sp.losses) - a.sp.wins / (a.sp.wins + a.sp.losses))[0]
+    .filter((r) => r.sp.wins + r.sp.losses + r.sp.draws >= 2)
+    .sort(
+      (a, b) =>
+        b.sp.wins / (b.sp.wins + b.sp.losses + b.sp.draws) - a.sp.wins / (a.sp.wins + a.sp.losses + a.sp.draws),
+    )[0]
 
   const totalGames = rows.reduce((n, r) => n + r.sp.gamesPlayed, 0)
   const spread = rows.length > 1 ? Math.max(...rows.map((r) => r.sp.gamesPlayed)) - Math.min(...rows.map((r) => r.sp.gamesPlayed)) : 0
@@ -118,7 +122,7 @@ function TodayStats() {
                 icon={<Trophy size={15} className="text-gold-deep" />}
                 title="ชนะเยอะสุด"
                 who={displayName(bestWin.player)}
-                detail={`${bestWin.sp.wins} ชนะ / ${bestWin.sp.losses} แพ้`}
+                detail={`${bestWin.sp.wins} ชนะ${bestWin.sp.draws > 0 ? ` / ${bestWin.sp.draws} เสมอ` : ""} / ${bestWin.sp.losses} แพ้`}
               />
             ) : null}
           </div>
@@ -144,9 +148,9 @@ function TodayStats() {
                 </span>
               </span>
               <LevelBadge level={player.level} />
-              {sp.wins + sp.losses > 0 ? (
-                <span className="nums chip bg-subtle text-ink-soft">
-                  {sp.wins}-{sp.losses}
+              {sp.wins + sp.losses + sp.draws > 0 ? (
+                <span className="nums chip bg-subtle text-ink-soft" title="ชนะ-เสมอ-แพ้">
+                  {recordLabel(sp)}
                 </span>
               ) : null}
               <span className="nums w-14 text-right font-heading text-[15px] font-semibold text-ink">
@@ -206,7 +210,7 @@ function AllTimeStats({ rows }: { rows: AllTime[] | null }) {
       </h2>
       <div className="divide-y divide-line/60">
         {rows.map((r, i) => {
-          const total = r.wins + r.losses
+          const total = r.wins + r.losses + r.draws
           const winRate = total > 0 ? Math.round((r.wins / total) * 100) : null
           return (
             <div key={r.playerId} className="flex items-center gap-2.5 px-3.5 py-2.5">

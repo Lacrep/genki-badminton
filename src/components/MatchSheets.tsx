@@ -34,7 +34,7 @@ export function FinishSheet({
     { a: 0, b: 0 },
     { a: 0, b: 0 },
   ])
-  const [quickWinner, setQuickWinner] = useState<"A" | "B" | "none">("none")
+  const [quickWinner, setQuickWinner] = useState<"A" | "B" | "draw" | "none">("none")
   const [shuttles, setShuttles] = useState(1)
   const [busy, setBusy] = useState(false)
 
@@ -65,7 +65,8 @@ export function FinishSheet({
   const match = cv.match
   const teamA = cv.players.filter((p) => p.team === "A")
   const teamB = cv.players.filter((p) => p.team === "B")
-  const highlight = mode === "score" ? decided : quickWinner === "none" ? null : quickWinner
+  const side = mode === "score" ? decided : quickWinner === "none" ? null : quickWinner
+  const highlight = side === "draw" ? null : side
 
   const setScore = (index: number, side: "a" | "b", value: number) => {
     setSets((prev) => {
@@ -138,21 +139,23 @@ export function FinishSheet({
             {needsThirdSet && sets.length === 2 ? (
               <button className="btn-ghost btn-sm self-start" onClick={() => setSets((p) => [...p, { a: 0, b: 0 }])}>
                 <Plus size={14} />
-                เสมอ 1-1 · เพิ่มเซ็ตที่ 3
+                ถ้าตัดเซ็ตที่ 3 กดเพิ่มที่นี่
               </button>
             ) : null}
 
             <p className="text-center text-[12.5px] text-ink-soft">
               {filled.length === 0
                 ? "ใส่คะแนนแต่ละเซ็ต หรือข้ามไปก็ได้"
-                : decided
-                  ? `ฝั่ง ${decided} ชนะ ${Math.max(won.a, won.b)}-${Math.min(won.a, won.b)} เซ็ต`
-                  : `ตอนนี้เสมอกัน ${won.a}-${won.b} เซ็ต`}
+                : decided === "draw"
+                  ? `เสมอกัน ${won.a}-${won.b} เซ็ต — บันทึกเป็นเสมอได้เลย`
+                  : decided
+                    ? `ฝั่ง ${decided} ชนะ ${Math.max(won.a, won.b)}-${Math.min(won.a, won.b)} เซ็ต`
+                    : `ได้คนละ ${won.a}-${won.b} เซ็ต`}
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-3 gap-2">
-            {(["A", "B", "none"] as const).map((k) => (
+          <div className="grid grid-cols-2 gap-2">
+            {(["A", "draw", "B", "none"] as const).map((k) => (
               <button
                 key={k}
                 type="button"
@@ -162,12 +165,16 @@ export function FinishSheet({
                   quickWinner === k
                     ? k === "none"
                       ? "border-line bg-subtle text-ink"
-                      : "border-navy bg-navy text-white"
+                      : k === "draw"
+                        ? "border-gold-deep bg-gold/20 text-ink"
+                        : "border-navy bg-navy text-white"
                     : "border-line bg-surface text-ink-soft hover:bg-subtle",
                 )}
               >
                 {k === "none" ? (
                   "ไม่บันทึก"
+                ) : k === "draw" ? (
+                  "เสมอ"
                 ) : (
                   <span className="flex items-center justify-center gap-1">
                     {quickWinner === k ? <Trophy size={13} /> : null}
@@ -183,7 +190,7 @@ export function FinishSheet({
           <span>
             <span className="block font-heading text-[14px] font-medium text-ink">ลูกที่ใช้ในเกมนี้</span>
             <span className="block text-[12px] text-ink-soft">
-              ค่าลูกจะถูกหารเฉพาะ {cv.players.length} คนที่ลงเกมนี้
+              {cv.players.length} คนในเกมนี้จ่ายค่าลูกคนละ {shuttles} ลูก
             </span>
           </span>
           <Stepper value={shuttles} onChange={setShuttles} max={20} suffix="ลูก" />

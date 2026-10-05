@@ -1,5 +1,15 @@
 import { useState } from "react"
-import { History, ListOrdered, Plus, Sparkles, Users } from "lucide-react"
+import {
+  CalendarClock,
+  ChevronDown,
+  ChevronUp,
+  History,
+  ListOrdered,
+  Plus,
+  Sparkles,
+  Trash2,
+  Users,
+} from "lucide-react"
 import { displayName, formatDuration, formatMinutes, scoreLabel, thaiTime } from "@shared/types"
 import { api } from "@/lib/api"
 import { useApp, useNow, useSession } from "@/lib/app"
@@ -16,13 +26,31 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
   const { run, needPin } = useApp()
   const now = useNow()
 
-  const [proposal, setProposal] = useState<{ courtIndex: number; mode: "auto" | "manual" } | null>(null)
+  const [proposal, setProposal] = useState<{ courtIndex: number | null; mode: "auto" | "manual" } | null>(null)
   const [finishing, setFinishing] = useState<number | null>(null)
   const [swapping, setSwapping] = useState<number | null>(null)
 
   const canControl = !needPin && view.session.status === "live"
   const liveCourts = view.courts
   const freeCourts = liveCourts.filter((c) => !c.match && !c.court.disabled).length
+
+  /**
+   * จับคู่เกมในคิวกับคอร์ตว่าง — คอร์ตว่างใบแรกได้เกมที่ 1 ใบถัดไปได้เกมที่ 2
+   * (ถ้าโชว์เกมเดียวกันทุกคอร์ต กดใบที่สองจะเด้ง error เพราะคนลงไปแล้ว)
+   */
+  const readyPlans = view.planned.filter((p) => p.ready)
+  const planForCourt = new Map<number, (typeof readyPlans)[number]>()
+  let nextPlan = 0
+  for (const cv of liveCourts) {
+    if (cv.match || cv.court.disabled) continue
+    const plan = readyPlans[nextPlan]
+    if (!plan) break
+    planForCourt.set(cv.court.index, plan)
+    nextPlan += 1
+  }
+
+  const startPlanned = (plannedId: string, courtIndex: number) =>
+    void run("เริ่มเกมจากคิวแล้ว", () => api.startPlan(sessionId, plannedId, courtIndex))
   const recent = [...view.session.matches]
     .filter((m) => m.endedAt)
     .sort((a, b) => (b.endedAt ?? 0) - (a.endedAt ?? 0))
@@ -88,6 +116,14 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
               cv={{ ...cv, elapsedMs: cv.match ? now - cv.match.startedAt : 0 }}
               settings={view.session.settings}
               canControl={canControl}
+              nextPlanned={(() => {
+                const plan = planForCourt.get(cv.court.index)
+                if (!plan) return null
+                return {
+                  names: plan.players.map((x) => displayName(x.player)),
+                  onStart: () => startPlanned(plan.planned.id, cv.court.index),
+                }
+              })()}
               onAuto={() => setProposal({ courtIndex: cv.court.index, mode: "auto" })}
               onManual={() => setProposal({ courtIndex: cv.court.index, mode: "manual" })}
               onFinish={() => setFinishing(cv.court.index)}
@@ -97,7 +133,10 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
                 if (!window.confirm(`ยกเลิกเกมใน ${cv.court.name}? ทุกคนจะกลับไปที่คิวเดิม`)) return
                 void run("ยกเลิกเกมแล้ว", () => api.cancelMatch(sessionId, cv.match!.id))
               }}
-              onShuttle={(delta) => void run("บันทึกลูกแบดแล้ว", () => api.shuttles(sessionId, delta, cv.match?.id))}
+              onShuttle={(delta) => {
+                if (!cv.match) return
+                void run("บันทึกลูกแบดแล้ว", () => api.shuttles(sessionId, delta, cv.match!.id))
+              }}
               onToggleCourt={(disabled) =>
                 void run(disabled ? "ปิดคอร์ตแล้ว" : "เปิดคอร์ตแล้ว", () =>
                   api.courtPatch(sessionId, cv.court.index, { disabled }),
@@ -107,6 +146,82 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
           ))}
         </div>
       </section>
+
+      {/* คิวเกมที่จัดไว้ล่วงหน้า */}
+      {view.session.status === "live" ? (
+        <section className="flex flex-col gap-2.5">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="section-title">
+              <CalendarClock size={15} className="text-gold-deep" />
+              คิวเกมที่จัดไว้ ({view.planned.length})
+            </h2>
+            {canControl ? (
+              <button className="btn-ghost btn-sm" onClick={() => setProposal({ courtIndex: null, mode: "auto" })}>
+                <Plus size={14} />
+                จัดเกมเข้าคิว
+              </button>
+            ) : null}
+          </div>
+
+          {view.planned.length === 0 ? (
+            <div className="card card-pad text-center text-[12.5px] leading-snug text-ink-faint">
+              จัดเกมล่วงหน้าไว้ได้ตอนนี้เลย — พอคอร์ตว่างก็กดลงได้ทันที
+              ไม่ต้องมายืนจัดคนตอนที่กำลังวุ่นที่สุด
+            </div>
+          ) : (
+            <ol className="flex flex-col gap-2">
+              {view.planned.map((pv, i) => (
+                <li key={pv.planned.id} className="card card-pad flex items-center gap-2.5">
+                  <span className="nums flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-subtle font-heading text-[13px] font-semibold text-ink-soft">
+                    {i + 1}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-heading text-[13.5px] font-medium text-ink">
+                      {pv.players.filter((x) => x.team === "A").map((x) => displayName(x.player)).join(" + ")}
+                      <span className="mx-1.5 text-ink-faint">vs</span>
+                      {pv.players.filter((x) => x.team === "B").map((x) => displayName(x.player)).join(" + ")}
+                    </p>
+                    <p className="truncate text-[11.5px] text-ink-faint">
+                      {pv.ready ? (
+                        freeCourts > 0 ? "พร้อมลง — มีคอร์ตว่างอยู่" : "พร้อมลง รอคอร์ตว่าง"
+                      ) : (
+                        <span className="text-hinomaru-deep dark:text-hinomaru-soft">{pv.blockers.join(" · ")}</span>
+                      )}
+                    </p>
+                  </div>
+                  {canControl ? (
+                    <div className="flex shrink-0 items-center gap-1">
+                      <button
+                        className="btn-quiet btn-sm px-2"
+                        title="เลื่อนขึ้น"
+                        disabled={i === 0}
+                        onClick={() => void run("", () => api.movePlan(sessionId, pv.planned.id, "up"), { silent: true })}
+                      >
+                        <ChevronUp size={16} />
+                      </button>
+                      <button
+                        className="btn-quiet btn-sm px-2"
+                        title="เลื่อนลง"
+                        disabled={i === view.planned.length - 1}
+                        onClick={() => void run("", () => api.movePlan(sessionId, pv.planned.id, "down"), { silent: true })}
+                      >
+                        <ChevronDown size={16} />
+                      </button>
+                      <button
+                        className="btn-quiet btn-sm px-2 text-hinomaru-deep dark:text-hinomaru-soft"
+                        title="เอาออกจากคิว"
+                        onClick={() => void run("เอาเกมออกจากคิวแล้ว", () => api.unplan(sessionId, pv.planned.id))}
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  ) : null}
+                </li>
+              ))}
+            </ol>
+          )}
+        </section>
+      ) : null}
 
       {/* คิวรอ */}
       <section className="flex flex-col gap-2.5">

@@ -40,6 +40,7 @@ function makeSession(specs: Spec[], overrides: Partial<Session> = {}) {
       longestWaitMs: 0,
       wins: 0,
       losses: 0,
+      draws: 0,
       boost: 0,
       paid: false,
     })
@@ -58,11 +59,11 @@ function makeSession(specs: Spec[], overrides: Partial<Session> = {}) {
       { index: 1, name: "คอร์ต 2", currentMatchId: null },
     ],
     players,
+    planned: [],
     matches: [],
     events: [],
     settings: { ...DEFAULT_SETTINGS },
     fees: { ...DEFAULT_FEES },
-    shuttlesExtra: 0,
     ...overrides,
   }
   return { session, roster }

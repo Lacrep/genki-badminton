@@ -51,6 +51,7 @@ function makeSession(fees: Partial<Fees> = {}, games: Record<string, number> = {
       longestWaitMs: 0,
       wins: 0,
       losses: 0,
+      draws: 0,
       boost: 0,
       paid: false,
     })
@@ -66,11 +67,11 @@ function makeSession(fees: Partial<Fees> = {}, games: Record<string, number> = {
     code: "BILL",
     courts: [{ index: 0, name: "คอร์ต 1", currentMatchId: null }],
     players,
+    planned: [],
     matches: [match("m1", ["a", "b", "c", "d"], 2), match("m2", ["a", "b", "c", "e"], 1)],
     events: [],
     settings: { ...DEFAULT_SETTINGS },
     fees: { ...DEFAULT_FEES, roundTo: 1, ...fees },
-    shuttlesExtra: 0,
   }
   return { session, roster }
 }
@@ -122,29 +123,16 @@ describe("โหมดระบบก๊วน — ค่าสนามต่�
     expect(line.extraPart).toBe(0)
   })
 
-  it("ลูกซ้อมนอกเกม ก๊วนออกให้ — ไม่โผล่ในบิลใครสักบาท", () => {
+  it("นับลูกเฉพาะที่ผูกกับเกม — ไม่มีถังลูกลอย ๆ ให้ยอดเพี้ยนอีก", () => {
     const { session, roster } = makeSession()
-    const before = computeBill(session, roster)
-
-    session.shuttlesExtra = 3
-    const after = computeBill(session, roster)
-
-    expect(after.billed).toBe(before.billed)
-    for (const line of after.lines) {
-      expect(line.shuttlePart, line.name).toBe(
-        before.lines.find((l) => l.playerId === line.playerId)!.shuttlePart,
-      )
-    }
-    // แต่ยังนับไว้ว่าวันนี้ใช้ลูกไปทั้งหมดกี่ลูก
-    expect(after.shuttlesInGames).toBe(3)
-    expect(after.shuttlesUsed).toBe(6)
+    const bill = computeBill(session, roster)
+    expect(bill.shuttlesUsed).toBe(3) // เกมแรก 2 ลูก + เกมสอง 1 ลูก
   })
 
-  it("ลูกซ้อมยังนับเป็นต้นทุนของก๊วนอยู่ เพราะก๊วนจ่ายค่าลูกนั้นไปจริง", () => {
+  it("ต้นทุนลูกคิดจากลูกที่ใช้ในเกมทั้งหมด", () => {
     const { session, roster } = makeSession({ shuttleCostReal: 100 })
-    session.shuttlesExtra = 2
     const bill = computeBill(session, roster)
-    expect(bill.total).toBe(500) // 5 ลูก × 100
+    expect(bill.total).toBe(300) // 3 ลูก × 100
   })
 
   it("ค่าอื่น ๆ หารเท่ากันทุกคน", () => {
@@ -176,7 +164,6 @@ describe("โหมดระบบก๊วน — ค่าสนามต่�
       roster.set(id, { id, name: id, level: 4, createdAt: NOW })
       session.players.push({ ...session.players[0]!, playerId: id, gamesPlayed: 0 })
     }
-    session.shuttlesExtra = 2
 
     const bill = computeBill(session, roster)
     for (const l of bill.lines) {

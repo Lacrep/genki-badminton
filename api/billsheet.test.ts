@@ -93,6 +93,7 @@ function makeSession(names: string[] = ["ต้น", "บอย", "เอก", "
       longestWaitMs: 0,
       wins: 1,
       losses: 1,
+      draws: 0,
       boost: 0,
       paid: i < 2,
       paidAt: i < 2 ? NOW : undefined,
@@ -110,11 +111,11 @@ function makeSession(names: string[] = ["ต้น", "บอย", "เอก", "
     code: "XLSX",
     courts: [{ index: 0, name: "คอร์ต 1", currentMatchId: null }],
     players,
+    planned: [],
     matches: [match("m1", ids, 2), match("m2", ids, 1)],
     events: [],
     settings: { ...DEFAULT_SETTINGS },
     fees: { ...DEFAULT_FEES, roundTo: 1 },
-    shuttlesExtra: 0,
   }
   return { session, roster }
 }
@@ -206,7 +207,6 @@ describe("ชีตค่าก๊วนรายคน", () => {
 
   it("ค่าลูกรายคนเป็นจำนวนเต็ม ไม่มีเศษสตางค์ให้ต้องอธิบาย", () => {
     const { session, roster } = makeSession()
-    session.shuttlesExtra = 2
     const sheets = unzip(billWorkbook(session, computeBill(session, roster), roster))
     for (const value of numbersOf(sheets, 1)) {
       expect(Number.isInteger(value), String(value)).toBe(true)
@@ -269,13 +269,11 @@ describe("ชีตสรุปก๊วน", () => {
     expect(numbers).toContain(bill.collected)
   })
 
-  it("แยกลูกที่เก็บเงินกับลูกซ้อมที่ก๊วนออกให้", () => {
+  it("บอกจำนวนลูกที่ใช้และค่าลูกที่เก็บได้รวม", () => {
     const { session, roster } = makeSession()
-    session.shuttlesExtra = 2
     const sheets = unzip(billWorkbook(session, computeBill(session, roster), roster))
     const texts = textsOf(sheets, 4)
-    expect(texts).toContain("ลูกที่ใช้ในเกม")
-    expect(texts).toContain("ลูกซ้อม (ก๊วนออกให้ ไม่เก็บเงิน)")
+    expect(texts).toContain("ลูกที่ใช้ทั้งหมด")
     expect(texts).toContain("ค่าลูกที่เก็บจากลูกก๊วนรวม")
   })
 
