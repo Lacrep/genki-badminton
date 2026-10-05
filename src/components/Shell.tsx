@@ -22,6 +22,7 @@ import { thaiTime } from "@shared/types"
 import { api } from "@/lib/api"
 import { useApp } from "@/lib/app"
 import { applyTheme, cn, copyText, loadTheme, type Theme } from "@/lib/util"
+import { QrCode } from "./QrCode"
 import { Logo, Modal, Wordmark } from "./ui"
 
 const TABS = [
@@ -255,9 +256,11 @@ function ShareModal({
       subtitle="ลูกก๊วนเปิดดูได้ว่าใครอยู่ในคอร์ต ตัวเองคิวที่เท่าไร — ดูได้อย่างเดียว แก้ไม่ได้"
     >
       <div className="flex flex-col gap-3">
-        <div className="rounded-washi border border-line/70 bg-subtle/50 p-4 text-center">
-          <p className="font-heading text-[12px] text-ink-faint">รหัสก๊วนวันนี้</p>
-          <p className="nums font-heading text-[34px] font-bold tracking-[0.18em] text-navy dark:text-gold-soft">
+        {/* ยื่นจอให้ลูกก๊วนส่อง — เร็วกว่าพิมพ์ไอพีในวง Wi-Fi ตามกันทีละคน */}
+        <div className="flex flex-col items-center gap-2 rounded-washi border border-line/70 bg-subtle/50 p-4">
+          {url ? <QrCode text={url} size={176} label="QR ลิงก์ดูคิว" /> : null}
+          <p className="font-heading text-[12px] text-ink-faint">ส่อง QR นี้ หรือพิมพ์รหัส</p>
+          <p className="nums font-heading text-[30px] font-bold leading-none tracking-[0.18em] text-navy dark:text-gold-soft">
             {code}
           </p>
         </div>

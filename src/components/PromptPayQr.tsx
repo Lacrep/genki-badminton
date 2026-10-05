@@ -1,8 +1,8 @@
 import { useMemo } from "react"
-import qrcode from "qrcode-generator"
 import { CLUB } from "@shared/club"
 import { promptPayPayload } from "@shared/promptpay"
 import { baht, cn } from "@/lib/util"
+import { qrPath } from "./QrCode"
 
 /**
  * QR พร้อมเพย์ที่ฝังยอดเงินของคนนั้นไว้เลย — สแกนแล้วแอปธนาคารขึ้นจำนวนเงินให้
@@ -81,28 +81,9 @@ export function PromptPayQr({
   )
 }
 
-/** แปลงโมดูลของ QR เป็น path เดียว (รวมช่องที่ติดกันในแถวเดียวกันให้เป็นสี่เหลี่ยมเดียว) */
 function buildQr(amount?: number): { path: string; count: number } | null {
   const payload = promptPayPayload(CLUB.payment.promptPayId, amount)
   if (!payload) return null
-
   // ระดับกันพลาด H = ทนโดนโลโก้บังตรงกลางได้
-  const qr = qrcode(0, "H")
-  qr.addData(payload)
-  qr.make()
-
-  const count = qr.getModuleCount()
-  let path = ""
-  for (let row = 0; row < count; row++) {
-    let start = -1
-    for (let col = 0; col <= count; col++) {
-      const dark = col < count && qr.isDark(row, col)
-      if (dark && start < 0) start = col
-      if (!dark && start >= 0) {
-        path += `M${start} ${row}h${col - start}v1h-${col - start}z`
-        start = -1
-      }
-    }
-  }
-  return { path, count }
+  return qrPath(payload, "H")
 }
