@@ -486,7 +486,24 @@ if (process.env.NODE_ENV === "production") {
   })
 
   const port = Number(process.env.PORT || 3100)
+  const os = await import("node:os")
+
+  /** ไอพีในวง Wi-Fi — ลูกก๊วนเอาไปพิมพ์ในมือถือได้เลย ไม่ต้องมานั่งหาเอง */
+  const lanAddresses = () =>
+    Object.values(os.networkInterfaces())
+      .flatMap((list) => list ?? [])
+      .filter((n) => n.family === "IPv4" && !n.internal)
+      .map((n) => n.address)
+
   serve({ fetch: app.fetch, port }, () => {
-    console.log(`🏸 Genki Desu Badminton — http://localhost:${port}/`)
+    const lines = [
+      "",
+      "🏸 Genki Desu Badminton — เปิดใช้งานแล้ว",
+      `   เครื่องนี้        http://localhost:${port}/`,
+      ...lanAddresses().map((ip) => `   มือถือใน Wi-Fi นี้  http://${ip}:${port}/`),
+      `   ข้อมูลเก็บที่      ${path.resolve(process.env.DATA_DIR || "./data")}`,
+      "",
+    ]
+    console.log(lines.join("\n"))
   })
 }

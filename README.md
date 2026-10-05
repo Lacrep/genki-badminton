@@ -214,27 +214,68 @@ PORT=3100 NODE_ENV=production npm start
 | `DATA_DIR` | `./data` | โฟลเดอร์เก็บข้อมูล (ย้ายเครื่องแค่ก็อปโฟลเดอร์นี้) |
 | `ORGANIZER_PIN` | ว่าง | PIN หัวก๊วน — ว่างไว้ = ใครเปิดลิงก์ได้ก็สั่งการได้ |
 
-### เอาขึ้นให้ลูกก๊วนเข้าจากมือถือ
+### เปิดให้ลูกก๊วนใช้จากมือถือ
 
-- **ในโรงยิม (ง่ายสุด)** — รันบนโน้ตบุ๊กหรือมือถือที่แชร์ฮอตสปอต แล้วบอก IP เครื่อง เช่น `http://192.168.1.20:3100`
-- **ลิงก์ https สวย ๆ ไม่ต้องเปิดพอร์ต** — `cloudflared tunnel --url http://localhost:3100`
-  (ได้ลิงก์ `https://xxx.trycloudflare.com` ส่งเข้าไลน์กลุ่มได้เลย)
-- **เข้าจากที่ไหนก็ได้ 24 ชม.** — รันบน VM ฟรีถาวร (Oracle Cloud / GCP Always Free):
+ตอนเซิร์ฟเวอร์เริ่มทำงาน มันจะพิมพ์ไอพีสำหรับมือถือให้เองเลย:
 
-  ```bash
-  # บน VM (Ubuntu 22.04)
-  sudo apt update && sudo apt install -y git build-essential
-  curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - && sudo apt install -y nodejs
-  sudo npm install -g pm2
+```
+🏸 Genki Desu Badminton — เปิดใช้งานแล้ว
+   เครื่องนี้          http://localhost:3100/
+   มือถือใน Wi-Fi นี้   http://192.168.1.20:3100/     ← พิมพ์อันนี้ในมือถือ
+   ข้อมูลเก็บที่        /home/pi/genki-badminton/data
+```
 
-  git clone <url ของ repo นี้> genki && cd genki
-  npm ci && npm run build
-  PORT=3100 NODE_ENV=production pm2 start "npm start" --name genki
-  pm2 save && pm2 startup          # ให้รีสตาร์ทเองเมื่อ VM รีบูต
-  ```
+เลือกวิธีรันตามสถานการณ์:
 
-  อัปเดตภายหลัง: `git pull && npm ci && npm run build && pm2 restart genki`
-  **สำรองข้อมูล: ก็อปโฟลเดอร์ `data/` เก็บไว้** (มีทะเบียนผู้เล่นกับประวัติก๊วนทั้งหมด)
+#### 1. ที่โรงยิม — ง่ายสุด ไม่ต้องมีอินเทอร์เน็ต
+
+รันบนโน้ตบุ๊ก (หรือมือถือที่แชร์ฮอตสปอต) ที่อยู่ Wi-Fi เดียวกับลูกก๊วน แล้วบอกไอพีข้างบน
+
+```bash
+npm run serve        # build แล้วรัน
+```
+
+#### 2. รันตลอดเวลาด้วย Docker — แนะนำสุดถ้ามีเครื่องเปิดทิ้งไว้
+
+ใช้ได้กับมินิพีซี / Raspberry Pi / VPS / NAS อะไรก็ได้ที่ลง Docker ได้
+
+```bash
+docker compose up -d --build     # รันเลย และขึ้นเองทุกครั้งที่เปิดเครื่อง
+docker compose logs -f           # ดู log
+docker compose ps                # เช็กว่ายังรันอยู่
+```
+
+ตั้ง `restart: unless-stopped` ไว้แล้ว — ไฟดับ/รีบูตก็กลับมาเอง
+ข้อมูลอยู่ในโฟลเดอร์ `data/` ข้างไฟล์ `docker-compose.yml` (**สำรองแค่ก็อปโฟลเดอร์นี้**)
+
+อัปเดตเวอร์ชันใหม่: `git pull && docker compose up -d --build`
+
+#### 3. รันตลอดเวลาแบบไม่ใช้ Docker
+
+```bash
+bash deploy/install.sh           # ลง Node + build + ตั้ง pm2 ให้ขึ้นเองตอนรีบูต
+```
+
+จบแล้วคุมด้วย `pm2 logs genki` / `pm2 restart genki`
+อัปเดต: `git pull && npm ci && npm run build && pm2 restart genki`
+
+#### 4. เข้าจากนอกบ้าน (ไม่ต้องเปิดพอร์ตที่เราเตอร์)
+
+ต่อ Cloudflare Tunnel เข้ากับเครื่องที่รันอยู่ — ได้ลิงก์ `https://` ส่งเข้าไลน์กลุ่มได้เลย
+
+```bash
+# ลิงก์ชั่วคราว ลองเล่นก่อน (ลิงก์เปลี่ยนทุกครั้งที่รันใหม่)
+cloudflared tunnel --url http://localhost:3100
+
+# ลิงก์ถาวร ต้องมีบัญชี Cloudflare (ฟรี) + โดเมน
+cloudflared tunnel login
+cloudflared tunnel create genki
+cloudflared tunnel route dns genki genki.yourdomain.com
+cloudflared tunnel run --url http://localhost:3100 genki
+```
+
+> ถ้าเปิดเว็บผ่าน `http://` ธรรมดา (ไม่ใช่ https) บางฟีเจอร์ของเบราว์เซอร์จะถูกจำกัด
+> — ปุ่มก็อปสรุปมีทางสำรองให้แล้ว แต่ถ้าอยากติดตั้งเป็นแอป (PWA) บนมือถือต้องใช้ https (ผ่าน Tunnel)
 
 ---
 

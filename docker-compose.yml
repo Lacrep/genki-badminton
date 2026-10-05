@@ -1,0 +1,21 @@
+# รันตลอดเวลาด้วยคำสั่งเดียว:  docker compose up -d --build
+# ดูว่ารันอยู่ไหม:              docker compose ps
+# ดู log:                      docker compose logs -f
+# อัปเดตเวอร์ชันใหม่:            git pull && docker compose up -d --build
+services:
+  genki:
+    build: .
+    image: genki-badminton
+    container_name: genki-badminton
+    # เปิดเครื่อง/ไฟดับแล้วมาใหม่ ก็ขึ้นเองอัตโนมัติ
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    environment:
+      PORT: "3100"
+      DATA_DIR: /app/data
+      # ใส่ PIN ถ้าอยากให้เฉพาะเครื่องหัวก๊วนสั่งการได้ (คนอื่นดูได้อย่างเดียว)
+      # ORGANIZER_PIN: "1234"
+    volumes:
+      # ข้อมูลก๊วนทั้งหมดอยู่ในโฟลเดอร์ data/ ข้าง ๆ ไฟล์นี้ — สำรองแค่ก็อปโฟลเดอร์นี้
+      - ./data:/app/data
