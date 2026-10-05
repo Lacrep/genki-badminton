@@ -2,6 +2,10 @@
 # ดูว่ารันอยู่ไหม:              docker compose ps
 # ดู log:                      docker compose logs -f
 # อัปเดตเวอร์ชันใหม่:            git pull && docker compose up -d --build
+#
+# อยากให้คนนอกวง Wi-Fi เข้าได้ด้วย (ได้ลิงก์ https):
+#   docker compose --profile public up -d --build
+#   bash deploy/link.sh            ← พิมพ์ลิงก์ออกมาให้
 services:
   genki:
     build: .
@@ -19,3 +23,18 @@ services:
     volumes:
       # ข้อมูลก๊วนทั้งหมดอยู่ในโฟลเดอร์ data/ ข้าง ๆ ไฟล์นี้ — สำรองแค่ก็อปโฟลเดอร์นี้
       - ./data:/app/data
+
+  # ── ลิงก์ให้คนนอกวง Wi-Fi เข้า (ไม่ต้องตั้งพอร์ตที่เราเตอร์) ──
+  # ขึ้นเฉพาะตอนสั่ง --profile public เท่านั้น ปกติไม่รัน
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: genki-tunnel
+    profiles: ["public"]
+    restart: unless-stopped
+    depends_on:
+      - genki
+    # ลิงก์ชั่วคราว — เปลี่ยนทุกครั้งที่ restart
+    command: tunnel --no-autoupdate --url http://genki:3100
+    # ลิงก์ถาวร (ต้องมีบัญชี Cloudflare ฟรี) — เอา token จากหน้า Zero Trust
+    # แล้วสลับมาใช้สองบรรทัดนี้แทน command ข้างบน
+    # command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}

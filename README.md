@@ -259,23 +259,42 @@ bash deploy/install.sh           # ลง Node + build + ตั้ง pm2 ให
 จบแล้วคุมด้วย `pm2 logs genki` / `pm2 restart genki`
 อัปเดต: `git pull && npm ci && npm run build && pm2 restart genki`
 
-#### 4. เข้าจากนอกบ้าน (ไม่ต้องเปิดพอร์ตที่เราเตอร์)
+#### 4. เข้าจากนอกบ้าน — ได้ลิงก์ `https://` ส่งเข้าไลน์กลุ่ม
 
-ต่อ Cloudflare Tunnel เข้ากับเครื่องที่รันอยู่ — ได้ลิงก์ `https://` ส่งเข้าไลน์กลุ่มได้เลย
+ไม่ต้องตั้งพอร์ตที่เราเตอร์ ไม่ต้องมีไอพีจริง เลือกตามวิธีที่ใช้รันอยู่:
 
 ```bash
-# ลิงก์ชั่วคราว ลองเล่นก่อน (ลิงก์เปลี่ยนทุกครั้งที่รันใหม่)
-cloudflared tunnel --url http://localhost:3100
+# ถ้ารันด้วย Docker
+docker compose --profile public up -d --build
+bash deploy/link.sh           # พิมพ์ลิงก์ออกมาให้
 
-# ลิงก์ถาวร ต้องมีบัญชี Cloudflare (ฟรี) + โดเมน
-cloudflared tunnel login
-cloudflared tunnel create genki
-cloudflared tunnel route dns genki genki.yourdomain.com
-cloudflared tunnel run --url http://localhost:3100 genki
+# ถ้ารันด้วย pm2 / npm run serve
+bash deploy/tunnel.sh         # โหลด cloudflared ให้เอง แล้วพิมพ์ลิงก์ออกมา
 ```
 
-> ถ้าเปิดเว็บผ่าน `http://` ธรรมดา (ไม่ใช่ https) บางฟีเจอร์ของเบราว์เซอร์จะถูกจำกัด
-> — ปุ่มก็อปสรุปมีทางสำรองให้แล้ว แต่ถ้าอยากติดตั้งเป็นแอป (PWA) บนมือถือต้องใช้ https (ผ่าน Tunnel)
+> **ตั้ง PIN ก่อนเปิดเป็นลิงก์สาธารณะ** — ไม่งั้นใครได้ลิงก์ไปก็กดจบเกม ลบคน ปิดก๊วนได้หมด
+> เอา `#` หน้า `ORGANIZER_PIN` ใน `docker-compose.yml` ออก (หรือ `ORGANIZER_PIN=1234 bash deploy/install.sh`)
+> คนที่ไม่มี PIN ยังเปิดดูคิวได้ตามปกติ แค่สั่งการไม่ได้
+
+**ลิงก์ถาวร** (ลิงก์ชั่วคราวข้างบนจะเปลี่ยนทุกครั้งที่รันใหม่) — ต้องมีบัญชี Cloudflare ฟรี
+
+1. [Zero Trust](https://one.dash.cloudflare.com/) → Networks → Tunnels → Create a tunnel → Cloudflared
+2. ตั้งชื่อ แล้วก็อป **token** ที่ได้มา
+3. ชี้ Public hostname ไปที่ `http://localhost:3100` (หรือ `http://genki:3100` ถ้าใช้ Docker)
+4. รันด้วย token นั้น — ได้ลิงก์เดิมทุกครั้ง แม้รีบูตเครื่อง
+
+```bash
+# Docker — สลับไปใช้บรรทัด command ที่มี token ใน docker-compose.yml
+CLOUDFLARE_TUNNEL_TOKEN=xxxxx docker compose --profile public up -d
+
+# pm2 / npm
+CLOUDFLARE_TUNNEL_TOKEN=xxxxx bash deploy/tunnel.sh
+```
+
+ถ้ามีโดเมนของตัวเองอยู่แล้ว จะตั้งเป็น `genki.yourdomain.com` ก็ได้
+
+> เปิดผ่าน `https://` แล้วติดตั้งเป็นแอปลงหน้าจอมือถือได้ (PWA) — ถ้าเปิดผ่าน `http://` ไอพีในวง Wi-Fi
+> เบราว์เซอร์จะจำกัดบางฟีเจอร์ (ปุ่มก็อปมีทางสำรองให้แล้ว แต่ติดตั้งเป็นแอปไม่ได้)
 
 ---
 

@@ -6,3 +6,6 @@ data.*/
 .env
 .env.local
 *.tsbuildinfo
+
+# cloudflared ที่ deploy/tunnel.sh โหลดมาเอง
+deploy/bin/
