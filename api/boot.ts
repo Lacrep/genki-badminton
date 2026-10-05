@@ -10,6 +10,7 @@ import type { HttpBindings } from "@hono/node-server"
 import { z } from "zod"
 import { type Level, type MatchType, MAX_LEVEL, displayName, scoreLabel, thaiTime } from "@shared/types"
 import { suggestMatch } from "./matching"
+import { billFilename, billWorkbook } from "./billsheet"
 import {
   type CreateSessionInput,
   StoreError,
@@ -20,6 +21,7 @@ import {
   cancelMatch,
   checkIn,
   checkOut,
+  computeBill,
   createSession,
   currentSession,
   deletePlayer,
@@ -442,6 +444,24 @@ app.get("/api/session/:id/matches.csv", (c) => {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
       "Content-Disposition": `attachment; filename="genki-${session.date}.csv"`,
+      "Cache-Control": "no-store",
+    },
+  })
+})
+
+app.get("/api/session/:id/bill.xlsx", (c) => {
+  const session = getSession(c.req.param("id"))
+  const roster = rosterMap()
+  const file = billWorkbook(session, computeBill(session, roster), roster)
+  const name = billFilename(session)
+  // ชื่อไฟล์ภาษาไทยต้องส่งแบบ RFC 5987 ไม่งั้นเบราว์เซอร์เก่าได้ชื่อเป็นตัวยึกยือ
+  const ascii = `genki-bill-${session.date}.xlsx`
+
+  return new Response(new Uint8Array(file), {
+    headers: {
+      "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "Content-Disposition": `attachment; filename="${ascii}"; filename*=UTF-8''${encodeURIComponent(name)}`,
+      "Content-Length": String(file.length),
       "Cache-Control": "no-store",
     },
   })

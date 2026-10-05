@@ -53,19 +53,78 @@ function ensureDirs() {
   fs.mkdirSync(SESSION_DIR, { recursive: true })
 }
 
+/**
+ * อ่านไฟล์ JSON — ถ้าไฟล์หลักพังก็ลองไฟล์สำรองที่เขียนคู่กันไว้ทุกครั้ง
+ *
+ * ที่ต้องมีสำรองเพราะถ้าปล่อยให้คืนค่าว่างเฉย ๆ การบันทึกครั้งถัดไปจะทับของเดิม
+ * ที่ยังกู้ได้ทิ้งไปเลย — ทะเบียนลูกก๊วนทั้งก๊วนหายในพริบตาโดยไม่มีใครรู้ตัว
+ */
 function readJson<T>(file: string, fallback: T): T {
   try {
     return JSON.parse(fs.readFileSync(file, "utf8")) as T
-  } catch {
-    return fallback
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException)?.code === "ENOENT") return fallback
+
+    try {
+      const rescued = JSON.parse(fs.readFileSync(`${file}.bak`, "utf8")) as T
+      console.error(`[store] ${path.basename(file)} เสีย — กู้จากไฟล์สำรองแล้ว`)
+      // เก็บตัวที่พังไว้ดูทีหลัง แล้วเอาตัวที่กู้ได้ขึ้นมาเป็นตัวหลักทันที
+      keepBroken(file)
+      writeJson(file, rescued)
+      return rescued
+    } catch {
+      console.error(`[store] ${path.basename(file)} เสียและไฟล์สำรองก็ใช้ไม่ได้ — เริ่มจากค่าว่าง`)
+      keepBroken(file)
+      return fallback
+    }
   }
 }
 
+/** ย้ายไฟล์ที่อ่านไม่ออกไปเก็บไว้ ไม่ลบทิ้ง — เผื่อยังแกะข้อมูลออกมาได้ */
+function keepBroken(file: string) {
+  try {
+    if (fs.existsSync(file)) fs.renameSync(file, `${file}.broken-${Date.now()}`)
+  } catch {
+    // กู้ไม่ได้ก็ไม่เป็นไร อย่าให้ล้มทั้งเซิร์ฟเวอร์เพราะเรื่องนี้
+  }
+}
+
+/**
+ * เขียนไฟล์แบบที่ไฟดับกลางคันแล้วข้อมูลไม่หาย
+ *
+ * เขียนลงไฟล์ชั่วคราว → fsync (บังคับให้ลงจานจริง ไม่ใช่ค้างใน cache ของ OS)
+ * → สำรองตัวเดิมไว้ → rename ทับ (atomic) → fsync โฟลเดอร์ให้ชื่อใหม่ติดจาน
+ *
+ * ถ้าไม่ fsync แล้วไฟดับ จะได้ไฟล์ชื่อถูกแต่ข้างในว่าง ซึ่งแย่กว่าไฟล์เก่าเสียอีก
+ */
 function writeJson(file: string, value: unknown) {
   ensureDirs()
   const tmp = `${file}.${process.pid}.tmp`
-  fs.writeFileSync(tmp, JSON.stringify(value, null, 2))
+  const text = JSON.stringify(value, null, 2)
+
+  const fd = fs.openSync(tmp, "w")
+  try {
+    fs.writeFileSync(fd, text)
+    fs.fsyncSync(fd)
+  } finally {
+    fs.closeSync(fd)
+  }
+
+  try {
+    if (fs.existsSync(file)) fs.copyFileSync(file, `${file}.bak`)
+  } catch {
+    // สำรองไม่ได้ก็ยังต้องเขียนตัวจริงต่อ
+  }
+
   fs.renameSync(tmp, file)
+
+  try {
+    const dir = fs.openSync(path.dirname(file), "r")
+    fs.fsyncSync(dir)
+    fs.closeSync(dir)
+  } catch {
+    // ระบบไฟล์บางตัว (เช่นบน Windows) fsync โฟลเดอร์ไม่ได้ — ข้ามไป
+  }
 }
 
 export function id(prefix = ""): string {

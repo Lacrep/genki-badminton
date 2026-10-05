@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Check, ClipboardList, Download, QrCode, Receipt, Volleyball, Wallet } from "lucide-react"
+import { Check, ClipboardList, Download, FileSpreadsheet, QrCode, Receipt, Volleyball, Wallet } from "lucide-react"
 import { type BillLine, type FeeMode, FEE_MODE_LABEL, displayName, thaiTime } from "@shared/types"
 import { CLUB } from "@shared/club"
 import { api } from "@/lib/api"
@@ -386,11 +386,18 @@ export function BillPage() {
           <ClipboardList size={16} />
           ก็อปสรุปส่งไลน์
         </button>
+        <a className="btn-ghost" href={`/api/session/${sessionId}/bill.xlsx`} download>
+          <FileSpreadsheet size={16} />
+          ไฟล์ Excel
+        </a>
         <a className="btn-ghost" href={`/api/session/${sessionId}/matches.csv`} download>
           <Download size={16} />
-          ดาวน์โหลด CSV
+          CSV รายเกม
         </a>
       </div>
+      <p className="-mt-1 text-center text-[11.5px] text-ink-faint">
+        ไฟล์ Excel มี 4 ชีต — ยอดรายคน · คนที่ยังค้าง · ที่มาของค่าลูกรายเกม · สรุปทั้งก๊วน
+      </p>
 
       {/* เก็บเงินรายคน */}
       {collecting ? (

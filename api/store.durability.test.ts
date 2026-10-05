@@ -1,0 +1,113 @@
+import fs from "node:fs"
+import os from "node:os"
+import path from "node:path"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+
+/**
+ * ข้อมูลก๊วนคือเงินจริงของลูกก๊วน — ไฟล์เสียแล้วกู้ไม่ได้คือเรื่องใหญ่
+ * เทสต์ชุดนี้จำลองไฟล์พังแบบที่เจอจริง (ไฟดับกลางเขียน / ไฟล์โดนแก้มั่ว)
+ */
+
+let dir = ""
+
+async function loadStore() {
+  vi.resetModules()
+  process.env.DATA_DIR = dir
+  return import("./store")
+}
+
+beforeEach(() => {
+  dir = fs.mkdtempSync(path.join(os.tmpdir(), "genki-store-"))
+})
+
+afterEach(() => {
+  fs.rmSync(dir, { recursive: true, force: true })
+  vi.restoreAllMocks()
+})
+
+const rosterFile = () => path.join(dir, "roster.json")
+
+describe("เขียนไฟล์แบบไฟดับแล้วไม่เสีย", () => {
+  it("เขียนเสร็จแล้วมีไฟล์สำรองคู่ไว้เสมอ", async () => {
+    const store = await loadStore()
+    store.addPlayer({ name: "ต้น", level: 5 })
+    store.addPlayer({ name: "บอย", level: 4 })
+
+    expect(fs.existsSync(rosterFile())).toBe(true)
+    expect(fs.existsSync(`${rosterFile()}.bak`)).toBe(true)
+  })
+
+  it("ไม่ทิ้งไฟล์ .tmp ค้างไว้", async () => {
+    const store = await loadStore()
+    store.addPlayer({ name: "ต้น", level: 5 })
+    expect(fs.readdirSync(dir).filter((f) => f.endsWith(".tmp"))).toHaveLength(0)
+  })
+})
+
+describe("ไฟล์ทะเบียนเสีย", () => {
+  it("กู้จากไฟล์สำรอง ไม่ใช่เริ่มนับหนึ่งใหม่", async () => {
+    const store = await loadStore()
+    store.addPlayer({ name: "ต้น", level: 5 })
+    store.addPlayer({ name: "บอย", level: 4 })
+    expect(store.getRoster()).toHaveLength(2)
+
+    // จำลองไฟดับกลางเขียน — ได้ไฟล์ที่ชื่อถูกแต่ข้างในไม่ครบ
+    fs.writeFileSync(rosterFile(), '[{"id":"p_1","name":"ต้')
+    vi.spyOn(console, "error").mockImplementation(() => {})
+
+    const reopened = await loadStore()
+    const names = reopened.getRoster().map((p) => p.name)
+    expect(names).toContain("ต้น")
+  })
+
+  it("เก็บไฟล์ที่พังไว้ให้ ไม่ลบทิ้ง", async () => {
+    const store = await loadStore()
+    store.addPlayer({ name: "ต้น", level: 5 })
+    store.addPlayer({ name: "บอย", level: 4 })
+
+    fs.writeFileSync(rosterFile(), "ขยะ")
+    vi.spyOn(console, "error").mockImplementation(() => {})
+    await (await loadStore()).getRoster()
+
+    expect(fs.readdirSync(dir).some((f) => f.includes(".broken-"))).toBe(true)
+  })
+
+  it("พังทั้งไฟล์หลักและไฟล์สำรองก็ยังเปิดเว็บได้ ไม่ค้าง", async () => {
+    const store = await loadStore()
+    store.addPlayer({ name: "ต้น", level: 5 })
+
+    fs.writeFileSync(rosterFile(), "ขยะ")
+    fs.writeFileSync(`${rosterFile()}.bak`, "ขยะเหมือนกัน")
+    vi.spyOn(console, "error").mockImplementation(() => {})
+
+    const reopened = await loadStore()
+    expect(reopened.getRoster()).toEqual([])
+    // ของเดิมยังอยู่ให้แกะ
+    expect(fs.readdirSync(dir).some((f) => f.includes(".broken-"))).toBe(true)
+  })
+
+  it("ยังไม่เคยมีไฟล์ (เปิดใช้ครั้งแรก) ไม่ถือว่าพัง", async () => {
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {})
+    const store = await loadStore()
+    expect(store.getRoster()).toEqual([])
+    expect(spy).not.toHaveBeenCalled()
+    expect(fs.readdirSync(dir).some((f) => f.includes(".broken-"))).toBe(false)
+  })
+})
+
+describe("ข้อมูลก๊วนที่กำลังเล่นอยู่", () => {
+  it("ปิดเซิร์ฟเวอร์กลางคันแล้วเปิดใหม่ ก๊วนยังอยู่ครบ", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ต้น", level: 5 })
+    const b = store.addPlayer({ name: "บอย", level: 4 })
+    const session = store.createSession({})
+    store.checkIn(session.id, a.id)
+    store.checkIn(session.id, b.id)
+
+    // เปิดเซิร์ฟเวอร์ใหม่ (โหลดโมดูลใหม่หมด ไม่เหลือ state ในหน่วยความจำ)
+    const reopened = await loadStore()
+    const current = reopened.currentSession()
+    expect(current?.id).toBe(session.id)
+    expect(current?.players).toHaveLength(2)
+  })
+})
