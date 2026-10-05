@@ -12,7 +12,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "tsc -b",
-    "serve": "npm run build && npm start"
+    "serve": "npm run build && npm start",
+    "demo": "node scripts/demo.mjs"
   },
   "dependencies": {
     "@hono/node-server": "^1.14.3",
