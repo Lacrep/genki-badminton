@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 import { Check, Pencil, Search, Trash2, UserPlus, Users } from "lucide-react"
-import { type Level, type RosterPlayer, LEVELS, displayName, levelInfo } from "@shared/types"
+import { type Level, type RosterPlayer, LEVELS, displayName, levelInfo, recordLabel } from "@shared/types"
 import { api, type PlayerInput } from "@/lib/api"
 import { useApp, useSession } from "@/lib/app"
 import { LevelBadge, PlayerAvatar } from "@/components/player"
@@ -143,7 +143,7 @@ export function CheckInPage() {
                   </span>
                   <span className="block text-[11px] text-ink-faint">
                     {sp.gamesPlayed} เกม
-                    {sp.wins + sp.losses > 0 ? ` · ${sp.wins}-${sp.losses}` : ""}
+                    {sp.wins + sp.losses + sp.draws > 0 ? ` · ${recordLabel(sp)}` : ""}
                     {sp.paid ? " · จ่ายแล้ว" : ""}
                   </span>
                 </span>
