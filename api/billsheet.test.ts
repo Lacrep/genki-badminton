@@ -228,14 +228,15 @@ describe("ชีตยังไม่จ่าย", () => {
 })
 
 describe("ชีตรายเกม", () => {
-  it("แจกแจงค่าลูกของแต่ละเกมว่าตกคนละเท่าไร", () => {
+  it("แจกแจงค่าลูกของแต่ละเกมว่าคนละเท่าไร และก๊วนเก็บได้เท่าไร", () => {
     const { sheets } = workbookOf()
     const numbers = numbersOf(sheets, 3)
-    // เกมแรก 2 ลูก × 25 = 50 หาร 4 คน = 12.5
+    // เกมแรก 2 ลูก → คนละ 50 · 4 คน = เก็บได้ 200
     expect(numbers).toContain(50)
-    expect(numbers).toContain(12.5)
-    // เกมสอง 1 ลูก × 25 = 25 หาร 4 คน = 6.25
-    expect(numbers).toContain(6.25)
+    expect(numbers).toContain(200)
+    // เกมสอง 1 ลูก → คนละ 25 · 4 คน = เก็บได้ 100
+    expect(numbers).toContain(25)
+    expect(numbers).toContain(100)
   })
 
   it("บันทึกคะแนนครบทุกเซ็ต", () => {
@@ -257,12 +258,20 @@ describe("ชีตสรุปก๊วน", () => {
     expect(numbers).toContain(bill.collected)
   })
 
-  it("บอกว่าลูกที่ใช้นอกเกมถูกหารเท่ากันทุกคนเท่าไร", () => {
+  it("แยกลูกที่ใช้ในเกมกับลูกที่ใช้นอกเกมให้เห็น", () => {
     const { session, roster } = makeSession()
     session.shuttlesExtra = 2
     const sheets = unzip(billWorkbook(session, computeBill(session, roster), roster))
-    expect(textsOf(sheets, 4)).toContain("ลูกที่ใช้นอกเกม (หารเท่ากัน)")
-    expect(numbersOf(sheets, 4)).toContain(50) // 2 ลูก × 25
+    const texts = textsOf(sheets, 4)
+    expect(texts).toContain("ลูกที่ใช้ในเกม")
+    expect(texts).toContain("ลูกที่ใช้นอกเกม (หารเท่ากัน)")
+    expect(texts).toContain("ค่าลูกที่เก็บจากลูกก๊วนรวม")
+  })
+
+  it("ไม่กรอกต้นทุนก็บอกตรง ๆ ว่าคิดกำไรขาดทุนไม่ได้", () => {
+    const texts = textsOf(workbookOf().sheets, 4)
+    expect(texts).toContain("ยังไม่ได้กรอกต้นทุน")
+    expect(texts).toContain("คิดไม่ได้ ต้องกรอกต้นทุนก่อน")
   })
 })
 

@@ -21,6 +21,7 @@ export function BillPage() {
 
   const [courtFeePerHead, setCourtFeePerHead] = useState(String(fees.courtFeePerHead))
   const [shuttlePrice, setShuttlePrice] = useState(String(fees.shuttlePrice))
+  const [shuttleCostReal, setShuttleCostReal] = useState(String(fees.shuttleCostReal))
   const [courtCost, setCourtCost] = useState(String(fees.courtCost))
   const [extraCost, setExtraCost] = useState(String(fees.extraCost))
   const [extraNote, setExtraNote] = useState(fees.extraNote ?? "")
@@ -31,10 +32,11 @@ export function BillPage() {
   useEffect(() => {
     setCourtFeePerHead(String(fees.courtFeePerHead))
     setShuttlePrice(String(fees.shuttlePrice))
+    setShuttleCostReal(String(fees.shuttleCostReal))
     setCourtCost(String(fees.courtCost))
     setExtraCost(String(fees.extraCost))
     setExtraNote(fees.extraNote ?? "")
-  }, [fees.courtFeePerHead, fees.shuttlePrice, fees.courtCost, fees.extraCost, fees.extraNote])
+  }, [fees.courtFeePerHead, fees.shuttlePrice, fees.shuttleCostReal, fees.courtCost, fees.extraCost, fees.extraNote])
 
   const saveFees = (patch: Record<string, unknown>) =>
     void run("บันทึกค่าใช้จ่ายแล้ว", () => api.updateSession(sessionId, { fees: patch }), { silent: true })
@@ -69,12 +71,12 @@ export function BillPage() {
             tone="gold"
           />
           <Stat label="ยังไม่จ่าย" value={`${baht(bill.billed - bill.collected)} ฿`} tone="red" hint={`${unpaid.length} คน`} />
-          {/* เทียบกับต้นทุนจริงได้ต่อเมื่อกรอกค่าคอร์ตที่จ่ายสนามไว้ */}
+          {/* บอกกำไร/ขาดทุนได้ต่อเมื่อรู้ต้นทุนจริง — ไม่กรอกก็อย่าเดาให้ */}
           <Stat
-            label={bill.courtCost === 0 ? "เหลือเข้าก๊วน" : bill.balance >= 0 ? "เหลือเข้าก๊วน" : "ขาดอยู่"}
-            value={bill.courtCost === 0 ? "—" : `${baht(Math.abs(bill.balance))} ฿`}
-            tone={bill.courtCost > 0 && bill.balance < 0 ? "red" : "gold"}
-            hint={bill.courtCost > 0 ? "ยอดที่เก็บ − ต้นทุนจริง" : "กรอกค่าคอร์ตที่จ่ายสนามเพื่อดูยอดนี้"}
+            label={!bill.costTracked || bill.balance >= 0 ? "เหลือเข้าก๊วน" : "ขาดอยู่"}
+            value={bill.costTracked ? `${baht(Math.abs(bill.balance))} ฿` : "—"}
+            tone={bill.costTracked && bill.balance < 0 ? "red" : "gold"}
+            hint={bill.costTracked ? "ยอดที่เก็บ − ต้นทุนจริง" : "กรอกต้นทุนด้านล่างเพื่อดูยอดนี้"}
           />
         </div>
       </div>
@@ -93,8 +95,8 @@ export function BillPage() {
         />
         <p className="text-[12px] leading-snug text-ink-faint">
           {fees.mode === "club"
-            ? `เก็บค่าสนามเท่ากันทุกคน ส่วนค่าลูกคิดเฉพาะคนที่ลงเกมนั้น (ลูกละ ${baht(fees.shuttlePrice)} หาร 4 คนในเกม) — ตรงกับที่โปสเตอร์ก๊วนเขียนไว้`
-            : "รวมต้นทุนทั้งหมด (ค่าสนาม + ค่าลูก + ค่าอื่น ๆ) แล้วหารจำนวนคนเท่า ๆ กัน ไม่สนว่าใครลงกี่เกม"}
+            ? `เก็บค่าสนามเท่ากันทุกคน ส่วนค่าลูกคิดเฉพาะคนที่ลงเกมนั้น — เกมที่ใช้ 1 ลูก ทั้ง 4 คนจ่ายคนละ ${baht(fees.shuttlePrice)} บาท`
+            : "รวมต้นทุนจริงทั้งหมด (ค่าคอร์ต + ค่าลูกที่ซื้อมา + ค่าอื่น ๆ) แล้วหารจำนวนคนเท่า ๆ กัน ไม่สนว่าใครลงกี่เกม"}
         </p>
 
         <div className="grid gap-3 sm:grid-cols-2">
@@ -132,7 +134,7 @@ export function BillPage() {
 
           <div>
             <label className="label" htmlFor="b-shuttle">
-              ค่าลูกแบด ลูกละ (บาท)
+              ค่าลูก เก็บคนละ (บาท/ลูก)
             </label>
             <input
               id="b-shuttle"
@@ -143,7 +145,9 @@ export function BillPage() {
               onChange={(e) => setShuttlePrice(e.target.value)}
               onBlur={() => saveFees({ shuttlePrice: num(shuttlePrice) })}
             />
-            <p className="mt-1 text-[11.5px] text-ink-faint">ลูกที่ก๊วนใช้: {CLUB.shuttle}</p>
+            <p className="mt-1 text-[11.5px] text-ink-faint">
+              เกมที่ใช้ 1 ลูก ทั้ง 4 คนจ่ายคนละเท่านี้ · ลูกที่ก๊วนใช้: {CLUB.shuttle}
+            </p>
           </div>
 
           {fees.mode === "club" ? (
@@ -164,6 +168,25 @@ export function BillPage() {
               <p className="mt-1 text-[11.5px] text-ink-faint">ใส่แล้วจะเห็นว่าเก็บได้เกินหรือขาดเท่าไร</p>
             </div>
           ) : null}
+
+          <div>
+            <label className="label" htmlFor="b-shuttlereal">
+              ราคาลูกที่ซื้อมาจริง ลูกละ (ใส่หรือไม่ใส่ก็ได้)
+            </label>
+            <input
+              id="b-shuttlereal"
+              className="input nums"
+              inputMode="numeric"
+              placeholder="0"
+              value={shuttleCostReal}
+              disabled={!canControl}
+              onChange={(e) => setShuttleCostReal(e.target.value)}
+              onBlur={() => saveFees({ shuttleCostReal: num(shuttleCostReal) })}
+            />
+            <p className="mt-1 text-[11.5px] text-ink-faint">
+              ต้นทุนจริงของก๊วน ไม่ใช่ยอดที่เก็บ — ใส่แล้วจะรู้ว่าวันนี้ก๊วนเหลือหรือขาดเท่าไร
+            </p>
+          </div>
 
           <div>
             <label className="label" htmlFor="b-extra">
@@ -277,10 +300,10 @@ export function BillPage() {
           ) : (
             <Row label="ค่าสนามรวม" value={`${baht(bill.courtCost)} ฿`} />
           )}
-          <Row label={`ค่าลูก (${bill.shuttlesUsed} ลูก × ${baht(fees.shuttlePrice)})`} value={`${baht(bill.shuttleCost)} ฿`} />
+          <Row label={`ค่าลูกที่เก็บได้ (ใช้ ${bill.shuttlesUsed} ลูก)`} value={`${baht(bill.shuttleCharged)} ฿`} />
           {bill.extraCost > 0 ? <Row label={fees.extraNote || "ค่าอื่น ๆ"} value={`${baht(bill.extraCost)} ฿`} /> : null}
           <Row label="ยอดที่ต้องเก็บรวม" value={`${baht(bill.billed)} ฿`} bold />
-          {bill.courtCost > 0 ? (
+          {bill.costTracked ? (
             <Row label="ต้นทุนจริงที่จ่ายไป" value={`${baht(bill.total)} ฿`} />
           ) : null}
         </div>
@@ -294,8 +317,8 @@ export function BillPage() {
             ค่าลูกรายเกม ({playedMatches.length} เกม)
           </h2>
           <p className="mb-3 text-[11.5px] leading-snug text-ink-faint">
-            ลูกละ {baht(fees.shuttlePrice)} บาท หารเฉพาะคนที่ลงเกมนั้น — เกมละ 1 ลูกคือคนละ{" "}
-            {(fees.shuttlePrice / 4).toFixed(2).replace(/\.00$/, "")} บาท · แก้จำนวนลูกย้อนหลังได้ที่นี่
+            คนที่ลงเกมนั้นจ่ายค่าลูก <b>คนละ {baht(fees.shuttlePrice)} บาทต่อลูก</b> — เกมที่ใช้ 1 ลูก
+            ทั้ง 4 คนจ่ายคนละ {baht(fees.shuttlePrice)} บาท · แก้จำนวนลูกย้อนหลังได้ที่นี่
           </p>
 
           {missingShuttles > 0 ? (
@@ -322,7 +345,7 @@ export function BillPage() {
                     </span>
                     <span className="block text-[11px] text-ink-faint">
                       {m.shuttles > 0
-                        ? `คนละ ${((m.shuttles * fees.shuttlePrice) / Math.max(1, names.length)).toFixed(2).replace(/\.00$/, "")} บาท`
+                        ? `คนละ ${baht(m.shuttles * fees.shuttlePrice)} บาท`
                         : "ยังไม่ได้ใส่จำนวนลูก"}
                     </span>
                   </span>
@@ -345,8 +368,9 @@ export function BillPage() {
           {view.session.shuttlesExtra > 0 ? (
             <p className="mt-3 rounded-xl bg-subtle/70 px-3 py-2 text-[12px] leading-snug text-ink-soft">
               มีลูกนอกเกมอีก {view.session.shuttlesExtra} ลูก (
-              {baht(view.session.shuttlesExtra * fees.shuttlePrice)} บาท) — ส่วนนี้<b>หารเท่ากันทุกคน</b>{" "}
-              เพราะไม่ได้ผูกกับเกมไหน ถ้าอยากให้คิดตามเกม ให้ย้ายไปใส่ในเกมด้านบนแทน
+              {baht(view.session.shuttlesExtra * fees.shuttlePrice * 4)} บาท) — ส่วนนี้<b>หารเท่ากันทุกคน</b>{" "}
+              เพราะไม่ได้ผูกกับเกมไหน (คิดราคาเต็มลูกละ {baht(fees.shuttlePrice * 4)} บาท เท่าที่เก็บได้ต่อลูกในเกมปกติ)
+              ถ้าอยากให้คิดตามเกม ให้ย้ายไปใส่ในเกมด้านบนแทน
             </p>
           ) : null}
         </section>

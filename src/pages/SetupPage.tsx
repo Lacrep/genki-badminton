@@ -149,7 +149,7 @@ export function SetupPage({ navigate }: { navigate?: (to: string) => void }) {
           </div>
         </div>
         <p className="-mt-1 text-[11.5px] text-ink-faint">
-          ค่าเริ่มต้นตามโปสเตอร์ก๊วน — ค่าลูกจะคิดเฉพาะคนที่ลงเกมนั้น (หาร 4 คนในเกม) เปลี่ยนวิธีคิดได้ในหน้า “ค่าก๊วน”
+          ค่าเริ่มต้นตามโปสเตอร์ก๊วน — ค่าลูกเก็บคนละ 25 บาทต่อลูก เฉพาะคนที่ลงเกมนั้น เปลี่ยนวิธีคิดได้ในหน้า “ค่าก๊วน”
         </p>
 
         <button className="btn-primary btn-lg" onClick={open} disabled={busy || (pinRequired && needPin)}>

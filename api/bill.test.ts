@@ -87,13 +87,24 @@ describe("ค่าเริ่มต้นตามโปสเตอร์ก�
 })
 
 describe("โหมดระบบก๊วน — ค่าสนามต่อหัว + ค่าลูกตามเกมที่ลง", () => {
-  it("ค่าลูกในแต่ละเกมหารกันเฉพาะ 4 คนที่ลงเกมนั้น", () => {
+  it("คนที่ลงเกมนั้นจ่ายค่าลูกคนละเต็มอัตรา ไม่ได้เอามาหารกัน", () => {
     const { session, roster } = makeSession()
     const bill = computeBill(session, roster)
-    // เกม 1: 2 ลูก × 25 = 50 ÷ 4 = 12.5 · เกม 2: 1 ลูก × 25 = 25 ÷ 4 = 6.25
-    expect(amountOf(bill, "a")).toBe(89) // 70 + 12.5 + 6.25 = 88.75 → ปัดขึ้น 89
-    expect(amountOf(bill, "d")).toBe(83) // 70 + 12.5 = 82.5 → 83
-    expect(amountOf(bill, "e")).toBe(77) // 70 + 6.25 = 76.25 → 77
+    // เกม 1 ใช้ 2 ลูก → คนในเกมจ่ายคนละ 50 · เกม 2 ใช้ 1 ลูก → คนละ 25
+    expect(amountOf(bill, "a")).toBe(145) // 70 + 50 + 25 (ลงทั้งสองเกม)
+    expect(amountOf(bill, "d")).toBe(120) // 70 + 50 (ลงเกมแรกเกมเดียว)
+    expect(amountOf(bill, "e")).toBe(95) // 70 + 25 (ลงเกมสองเกมเดียว)
+  })
+
+  it("เกมที่ใช้ลูกเดียว ทั้งสี่คนจ่ายคนละเท่าราคาลูกที่ตั้งไว้", () => {
+    const { session, roster } = makeSession()
+    session.matches = [match("m1", ["a", "b", "c", "d"], 1)]
+    const bill = computeBill(session, roster)
+    for (const id of ["a", "b", "c", "d"]) {
+      expect(amountOf(bill, id), id).toBe(70 + 25)
+    }
+    // ก๊วนเก็บค่าลูกเกมนี้ได้ 100 บาท = ราคาลูกจริงหนึ่งลูก
+    expect(bill.shuttleCharged).toBe(100)
   })
 
   it("คนที่ยังไม่ได้ลงเลยจ่ายแค่ค่าสนาม", () => {
@@ -107,16 +118,17 @@ describe("โหมดระบบก๊วน — ค่าสนามต่�
     const { session, roster } = makeSession()
     const line = computeBill(session, roster).lines.find((l) => l.playerId === "a")!
     expect(line.courtPart).toBe(70)
-    expect(line.shuttlePart).toBe(18.75)
+    expect(line.shuttlePart).toBe(75) // 2 ลูกเกมแรก + 1 ลูกเกมสอง = คนละ 50 + 25
     expect(line.extraPart).toBe(0)
   })
 
-  it("ลูกที่ใช้นอกเกมหารเท่ากันทุกคน", () => {
+  it("ลูกที่ใช้นอกเกมคิดราคาเต็มลูกแล้วหารเท่ากันทุกคน", () => {
     const { session, roster } = makeSession()
-    session.shuttlesExtra = 1 // 25 บาท ÷ 5 คน = 5 บาท
+    session.shuttlesExtra = 1 // ราคาเต็ม 25 × 4 = 100 บาท ÷ 5 คน = 20 บาท
     const bill = computeBill(session, roster)
     expect(bill.shuttlesUsed).toBe(4)
-    expect(amountOf(bill, "e")).toBe(82) // 70 + 6.25 + 5 = 81.25 → 82
+    expect(bill.shuttlesInGames).toBe(3)
+    expect(amountOf(bill, "e")).toBe(115) // 70 + 25 + 20
   })
 
   it("ค่าอื่น ๆ หารเท่ากันทุกคน", () => {
@@ -125,25 +137,38 @@ describe("โหมดระบบก๊วน — ค่าสนามต่�
     expect(bill.lines.every((l) => l.extraPart === 20)).toBe(true)
   })
 
-  it("บอกว่าเก็บได้เกินหรือขาดเมื่อกรอกค่าคอร์ตที่จ่ายสนามจริง", () => {
-    const { session, roster } = makeSession({ courtCost: 700 })
+  it("ต้นทุนจริงคิดจากราคาลูกที่ซื้อมา ไม่ใช่อัตราที่เก็บต่อคน", () => {
+    const { session, roster } = makeSession({ courtCost: 700, shuttleCostReal: 100 })
     const bill = computeBill(session, roster)
-    // ต้นทุน = ค่าคอร์ต 700 + ค่าลูก 3 ลูก × 25 = 775
-    expect(bill.total).toBe(775)
-    expect(bill.balance).toBe(bill.billed - 775)
-    // เก็บหัวละ 70 จาก 5 คน = 350 → ยังขาด
-    expect(bill.balance).toBeLessThan(0)
+    // ต้นทุน = ค่าคอร์ต 700 + ลูก 3 ลูก × ราคาจริง 100 = 1,000
+    expect(bill.total).toBe(1000)
+    expect(bill.costTracked).toBe(true)
+    expect(bill.balance).toBe(bill.billed - 1000)
+  })
+
+  it("ไม่กรอกต้นทุนก็บอกว่ายังคิดกำไรขาดทุนไม่ได้ ไม่ใช่เดาว่าต้นทุนเป็นศูนย์", () => {
+    const { session, roster } = makeSession()
+    const bill = computeBill(session, roster)
+    expect(bill.costTracked).toBe(false)
+    expect(bill.shuttleCost).toBe(0)
+  })
+
+  it("ค่าลูกที่เก็บได้รวม = ผลรวมค่าลูกของทุกคน", () => {
+    const { session, roster } = makeSession()
+    const bill = computeBill(session, roster)
+    // เกมแรก 4 คน × 50 = 200 · เกมสอง 4 คน × 25 = 100
+    expect(bill.shuttleCharged).toBe(300)
   })
 })
 
 describe("โหมดหารเท่ากันทุกคน", () => {
-  it("ทุกคนจ่ายเท่ากันจากต้นทุนรวม", () => {
-    const { session, roster } = makeSession({ mode: "equal", courtCost: 700 })
+  it("ทุกคนจ่ายเท่ากันจากต้นทุนจริงรวม", () => {
+    const { session, roster } = makeSession({ mode: "equal", courtCost: 700, shuttleCostReal: 100 })
     const bill = computeBill(session, roster)
-    // (700 + 3×25) / 5 = 155
+    // (ค่าคอร์ต 700 + ลูก 3 ลูก × 100) / 5 คน = 200
     expect(new Set(bill.lines.map((l) => l.amount)).size).toBe(1)
-    expect(amountOf(bill, "a")).toBe(155)
-    expect(amountOf(bill, "e")).toBe(155)
+    expect(amountOf(bill, "a")).toBe(200)
+    expect(amountOf(bill, "e")).toBe(200)
   })
 
   it("ไม่สนว่าใครลงกี่เกม", () => {
@@ -158,14 +183,14 @@ describe("การปัดเศษและยอดที่เก็บไ�
     const { session, roster } = makeSession({ roundTo: 5 })
     const bill = computeBill(session, roster)
     expect(bill.lines.every((l) => l.amount % 5 === 0)).toBe(true)
-    expect(amountOf(bill, "a")).toBe(90) // 88.75 → 90
+    expect(amountOf(bill, "a")).toBe(145) // 145 ลงตัวอยู่แล้ว
   })
 
   it("นับยอดที่จ่ายแล้วเฉพาะคนที่ติ๊กว่าจ่าย", () => {
     const { session, roster } = makeSession()
     session.players[0].paid = true // a
     const bill = computeBill(session, roster)
-    expect(bill.collected).toBe(89)
+    expect(bill.collected).toBe(145)
     expect(bill.billed).toBeGreaterThan(bill.collected)
   })
 
@@ -175,6 +200,6 @@ describe("การปัดเศษและยอดที่เก็บไ�
     session.players[4].leftAt = NOW
     const bill = computeBill(session, roster)
     expect(bill.lines.length).toBe(5)
-    expect(amountOf(bill, "e")).toBe(77)
+    expect(amountOf(bill, "e")).toBe(95) // 70 + ค่าลูกเกมที่ลงไว้ก่อนกลับ
   })
 })

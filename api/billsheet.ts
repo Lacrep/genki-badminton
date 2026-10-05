@@ -139,8 +139,9 @@ export function billWorkbook(session: Session, bill: Bill, roster: Map<string, R
   // ── ชีต 3: ที่มาของค่าลูก (รายเกม) ─────────────────────────────────────────
   const matchRows: Cell[][] = session.matches.map((m, i) => {
     const sets = m.sets ?? []
-    const head = [...m.teamA, ...m.teamB].length || 1
-    const cost = m.shuttles * session.fees.shuttlePrice
+    const head = [...m.teamA, ...m.teamB].length
+    const perHead = m.shuttles * session.fees.shuttlePrice
+    const collected = perHead * head
     return [
       { v: i + 1, style: "int" },
       session.courts[m.courtIndex]?.name ?? `คอร์ต ${m.courtIndex + 1}`,
@@ -155,8 +156,8 @@ export function billWorkbook(session: Session, bill: Bill, roster: Map<string, R
       sets[2] ? `${sets[2].a}-${sets[2].b}` : "",
       m.winner ? `ทีม ${m.winner}` : "",
       { v: m.shuttles, style: "int" },
-      { v: round2(cost), style: "money" },
-      { v: round2(cost / head), style: "money" },
+      { v: round2(perHead), style: "money" },
+      { v: round2(collected), style: "money" },
     ]
   })
 
@@ -176,8 +177,8 @@ export function billWorkbook(session: Session, bill: Bill, roster: Map<string, R
       { header: "เซ็ต 3", width: 8 },
       { header: "ผู้ชนะ", width: 9 },
       { header: "ลูกที่ใช้", width: 9 },
-      { header: "ค่าลูกเกมนี้", width: 12 },
-      { header: "ตกคนละ", width: 11 },
+      { header: "ค่าลูก คนละ", width: 12 },
+      { header: "เก็บได้เกมนี้", width: 12 },
     ],
     rows: matchRows,
   }
@@ -185,7 +186,6 @@ export function billWorkbook(session: Session, bill: Bill, roster: Map<string, R
   // ── ชีต 4: สรุปทั้งก๊วน ────────────────────────────────────────────────────
   const money = (v: number): Cell => ({ v: round2(v), style: "money" })
   const count = (v: number): Cell => ({ v, style: "int" })
-  const looseShuttleCost = session.shuttlesExtra * session.fees.shuttlePrice
 
   const summaryRows: Cell[][] = [
     ["ชื่อก๊วน", session.name],
@@ -195,10 +195,16 @@ export function billWorkbook(session: Session, bill: Bill, roster: Map<string, R
     ["สถานะ", session.status === "ended" ? "ปิดก๊วนแล้ว" : "ยังเล่นอยู่"],
     [null, null],
     [{ v: "วิธีคิดเงิน", style: "bold" }, null],
-    ["โหมด", session.fees.mode === "club" ? "ระบบก๊วน (ค่าสนามต่อหัว + ค่าลูกหารในเกม)" : "หารเท่ากันทุกคน"],
+    [
+      "โหมด",
+      session.fees.mode === "club"
+        ? "ระบบก๊วน (ค่าสนามต่อหัว + ค่าลูกคนละเท่ากันต่อลูก เฉพาะเกมที่ลง)"
+        : "หารเท่ากันทุกคน",
+    ],
     ["ค่าสนามต่อหัว", money(session.fees.courtFeePerHead)],
-    ["ค่าลูกต่อลูก", money(session.fees.shuttlePrice)],
+    ["ค่าลูก เก็บคนละ (ต่อลูก)", money(session.fees.shuttlePrice)],
     ["ปัดเศษขึ้นทีละ", money(session.fees.roundTo)],
+    ["ราคาลูกที่ซื้อมาจริง (ต่อลูก)", session.fees.shuttleCostReal > 0 ? money(session.fees.shuttleCostReal) : "ไม่ได้กรอก"],
     ["ค่าเช่าคอร์ตที่จ่ายสนามจริง", money(session.fees.courtCost)],
     [
       session.fees.extraNote ? `ค่าอื่น ๆ (${session.fees.extraNote})` : "ค่าอื่น ๆ",
@@ -208,22 +214,23 @@ export function billWorkbook(session: Session, bill: Bill, roster: Map<string, R
     [{ v: "ตัวเลขของวันนี้", style: "bold" }, null],
     ["จำนวนคน", count(session.players.length)],
     ["เกมที่จบแล้ว", count(finished.length)],
-    ["ลูกที่ใช้ในเกม", count(bill.shuttlesUsed - session.shuttlesExtra)],
+    ["ลูกที่ใช้ในเกม", count(bill.shuttlesInGames)],
     ["ลูกที่ใช้นอกเกม (หารเท่ากัน)", count(session.shuttlesExtra)],
     ["ลูกที่ใช้ทั้งหมด", count(bill.shuttlesUsed)],
-    ["ค่าลูกรวม", money(bill.shuttleCost)],
-    ["  • ส่วนที่หารกันในเกม", money(bill.shuttleCost - looseShuttleCost)],
-    ["  • ส่วนที่หารเท่ากันทุกคน", money(looseShuttleCost)],
+    ["ค่าลูกที่เก็บจากลูกก๊วนรวม", money(bill.shuttleCharged)],
     [null, null],
     [{ v: "เงิน", style: "bold" }, null],
     ["ยอดเรียกเก็บรวม", { v: round2(bill.billed), style: "moneyBold" }],
     ["เก็บได้แล้ว", { v: round2(bill.collected), style: "moneyBold" }],
     ["ยังค้างอยู่", { v: round2(bill.billed - bill.collected), style: "moneyBold" }],
     ["จ่ายแล้วกี่คน", `${bill.lines.filter((l) => l.paid).length} / ${bill.lines.length} คน`],
-    ["ต้นทุนจริงที่ก๊วนจ่ายออก", money(bill.total)],
     [
-      bill.balance >= 0 ? "เหลือเข้าก๊วน" : "ก๊วนออกให้ก่อน",
-      { v: round2(Math.abs(bill.balance)), style: "moneyBold" },
+      "ต้นทุนจริงที่ก๊วนจ่ายออก",
+      bill.costTracked ? money(bill.total) : "ยังไม่ได้กรอกต้นทุน",
+    ],
+    [
+      bill.costTracked && bill.balance < 0 ? "ก๊วนออกให้ก่อน" : "เหลือเข้าก๊วน",
+      bill.costTracked ? { v: round2(Math.abs(bill.balance)), style: "moneyBold" } : "คิดไม่ได้ ต้องกรอกต้นทุนก่อน",
     ],
     [null, null],
     ["รับเงินที่", session.fees.promptPay || CLUB.payment.name],

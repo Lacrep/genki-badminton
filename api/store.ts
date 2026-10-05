@@ -212,7 +212,7 @@ function migrateSession(session: Session): { session: Session; changed: boolean 
     delete fees.guestFee
     changed = true
   }
-  for (const key of ["shuttlePrice", "courtCost", "extraCost", "roundTo"] as const) {
+  for (const key of ["shuttlePrice", "shuttleCostReal", "courtCost", "extraCost", "roundTo"] as const) {
     if (typeof fees[key] !== "number") {
       fees[key] = DEFAULT_FEES[key]
       changed = true
@@ -807,30 +807,46 @@ function roundUpTo(value: number, step: number): number {
   return Math.ceil(value / s) * s
 }
 
+/** คนในหนึ่งเกมคู่ — ค่าลูกต่อลูกที่ก๊วนเก็บได้ = อัตราต่อคน × เลขนี้ */
+const PLAYERS_PER_SHUTTLE = 4
+
 export function computeBill(session: Session, roster: Map<string, RosterPlayer>): Bill {
   const fees = session.fees
-  const shuttlesUsed = session.matches.reduce((n, m) => n + m.shuttles, 0) + session.shuttlesExtra
-  const shuttleCost = shuttlesUsed * fees.shuttlePrice
-  // ต้นทุนจริงที่ก๊วนจ่ายออกไป (ค่าคอร์ตกรอกเองได้ ใส่ 0 ถ้าไม่อยากกรอก)
+  const shuttlesInGames = session.matches.reduce((n, m) => n + m.shuttles, 0)
+  const shuttlesUsed = shuttlesInGames + session.shuttlesExtra
+
+  /**
+   * ต้นทุนลูกจริง = จำนวนลูก × ราคาที่ก๊วนซื้อลูกมา (ไม่ใช่อัตราที่เก็บต่อคน)
+   * ไม่กรอกราคาที่ซื้อมา = ไม่รู้ต้นทุน ซึ่งต่างจาก "ต้นทุนเป็นศูนย์" — จึงต้องแยกให้ออก
+   */
+  const shuttleCost = shuttlesUsed * fees.shuttleCostReal
   const total = fees.courtCost + shuttleCost + fees.extraCost
+  const costTracked = fees.courtCost > 0 || fees.shuttleCostReal > 0
 
   // ทุกคนที่เช็คอินวันนี้ (รวมคนที่กลับไปแล้ว — เขาก็ใช้คอร์ตไปแล้ว)
   const people = session.players
   const n = people.length || 1
 
   /**
-   * ค่าลูกแบบระบบก๊วน: ลูกที่ใช้ในเกมไหน หารกันเฉพาะ 4 คนที่ลงเกมนั้น
-   * (ตรงกับที่โปสเตอร์เขียนว่า "ลูกละ 25 ต่อเกม")
+   * ค่าลูกแบบระบบก๊วน: ใครลงเกมไหน จ่ายค่าลูกของเกมนั้น "เต็มอัตราต่อคน"
+   *
+   * เกมหนึ่งใช้ 1 ลูก ทั้งสี่คนจ่ายคนละ 25 (ไม่ใช่เอา 25 มาหารสี่)
+   * ก๊วนจึงเก็บได้ 100 ต่อลูก ซึ่งพอดีกับราคาลูกที่ซื้อมา — นี่คือวิธีที่ก๊วนใช้จริง
    */
   const shuttleShare = new Map<string, number>()
   for (const m of session.matches) {
     const ids = [...m.teamA, ...m.teamB]
     if (ids.length === 0 || m.shuttles <= 0) continue
-    const per = (m.shuttles * fees.shuttlePrice) / ids.length
-    for (const id of ids) shuttleShare.set(id, (shuttleShare.get(id) ?? 0) + per)
+    const perHead = m.shuttles * fees.shuttlePrice
+    for (const id of ids) shuttleShare.set(id, (shuttleShare.get(id) ?? 0) + perHead)
   }
-  // ลูกที่เปิดใช้นอกเกม (ซ้อมก่อนเริ่ม ฯลฯ) และค่าอื่น ๆ หารเท่ากันทุกคน
-  const loosePerHead = (session.shuttlesExtra * fees.shuttlePrice) / n
+
+  /**
+   * ลูกที่เปิดใช้นอกเกม (ซ้อมก่อนเริ่ม ฯลฯ) ไม่มีเจ้าของเกม จึงหารเท่ากันทุกคน
+   * ที่ราคาลูกเต็ม = อัตราต่อคน × 4 (เท่ากับที่เก็บได้ต่อลูกในเกมปกติ)
+   */
+  const looseFullPrice = session.shuttlesExtra * fees.shuttlePrice * PLAYERS_PER_SHUTTLE
+  const loosePerHead = looseFullPrice / n
   const extraPerHead = fees.extraCost / n
 
   const round2 = (v: number) => Math.round(v * 100) / 100
@@ -855,14 +871,18 @@ export function computeBill(session: Session, roster: Map<string, RosterPlayer>)
 
   const billed = lines.reduce((sum, l) => sum + l.amount, 0)
   const collected = lines.filter((l) => l.paid).reduce((sum, l) => sum + l.amount, 0)
+  const shuttleCharged = lines.reduce((sum, l) => sum + l.shuttlePart, 0)
 
   return {
     mode: fees.mode,
     courtCost: fees.courtCost,
+    shuttleCharged: round2(shuttleCharged),
     shuttleCost,
     shuttlesUsed,
+    shuttlesInGames,
     extraCost: fees.extraCost,
     total,
+    costTracked,
     billed,
     collected,
     lines: lines.sort((a, b) => b.games - a.games || a.name.localeCompare(b.name, "th")),
@@ -889,7 +909,9 @@ export function summaryText(session: Session): string {
   lines.push("")
 
   if (fees.mode === "club") {
-    lines.push(`💰 ค่าสนามคนละ ${baht(fees.courtFeePerHead)} + ค่าลูกลูกละ ${baht(fees.shuttlePrice)} (หารกันในเกมที่ลง)`)
+    lines.push(
+      `💰 ค่าสนามคนละ ${baht(fees.courtFeePerHead)} + ค่าลูกคนละ ${baht(fees.shuttlePrice)} ต่อลูก (เฉพาะเกมที่ลง)`,
+    )
   } else {
     lines.push(`💰 หารเท่ากันทุกคน — ต้นทุนรวม ${baht(bill.total)} บาท`)
   }

@@ -177,6 +177,7 @@ const feesSchema = z.object({
   mode: z.enum(["club", "equal"]).optional(),
   courtFeePerHead: z.number().min(0).max(100_000).optional(),
   shuttlePrice: z.number().min(0).max(10_000).optional(),
+  shuttleCostReal: z.number().min(0).max(10_000).optional(),
   courtCost: z.number().min(0).max(1_000_000).optional(),
   extraCost: z.number().min(0).max(1_000_000).optional(),
   extraNote: z.string().trim().max(80).optional(),
