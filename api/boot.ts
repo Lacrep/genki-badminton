@@ -491,7 +491,15 @@ app.all("/api/*", (c) => c.json({ error: "Not Found" }, 404))
 
 export default app
 
-if (process.env.NODE_ENV === "production") {
+/**
+ * รันเป็นเซิร์ฟเวอร์จริงเมื่อไม่ได้อยู่ในโหมด dev
+ *
+ * ที่เช็ก "ไม่ใช่ development" แทนที่จะเช็ก "เป็น production" เพราะการสั่ง
+ * NODE_ENV=production นำหน้าคำสั่งเป็นไวยากรณ์ของ bash — PowerShell กับ cmd
+ * บน Windows รันไม่ได้ ถ้าต้องตั้งค่านี้ก่อนเสมอ ก็เท่ากับเปิดเว็บบน Windows ไม่ได้เลย
+ * (ตอน vite dev มันตั้ง NODE_ENV=development ให้อยู่แล้ว จึงไม่เปิดพอร์ตซ้อน)
+ */
+if (process.env.NODE_ENV !== "development") {
   const { serve } = await import("@hono/node-server")
   const { serveStatic } = await import("@hono/node-server/serve-static")
   const fs = await import("node:fs")

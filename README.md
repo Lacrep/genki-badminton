@@ -222,8 +222,14 @@ npm run dev          # เปิด http://localhost:3100 (มือถือใ
 ขึ้นเครื่องจริง:
 
 ```bash
-npm run build
-PORT=3100 NODE_ENV=production npm start
+npm run serve        # = npm run build && npm start
+```
+
+**Windows (PowerShell / cmd)** ใช้คำสั่งเดียวกันได้เลย ไม่ต้องตั้ง `NODE_ENV` นำหน้า
+อยากเปลี่ยนพอร์ตค่อยตั้งแยกบรรทัด:
+
+```powershell
+$env:PORT = "8080"; npm run serve
 ```
 
 ตัวแปรที่ตั้งได้ (ดู `.env.example`):
@@ -246,8 +252,9 @@ npm run demo      # หน้าต่างที่ 2
 ได้ลูกก๊วน 14 คน เล่นไป 10 เกม จ่ายแล้ว 9 คน ค้าง 5 คน (มีเกมที่จงใจลืมกดลูกไว้ให้ดูด้วย)
 แล้วเปิด `http://localhost:3100/bill` กดปุ่ม **"ไฟล์ Excel"** ได้เลย
 
-ล้างข้อมูลตัวอย่างทิ้ง: ปิดเว็บ แล้ว `rm -rf data`
-(ถ้ามีข้อมูลอยู่แล้ว `npm run demo` จะไม่ยัดทับให้ — กันข้อมูลจริงหาย)
+ล้างข้อมูลตัวอย่างทิ้ง: ปิดเว็บก่อน แล้วลบโฟลเดอร์ `data`
+(macOS/Linux: `rm -rf data` · Windows PowerShell: `Remove-Item -Recurse -Force data`)
+ถ้ามีข้อมูลอยู่แล้ว `npm run demo` จะไม่ยัดทับให้ — กันข้อมูลจริงหาย
 
 ### เปิดให้ลูกก๊วนใช้จากมือถือ
 

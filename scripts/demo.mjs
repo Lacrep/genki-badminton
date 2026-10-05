@@ -7,6 +7,9 @@
  * ยิงผ่าน API เหมือนที่หน้าเว็บทำทุกอย่าง — ข้อมูลที่ได้จึงเป็นของจริง ไม่ใช่ของปลอมที่ยัดลงไฟล์
  */
 
+/** คำสั่งลบโฟลเดอร์ข้อมูล — PowerShell ไม่รู้จัก rm -rf */
+const RESET_CMD = process.platform === "win32" ? "Remove-Item -Recurse -Force data" : "rm -rf data"
+
 const PORT = process.env.PORT || 3100
 const BASE = process.env.BASE_URL || `http://127.0.0.1:${PORT}`
 const PIN = process.env.ORGANIZER_PIN || ""
@@ -49,7 +52,8 @@ if (boot.roster.length > 0) {
      ${BASE}/
 
   ถ้าเป็นข้อมูลตัวอย่างที่อยากล้างทิ้งแล้วใส่ใหม่ ปิดเว็บก่อน แล้ว
-     rm -rf data && npm run serve     (อีกหน้าต่างหนึ่ง)
+     ${RESET_CMD}
+     npm run serve     (อีกหน้าต่างหนึ่ง)
      npm run demo
 `)
   process.exit(1)
@@ -121,5 +125,5 @@ console.log(`
    ${final.bill.lines.length} คน · ${final.session.matches.filter((m) => m.endedAt).length} เกม · ${final.bill.shuttlesUsed} ลูก
    เรียกเก็บ ${final.bill.billed} บาท · เก็บได้แล้ว ${final.bill.collected} · ค้างอยู่ ${owed.toFixed(2)}
 
-   ลบข้อมูลตัวอย่างทิ้งเมื่อไรก็ได้ — ลบโฟลเดอร์ data/ แล้วเปิดเว็บใหม่
+   ลบข้อมูลตัวอย่างทิ้งเมื่อไรก็ได้ — ปิดเว็บแล้วสั่ง  ${RESET_CMD}
 `)
