@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Award, BarChart3, Clock, Flame, History, Trophy } from "lucide-react"
+import { Award, BarChart3, Clock, Flame, Handshake, History, Trophy } from "lucide-react"
 import { displayName, formatMinutes, levelInfo, recordLabel, thaiTime } from "@shared/types"
 import { api, type SessionSummary } from "@/lib/api"
 import { useApp } from "@/lib/app"
@@ -65,8 +65,12 @@ function TodayStats() {
     .filter((r): r is { sp: typeof r.sp; player: NonNullable<typeof r.player> } => !!r.player)
     .sort((a, b) => b.sp.gamesPlayed - a.sp.gamesPlayed || b.sp.playedMs - a.sp.playedMs)
 
+  // เกมที่จบแบบได้กันคนละเซ็ต — ตัวชี้วัดว่าจัดคู่ได้สูสีแค่ไหน
+  const drawnGames = view.session.matches.filter((m) => m.winner === "draw").length
+
   const mostGames = rows[0]
   const mostPatient = [...rows].sort((a, b) => b.sp.longestWaitMs - a.sp.longestWaitMs)[0]
+  const mostDraws = [...rows].sort((a, b) => b.sp.draws - a.sp.draws)[0]
   const bestWin = [...rows]
     .filter((r) => r.sp.wins + r.sp.losses + r.sp.draws >= 2)
     .sort(
@@ -81,7 +85,7 @@ function TodayStats() {
     <div className="flex flex-col gap-4">
       <div className="card card-pad">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <Stat label="เกมทั้งวัน" value={view.stats.matchesDone} />
+          <Stat label="เกมทั้งวัน" value={view.stats.matchesDone} hint={`สูสีจนเสมอ ${drawnGames} เกม`} />
           <Stat label="เฉลี่ยคนละ" value={rows.length ? (totalGames / rows.length).toFixed(1) : "0"} hint="เกม" />
           <Stat
             label="ห่างกันมากสุด"
@@ -122,7 +126,15 @@ function TodayStats() {
                 icon={<Trophy size={15} className="text-gold-deep" />}
                 title="ชนะเยอะสุด"
                 who={displayName(bestWin.player)}
-                detail={`${bestWin.sp.wins} ชนะ${bestWin.sp.draws > 0 ? ` / ${bestWin.sp.draws} เสมอ` : ""} / ${bestWin.sp.losses} แพ้`}
+                detail={`ชนะ ${bestWin.sp.wins} · เสมอ ${bestWin.sp.draws} · แพ้ ${bestWin.sp.losses}`}
+              />
+            ) : null}
+            {mostDraws && mostDraws.sp.draws > 0 ? (
+              <AwardRow
+                icon={<Handshake size={15} className="text-gold-deep" />}
+                title="สูสีที่สุด (เสมอเยอะสุด)"
+                who={displayName(mostDraws.player)}
+                detail={`เสมอ ${mostDraws.sp.draws} เกม จาก ${mostDraws.sp.gamesPlayed} เกมที่ลง`}
               />
             ) : null}
           </div>
@@ -133,6 +145,8 @@ function TodayStats() {
         <h2 className="section-title px-4 py-3">
           <BarChart3 size={15} className="text-gold-deep" />
           รายคน
+          {/* ชิปตัวเลขสามตัวอ่านไม่ออกถ้าไม่บอก และ title ไม่ขึ้นบนมือถือ */}
+          <span className="order-last shrink-0 text-[11px] font-normal text-ink-faint">ชนะ-เสมอ-แพ้</span>
         </h2>
         <div className="divide-y divide-line/60">
           {rows.map(({ sp, player }) => (
@@ -207,6 +221,7 @@ function AllTimeStats({ rows }: { rows: AllTime[] | null }) {
       <h2 className="section-title px-4 py-3">
         <BarChart3 size={15} className="text-gold-deep" />
         สถิติรวมทุกก๊วน ({rows.length} คน)
+        <span className="order-last shrink-0 text-[11px] font-normal text-ink-faint">ชนะ-เสมอ-แพ้</span>
       </h2>
       <div className="divide-y divide-line/60">
         {rows.map((r, i) => {
@@ -227,9 +242,11 @@ function AllTimeStats({ rows }: { rows: AllTime[] | null }) {
                 <span className="block text-[11.5px] text-ink-faint">
                   มา {r.sessions} ครั้ง · เล่นรวม {formatMinutes(r.playedMs)}
                   {winRate != null ? ` · ชนะ ${winRate}%` : ""}
+                  {r.draws > 0 ? ` · เสมอ ${r.draws}` : ""}
                 </span>
               </span>
               <span className={cn("chip", levelInfo(r.level).tone)}>{levelInfo(r.level).code}</span>
+              {total > 0 ? <span className="nums chip bg-subtle text-ink-soft">{recordLabel(r)}</span> : null}
               <span className="nums w-14 text-right font-heading text-[15px] font-semibold text-ink">
                 {r.games}
                 <span className="ml-0.5 text-[10.5px] font-normal text-ink-faint">เกม</span>
