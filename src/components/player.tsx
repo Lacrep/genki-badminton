@@ -127,7 +127,11 @@ export function QueueRow({
         <PlayerAvatar player={player} size={compact ? 28 : 32} />
         <span className="min-w-0 flex-1">
           <span className="block truncate font-heading text-[14px] font-medium text-ink">{displayName(player)}</span>
-          <span className="nums block truncate text-[11px] text-ink-faint">
+          {/*
+            ปล่อยให้ตกบรรทัดแทนที่จะตัดทิ้ง — บนจอ 390px แถวนี้มีทั้งป้ายมือ นาฬิกา
+            และลูกศร สถิติแพ้ชนะจึงโดนตัดหายทุกครั้ง ทั้งที่เป็นข้อมูลที่อยากดู
+          */}
+          <span className="nums block text-[11px] leading-snug text-ink-faint">
             {etaText(queueAhead, etaMinutes)} · ลงไป {sp.gamesPlayed} เกม
             {sp.wins + sp.losses + sp.draws > 0 ? ` · ${recordLabel(sp)}` : ""}
           </span>
