@@ -12,27 +12,11 @@ import { baht, cn, copyText } from "@/lib/util"
 /** ตัวเลขที่เชื่อถือได้ — ถ้าเซิร์ฟเวอร์ (เวอร์ชันเก่า) ไม่ได้ส่งมา ให้เป็น 0 แทนที่จะพังทั้งหน้า */
 const nz = (v: number | undefined | null): number => (typeof v === "number" && Number.isFinite(v) ? v : 0)
 
-/** ตัดทศนิยมที่ไม่จำเป็นออก — 100.00 → 100 แต่ 14.29 ยังเป็น 14.29 */
-const money = (v: number): string => v.toFixed(2).replace(/\.00$/, "")
-
-/**
- * ที่มาของยอดคนนี้ แยกเป็นก้อน ๆ
- *
- * ค่าลูกในเกมเป็นจำนวนเต็มเสมอ (คนละ 25 ต่อลูก) เศษสตางค์มาจาก "ลูกนอกเกม" ที่หาร
- * เท่ากันทุกคนเท่านั้น จึงต้องแยกให้เห็น ไม่งั้นเลข 114.29 ลอยมาโดยไม่มีใครรู้ที่มา
- */
+/** ที่มาของยอดคนนี้ แยกเป็นก้อน ๆ */
 function feeBreakdown(line: BillLine, long = false): string {
-  const court = long ? "ค่าสนาม" : "สนาม"
-  const inGame = nz(line.shuttlePart) - nz(line.looseShuttlePart)
-  const parts = [`${court} ${baht(nz(line.courtPart))}`]
-
-  if (nz(line.looseShuttlePart) > 0) {
-    parts.push(`ลูกในเกม ${money(inGame)}`, `ลูกนอกเกม ${money(nz(line.looseShuttlePart))}`)
-  } else if (nz(line.shuttlePart) > 0) {
-    parts.push(`${long ? "ค่าลูก" : "ลูก"} ${money(nz(line.shuttlePart))}`)
-  }
+  const parts = [`${long ? "ค่าสนาม" : "สนาม"} ${baht(nz(line.courtPart))}`]
+  if (nz(line.shuttlePart) > 0) parts.push(`${long ? "ค่าลูก" : "ลูก"} ${baht(nz(line.shuttlePart))}`)
   if (nz(line.extraPart) > 0) parts.push(`${long ? "อื่น ๆ" : "อื่น"} ${baht(nz(line.extraPart))}`)
-
   return parts.join(" + ")
 }
 
@@ -246,8 +230,8 @@ export function BillPage() {
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="flex items-center justify-between gap-2">
             <span>
-              <span className="block font-heading text-[13.5px] text-ink">ลูกที่ใช้นอกเกม</span>
-              <span className="block text-[11.5px] text-ink-faint">เช่น ลูกที่เปิดไว้ซ้อมก่อนเริ่ม (หารเท่ากันทุกคน)</span>
+              <span className="block font-heading text-[13.5px] text-ink">ลูกซ้อม (ก๊วนออกให้)</span>
+              <span className="block text-[11.5px] text-ink-faint">ลูกที่เปิดไว้ซ้อมก่อนเริ่ม — ไม่เก็บเงินใคร</span>
             </span>
             <Stepper
               value={view.session.shuttlesExtra}
@@ -392,11 +376,9 @@ export function BillPage() {
 
           {view.session.shuttlesExtra > 0 ? (
             <p className="mt-3 rounded-xl bg-subtle/70 px-3 py-2 text-[12px] leading-snug text-ink-soft">
-              มีลูกนอกเกมอีก {view.session.shuttlesExtra} ลูก คิดราคาเต็มลูกละ {baht(fees.shuttlePrice * 4)} บาท
-              = {baht(view.session.shuttlesExtra * fees.shuttlePrice * 4)} บาท — ส่วนนี้<b>หารเท่ากันทุกคน</b>{" "}
-              เพราะไม่ได้ผูกกับเกมไหน <b>ตกคนละ {(bill.lines[0]?.looseShuttlePart ?? 0).toFixed(2)} บาท</b>{" "}
-              (นี่คือที่มาของเศษสตางค์ในค่าลูกของทุกคน — ค่าลูกในเกมเป็นจำนวนเต็มเสมอ)
-              ถ้าอยากให้คิดตามเกม ให้ย้ายไปใส่ในเกมด้านบนแทน
+              มีลูกซ้อมอีก {view.session.shuttlesExtra} ลูก — <b>ก๊วนออกให้ ไม่ได้เก็บจากใคร</b>{" "}
+              นับไว้เฉย ๆ ให้รู้ว่าวันนี้ใช้ลูกไปทั้งหมดกี่ลูก
+              ถ้าลูกไหนควรเก็บเงิน ให้ย้ายไปใส่ในเกมด้านบนแทน
             </p>
           ) : null}
         </section>

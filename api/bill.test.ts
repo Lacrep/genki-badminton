@@ -122,13 +122,29 @@ describe("โหมดระบบก๊วน — ค่าสนามต่�
     expect(line.extraPart).toBe(0)
   })
 
-  it("ลูกที่ใช้นอกเกมคิดราคาเต็มลูกแล้วหารเท่ากันทุกคน", () => {
+  it("ลูกซ้อมนอกเกม ก๊วนออกให้ — ไม่โผล่ในบิลใครสักบาท", () => {
     const { session, roster } = makeSession()
-    session.shuttlesExtra = 1 // ราคาเต็ม 25 × 4 = 100 บาท ÷ 5 คน = 20 บาท
+    const before = computeBill(session, roster)
+
+    session.shuttlesExtra = 3
+    const after = computeBill(session, roster)
+
+    expect(after.billed).toBe(before.billed)
+    for (const line of after.lines) {
+      expect(line.shuttlePart, line.name).toBe(
+        before.lines.find((l) => l.playerId === line.playerId)!.shuttlePart,
+      )
+    }
+    // แต่ยังนับไว้ว่าวันนี้ใช้ลูกไปทั้งหมดกี่ลูก
+    expect(after.shuttlesInGames).toBe(3)
+    expect(after.shuttlesUsed).toBe(6)
+  })
+
+  it("ลูกซ้อมยังนับเป็นต้นทุนของก๊วนอยู่ เพราะก๊วนจ่ายค่าลูกนั้นไปจริง", () => {
+    const { session, roster } = makeSession({ shuttleCostReal: 100 })
+    session.shuttlesExtra = 2
     const bill = computeBill(session, roster)
-    expect(bill.shuttlesUsed).toBe(4)
-    expect(bill.shuttlesInGames).toBe(3)
-    expect(amountOf(bill, "e")).toBe(115) // 70 + 25 + 20
+    expect(bill.total).toBe(500) // 5 ลูก × 100
   })
 
   it("ค่าอื่น ๆ หารเท่ากันทุกคน", () => {
@@ -153,31 +169,19 @@ describe("โหมดระบบก๊วน — ค่าสนามต่�
     expect(bill.shuttleCost).toBe(0)
   })
 
-  it("เศษสตางค์มาจากลูกนอกเกมเท่านั้น — ค่าลูกในเกมลงตัวเสมอ", () => {
+  it("ค่าลูกไม่มีเศษสตางค์ ไม่ว่าจะมีลูกซ้อมกี่ลูกหรือคนในก๊วนกี่คน", () => {
+    // 7 คน เป็นจำนวนที่หารไม่ลงตัวกับอะไรเลย — เดิมจะได้เศษทศนิยมยาว ๆ
     const { session, roster } = makeSession()
-    session.shuttlesExtra = 1 // 100 บาท ÷ 5 คน = 20 ลงตัว
-    let bill = computeBill(session, roster)
-    for (const l of bill.lines) {
-      expect(Number.isInteger(l.shuttlePart - l.looseShuttlePart), l.name).toBe(true)
+    for (const id of ["f", "g"]) {
+      roster.set(id, { id, name: id, level: 4, createdAt: NOW })
+      session.players.push({ ...session.players[0]!, playerId: id, gamesPlayed: 0 })
     }
+    session.shuttlesExtra = 2
 
-    // 3 ลูกนอกเกม = 300 ÷ 5 คน ก็ยังลงตัว ลองกรณีหารไม่ลงด้วย
-    session.players.push({ ...session.players[0]!, playerId: "f", gamesPlayed: 0 })
-    roster.set("f", { id: "f", name: "f", level: 4, createdAt: NOW })
-    bill = computeBill(session, roster)
-    const loose = bill.lines[0]!.looseShuttlePart
-    expect(loose).toBe(16.67) // 100 ÷ 6 = 16.666… → 16.67
-    for (const l of bill.lines) {
-      expect(l.looseShuttlePart, l.name).toBe(loose)
-      expect(Number.isInteger(l.shuttlePart - l.looseShuttlePart), l.name).toBe(true)
-    }
-  })
-
-  it("ไม่มีลูกนอกเกม ก็ไม่มีเศษให้งง", () => {
-    const { session, roster } = makeSession()
     const bill = computeBill(session, roster)
-    expect(bill.lines.every((l) => l.looseShuttlePart === 0)).toBe(true)
-    expect(bill.lines.every((l) => Number.isInteger(l.shuttlePart))).toBe(true)
+    for (const l of bill.lines) {
+      expect(Number.isInteger(l.shuttlePart), `${l.name} = ${l.shuttlePart}`).toBe(true)
+    }
   })
 
   it("ค่าลูกที่เก็บได้รวม = ผลรวมค่าลูกของทุกคน", () => {

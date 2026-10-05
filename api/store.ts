@@ -807,9 +807,6 @@ function roundUpTo(value: number, step: number): number {
   return Math.ceil(value / s) * s
 }
 
-/** คนในหนึ่งเกมคู่ — ค่าลูกต่อลูกที่ก๊วนเก็บได้ = อัตราต่อคน × เลขนี้ */
-const PLAYERS_PER_SHUTTLE = 4
-
 export function computeBill(session: Session, roster: Map<string, RosterPlayer>): Bill {
   const fees = session.fees
   const shuttlesInGames = session.matches.reduce((n, m) => n + m.shuttles, 0)
@@ -842,11 +839,9 @@ export function computeBill(session: Session, roster: Map<string, RosterPlayer>)
   }
 
   /**
-   * ลูกที่เปิดใช้นอกเกม (ซ้อมก่อนเริ่ม ฯลฯ) ไม่มีเจ้าของเกม จึงหารเท่ากันทุกคน
-   * ที่ราคาลูกเต็ม = อัตราต่อคน × 4 (เท่ากับที่เก็บได้ต่อลูกในเกมปกติ)
+   * ลูกที่เปิดใช้นอกเกม (ซ้อมก่อนเริ่ม ฯลฯ) ก๊วนออกให้ — ไม่เก็บจากใครสักบาท
+   * ยังนับรวมใน "ลูกที่ใช้ทั้งหมด" และต้นทุนจริงอยู่ เพราะก๊วนจ่ายค่าลูกนั้นไปแล้วจริง ๆ
    */
-  const looseFullPrice = session.shuttlesExtra * fees.shuttlePrice * PLAYERS_PER_SHUTTLE
-  const loosePerHead = looseFullPrice / n
   const extraPerHead = fees.extraCost / n
 
   const round2 = (v: number) => Math.round(v * 100) / 100
@@ -855,7 +850,7 @@ export function computeBill(session: Session, roster: Map<string, RosterPlayer>)
     const player = roster.get(sp.playerId)
     const courtPart = fees.mode === "club" ? fees.courtFeePerHead : fees.courtCost / n
     const shuttlePart =
-      fees.mode === "club" ? (shuttleShare.get(sp.playerId) ?? 0) + loosePerHead : shuttleCost / n
+      fees.mode === "club" ? (shuttleShare.get(sp.playerId) ?? 0) : shuttleCost / n
 
     return {
       playerId: sp.playerId,
@@ -863,7 +858,6 @@ export function computeBill(session: Session, roster: Map<string, RosterPlayer>)
       games: sp.gamesPlayed,
       courtPart: round2(courtPart),
       shuttlePart: round2(shuttlePart),
-      looseShuttlePart: fees.mode === "club" ? round2(loosePerHead) : 0,
       extraPart: round2(extraPerHead),
       amount: roundUpTo(courtPart + shuttlePart + extraPerHead, fees.roundTo),
       paid: sp.paid,

@@ -270,6 +270,7 @@ export interface Session {
   events: SessionEvent[]
   settings: SessionSettings
   fees: Fees
+  /** ลูกที่เปิดใช้นอกเกม (ซ้อมก่อนเริ่ม) — ก๊วนออกให้ ไม่เก็บจากใคร */
   shuttlesExtra: number
   notes?: string
 }
@@ -304,13 +305,8 @@ export interface BillLine {
   games: number
   /** ค่าสนามส่วนของคนนี้ */
   courtPart: number
-  /** ค่าลูกส่วนของคนนี้ (รวมลูกนอกเกมแล้ว) */
+  /** ค่าลูกส่วนของคนนี้ — คิดเฉพาะลูกที่ใช้ในเกมที่ตัวเองลง */
   shuttlePart: number
-  /**
-   * ส่วนที่มาจากลูกนอกเกมโดยเฉพาะ — แยกไว้เพราะมันคือตัวเดียวที่ทำให้เกิดเศษสตางค์
-   * (ค่าลูกในเกมเป็นจำนวนเต็มเสมอ) ถ้าไม่โชว์แยก หัวก๊วนจะงงว่าเศษมาจากไหน
-   */
-  looseShuttlePart: number
   /** ค่าอื่น ๆ ส่วนของคนนี้ */
   extraPart: number
   /** ยอดที่ต้องจ่าย (ปัดเศษแล้ว) */

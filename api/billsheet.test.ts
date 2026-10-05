@@ -200,17 +200,17 @@ describe("ชีตค่าก๊วนรายคน", () => {
     const { sheets, session } = workbookOf()
     const xml = sheets.get("xl/worksheets/sheet1.xml")!
     const last = session.players.length + 1
-    // M = คอลัมน์ "รวมต้องจ่าย"
-    expect(xml).toContain(`<f>SUM(M2:M${last})</f>`)
+    // L = คอลัมน์ "รวมต้องจ่าย"
+    expect(xml).toContain(`<f>SUM(L2:L${last})</f>`)
   })
 
-  it("แยกค่าลูกในเกมกับค่าลูกนอกเกมเป็นคนละคอลัมน์", () => {
+  it("ค่าลูกรายคนเป็นจำนวนเต็ม ไม่มีเศษสตางค์ให้ต้องอธิบาย", () => {
     const { session, roster } = makeSession()
     session.shuttlesExtra = 2
     const sheets = unzip(billWorkbook(session, computeBill(session, roster), roster))
-    const texts = textsOf(sheets, 1)
-    expect(texts).toContain("ค่าลูกในเกม")
-    expect(texts).toContain("ค่าลูกนอกเกม")
+    for (const value of numbersOf(sheets, 1)) {
+      expect(Number.isInteger(value), String(value)).toBe(true)
+    }
   })
 
   it("ตรึงหัวตารางและใส่ปุ่มกรองให้", () => {
@@ -269,13 +269,13 @@ describe("ชีตสรุปก๊วน", () => {
     expect(numbers).toContain(bill.collected)
   })
 
-  it("แยกลูกที่ใช้ในเกมกับลูกที่ใช้นอกเกมให้เห็น", () => {
+  it("แยกลูกที่เก็บเงินกับลูกซ้อมที่ก๊วนออกให้", () => {
     const { session, roster } = makeSession()
     session.shuttlesExtra = 2
     const sheets = unzip(billWorkbook(session, computeBill(session, roster), roster))
     const texts = textsOf(sheets, 4)
     expect(texts).toContain("ลูกที่ใช้ในเกม")
-    expect(texts).toContain("ลูกที่ใช้นอกเกม (หารเท่ากัน)")
+    expect(texts).toContain("ลูกซ้อม (ก๊วนออกให้ ไม่เก็บเงิน)")
     expect(texts).toContain("ค่าลูกที่เก็บจากลูกก๊วนรวม")
   })
 
