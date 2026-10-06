@@ -110,4 +110,21 @@ describe("ข้อมูลก๊วนที่กำลังเล่นอ�
     expect(current?.id).toBe(session.id)
     expect(current?.players).toHaveLength(2)
   })
+
+  it("ก๊วนเก่าที่เก็บค่าลูกไว้ชื่อเดิม ยอดไม่หายตอนเปิดใหม่", async () => {
+    const store = await loadStore()
+    const session = store.createSession({})
+    const file = path.join(dir, "sessions", `${session.id}.json`)
+
+    // จำลองไฟล์รุ่นเก่า: ค่าลูกที่จ่ายจริงทั้งวันเคยชื่อ shuttleCostReal
+    const raw = JSON.parse(fs.readFileSync(file, "utf8"))
+    delete raw.fees.shuttleCostTotal
+    raw.fees.shuttleCostReal = 1200
+    fs.writeFileSync(file, JSON.stringify(raw))
+
+    const reopened = await loadStore()
+    const fees = reopened.currentSession()?.fees as { shuttleCostTotal: number; shuttleCostReal?: number }
+    expect(fees.shuttleCostTotal).toBe(1200)
+    expect(fees.shuttleCostReal).toBeUndefined()
+  })
 })

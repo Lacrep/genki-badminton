@@ -158,7 +158,7 @@ function TodayStats() {
                 </span>
                 <span className="block text-[11.5px] text-ink-faint">
                   เล่น {formatMinutes(sp.playedMs)} · รอ {formatMinutes(sp.waitedMs)}
-                  {sp.longestWaitMs > 0 ? ` · รอนานสุด ${Math.round(sp.longestWaitMs / 60_000)} น.` : ""}
+                  {sp.longestWaitMs > 0 ? ` · รอนานสุด ${formatMinutes(sp.longestWaitMs)}` : ""}
                 </span>
               </span>
               <LevelBadge level={player.level} />

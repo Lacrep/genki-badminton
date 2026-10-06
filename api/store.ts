@@ -34,6 +34,7 @@ import {
   DEFAULT_SETTINGS,
   MAX_LEVEL,
   displayName,
+  formatMinutes,
   playersPerMatch,
   priorityOf,
   thaiDateKey,
@@ -198,7 +199,7 @@ const MATCH_TYPES: MatchType[] = ["D", "S"]
 
 function migrateSession(session: Session): { session: Session; changed: boolean } {
   let changed = false
-  const fees = session.fees as Fees & { memberFee?: number; guestFee?: number }
+  const fees = session.fees as Fees & { memberFee?: number; guestFee?: number; shuttleCostReal?: number }
 
   if (!FEE_MODES.includes(fees.mode)) {
     // split/byGames/flat ของเดิม ใกล้กับ "ระบบก๊วน" ที่สุด
@@ -212,6 +213,13 @@ function migrateSession(session: Session): { session: Session; changed: boolean 
   if (fees.memberFee !== undefined || fees.guestFee !== undefined) {
     delete fees.memberFee
     delete fees.guestFee
+    changed = true
+  }
+  // ก๊วนรุ่นเก่าเก็บ "ค่าลูกที่จ่ายจริงทั้งวัน" ไว้ในชื่อ shuttleCostReal
+  // ย้ายยอดมาชื่อใหม่ก่อน ไม่งั้นค่าลูกที่เคยกรอกไว้จะหายกลายเป็น 0
+  if (fees.shuttleCostReal !== undefined) {
+    if (typeof fees.shuttleCostTotal !== "number") fees.shuttleCostTotal = fees.shuttleCostReal
+    delete fees.shuttleCostReal
     changed = true
   }
   for (const key of ["shuttlePrice", "shuttleCostTotal", "courtCost", "extraCost", "roundTo"] as const) {
@@ -1103,7 +1111,7 @@ export function summaryText(session: Session): string {
   const patient = [...session.players].sort((a, b) => b.longestWaitMs - a.longestWaitMs)[0]
   if (patient && patient.longestWaitMs > 0) {
     const p = rmap.get(patient.playerId)
-    if (p) lines.push(`🧘 ใจเย็นสุด: ${displayName(p)} รอนานสุด ${Math.round(patient.longestWaitMs / 60_000)} นาที`)
+    if (p) lines.push(`🧘 ใจเย็นสุด: ${displayName(p)} รอนานสุด ${formatMinutes(patient.longestWaitMs)}`)
   }
   return lines.join("\n")
 }
@@ -1192,7 +1200,7 @@ export function buildView(session: Session, now = Date.now()): SessionView {
   const waits = queue.map((q) => q.waitMs)
   const dongAlerts = queue
     .filter((q) => q.tier === "dong")
-    .map((q) => `${displayName(q.player)} รอมา ${Math.round(q.waitMs / 60_000)} นาที`)
+    .map((q) => `${displayName(q.player)} รอมา ${formatMinutes(q.waitMs)}`)
 
   return {
     session,

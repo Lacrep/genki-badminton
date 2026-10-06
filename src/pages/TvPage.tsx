@@ -9,7 +9,7 @@ import { cn } from "@/lib/util"
  * โหมดจอใหญ่ — เอาทีวี/จอมอนิเตอร์ตั้งไว้ข้างคอร์ต ให้ลูกก๊วนดูเองได้ว่า
  * ใครอยู่ในสนาม เหลือเวลาเท่าไร และคู่ไหนรอลงอยู่ (หัวก๊วนจะได้ไม่โดนถามทั้งวัน)
  *
- * แบ่งสองคอลัมน์: ซ้าย = คอร์ตที่กำลังเล่น · ขวา = คิวคู่ที่รอลง + คนที่รออยู่
+ * แบ่งสองคอลัมน์: ซ้าย = คอร์ต · ขวา = คู่ที่จัดรอลงไว้ (ไม่มีคิวรายคน จอจะได้ไม่รก)
  * ตัวอักษรใหญ่กว่าหน้าปกติทุกจุด เพราะคนยืนดูห่างจากจอหลายเมตร
  */
 export function TvPage({ navigate }: { navigate: (to: string) => void }) {
@@ -33,6 +33,24 @@ export function TvPage({ navigate }: { navigate: (to: string) => void }) {
 
   const courts = view.courts.filter((c) => !c.court.disabled)
 
+  /**
+   * คอร์ตว่างใบแรกได้คู่ที่พร้อมคู่แรก ใบถัดไปได้คู่ถัดไป — ตรงกับหน้าคุมเกม
+   * ถ้าไม่โชว์ คนดูจะเห็นคอร์ตว่างพร้อมคู่ที่พร้อมลง แล้วงงว่าทำไมยังไม่มีใครลง
+   */
+  const readyPlans = view.planned.filter((p) => p.ready)
+  const planForCourt = new Map<number, { order: number; pv: PlannedView }>()
+  const courtForPlan = new Map<string, string>()
+  let nextPlan = 0
+  for (const cv of courts) {
+    if (cv.match) continue
+    const pv = readyPlans[nextPlan]
+    if (!pv) break
+    const order = view.planned.indexOf(pv) + 1
+    planForCourt.set(cv.court.index, { order, pv })
+    courtForPlan.set(pv.planned.id, cv.court.name)
+    nextPlan += 1
+  }
+
   return (
     <div className="flex h-dvh flex-col overflow-hidden bg-navy-deep px-6 py-4 text-sand">
       <TvHeader view={view} now={now} onExit={() => navigate("/")} />
@@ -48,7 +66,13 @@ export function TvPage({ navigate }: { navigate: (to: string) => void }) {
             )}
           >
             {courts.map((cv) => (
-              <CourtPanel key={cv.court.index} cv={cv} now={now} targetMinutes={view.session.settings.targetGameMinutes} />
+              <CourtPanel
+                key={cv.court.index}
+                cv={cv}
+                now={now}
+                targetMinutes={view.session.settings.targetGameMinutes}
+                nextUp={planForCourt.get(cv.court.index) ?? null}
+              />
             ))}
           </div>
         </section>
@@ -60,7 +84,16 @@ export function TvPage({ navigate }: { navigate: (to: string) => void }) {
             {view.planned.length === 0 ? (
               <EmptyPanel>ยังไม่มีคู่ที่จัดรอไว้</EmptyPanel>
             ) : (
-              view.planned.slice(0, 6).map((pv, i) => <PlannedPanel key={pv.planned.id} pv={pv} order={i + 1} />)
+              view.planned
+                .slice(0, 6)
+                .map((pv, i) => (
+                  <PlannedPanel
+                    key={pv.planned.id}
+                    pv={pv}
+                    order={i + 1}
+                    courtName={courtForPlan.get(pv.planned.id) ?? null}
+                  />
+                ))
             )}
             {view.planned.length > 6 ? (
               <p className="pt-0.5 text-center font-heading text-[14px] text-sand/55">
@@ -124,7 +157,18 @@ function PlayerTag({ name, level, size }: { name: string; level: number; size: "
   )
 }
 
-function CourtPanel({ cv, now, targetMinutes }: { cv: CourtView; now: number; targetMinutes: number }) {
+function CourtPanel({
+  cv,
+  now,
+  targetMinutes,
+  nextUp,
+}: {
+  cv: CourtView
+  now: number
+  targetMinutes: number
+  /** คู่ที่พร้อมลงคอร์ตนี้เป็นคิวถัดไป — โชว์ไว้เลยให้คนเตรียมตัวได้ก่อนถูกเรียก */
+  nextUp: { order: number; pv: PlannedView } | null
+}) {
   const elapsed = cv.match ? now - cv.match.startedAt : 0
   const over = elapsed > targetMinutes * 60_000
 
@@ -178,6 +222,26 @@ function CourtPanel({ cv, now, targetMinutes }: { cv: CourtView; now: number; ta
             </div>
           ))}
         </div>
+      ) : nextUp ? (
+        <div className="flex min-h-0 flex-1 flex-col justify-center gap-2">
+          <p className="text-center font-heading text-[16px] font-bold uppercase tracking-[0.14em] text-gold-soft">
+            คู่ที่ {nextUp.order} · เตรียมลง
+          </p>
+          {(["A", "B"] as const).map((team, i) => (
+            <div key={team}>
+              {i === 1 ? (
+                <p className="my-1 text-center font-heading text-[14px] font-bold tracking-widest text-sand/40">VS</p>
+              ) : null}
+              <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 rounded-xl bg-navy-deep/45 px-3 py-2.5">
+                {nextUp.pv.players
+                  .filter((p) => p.team === team)
+                  .map((p) => (
+                    <PlayerTag key={p.player.id} name={displayName(p.player)} level={p.player.level} size="lg" />
+                  ))}
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
         <div className="flex flex-1 items-center justify-center">
           <p className="text-center font-heading text-[17px] text-sand/50">รอหัวก๊วนจัดคนลง</p>
@@ -191,7 +255,7 @@ function CourtPanel({ cv, now, targetMinutes }: { cv: CourtView; now: number; ta
  * การ์ดคู่ที่รอลง — บีบให้เตี้ย (ฝั่งละบรรทัด) เพราะจอ 768px สูงไม่พอ
  * ถ้าการ์ดสูง จะโดนตัดครึ่งคาตา ซึ่งอ่านแล้วงงกว่าไม่โชว์เลย
  */
-function PlannedPanel({ pv, order }: { pv: PlannedView; order: number }) {
+function PlannedPanel({ pv, order, courtName }: { pv: PlannedView; order: number; courtName: string | null }) {
   const side = (team: "A" | "B") => pv.players.filter((p) => p.team === team)
   const status =
     pv.problems.length > 0
@@ -219,6 +283,11 @@ function PlannedPanel({ pv, order }: { pv: PlannedView; order: number }) {
         <span className={cn("truncate font-heading text-[13px] font-medium", pv.problems.length > 0 ? "text-hinomaru-soft" : "text-sand/70")}>
           {status}
         </span>
+        {courtName ? (
+          <span className="ml-auto shrink-0 rounded-md bg-gold px-2 py-0.5 font-heading text-[12px] font-bold text-navy-deep">
+            → {courtName}
+          </span>
+        ) : null}
       </div>
 
       <div className="flex flex-col gap-1">

@@ -17,6 +17,7 @@ import {
   type RosterPlayer,
   type Session,
   type SessionPlayer,
+  formatMinutes,
   levelInfo,
   playersPerMatch,
   priorityOf,
@@ -286,7 +287,7 @@ export function suggestMatch(input: SuggestInput): SuggestResult {
   for (const c of dongs) {
     if (forced.length >= need) break
     forced.push(c)
-    reasons.push(`บังคับลง: ${shortName(c.player)} รอมา ${Math.round(c.waitMs / 60_000)} นาที`)
+    reasons.push(`บังคับลง: ${shortName(c.player)} รอมา ${formatMinutes(c.waitMs)}`)
   }
 
   if (forced.length > need) forced.length = need

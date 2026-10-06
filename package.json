@@ -14,7 +14,8 @@
     "lint": "tsc -b",
     "serve": "npm run build && npm start",
     "demo": "node scripts/demo.mjs",
-    "reset-sessions": "node scripts/reset-sessions.mjs"
+    "reset-sessions": "node scripts/reset-sessions.mjs",
+    "fetch-fonts": "node scripts/fetch-fonts.mjs public/fonts"
   },
   "dependencies": {
     "@hono/node-server": "^1.14.3",
