@@ -100,7 +100,7 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
           <Stat
             label="รอคิว"
             value={view.stats.waiting}
-            hint={view.stats.waiting > 0 ? `รอเฉลี่ย ${Math.round(view.stats.avgWaitMs / 60_000)} นาที` : "ไม่มีใครรอ"}
+            hint={view.stats.waiting > 0 ? `รอเฉลี่ย ${formatMinutes(view.stats.avgWaitMs)}` : "ไม่มีใครรอ"}
             tone={view.dongAlerts.length > 0 ? "red" : "navy"}
           />
           <Stat

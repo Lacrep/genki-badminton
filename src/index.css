@@ -162,7 +162,7 @@
     @apply border border-gold-deep/55 bg-gold-deep/25 text-gold-deep dark:bg-gold-deep/45 dark:text-gold-soft;
   }
   .level-7 {
-    @apply border border-hinomaru/45 bg-hinomaru/18 text-hinomaru-deep dark:bg-hinomaru/30 dark:text-hinomaru-soft;
+    @apply border border-hinomaru/45 bg-hinomaru/20 text-hinomaru-deep dark:bg-hinomaru/30 dark:text-hinomaru-soft;
   }
 
   /* ── ระดับความ "ดอง" ของคนนั่งรอ ── */

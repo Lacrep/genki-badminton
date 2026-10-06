@@ -39,7 +39,7 @@ export function QueuePage() {
           <Stat label="รอคิว" value={queue.length} />
           <Stat
             label="รอเฉลี่ย"
-            value={queue.length ? `${Math.round(view.stats.avgWaitMs / 60_000)} น.` : "—"}
+            value={queue.length ? formatMinutes(view.stats.avgWaitMs) : "—"}
             tone="gold"
           />
           <Stat

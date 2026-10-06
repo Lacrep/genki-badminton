@@ -5,7 +5,10 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  // shared/ ต้องอยู่ด้วย — ชื่อคลาสสีระดับมือ ("level-1"…"level-7") เป็นสตริง
+  // อยู่ใน shared/types.ts ถ้าไม่สแกนไฟล์นี้ Tailwind จะตัดกฎ .level-N ทิ้งทั้งชุด
+  // แล้วป้ายระดับมือจะกลายเป็นสีเดียวกันหมด
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}", "./shared/**/*.{js,ts}"],
   theme: {
     extend: {
       fontFamily: {

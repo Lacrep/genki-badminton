@@ -92,6 +92,25 @@ export function PublicQueuePage({ code }: { code: string }) {
   const myPlanIndex = me ? view.planned.findIndex((pv) => pv.players.some((x) => x.player.id === me)) : -1
   const myPlan = myPlanIndex >= 0 ? view.planned[myPlanIndex] : undefined
   const myPlaying = me ? view.courts.find((c) => c.players.some((p) => p.player.id === me)) : undefined
+
+  /**
+   * คู่ไหนถึงคิวคอร์ตไหนแล้ว — กติกาเดียวกับหน้าคุมเกมและจอใหญ่
+   * (คอร์ตว่างใบแรกได้คู่ที่พร้อมคู่แรก) ไม่งั้นมือถือจะขึ้นว่า "รอคอร์ตว่าง"
+   * ทั้งที่คอร์ตว่างอยู่ตรงหน้า
+   */
+  const courtForPlan = new Map<string, string>()
+  {
+    const ready = view.planned.filter((pv) => pv.ready)
+    let next = 0
+    for (const cv of view.courts) {
+      if (cv.match || cv.court.disabled) continue
+      const pv = ready[next]
+      if (!pv) break
+      courtForPlan.set(pv.planned.id, cv.court.name)
+      next += 1
+    }
+  }
+  const myCourt = myPlan ? courtForPlan.get(myPlan.planned.id) : undefined
   const mySp = me ? view.session.players.find((p) => p.playerId === me) : undefined
   const myIndex = myEntry ? view.queue.findIndex((q) => q.player.id === me) : -1
 
@@ -154,9 +173,11 @@ export function PublicQueuePage({ code }: { code: string }) {
                     .join(" + ")}
                 </p>
                 <p className="font-heading text-[14px] font-medium text-ink">
-                  {myPlan.ready
-                    ? "🏸 พร้อมลงแล้ว — รอคอร์ตว่าง เตรียมตัวไว้"
-                    : `รอ ${myPlan.waitingFor.join(", ")} จบเกมก่อน`}
+                  {!myPlan.ready
+                    ? `รอ ${myPlan.waitingFor.join(", ")} จบเกมก่อน`
+                    : myCourt
+                      ? `🏸 ถึงคิวแล้ว — ลง${myCourt} ได้เลย`
+                      : "🏸 พร้อมลงแล้ว — รอคอร์ตว่าง เตรียมตัวไว้"}
                 </p>
               </>
             ) : myEntry ? (
@@ -264,7 +285,11 @@ export function PublicQueuePage({ code }: { code: string }) {
                         {pv.players.filter((x) => x.team === "B").map((x) => displayName(x.player)).join(" + ")}
                       </span>
                       <span className="block text-[11.5px] leading-snug text-ink-faint">
-                        {pv.ready ? "พร้อมลง รอคอร์ตว่าง" : `รอ ${pv.waitingFor.join(", ")} จบเกมก่อน`}
+                        {!pv.ready
+                          ? `รอ ${pv.waitingFor.join(", ")} จบเกมก่อน`
+                          : (courtForPlan.get(pv.planned.id) ?? null)
+                            ? `ถึงคิวแล้ว — ${courtForPlan.get(pv.planned.id)}`
+                            : "พร้อมลง รอคอร์ตว่าง"}
                       </span>
                     </span>
                     {mine ? (
