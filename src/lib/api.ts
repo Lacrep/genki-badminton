@@ -113,6 +113,8 @@ export const api = {
   view: (sessionId: string) => request<ViewReply>(`/api/view/${sessionId}`),
   publicQueue: (code: string) => request<{ view: SessionView }>(`/api/q/${code}`),
   sessions: () => request<{ sessions: SessionSummary[] }>("/api/sessions"),
+  deleteSession: (id: string) =>
+    request<{ sessions: { id: string; name: string }[] }>(`/api/sessions/${id}`, { method: "DELETE" }),
   stats: () =>
     request<{
       stats: {
@@ -165,7 +167,14 @@ export const api = {
   // เกม
   suggest: (
     id: string,
-    input: { type?: MatchType | "auto"; include?: string[]; exclude?: string[]; shuffle?: boolean },
+    input: {
+      type?: MatchType | "auto"
+      include?: string[]
+      exclude?: string[]
+      shuffle?: boolean
+      /** true = จัดเกมเข้าคิวล่วงหน้า (เลือกคนที่อยู่ในคอร์ตได้ด้วย) */
+      forPlan?: boolean
+    },
   ) =>
     post<SuggestReply>(`/api/session/${id}/suggest`, input),
   start: (

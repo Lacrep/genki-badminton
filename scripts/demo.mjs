@@ -73,7 +73,8 @@ for (const [name, level] of ROSTER) {
 }
 
 console.log("▸ เปิดก๊วนและเช็คอินทุกคน")
-const { view } = await post("/api/session", {})
+// ตั้งชื่อให้รู้ทันทีว่าเป็นของปลอม จะได้กดลบทิ้งถูกตัวตอนเริ่มใช้งานจริง
+const { view } = await post("/api/session", { name: "ก๊วนตัวอย่าง (ข้อมูลเดโม่ — ลบทิ้งได้)" })
 const sid = view.session.id
 await post(`/api/session/${sid}/checkin-many`, { playerIds: players.map((p) => p.id) })
 
@@ -137,5 +138,7 @@ console.log(`
    ${final.bill.lines.length} คน · ${final.session.matches.filter((m) => m.endedAt).length} เกม · ${final.bill.shuttlesUsed} ลูก
    เรียกเก็บ ${final.bill.billed} บาท · เก็บได้แล้ว ${final.bill.collected} · ค้างอยู่ ${owed.toFixed(2)}
 
-   ลบข้อมูลตัวอย่างทิ้งเมื่อไรก็ได้ — ปิดเว็บแล้วสั่ง  ${RESET_CMD}
+   ลบทิ้งทีหลังได้ 2 แบบ
+     • ลบเฉพาะก๊วนตัวอย่าง — หน้าสถิติ → แท็บ "ก๊วนที่ผ่านมา" → กดถังขยะ
+     • ล้างทุกอย่างรวมทะเบียนคน — ปิดเว็บแล้วสั่ง  ${RESET_CMD}
 `)

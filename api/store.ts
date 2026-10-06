@@ -214,7 +214,7 @@ function migrateSession(session: Session): { session: Session; changed: boolean 
     delete fees.guestFee
     changed = true
   }
-  for (const key of ["shuttlePrice", "shuttleCostReal", "courtCost", "extraCost", "roundTo"] as const) {
+  for (const key of ["shuttlePrice", "shuttleCostTotal", "courtCost", "extraCost", "roundTo"] as const) {
     if (typeof fees[key] !== "number") {
       fees[key] = DEFAULT_FEES[key]
       changed = true
@@ -334,6 +334,38 @@ export function getSession(sessionId: string): Session {
 export function findSessionByCode(code: string): Session | null {
   const up = code.trim().toUpperCase()
   return listSessions().find((s) => s.code === up) ?? null
+}
+
+/**
+ * ลบก๊วนทิ้งถาวร — ใช้กับก๊วนที่เปิดไว้ลองเล่นหรือวันที่ไม่อยากเก็บ
+ *
+ * ก๊วนที่ยังเปิดอยู่ลบไม่ได้ ต้องปิดก่อน — กันลบก๊วนที่กำลังเล่นอยู่กลางคัน
+ * ไฟล์ถูกย้ายไปเป็น .deleted-<เวลา> ไม่ได้ลบทิ้งจริง เผื่อกดผิดแล้วอยากได้คืน
+ */
+export function deleteSession(sessionId: string): void {
+  const session = getSession(sessionId)
+  if (session.status === "live") {
+    throw new StoreError("ก๊วนนี้ยังเปิดอยู่ — ปิดก๊วนก่อนถึงจะลบได้", 400)
+  }
+
+  const file = sessionFile(sessionId)
+  try {
+    fs.renameSync(file, `${file}.deleted-${Date.now()}`)
+  } catch {
+    throw new StoreError("ลบไม่สำเร็จ ลองใหม่อีกครั้ง", 500)
+  }
+  try {
+    fs.rmSync(`${file}.bak`, { force: true })
+  } catch {
+    // ไฟล์สำรองลบไม่ได้ก็ไม่เป็นไร ตัวจริงถูกย้ายออกไปแล้ว
+  }
+
+  // ถ้าตัวชี้ "ก๊วนปัจจุบัน" ชี้มาที่ก๊วนนี้อยู่ ต้องย้ายไปก๊วนล่าสุดที่ยังเหลือ
+  if (currentSessionId() === sessionId) {
+    const latest = listSessions()[0]
+    writeJson(POINTER_FILE, { id: latest?.id ?? null })
+  }
+  undoStacks.delete(sessionId)
 }
 
 export function currentSessionId(): string | null {
@@ -686,10 +718,16 @@ export function startMatch(
 
 // ── เกมที่จัดไว้ล่วงหน้า ─────────────────────────────────────────────────────
 
-/** คนที่ "ไม่ว่าง" สำหรับจัดเกมใหม่ — อยู่ในคอร์ต หรือถูกจัดไว้ในคิวเกมแล้ว */
-export function committedPlayerIds(session: Session): string[] {
+/** คนที่ถูกจัดไว้ในคิวเกมแล้ว — ห้ามถูกจัดซ้ำอีกเกม */
+export function plannedPlayerIds(session: Session): string[] {
   const ids = new Set<string>()
   for (const p of session.planned) for (const pid of [...p.teamA, ...p.teamB]) ids.add(pid)
+  return [...ids]
+}
+
+/** คนที่ลงคอร์ตตอนนี้ไม่ได้ — อยู่ในคอร์ตอื่น หรือถูกจัดไว้ในคิวเกมแล้ว */
+export function committedPlayerIds(session: Session): string[] {
+  const ids = new Set<string>(plannedPlayerIds(session))
   for (const court of session.courts) {
     const match = court.currentMatchId ? session.matches.find((m) => m.id === court.currentMatchId) : null
     if (match) for (const pid of [...match.teamA, ...match.teamB]) ids.add(pid)
@@ -715,7 +753,8 @@ export function planMatch(
       const sp = s.players.find((p) => p.playerId === pid)
       if (!sp) throw new StoreError("มีคนในเกมที่ยังไม่ได้เช็คอิน", 400)
       if (sp.status === "left") throw new StoreError("มีคนในเกมที่กลับบ้านแล้ว", 400)
-      // กันจัดคนเดิมซ้ำสองเกม — พอถึงคิวจะลงพร้อมกันไม่ได้
+      // คนที่กำลังเล่นอยู่จัดเข้าคิวได้ — กว่าจะถึงคิวนั้นเขาก็ลงจากคอร์ตแล้ว
+      // แต่กันจัดคนเดิมซ้ำสองเกมในคิว เพราะพอถึงคิวจะลงพร้อมกันไม่ได้
       if (alreadyPlanned.has(pid)) throw new StoreError("มีคนที่ถูกจัดไว้ในคิวเกมอื่นแล้ว", 400)
     }
 
@@ -927,12 +966,12 @@ export function computeBill(session: Session, roster: Map<string, RosterPlayer>)
   const shuttlesUsed = session.matches.reduce((n, m) => n + m.shuttles, 0)
 
   /**
-   * ต้นทุนลูกจริง = จำนวนลูก × ราคาที่ก๊วนซื้อลูกมา (ไม่ใช่อัตราที่เก็บต่อคน)
-   * ไม่กรอกราคาที่ซื้อมา = ไม่รู้ต้นทุน ซึ่งต่างจาก "ต้นทุนเป็นศูนย์" — จึงต้องแยกให้ออก
+   * ต้นทุนจริงของก๊วน = ค่าคอร์ต + ค่าลูกที่ซื้อมา + ค่าอื่น ๆ (กรอกเป็นยอดรวมทั้งหมด)
+   * ไม่กรอก = ไม่รู้ต้นทุน ซึ่งต่างจาก "ต้นทุนเป็นศูนย์" — จึงต้องแยกให้ออก
    */
-  const shuttleCost = shuttlesUsed * fees.shuttleCostReal
+  const shuttleCost = fees.shuttleCostTotal
   const total = fees.courtCost + shuttleCost + fees.extraCost
-  const costTracked = fees.courtCost > 0 || fees.shuttleCostReal > 0
+  const costTracked = fees.courtCost > 0 || fees.shuttleCostTotal > 0
 
   // ทุกคนที่เช็คอินวันนี้ (รวมคนที่กลับไปแล้ว — เขาก็ใช้คอร์ตไปแล้ว)
   const people = session.players
@@ -962,9 +1001,9 @@ export function computeBill(session: Session, roster: Map<string, RosterPlayer>)
 
   const lines: BillLine[] = people.map((sp) => {
     const player = roster.get(sp.playerId)
+    // หารเท่า: เอาต้นทุนทั้งก้อนหารจำนวนคน — ช่องค่าอื่น ๆ ถูกบวกแยกด้านล่างอยู่แล้ว
     const courtPart = fees.mode === "club" ? fees.courtFeePerHead : fees.courtCost / n
-    const shuttlePart =
-      fees.mode === "club" ? (shuttleShare.get(sp.playerId) ?? 0) : shuttleCost / n
+    const shuttlePart = fees.mode === "club" ? (shuttleShare.get(sp.playerId) ?? 0) : shuttleCost / n
 
     return {
       playerId: sp.playerId,
@@ -1122,23 +1161,30 @@ export function buildView(session: Session, now = Date.now()): SessionView {
    */
   const planned: PlannedView[] = session.planned.map((p) => {
     const players: PlannedView["players"] = []
-    const blockers: string[] = []
+    const waitingFor: string[] = []
+    const problems: string[] = []
 
     for (const team of ["A", "B"] as const) {
       for (const pid of team === "A" ? p.teamA : p.teamB) {
         const player = rmap.get(pid)
         const sp = session.players.find((x) => x.playerId === pid)
         if (!player || !sp) {
-          blockers.push("มีคนที่ไม่อยู่ในก๊วนแล้ว")
+          problems.push("มีคนที่ไม่อยู่ในก๊วนแล้ว")
           continue
         }
         players.push({ player, sp, team })
-        if (sp.status === "left") blockers.push(`${displayName(player)} กลับบ้านแล้ว`)
-        else if (sp.status === "playing") blockers.push(`${displayName(player)} อยู่ในคอร์ตอื่น`)
+        if (sp.status === "left") problems.push(`${displayName(player)} กลับบ้านแล้ว`)
+        else if (sp.status === "playing") waitingFor.push(displayName(player))
       }
     }
 
-    return { planned: p, players, ready: blockers.length === 0, blockers: [...new Set(blockers)] }
+    return {
+      planned: p,
+      players,
+      ready: waitingFor.length === 0 && problems.length === 0,
+      waitingFor: [...new Set(waitingFor)],
+      problems: [...new Set(problems)],
+    }
   })
 
   const waits = queue.map((q) => q.waitMs)

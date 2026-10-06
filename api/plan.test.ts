@@ -111,7 +111,7 @@ describe("เอาเกมในคิวลงคอร์ต", () => {
     const view = store.buildView(store.getSession(sessionId))
     expect(view.planned).toHaveLength(1)
     expect(view.planned[0]!.ready).toBe(false)
-    expect(view.planned[0]!.blockers.join(" ")).toContain("กลับบ้านแล้ว")
+    expect(view.planned[0]!.problems.join(" ")).toContain("กลับบ้านแล้ว")
   })
 
   it("คนที่ถูกจัดไว้ในคิวแล้ว ไม่ถูกนับว่าว่างสำหรับจัดเกมใหม่", async () => {
@@ -120,6 +120,96 @@ describe("เอาเกมในคิวลงคอร์ต", () => {
     const busy = store.committedPlayerIds(store.getSession(sessionId))
     for (const pid of ids.slice(0, 4)) expect(busy, pid).toContain(pid)
     for (const pid of ids.slice(4)) expect(busy, pid).not.toContain(pid)
+  })
+})
+
+describe("จัดคิวได้จากคนทุกคน ไม่ใช่เฉพาะคนที่รออยู่", () => {
+  it("คนที่กำลังเล่นอยู่ในคอร์ต ก็จัดเข้าคิวเกมถัดไปได้", async () => {
+    const { store, sessionId, ids } = await setup()
+    store.startMatch(sessionId, { courtIndex: 0, type: "D", teamA: [ids[0]!, ids[1]!], teamB: [ids[2]!, ids[3]!] })
+
+    // สี่คนนี้อยู่ในคอร์ต แต่กว่าจะถึงคิวถัดไปเขาก็ลงแล้ว จึงต้องจัดได้
+    expect(() =>
+      store.planMatch(sessionId, { type: "D", teamA: [ids[0]!, ids[1]!], teamB: [ids[2]!, ids[3]!] }),
+    ).not.toThrow()
+    expect(store.getSession(sessionId).planned).toHaveLength(1)
+  })
+
+  it("เครื่องจัดเกมเสนอคนที่อยู่ในคอร์ตได้ตอนจัดล่วงหน้า แต่ไม่เสนอตอนจัดลงคอร์ตเดี๋ยวนี้", async () => {
+    const { store, sessionId, ids } = await setup()
+    const { suggestMatch } = await import("./matching")
+    // ดึง 4 คนลงคอร์ต เหลือในคิวแค่ 4 คน
+    store.startMatch(sessionId, { courtIndex: 0, type: "D", teamA: [ids[0]!, ids[1]!], teamB: [ids[2]!, ids[3]!] })
+
+    const base = { session: store.getSession(sessionId), roster: store.rosterMap(), now: Date.now(), type: "D" as const }
+    const live = suggestMatch(base)
+    const plan = suggestMatch({ ...base, includePlaying: true })
+
+    expect(live.ok).toBe(true)
+    expect(plan.ok).toBe(true)
+    if (!live.ok || !plan.ok) return
+    const liveIds = [...live.suggestion.teamA, ...live.suggestion.teamB]
+    // ตอนจัดลงคอร์ตเดี๋ยวนี้ ต้องไม่หยิบคนที่อยู่ในคอร์ตมา
+    for (const pid of ids.slice(0, 4)) expect(liveIds, pid).not.toContain(pid)
+  })
+
+  it("คนที่ถูกจัดไว้ในคิวแล้ว ไม่ถูกเสนอซ้ำ", async () => {
+    const { store, sessionId, ids } = await setup()
+    store.planMatch(sessionId, { type: "D", teamA: [ids[0]!, ids[1]!], teamB: [ids[2]!, ids[3]!] })
+    const planned = store.plannedPlayerIds(store.getSession(sessionId))
+    for (const pid of ids.slice(0, 4)) expect(planned, pid).toContain(pid)
+    for (const pid of ids.slice(4)) expect(planned, pid).not.toContain(pid)
+  })
+})
+
+describe("เกมในคิวที่คนยังเล่นอยู่", () => {
+  it("แยก 'รอเขาจบเกม' (เรื่องปกติ) ออกจาก 'มีคนกลับบ้าน' (ปัญหาจริง)", async () => {
+    const { store, sessionId, ids } = await setup()
+    store.startMatch(sessionId, { courtIndex: 0, type: "D", teamA: [ids[0]!, ids[1]!], teamB: [ids[2]!, ids[3]!] })
+    store.planMatch(sessionId, { type: "D", teamA: [ids[0]!, ids[1]!], teamB: [ids[2]!, ids[3]!] })
+
+    const view = store.buildView(store.getSession(sessionId))
+    const pv = view.planned[0]!
+    expect(pv.ready).toBe(false)
+    expect(pv.waitingFor).toHaveLength(4)
+    expect(pv.problems).toHaveLength(0)
+  })
+
+  it("พอเขาจบเกม เกมในคิวก็พร้อมลงเอง", async () => {
+    const { store, sessionId, ids } = await setup()
+    const { match } = store.startMatch(sessionId, {
+      courtIndex: 0, type: "D", teamA: [ids[0]!, ids[1]!], teamB: [ids[2]!, ids[3]!],
+    })
+    store.planMatch(sessionId, { type: "D", teamA: [ids[0]!, ids[1]!], teamB: [ids[2]!, ids[3]!] })
+    store.finishMatch(sessionId, { matchId: match.id, shuttles: 1 })
+
+    const pv = store.buildView(store.getSession(sessionId)).planned[0]!
+    expect(pv.ready).toBe(true)
+    expect(pv.waitingFor).toHaveLength(0)
+  })
+})
+
+describe("ลบก๊วนทิ้ง", () => {
+  it("ก๊วนที่ยังเปิดอยู่ลบไม่ได้ ต้องปิดก่อน", async () => {
+    const { store, sessionId } = await setup()
+    expect(() => store.deleteSession(sessionId)).toThrow(/ปิดก๊วนก่อน/)
+  })
+
+  it("ปิดแล้วลบได้ และหายไปจากประวัติ", async () => {
+    const { store, sessionId } = await setup()
+    store.endSession(sessionId)
+    store.deleteSession(sessionId)
+    expect(store.listSessions().some((s) => s.id === sessionId)).toBe(false)
+    expect(() => store.getSession(sessionId)).toThrow()
+  })
+
+  it("ลบก๊วนที่หน้าเว็บเปิดค้างอยู่ แล้วตัวชี้ต้องไม่ค้างชี้ไปที่ของที่ไม่มีแล้ว", async () => {
+    const { store, sessionId } = await setup()
+    store.endSession(sessionId)
+    expect(store.currentSessionId()).toBe(sessionId)
+    store.deleteSession(sessionId)
+    expect(store.currentSessionId()).not.toBe(sessionId)
+    expect(store.currentSession()).toBeNull()
   })
 })
 

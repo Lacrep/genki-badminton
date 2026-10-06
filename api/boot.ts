@@ -26,6 +26,7 @@ import {
   createSession,
   currentSession,
   deletePlayer,
+  deleteSession,
   endSession,
   findSessionByCode,
   finishMatch,
@@ -34,6 +35,7 @@ import {
   listSessions,
   movePlanned,
   planMatch,
+  plannedPlayerIds,
   renameCourt,
   reopenSession,
   rosterMap,
@@ -182,7 +184,7 @@ const feesSchema = z.object({
   mode: z.enum(["club", "equal"]).optional(),
   courtFeePerHead: z.number().min(0).max(100_000).optional(),
   shuttlePrice: z.number().min(0).max(10_000).optional(),
-  shuttleCostReal: z.number().min(0).max(10_000).optional(),
+  shuttleCostTotal: z.number().min(0).max(1_000_000).optional(),
   courtCost: z.number().min(0).max(1_000_000).optional(),
   extraCost: z.number().min(0).max(1_000_000).optional(),
   extraNote: z.string().trim().max(80).optional(),
@@ -322,11 +324,18 @@ app.post("/api/session/:id/suggest", async (c) => {
       exclude: z.array(z.string()).max(60).optional(),
       /** true = ผู้ใช้กด "สุ่มใหม่" → ใส่ความสุ่มเล็กน้อยให้ได้ชุดอื่น */
       shuffle: z.boolean().optional(),
+      /** true = กำลังจัดเกมเข้าคิวล่วงหน้า ไม่ใช่จัดลงคอร์ตเดี๋ยวนี้ */
+      forPlan: z.boolean().optional(),
     }),
   )
   const session = getSession(c.req.param("id"))
-  // คนที่ถูกจัดไว้ในคิวเกมแล้ว ไม่ควรถูกเสนอซ้ำ ไม่งั้นจะลงสองคอร์ตพร้อมกัน
-  const taken = committedPlayerIds(session).filter((pid) => !input.include?.includes(pid))
+  /*
+   * จัดลงคอร์ตเดี๋ยวนี้  → คนที่อยู่ในคอร์ตอื่นหรือถูกจัดไว้ในคิวแล้ว เลือกไม่ได้
+   * จัดเข้าคิวล่วงหน้า → คนในคอร์ตเลือกได้ (เดี๋ยวเขาก็ลง) ห้ามแค่คนที่อยู่ในคิวแล้ว
+   */
+  const taken = (input.forPlan ? plannedPlayerIds(session) : committedPlayerIds(session)).filter(
+    (pid) => !input.include?.includes(pid),
+  )
   const result = suggestMatch({
     session,
     roster: rosterMap(),
@@ -334,6 +343,7 @@ app.post("/api/session/:id/suggest", async (c) => {
     type: input.type ?? session.settings.defaultMatchType,
     include: input.include,
     exclude: [...new Set([...(input.exclude ?? []), ...taken])],
+    includePlaying: input.forPlan,
     jitter: input.shuffle ? 4 : 0,
   })
   return c.json(result)
@@ -517,6 +527,11 @@ app.get("/api/session/:id/bill.xlsx", (c) => {
       "Cache-Control": "no-store",
     },
   })
+})
+
+app.delete("/api/sessions/:id", (c) => {
+  deleteSession(c.req.param("id"))
+  return c.json({ sessions: listSessions().map((s) => ({ id: s.id, name: s.name })) })
 })
 
 app.get("/api/stats", (c) => c.json({ stats: allTimeStats() }))

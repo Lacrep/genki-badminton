@@ -182,10 +182,15 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
                       {pv.players.filter((x) => x.team === "B").map((x) => displayName(x.player)).join(" + ")}
                     </p>
                     <p className="truncate text-[11.5px] text-ink-faint">
-                      {pv.ready ? (
-                        freeCourts > 0 ? "พร้อมลง — มีคอร์ตว่างอยู่" : "พร้อมลง รอคอร์ตว่าง"
+                      {pv.problems.length > 0 ? (
+                        <span className="text-hinomaru-deep dark:text-hinomaru-soft">{pv.problems.join(" · ")}</span>
+                      ) : pv.waitingFor.length > 0 ? (
+                        // เรื่องปกติของเกมที่จัดล่วงหน้า — บอกเฉย ๆ ไม่ต้องทำให้ดูเหมือนพัง
+                        `รอ ${pv.waitingFor.join(", ")} จบเกมก่อน`
+                      ) : freeCourts > 0 ? (
+                        "พร้อมลง — มีคอร์ตว่างอยู่"
                       ) : (
-                        <span className="text-hinomaru-deep dark:text-hinomaru-soft">{pv.blockers.join(" · ")}</span>
+                        "พร้อมลง รอคอร์ตว่าง"
                       )}
                     </p>
                   </div>
@@ -285,7 +290,11 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
                   </span>
                   {scoreLabel(m) ? (
                     <span className="nums chip shrink-0 bg-subtle text-ink-soft">{scoreLabel(m)}</span>
-                  ) : m.winner ? (
+                  ) : null}
+                  {/* เกมที่เสมอต้องอ่านออกว่าเสมอ ไม่ใช่ปล่อยให้เดาเอาจากคะแนน */}
+                  {m.winner === "draw" ? (
+                    <span className="chip shrink-0 bg-gold/20 text-gold-deep">เสมอ</span>
+                  ) : !scoreLabel(m) && m.winner ? (
                     <span className="chip shrink-0 bg-gold/20 text-gold-deep">ฝั่ง {m.winner} ชนะ</span>
                   ) : null}
                   <span className="nums shrink-0 text-[11.5px] text-ink-faint">

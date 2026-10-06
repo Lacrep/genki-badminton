@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { CheckCheck, Dices, Info, ListPlus, Play, Users } from "lucide-react"
 import {
   type MatchType,
+  type RosterPlayer,
   type SessionView,
   MATCH_TYPE_LABEL,
   displayName,
@@ -51,6 +52,28 @@ export function MatchProposal({
   const [busy, setBusy] = useState(false)
 
   const rosterById = useMemo(() => new Map(view.roster.map((p) => [p.id, p])), [view.roster])
+
+  /**
+   * คนที่หยิบมาจัดเกมได้
+   *
+   * จัดลงคอร์ตเดี๋ยวนี้ → เฉพาะคนที่รออยู่ในคิว
+   * จัดเข้าคิวล่วงหน้า → ทุกคนที่ยังอยู่ในก๊วน (รวมคนที่กำลังเล่น) ยกเว้นคนที่ถูกจัดไว้แล้ว
+   */
+  const pickable = useMemo(() => {
+    if (!planning) {
+      return view.queue.map((q) => ({ player: q.player, note: formatDuration(q.waitMs) }))
+    }
+    const taken = new Set(view.planned.flatMap((p) => p.players.map((x) => x.player.id)))
+    return view.session.players
+      .filter((sp) => sp.status !== "left" && !taken.has(sp.playerId))
+      .map((sp) => {
+        const player = rosterById.get(sp.playerId)
+        return player
+          ? { player, note: sp.status === "playing" ? "อยู่ในคอร์ต" : sp.status === "resting" ? "พัก" : "รอคิว" }
+          : null
+      })
+      .filter((x): x is { player: RosterPlayer; note: string } => !!x)
+  }, [planning, view.queue, view.planned, view.session.players, rosterById])
   const need = playersPerMatch(type === "auto" ? (view.queue.length >= 4 ? "D" : "S") : type)
 
   const fetchSuggestion = useCallback(
@@ -62,6 +85,7 @@ export function MatchProposal({
           type,
           include: opts.include,
           shuffle: opts.shuffle,
+          forPlan: planning,
         })
         if (reply.ok) {
           setSuggestion(reply.suggestion)
@@ -77,7 +101,7 @@ export function MatchProposal({
         setBusy(false)
       }
     },
-    [sessionId, type],
+    [sessionId, type, planning],
   )
 
   // เปิดหน้าต่าง → ล้างของเก่าทิ้ง
@@ -246,33 +270,41 @@ export function MatchProposal({
           <div>
             <p className="section-title mb-2">
               <Users size={14} />
-              คิวรอ ({view.queue.length})
+              {planning ? `เลือกใครก็ได้ (${pickable.length} คน)` : `คิวรอ (${pickable.length})`}
             </p>
+            {planning ? (
+              <p className="mb-2 text-[11.5px] leading-snug text-ink-faint">
+                คนที่อยู่ในคอร์ตตอนนี้ก็เลือกได้ — กว่าจะถึงคิวนี้เขาก็ลงจากคอร์ตแล้ว
+                (คนที่ถูกจัดไว้ในคิวเกมอื่นแล้วจะไม่ขึ้นให้เลือกซ้ำ)
+              </p>
+            ) : null}
             <div className="flex flex-col gap-1.5">
-              {view.queue.map((q) => {
-                const on = picked.includes(q.player.id)
+              {pickable.map((c) => {
+                const on = picked.includes(c.player.id)
                 return (
                   <button
-                    key={q.player.id}
+                    key={c.player.id}
                     type="button"
-                    onClick={() => togglePick(q.player.id)}
+                    onClick={() => togglePick(c.player.id)}
                     className={cn(
                       "flex items-center gap-2.5 rounded-xl border px-2.5 py-2 text-left transition-all",
                       on ? "border-navy bg-navy/[0.07] ring-1 ring-navy/40" : "border-line/70 bg-surface hover:bg-subtle",
                     )}
                   >
-                    <PlayerAvatar player={q.player} size={30} />
+                    <PlayerAvatar player={c.player} size={30} />
                     <span className="min-w-0 flex-1 truncate font-heading text-[14px] font-medium text-ink">
-                      {displayName(q.player)}
+                      {displayName(c.player)}
                     </span>
-                    <LevelBadge level={q.player.level} />
-                    <span className="nums text-[12px] text-ink-soft">{formatDuration(q.waitMs)}</span>
+                    <LevelBadge level={c.player.level} />
+                    <span className="nums text-[12px] text-ink-soft">{c.note}</span>
                     {on ? <CheckCheck size={16} className="text-navy dark:text-gold-soft" /> : null}
                   </button>
                 )
               })}
-              {view.queue.length === 0 ? (
-                <p className="py-4 text-center text-[13px] text-ink-faint">ยังไม่มีคนในคิว</p>
+              {pickable.length === 0 ? (
+                <p className="py-4 text-center text-[13px] text-ink-faint">
+                  {planning ? "ทุกคนถูกจัดไว้ในคิวหมดแล้ว" : "ยังไม่มีคนในคิว"}
+                </p>
               ) : null}
             </div>
           </div>

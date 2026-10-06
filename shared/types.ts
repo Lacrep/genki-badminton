@@ -140,7 +140,7 @@ export interface Match {
 
 /**
  * club  — ระบบก๊วน: ค่าสนามคนละ X + ค่าลูก "คนละ Y ต่อลูก" ของทุกเกมที่ลง
- * equal — หารเท่ากันทุกคน: ต้นทุนจริงทั้งหมด (ค่าคอร์ต + ค่าลูก + ค่าอื่น) ÷ จำนวนคน
+ * equal — หารเท่ากันทุกคน: (ค่าสนามทั้งหมด + ค่าลูกทั้งหมด + ค่าอื่น ๆ) ÷ คนที่มาวันนั้น
  */
 export type FeeMode = "club" | "equal"
 
@@ -161,10 +161,12 @@ export interface Fees {
    */
   shuttlePrice: number
   /**
-   * ราคาลูกที่ก๊วนซื้อมาจริง ต่อหนึ่งลูก — ใช้คิด "ต้นทุนจริง" และโหมดหารเท่า
+   * ค่าลูกที่ก๊วนจ่ายไปทั้งวัน (ยอดรวม ไม่ใช่ต่อลูก)
+   *
+   * โหมดหารเท่า ใช้ตัวนี้เป็นตัวตั้งตรง ๆ · โหมดระบบก๊วน ใช้คิดว่าเก็บได้เกินหรือขาด
    * ใส่ 0 = ไม่ได้กรอก (ระบบจะไม่เดาให้ และจะไม่โชว์ยอดกำไร/ขาดทุน)
    */
-  shuttleCostReal: number
+  shuttleCostTotal: number
   /**
    * ค่าเช่าคอร์ตที่จ่ายสนามจริงทั้งวัน — โหมดหารเท่าใช้ตัวนี้เป็นตัวตั้ง
    * โหมดระบบก๊วนใส่ไว้เพื่อดูว่าเก็บได้เกินหรือขาดเท่าไร (ใส่ 0 ได้)
@@ -223,7 +225,7 @@ export const DEFAULT_FEES: Fees = {
   mode: "club",
   courtFeePerHead: CLUB.courtFeePerHead,
   shuttlePrice: CLUB.shuttlePrice,
-  shuttleCostReal: 0,
+  shuttleCostTotal: 0,
   courtCost: 0,
   extraCost: 0,
   roundTo: 1,
@@ -365,8 +367,13 @@ export interface PlannedView {
   players: { player: RosterPlayer; sp: SessionPlayer; team: "A" | "B" }[]
   /** ลงคอร์ตได้เลยไหม — ทุกคนต้องยังอยู่และไม่ติดคอร์ตอื่น */
   ready: boolean
-  /** ถ้ายังไม่พร้อม ติดอะไรอยู่ */
-  blockers: string[]
+  /**
+   * คนที่ยังเล่นอยู่ในคอร์ตอื่น — เรื่องปกติของเกมที่จัดล่วงหน้า แค่ต้องรอเขาจบ
+   * (แยกจาก problems เพราะอันนี้ไม่ใช่ความผิดพลาด ไม่ควรขึ้นสีแดงให้ตกใจ)
+   */
+  waitingFor: string[]
+  /** ปัญหาจริงที่ต้องแก้ เช่น มีคนกลับบ้านไปแล้ว */
+  problems: string[]
 }
 
 export interface SessionView {

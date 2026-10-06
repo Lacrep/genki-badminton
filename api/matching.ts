@@ -33,6 +33,11 @@ export interface SuggestInput {
   /** ไม่เอาคนนี้ในเกมนี้ */
   exclude?: string[]
   /**
+   * เอาคนที่กำลังเล่นอยู่มาคิดด้วย — ใช้ตอนจัดเกมล่วงหน้าเข้าคิว
+   * เพราะกว่าจะถึงคิวนั้น เขาก็ลงจากคอร์ตแล้ว ถ้าไม่ให้เลือกจะจัดได้ไม่กี่เกม
+   */
+  includePlaying?: boolean
+  /**
    * ความสุ่ม (คะแนน) — 0 = เอาชุดที่ดีที่สุดเสมอ (ค่าเริ่มต้น)
    * ใส่ค่า 2-3 เวลาผู้ใช้กด "สุ่มใหม่" เพื่อให้ได้ชุดอื่นที่ดีใกล้เคียงกัน
    * ไม่ทำให้คนถูกดองหลุด เพราะกฎเหล็กบังคับใส่ก่อนคิดคะแนน
@@ -195,9 +200,11 @@ function buildCandidates(input: SuggestInput): Candidate[] {
     0,
   )
 
+  const eligible = input.includePlaying ? new Set(["queue", "playing"]) : new Set(["queue"])
+
   const out: Candidate[] = []
   for (const sp of session.players) {
-    if (sp.status !== "queue") continue
+    if (!eligible.has(sp.status)) continue
     if (exclude.has(sp.playerId)) continue
     const player = roster.get(sp.playerId)
     if (!player) continue
@@ -252,8 +259,9 @@ export function suggestMatch(input: SuggestInput): SuggestResult {
   if (candidates.length < need) {
     return {
       ok: false,
-      reason:
-        candidates.length === rawQueue
+      reason: input.includePlaying
+        ? `คนที่ยังว่างไม่พอ (ต้องมี ${need} คน เลือกได้ ${candidates.length} คน) — คนอื่นถูกจัดไว้ในคิวหมดแล้ว`
+        : candidates.length === rawQueue
           ? `คนในคิวไม่พอ (ต้องมี ${need} คน มี ${rawQueue} คน)`
           : `คนในคิวที่เลือกได้ไม่พอ (ต้องมี ${need} คน เลือกได้ ${candidates.length} คน)`,
       needed: need,

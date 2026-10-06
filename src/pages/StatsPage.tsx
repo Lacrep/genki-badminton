@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Award, BarChart3, Clock, Flame, Handshake, History, Trophy } from "lucide-react"
+import { Award, BarChart3, Clock, Flame, Handshake, History, Trash2, Trophy } from "lucide-react"
 import { displayName, formatMinutes, levelInfo, recordLabel, thaiTime } from "@shared/types"
 import { api, type SessionSummary } from "@/lib/api"
 import { useApp } from "@/lib/app"
@@ -45,7 +45,7 @@ export function StatsPage() {
 
       {tab === "today" ? <TodayStats /> : null}
       {tab === "all" ? <AllTimeStats rows={allTime} /> : null}
-      {tab === "history" ? <SessionHistory rows={sessions} /> : null}
+      {tab === "history" ? <SessionHistory rows={sessions} onDeleted={() => setSessions(null)} /> : null}
     </div>
   )
 }
@@ -259,7 +259,27 @@ function AllTimeStats({ rows }: { rows: AllTime[] | null }) {
   )
 }
 
-function SessionHistory({ rows }: { rows: SessionSummary[] | null }) {
+function SessionHistory({ rows, onDeleted }: { rows: SessionSummary[] | null; onDeleted: () => void }) {
+  const { toast, refresh, needPin } = useApp()
+  const [busy, setBusy] = useState<string | null>(null)
+
+  const remove = async (s: SessionSummary) => {
+    // ลบแล้วสถิติรวมของวันนั้นหายไปด้วย จึงต้องถามให้ชัดว่าลบอันไหน
+    if (!window.confirm(`ลบ "${s.name}" (${s.date}) ทิ้งถาวรเลยไหม?\nสถิติและค่าก๊วนของวันนั้นจะหายไปด้วย`)) return
+    setBusy(s.id)
+    try {
+      await api.deleteSession(s.id)
+      toast("ลบก๊วนนั้นแล้ว", "ok")
+      onDeleted()
+      // เผื่อที่ลบไปคือก๊วนที่หน้าเว็บกำลังเปิดค้างอยู่ ต้องดึงของใหม่มาแทน
+      await refresh()
+    } catch (err) {
+      toast(err instanceof Error ? err.message : "ลบไม่สำเร็จ", "error")
+    } finally {
+      setBusy(null)
+    }
+  }
+
   if (!rows) return <div className="card"><EmptyState title="กำลังโหลด..." /></div>
   if (rows.length === 0) {
     return (
@@ -287,6 +307,18 @@ function SessionHistory({ rows }: { rows: SessionSummary[] | null }) {
           <span className={cn("chip", s.status === "live" ? "bg-gold/25 text-gold-deep" : "bg-subtle text-ink-faint")}>
             {s.status === "live" ? "กำลังเล่น" : "จบแล้ว"}
           </span>
+          {/* ก๊วนที่เปิดไว้ลองเล่นควรลบทิ้งได้ — แต่ก๊วนที่ยังเล่นอยู่ต้องปิดก่อน */}
+          {!needPin ? (
+            <button
+              type="button"
+              className="btn-quiet btn-sm shrink-0 px-2 text-hinomaru-deep disabled:opacity-40 dark:text-hinomaru-soft"
+              title={s.status === "live" ? "ปิดก๊วนก่อนถึงจะลบได้" : "ลบก๊วนนี้ทิ้ง"}
+              disabled={s.status === "live" || busy === s.id}
+              onClick={() => void remove(s)}
+            >
+              <Trash2 size={15} />
+            </button>
+          ) : null}
         </div>
       ))}
       <BrushDivider className="my-2" />

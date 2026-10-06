@@ -29,7 +29,7 @@ export function BillPage() {
 
   const [courtFeePerHead, setCourtFeePerHead] = useState(String(fees.courtFeePerHead))
   const [shuttlePrice, setShuttlePrice] = useState(String(fees.shuttlePrice))
-  const [shuttleCostReal, setShuttleCostReal] = useState(String(fees.shuttleCostReal))
+  const [shuttleCostTotal, setShuttleCostTotal] = useState(String(fees.shuttleCostTotal))
   const [courtCost, setCourtCost] = useState(String(fees.courtCost))
   const [extraCost, setExtraCost] = useState(String(fees.extraCost))
   const [extraNote, setExtraNote] = useState(fees.extraNote ?? "")
@@ -40,11 +40,11 @@ export function BillPage() {
   useEffect(() => {
     setCourtFeePerHead(String(fees.courtFeePerHead))
     setShuttlePrice(String(fees.shuttlePrice))
-    setShuttleCostReal(String(fees.shuttleCostReal))
+    setShuttleCostTotal(String(fees.shuttleCostTotal))
     setCourtCost(String(fees.courtCost))
     setExtraCost(String(fees.extraCost))
     setExtraNote(fees.extraNote ?? "")
-  }, [fees.courtFeePerHead, fees.shuttlePrice, fees.shuttleCostReal, fees.courtCost, fees.extraCost, fees.extraNote])
+  }, [fees.courtFeePerHead, fees.shuttlePrice, fees.shuttleCostTotal, fees.courtCost, fees.extraCost, fees.extraNote])
 
   const saveFees = (patch: Record<string, unknown>) =>
     void run("บันทึกค่าใช้จ่ายแล้ว", () => api.updateSession(sessionId, { fees: patch }), { silent: true })
@@ -104,97 +104,118 @@ export function BillPage() {
         <p className="text-[12px] leading-snug text-ink-faint">
           {fees.mode === "club"
             ? `เก็บค่าสนามเท่ากันทุกคน ส่วนค่าลูกคิดเฉพาะคนที่ลงเกมนั้น — เกมที่ใช้ 1 ลูก ทั้ง 4 คนจ่ายคนละ ${baht(fees.shuttlePrice)} บาท`
-            : "รวมต้นทุนจริงทั้งหมด (ค่าคอร์ต + ค่าลูกที่ซื้อมา + ค่าอื่น ๆ) แล้วหารจำนวนคนเท่า ๆ กัน ไม่สนว่าใครลงกี่เกม"}
+            : `รวม 3 ยอด (ค่าสนามทั้งหมด + ค่าลูกทั้งหมด + ค่าอื่น ๆ) แล้วหารด้วยจำนวนคนที่มาวันนี้ ${bill.lines.length} คน — ไม่สนว่าใครลงกี่เกม`}
         </p>
 
         <div className="grid gap-3 sm:grid-cols-2">
           {fees.mode === "club" ? (
-            <div>
-              <label className="label" htmlFor="b-perhead">
-                ค่าสนาม คนละ (บาท)
-              </label>
-              <input
-                id="b-perhead"
-                className="input nums"
-                inputMode="numeric"
-                value={courtFeePerHead}
-                disabled={!canControl}
-                onChange={(e) => setCourtFeePerHead(e.target.value)}
-                onBlur={() => saveFees({ courtFeePerHead: num(courtFeePerHead) })}
-              />
-            </div>
+            <>
+              <div>
+                <label className="label" htmlFor="b-perhead">
+                  ค่าสนาม คนละ (บาท)
+                </label>
+                <input
+                  id="b-perhead"
+                  className="input nums"
+                  inputMode="numeric"
+                  value={courtFeePerHead}
+                  disabled={!canControl}
+                  onChange={(e) => setCourtFeePerHead(e.target.value)}
+                  onBlur={() => saveFees({ courtFeePerHead: num(courtFeePerHead) })}
+                />
+              </div>
+
+              <div>
+                <label className="label" htmlFor="b-shuttle">
+                  ค่าลูก เก็บคนละ (บาท/ลูก)
+                </label>
+                <input
+                  id="b-shuttle"
+                  className="input nums"
+                  inputMode="numeric"
+                  value={shuttlePrice}
+                  disabled={!canControl}
+                  onChange={(e) => setShuttlePrice(e.target.value)}
+                  onBlur={() => saveFees({ shuttlePrice: num(shuttlePrice) })}
+                />
+                <p className="mt-1 text-[11.5px] text-ink-faint">
+                  เกมที่ใช้ 1 ลูก ทั้ง 4 คนจ่ายคนละเท่านี้ · ลูกที่ก๊วนใช้: {CLUB.shuttle}
+                </p>
+              </div>
+
+              {/* สองช่องนี้คือ "ต้นทุน" ไม่ใช่ยอดที่เก็บ — ใส่เมื่ออยากรู้ว่าก๊วนเหลือเท่าไร */}
+              <div>
+                <label className="label" htmlFor="b-courtreal">
+                  ค่าสนามที่จ่ายจริงทั้งวัน (ใส่หรือไม่ใส่ก็ได้)
+                </label>
+                <input
+                  id="b-courtreal"
+                  className="input nums"
+                  inputMode="numeric"
+                  placeholder="0"
+                  value={courtCost}
+                  disabled={!canControl}
+                  onChange={(e) => setCourtCost(e.target.value)}
+                  onBlur={() => saveFees({ courtCost: num(courtCost) })}
+                />
+              </div>
+
+              <div>
+                <label className="label" htmlFor="b-shuttletotal">
+                  ค่าลูกที่จ่ายจริงทั้งวัน (ใส่หรือไม่ใส่ก็ได้)
+                </label>
+                <input
+                  id="b-shuttletotal"
+                  className="input nums"
+                  inputMode="numeric"
+                  placeholder="0"
+                  value={shuttleCostTotal}
+                  disabled={!canControl}
+                  onChange={(e) => setShuttleCostTotal(e.target.value)}
+                  onBlur={() => saveFees({ shuttleCostTotal: num(shuttleCostTotal) })}
+                />
+                <p className="mt-1 text-[11.5px] text-ink-faint">
+                  สองช่องบนนี้คือต้นทุนที่ก๊วนจ่ายออกไปจริง ใส่แล้วจะรู้ว่าวันนี้เหลือหรือขาดเท่าไร
+                </p>
+              </div>
+            </>
           ) : (
-            <div>
-              <label className="label" htmlFor="b-courttotal">
-                ค่าสนามรวมทั้งวัน (บาท)
-              </label>
-              <input
-                id="b-courttotal"
-                className="input nums"
-                inputMode="numeric"
-                value={courtCost}
-                disabled={!canControl}
-                onChange={(e) => setCourtCost(e.target.value)}
-                onBlur={() => saveFees({ courtCost: num(courtCost) })}
-              />
-            </div>
+            <>
+              {/* หารเท่า: กรอกแค่ยอดรวม 3 ก้อน แล้วหารจำนวนคนที่มาวันนั้น */}
+              <div>
+                <label className="label" htmlFor="b-courttotal">
+                  ค่าสนามทั้งหมด (บาท)
+                </label>
+                <input
+                  id="b-courttotal"
+                  className="input nums"
+                  inputMode="numeric"
+                  value={courtCost}
+                  disabled={!canControl}
+                  onChange={(e) => setCourtCost(e.target.value)}
+                  onBlur={() => saveFees({ courtCost: num(courtCost) })}
+                />
+              </div>
+
+              <div>
+                <label className="label" htmlFor="b-shuttletotal">
+                  ค่าลูกทั้งหมด (บาท)
+                </label>
+                <input
+                  id="b-shuttletotal"
+                  className="input nums"
+                  inputMode="numeric"
+                  value={shuttleCostTotal}
+                  disabled={!canControl}
+                  onChange={(e) => setShuttleCostTotal(e.target.value)}
+                  onBlur={() => saveFees({ shuttleCostTotal: num(shuttleCostTotal) })}
+                />
+                <p className="mt-1 text-[11.5px] text-ink-faint">
+                  ยอดรวมค่าลูกที่ใช้ไปทั้งวัน ไม่ต้องนับเป็นลูก
+                </p>
+              </div>
+            </>
           )}
-
-          <div>
-            <label className="label" htmlFor="b-shuttle">
-              ค่าลูก เก็บคนละ (บาท/ลูก)
-            </label>
-            <input
-              id="b-shuttle"
-              className="input nums"
-              inputMode="numeric"
-              value={shuttlePrice}
-              disabled={!canControl}
-              onChange={(e) => setShuttlePrice(e.target.value)}
-              onBlur={() => saveFees({ shuttlePrice: num(shuttlePrice) })}
-            />
-            <p className="mt-1 text-[11.5px] text-ink-faint">
-              เกมที่ใช้ 1 ลูก ทั้ง 4 คนจ่ายคนละเท่านี้ · ลูกที่ก๊วนใช้: {CLUB.shuttle}
-            </p>
-          </div>
-
-          {fees.mode === "club" ? (
-            <div>
-              <label className="label" htmlFor="b-courtreal">
-                ค่าคอร์ตที่จ่ายสนามจริง (ใส่หรือไม่ใส่ก็ได้)
-              </label>
-              <input
-                id="b-courtreal"
-                className="input nums"
-                inputMode="numeric"
-                placeholder="0"
-                value={courtCost}
-                disabled={!canControl}
-                onChange={(e) => setCourtCost(e.target.value)}
-                onBlur={() => saveFees({ courtCost: num(courtCost) })}
-              />
-              <p className="mt-1 text-[11.5px] text-ink-faint">ใส่แล้วจะเห็นว่าเก็บได้เกินหรือขาดเท่าไร</p>
-            </div>
-          ) : null}
-
-          <div>
-            <label className="label" htmlFor="b-shuttlereal">
-              ราคาลูกที่ซื้อมาจริง ลูกละ (ใส่หรือไม่ใส่ก็ได้)
-            </label>
-            <input
-              id="b-shuttlereal"
-              className="input nums"
-              inputMode="numeric"
-              placeholder="0"
-              value={shuttleCostReal}
-              disabled={!canControl}
-              onChange={(e) => setShuttleCostReal(e.target.value)}
-              onBlur={() => saveFees({ shuttleCostReal: num(shuttleCostReal) })}
-            />
-            <p className="mt-1 text-[11.5px] text-ink-faint">
-              ต้นทุนจริงของก๊วน ไม่ใช่ยอดที่เก็บ — ใส่แล้วจะรู้ว่าวันนี้ก๊วนเหลือหรือขาดเท่าไร
-            </p>
-          </div>
 
           <div>
             <label className="label" htmlFor="b-extra">
@@ -295,14 +316,26 @@ export function BillPage() {
 
         <div className="mt-3 flex flex-col gap-1 border-t border-line pt-3 text-[13px]">
           {fees.mode === "club" ? (
-            <Row label={`ค่าสนาม ${baht(fees.courtFeePerHead)} × ${bill.lines.length} คน`} value={`${baht(fees.courtFeePerHead * bill.lines.length)} ฿`} />
+            <>
+              <Row
+                label={`ค่าสนาม ${baht(fees.courtFeePerHead)} × ${bill.lines.length} คน`}
+                value={`${baht(fees.courtFeePerHead * bill.lines.length)} ฿`}
+              />
+              <Row label={`ค่าลูกที่เก็บได้ (ใช้ ${bill.shuttlesUsed} ลูก)`} value={`${baht(bill.shuttleCharged)} ฿`} />
+            </>
           ) : (
-            <Row label="ค่าสนามรวม" value={`${baht(bill.courtCost)} ฿`} />
+            <>
+              {/* หารเท่า: โชว์ 3 ยอดที่กรอกไว้ตรง ๆ จะได้ตรวจทานง่าย */}
+              <Row label="ค่าสนามทั้งหมด" value={`${baht(bill.courtCost)} ฿`} />
+              <Row label="ค่าลูกทั้งหมด" value={`${baht(bill.shuttleCost)} ฿`} />
+            </>
           )}
-          <Row label={`ค่าลูกที่เก็บได้ (ใช้ ${bill.shuttlesUsed} ลูก)`} value={`${baht(bill.shuttleCharged)} ฿`} />
           {bill.extraCost > 0 ? <Row label={fees.extraNote || "ค่าอื่น ๆ"} value={`${baht(bill.extraCost)} ฿`} /> : null}
+          {fees.mode === "equal" ? (
+            <Row label={`หาร ${bill.lines.length} คน`} value={`คนละ ${baht(bill.lines[0]?.amount ?? 0)} ฿`} />
+          ) : null}
           <Row label="ยอดที่ต้องเก็บรวม" value={`${baht(bill.billed)} ฿`} bold />
-          {bill.costTracked ? (
+          {bill.costTracked && fees.mode === "club" ? (
             <Row label="ต้นทุนจริงที่จ่ายไป" value={`${baht(bill.total)} ฿`} />
           ) : null}
         </div>

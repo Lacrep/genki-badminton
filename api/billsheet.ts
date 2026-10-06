@@ -207,7 +207,7 @@ export function billWorkbook(session: Session, bill: Bill, roster: Map<string, R
     ["ค่าสนามต่อหัว", money(session.fees.courtFeePerHead)],
     ["ค่าลูก เก็บคนละ (ต่อลูก)", money(session.fees.shuttlePrice)],
     ["ปัดเศษขึ้นทีละ", money(session.fees.roundTo)],
-    ["ราคาลูกที่ซื้อมาจริง (ต่อลูก)", session.fees.shuttleCostReal > 0 ? money(session.fees.shuttleCostReal) : "ไม่ได้กรอก"],
+    ["ค่าลูกที่ก๊วนจ่ายไปจริง (ทั้งวัน)", session.fees.shuttleCostTotal > 0 ? money(session.fees.shuttleCostTotal) : "ไม่ได้กรอก"],
     ["ค่าเช่าคอร์ตที่จ่ายสนามจริง", money(session.fees.courtCost)],
     [
       session.fees.extraNote ? `ค่าอื่น ๆ (${session.fees.extraNote})` : "ค่าอื่น ๆ",

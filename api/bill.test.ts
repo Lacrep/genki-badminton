@@ -129,10 +129,11 @@ describe("โหมดระบบก๊วน — ค่าสนามต่�
     expect(bill.shuttlesUsed).toBe(3) // เกมแรก 2 ลูก + เกมสอง 1 ลูก
   })
 
-  it("ต้นทุนลูกคิดจากลูกที่ใช้ในเกมทั้งหมด", () => {
-    const { session, roster } = makeSession({ shuttleCostReal: 100 })
+  it("ต้นทุนลูกคือยอดรวมที่กรอกไว้ ไม่ต้องคูณจำนวนลูกเอง", () => {
+    const { session, roster } = makeSession({ shuttleCostTotal: 300 })
     const bill = computeBill(session, roster)
-    expect(bill.total).toBe(300) // 3 ลูก × 100
+    expect(bill.total).toBe(300)
+    expect(bill.costTracked).toBe(true)
   })
 
   it("ค่าอื่น ๆ หารเท่ากันทุกคน", () => {
@@ -142,9 +143,9 @@ describe("โหมดระบบก๊วน — ค่าสนามต่�
   })
 
   it("ต้นทุนจริงคิดจากราคาลูกที่ซื้อมา ไม่ใช่อัตราที่เก็บต่อคน", () => {
-    const { session, roster } = makeSession({ courtCost: 700, shuttleCostReal: 100 })
+    const { session, roster } = makeSession({ courtCost: 700, shuttleCostTotal: 300 })
     const bill = computeBill(session, roster)
-    // ต้นทุน = ค่าคอร์ต 700 + ลูก 3 ลูก × ราคาจริง 100 = 1,000
+    // ต้นทุน = ค่าสนาม 700 + ค่าลูกทั้งหมด 300 = 1,000
     expect(bill.total).toBe(1000)
     expect(bill.costTracked).toBe(true)
     expect(bill.balance).toBe(bill.billed - 1000)
@@ -180,10 +181,10 @@ describe("โหมดระบบก๊วน — ค่าสนามต่�
 })
 
 describe("โหมดหารเท่ากันทุกคน", () => {
-  it("ทุกคนจ่ายเท่ากันจากต้นทุนจริงรวม", () => {
-    const { session, roster } = makeSession({ mode: "equal", courtCost: 700, shuttleCostReal: 100 })
+  it("หารเท่า = (ค่าสนามทั้งหมด + ค่าลูกทั้งหมด + ค่าอื่น ๆ) ÷ จำนวนคน", () => {
+    const { session, roster } = makeSession({ mode: "equal", courtCost: 700, shuttleCostTotal: 300 })
     const bill = computeBill(session, roster)
-    // (ค่าคอร์ต 700 + ลูก 3 ลูก × 100) / 5 คน = 200
+    // (ค่าสนาม 700 + ค่าลูก 300) / 5 คน = 200
     expect(new Set(bill.lines.map((l) => l.amount)).size).toBe(1)
     expect(amountOf(bill, "a")).toBe(200)
     expect(amountOf(bill, "e")).toBe(200)
