@@ -7,6 +7,7 @@ import {
   recordLabel,
   formatDuration,
   levelInfo,
+  levelSolid,
 } from "@shared/types"
 import { cn } from "@/lib/util"
 
@@ -24,23 +25,18 @@ export function LevelBadge({ level, showName = false }: { level: number; showNam
 
 // ── ชื่อ + วงกลมตัวอักษรแรก ───────────────────────────────────────────────────
 
-/** สีวงกลมไล่ตามระดับมือ — กวาดตาดูคิวทีเดียวก็รู้ว่ามือประมาณไหน */
-function avatarTone(level: number): string {
-  if (level >= 7) return "bg-hinomaru/90"
-  if (level >= 5) return "bg-gold-deep/90"
-  if (level >= 3) return "bg-navy/90"
-  return "bg-navy-mist/90"
-}
-
 export function PlayerAvatar({ player, size = 34 }: { player: RosterPlayer; size?: number }) {
   const label = displayName(player).trim().slice(0, 2)
   return (
     <span
-      className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-full font-heading font-semibold text-white",
-        avatarTone(player.level),
-      )}
-      style={{ width: size, height: size, fontSize: Math.round(size * 0.4) }}
+      className="inline-flex shrink-0 items-center justify-center rounded-full font-heading font-semibold text-white"
+      // สีวงกลมไล่ตามระดับมือทั้ง 7 ขั้น — กวาดตาดูคิวทีเดียวก็รู้ว่าใครมือไหน
+      style={{
+        backgroundColor: levelSolid(player.level),
+        width: size,
+        height: size,
+        fontSize: Math.round(size * 0.4),
+      }}
       aria-hidden
     >
       {label}

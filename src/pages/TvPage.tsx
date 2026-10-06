@@ -1,12 +1,16 @@
 import { X } from "lucide-react"
-import { displayName, formatDuration, levelInfo, thaiTime } from "@shared/types"
+import { displayName, formatDuration, levelInfo, levelSolid, thaiTime } from "@shared/types"
+import type { CourtView, PlannedView, QueueEntry } from "@shared/types"
 import { useApp, useNow } from "@/lib/app"
 import { Logo } from "@/components/ui"
 import { cn } from "@/lib/util"
 
 /**
- * โหมดจอใหญ่ — เอาแท็บเล็ต/ทีวีตั้งไว้ข้างคอร์ต ทุกคนเห็นพร้อมกันว่า
- * ใครอยู่ในสนาม เหลือเวลาเท่าไร และคิวถัดไปคือใคร (ลดการถามหัวก๊วนไปเยอะ)
+ * โหมดจอใหญ่ — เอาทีวี/จอมอนิเตอร์ตั้งไว้ข้างคอร์ต ให้ลูกก๊วนดูเองได้ว่า
+ * ใครอยู่ในสนาม เหลือเวลาเท่าไร และคู่ไหนรอลงอยู่ (หัวก๊วนจะได้ไม่โดนถามทั้งวัน)
+ *
+ * แบ่งสองคอลัมน์: ซ้าย = คอร์ตที่กำลังเล่น · ขวา = คิวคู่ที่รอลง + คนที่รออยู่
+ * ตัวอักษรใหญ่กว่าหน้าปกติทุกจุด เพราะคนยืนดูห่างจากจอหลายเมตร
  */
 export function TvPage({ navigate }: { navigate: (to: string) => void }) {
   const { view } = useApp()
@@ -27,154 +31,287 @@ export function TvPage({ navigate }: { navigate: (to: string) => void }) {
     )
   }
 
-  const nextUp = view.queue.slice(0, 4)
-  const later = view.queue.slice(4)
+  const courts = view.courts.filter((c) => !c.court.disabled)
 
   return (
-    <div className="flex min-h-dvh flex-col bg-navy-deep px-5 py-4 text-sand">
-      {/* หัวจอ */}
-      <div className="mb-4 flex shrink-0 items-center gap-4">
-        <Logo size={54} plate />
-        <div className="min-w-0 flex-1">
-          <h1 className="truncate font-heading text-2xl font-bold text-white">{view.session.name}</h1>
-          <p className="truncate text-[13px] text-sand/70">
-            {view.session.venue || "เกงกิเดสซ์"} · เปิด {thaiTime(view.session.startAt)} · รหัสดูคิว #{view.session.code}
-          </p>
-        </div>
-        <div className="text-right">
-          <p className="nums font-heading text-3xl font-bold text-white">{thaiTime(now)}</p>
-          <p className="text-[12px] text-sand/60">
-            {view.stats.playing} คนในคอร์ต · รอ {view.stats.waiting} คน
-          </p>
-        </div>
-        <button
-          className="rounded-xl border border-sand/30 p-2 text-sand/70 transition-colors hover:bg-sand/10"
-          onClick={() => navigate("/")}
-          aria-label="ออกจากโหมดจอใหญ่"
-        >
-          <X size={20} />
-        </button>
-      </div>
+    <div className="flex h-dvh flex-col overflow-hidden bg-navy-deep px-6 py-4 text-sand">
+      <TvHeader view={view} now={now} onExit={() => navigate("/")} />
 
-      {/* คอร์ต — กินพื้นที่ที่เหลือทั้งหมด ตั้งทีวีห่าง ๆ ก็ยังอ่านออก */}
-      <div
-        className={cn(
-          "mb-4 grid flex-1 auto-rows-fr gap-3",
-          view.courts.length <= 4 ? "grid-cols-2" : "grid-cols-3",
-        )}
-      >
-        {view.courts.map((cv) => {
-          const elapsed = cv.match ? now - cv.match.startedAt : 0
-          const over = elapsed > view.session.settings.targetGameMinutes * 60_000
-          return (
-            <div
-              key={cv.court.index}
-              className={cn(
-                "rounded-2xl border p-4",
-                cv.match ? "border-sand/25 bg-navy/60" : "border-dashed border-gold/40 bg-navy/25",
+      <div className="grid min-h-0 flex-1 gap-5 lg:grid-cols-[1.55fr_1fr]">
+        {/* ── ซ้าย: คอร์ตที่กำลังเล่น ── */}
+        <section className="flex min-h-0 flex-col">
+          <TvHeading>คอร์ต</TvHeading>
+          <div
+            className={cn(
+              "grid min-h-0 flex-1 auto-rows-fr gap-4",
+              courts.length <= 2 ? "grid-cols-1" : courts.length <= 6 ? "grid-cols-2" : "grid-cols-3",
+            )}
+          >
+            {courts.map((cv) => (
+              <CourtPanel key={cv.court.index} cv={cv} now={now} targetMinutes={view.session.settings.targetGameMinutes} />
+            ))}
+          </div>
+        </section>
+
+        {/* ── ขวา: คิวคู่ที่รอลง แล้วตามด้วยคนที่รออยู่ ── */}
+        <section className="flex min-h-0 flex-col gap-4">
+          <div className="flex min-h-0 flex-[3] flex-col">
+            <TvHeading>คู่ต่อไปที่รอลง ({view.planned.length})</TvHeading>
+            <div className="min-h-0 flex-1 space-y-2 overflow-hidden">
+              {view.planned.length === 0 ? (
+                <EmptyPanel>ยังไม่มีคู่ที่จัดรอไว้</EmptyPanel>
+              ) : (
+                view.planned.slice(0, 3).map((pv, i) => <PlannedPanel key={pv.planned.id} pv={pv} order={i + 1} />)
               )}
-            >
-              <div className="mb-2 flex items-baseline gap-2">
-                <h2 className="flex-1 truncate font-heading text-lg font-semibold text-white">{cv.court.name}</h2>
-                {cv.match ? (
-                  <span className={cn("nums font-heading text-2xl font-bold", over ? "text-hinomaru-soft" : "text-gold-soft")}>
-                    {formatDuration(elapsed)}
-                  </span>
-                ) : (
-                  <span className="font-heading text-lg font-semibold text-gold-soft">ว่าง</span>
-                )}
-              </div>
+              {view.planned.length > 3 ? (
+                <p className="pt-0.5 text-center font-heading text-[13px] text-sand/55">
+                  + อีก {view.planned.length - 3} คู่ที่จัดรอไว้
+                </p>
+              ) : null}
+            </div>
+          </div>
 
-              {cv.match ? (
-                <div className="flex flex-col gap-1.5">
-                  {(["A", "B"] as const).map((team) => (
-                    <div key={team} className="flex items-center gap-2 rounded-xl bg-navy-deep/60 px-3 py-2">
-                      <span
-                        className={cn(
-                          "flex h-6 w-6 shrink-0 items-center justify-center rounded font-heading text-[12px] font-bold",
-                          team === "A" ? "bg-sand text-navy-deep" : "bg-hinomaru text-white",
-                        )}
-                      >
-                        {team}
-                      </span>
-                      <span className="flex min-w-0 flex-1 flex-wrap gap-x-3">
-                        {cv.players
-                          .filter((p) => p.team === team)
-                          .map((p) => (
-                            <span key={p.player.id} className="truncate font-heading text-[17px] font-medium text-white">
-                              {displayName(p.player)}
-                              <span className="ml-1 text-[12px] text-gold-soft/80">{levelInfo(p.player.level).code}</span>
-                            </span>
-                          ))}
-                      </span>
-                    </div>
+          <div className="flex min-h-0 flex-[2] flex-col">
+            <TvHeading>คิวรอ ({view.queue.length})</TvHeading>
+            <div className="min-h-0 flex-1 overflow-hidden">
+              {view.queue.length === 0 ? (
+                <EmptyPanel>ไม่มีใครรอคิว</EmptyPanel>
+              ) : (
+                <div className="grid grid-cols-2 gap-2">
+                  {view.queue.slice(0, 8).map((q, i) => (
+                    <QueueChip key={q.player.id} q={q} order={i + 1} now={now} />
                   ))}
                 </div>
-              ) : (
-                <p className="py-3 text-center text-[14px] text-sand/50">รอหัวก๊วนจัดคนลง</p>
               )}
             </div>
-          )
-        })}
-      </div>
-
-      {/* คิวหน้า */}
-      <div className="shrink-0 rounded-2xl border border-sand/20 bg-navy/45 p-4">
-        <h2 className="mb-3 font-heading text-[15px] font-semibold uppercase tracking-wide text-gold-soft">
-          คิวถัดไป
-        </h2>
-        {view.queue.length === 0 ? (
-          <p className="py-2 text-center text-[15px] text-sand/60">ไม่มีใครรอคิว</p>
-        ) : (
-          <>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-              {nextUp.map((q, i) => {
-                const wait = q.sp.queueSince ? Math.max(0, now - q.sp.queueSince) : q.waitMs
-                return (
-                  <div
-                    key={q.player.id}
-                    className={cn(
-                      "rounded-xl border px-3 py-2.5",
-                      q.tier === "dong"
-                        ? "border-hinomaru bg-hinomaru/25 animate-dong-pulse"
-                        : q.tier === "warn"
-                          ? "border-gold/70 bg-gold/15"
-                          : "border-sand/25 bg-navy-deep/50",
-                    )}
-                  >
-                    <div className="flex items-baseline gap-1.5">
-                      <span className="nums font-heading text-[13px] font-bold text-gold-soft">{i + 1}</span>
-                      <span className="truncate font-heading text-[17px] font-semibold text-white">
-                        {displayName(q.player)}
-                      </span>
-                    </div>
-                    <p className="nums text-[12.5px] text-sand/70">
-                      รอ {formatDuration(wait)} · {levelInfo(q.player.level).code} · {q.sp.gamesPlayed} เกม
-                    </p>
-                  </div>
-                )
-              })}
-            </div>
-
-            {later.length > 0 ? (
-              <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[14px] text-sand/65">
-                <span className="font-heading text-sand/45">ต่อจากนั้น:</span>
-                {later.map((q, i) => (
-                  <span key={q.player.id} className="nums">
-                    {i + 5}. {displayName(q.player)}
-                  </span>
-                ))}
-              </p>
-            ) : null}
-          </>
-        )}
+          </div>
+        </section>
       </div>
 
       {view.dongAlerts.length > 0 ? (
-        <div className="mt-3 shrink-0 rounded-2xl border border-hinomaru bg-hinomaru/20 px-4 py-3">
-          <p className="font-heading text-[15px] font-semibold text-white">รอนานเกินกำหนด: {view.dongAlerts.join(" · ")}</p>
+        <div className="mt-3 shrink-0 rounded-2xl border-2 border-hinomaru bg-hinomaru/25 px-5 py-3">
+          <p className="truncate font-heading text-[19px] font-semibold text-white">
+            รอนานเกินกำหนด — {view.dongAlerts.join(" · ")}
+          </p>
         </div>
       ) : null}
+    </div>
+  )
+}
+
+function TvHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <h2 className="mb-2.5 flex shrink-0 items-center gap-3 font-heading text-[17px] font-semibold uppercase tracking-[0.12em] text-gold-soft">
+      {children}
+      <span className="h-px flex-1 bg-gradient-to-r from-gold/50 to-transparent" />
+    </h2>
+  )
+}
+
+function EmptyPanel({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-sand/25 bg-navy/25 px-4 py-6">
+      <p className="text-center font-heading text-[17px] text-sand/55">{children}</p>
+    </div>
+  )
+}
+
+/** ชื่อ + ป้ายระดับมือ — หน่วยที่ใช้ซ้ำทั้งจอ ให้ขนาดตัวอักษรสั่งจากข้างนอกได้ */
+function PlayerTag({ name, level, size }: { name: string; level: number; size: "lg" | "md" }) {
+  return (
+    <span className="flex min-w-0 items-center gap-2">
+      <span
+        className="inline-block h-3 w-3 shrink-0 rounded-full ring-1 ring-white/25"
+        style={{ backgroundColor: levelSolid(level) }}
+        aria-hidden
+      />
+      <span className={cn("truncate font-heading font-semibold text-white", size === "lg" ? "text-[26px]" : "text-[18px]")}>
+        {name}
+      </span>
+      <span
+        className={cn(
+          "shrink-0 rounded-md px-1.5 py-0.5 font-heading font-bold text-white/95",
+          size === "lg" ? "text-[13px]" : "text-[11px]",
+        )}
+        style={{ backgroundColor: levelSolid(level) }}
+      >
+        {levelInfo(level).code}
+      </span>
+    </span>
+  )
+}
+
+function CourtPanel({ cv, now, targetMinutes }: { cv: CourtView; now: number; targetMinutes: number }) {
+  const elapsed = cv.match ? now - cv.match.startedAt : 0
+  const over = elapsed > targetMinutes * 60_000
+
+  return (
+    <div
+      className={cn(
+        "flex min-h-0 flex-col rounded-2xl border-2 p-4",
+        cv.match ? "border-sand/25 bg-navy/55" : "border-dashed border-gold/45 bg-navy/20",
+      )}
+    >
+      <div className="mb-3 flex shrink-0 items-baseline gap-3">
+        <h3 className="flex-1 truncate font-heading text-[22px] font-bold text-white">{cv.court.name}</h3>
+        {cv.match ? (
+          <span
+            className={cn(
+              "nums font-heading text-[30px] font-bold leading-none",
+              over ? "text-hinomaru-soft" : "text-gold-soft",
+            )}
+          >
+            {formatDuration(elapsed)}
+          </span>
+        ) : (
+          <span className="rounded-lg bg-gold/20 px-2.5 py-1 font-heading text-[17px] font-bold text-gold-soft">ว่าง</span>
+        )}
+      </div>
+
+      {cv.match ? (
+        <div className="flex min-h-0 flex-1 flex-col justify-center gap-2">
+          {(["A", "B"] as const).map((team, i) => (
+            <div key={team}>
+              {i === 1 ? (
+                <p className="my-1 text-center font-heading text-[14px] font-bold tracking-widest text-sand/40">VS</p>
+              ) : null}
+              <div className="flex items-center gap-3 rounded-xl bg-navy-deep/65 px-3 py-2.5">
+                <span
+                  className={cn(
+                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg font-heading text-[16px] font-bold",
+                    team === "A" ? "bg-sand text-navy-deep" : "bg-hinomaru text-white",
+                  )}
+                >
+                  {team}
+                </span>
+                <span className="flex min-w-0 flex-1 flex-col gap-1">
+                  {cv.players
+                    .filter((p) => p.team === team)
+                    .map((p) => (
+                      <PlayerTag key={p.player.id} name={displayName(p.player)} level={p.player.level} size="lg" />
+                    ))}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-1 items-center justify-center">
+          <p className="text-center font-heading text-[17px] text-sand/50">รอหัวก๊วนจัดคนลง</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+/**
+ * การ์ดคู่ที่รอลง — บีบให้เตี้ย (ฝั่งละบรรทัด) เพราะจอ 768px สูงไม่พอ
+ * ถ้าการ์ดสูง จะโดนตัดครึ่งคาตา ซึ่งอ่านแล้วงงกว่าไม่โชว์เลย
+ */
+function PlannedPanel({ pv, order }: { pv: PlannedView; order: number }) {
+  const side = (team: "A" | "B") => pv.players.filter((p) => p.team === team)
+  const status =
+    pv.problems.length > 0
+      ? pv.problems.join(" · ")
+      : pv.waitingFor.length > 0
+        ? `รอ ${pv.waitingFor.join(", ")} จบเกม`
+        : "พร้อมลงคอร์ต"
+
+  return (
+    <div
+      className={cn(
+        "rounded-2xl border px-3.5 py-2.5",
+        order === 1 ? "border-gold/60 bg-gold/[0.12]" : "border-sand/20 bg-navy/40",
+      )}
+    >
+      <div className="mb-1.5 flex items-center gap-2.5">
+        <span
+          className={cn(
+            "nums flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-heading text-[13px] font-bold",
+            order === 1 ? "bg-gold text-navy-deep" : "bg-navy-deep/70 text-sand/80",
+          )}
+        >
+          {order}
+        </span>
+        <span className={cn("truncate font-heading text-[13px] font-medium", pv.problems.length > 0 ? "text-hinomaru-soft" : "text-sand/70")}>
+          {status}
+        </span>
+      </div>
+
+      <div className="flex flex-col gap-1">
+        {(["A", "B"] as const).map((team, i) => (
+          <div key={team}>
+            {i === 1 ? (
+              <p className="py-0.5 font-heading text-[10.5px] font-bold tracking-[0.2em] text-sand/35">VS</p>
+            ) : null}
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5">
+              {side(team).map((p) => (
+                <PlayerTag key={p.player.id} name={displayName(p.player)} level={p.player.level} size="md" />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function QueueChip({ q, order, now }: { q: QueueEntry; order: number; now: number }) {
+  const wait = q.sp.queueSince ? Math.max(0, now - q.sp.queueSince) : q.waitMs
+  return (
+    <div
+      className={cn(
+        "rounded-xl border px-3 py-2",
+        q.tier === "dong"
+          ? "animate-dong-pulse border-hinomaru bg-hinomaru/25"
+          : q.tier === "warn"
+            ? "border-gold/70 bg-gold/15"
+            : "border-sand/20 bg-navy-deep/45",
+      )}
+    >
+      <div className="flex items-center gap-2">
+        <span className="nums shrink-0 font-heading text-[13px] font-bold text-gold-soft">{order}</span>
+        <PlayerTag name={displayName(q.player)} level={q.player.level} size="md" />
+      </div>
+      <p className="nums mt-0.5 pl-6 text-[13px] text-sand/70">
+        รอ {formatDuration(wait)} · ลงไป {q.sp.gamesPlayed} เกม
+      </p>
+    </div>
+  )
+}
+
+function TvHeader({
+  view,
+  now,
+  onExit,
+}: {
+  view: NonNullable<ReturnType<typeof useApp>["view"]>
+  now: number
+  onExit: () => void
+}) {
+  return (
+    <div className="mb-4 flex shrink-0 items-center gap-5">
+      <Logo size={56} plate />
+      <div className="min-w-0 flex-1">
+        <h1 className="truncate font-heading text-[26px] font-bold leading-tight text-white">{view.session.name}</h1>
+        <p className="truncate text-[14px] text-sand/70">
+          {view.session.venue || "เกงกิเดสซ์"} · ดูคิวที่มือถือ พิมพ์รหัส{" "}
+          <span className="font-heading font-bold tracking-widest text-gold-soft">#{view.session.code}</span>
+        </p>
+      </div>
+      <div className="shrink-0 text-right">
+        <p className="nums font-heading text-[38px] font-bold leading-none text-white">{thaiTime(now)}</p>
+        <p className="text-[14px] text-sand/65">
+          ในคอร์ต {view.stats.playing} · รอ {view.stats.waiting} คน
+        </p>
+      </div>
+      <button
+        className="shrink-0 rounded-xl border border-sand/30 p-2 text-sand/60 transition-colors hover:bg-sand/10"
+        onClick={onExit}
+        aria-label="ออกจากโหมดจอใหญ่"
+      >
+        <X size={20} />
+      </button>
     </div>
   )
 }

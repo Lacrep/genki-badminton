@@ -138,18 +138,31 @@
     @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 font-heading text-[11.5px] font-medium;
   }
 
-  /* ระดับมือ — ไล่จากน้ำเงินอ่อน (มือใหม่) ไปแดงเข้ม (มือแข่ง) */
-  .level-n {
-    @apply bg-navy-mist/15 text-navy-mist dark:bg-navy-mist/25 dark:text-sand;
+  /*
+   * ระดับมือ 7 ขั้น — ขั้นละสี ไม่ใช้ซ้ำ
+   * ฟ้าอ่อน → น้ำเงินเข้ม → ทอง → แดง  (มือใหม่ → มือเปิด)
+   * ใส่เส้นขอบบาง ๆ ด้วย เพราะสองขั้นที่ติดกันพื้นใกล้เคียงกันมาก
+   */
+  .level-1 {
+    @apply border border-[#8fa3bf]/35 bg-[#8fa3bf]/15 text-[#5a6f93] dark:bg-[#8fa3bf]/25 dark:text-[#c3d2e6];
   }
-  .level-s {
-    @apply bg-navy/12 text-navy dark:bg-navy-soft/40 dark:text-sand;
+  .level-2 {
+    @apply border border-[#5a74a8]/35 bg-[#5a74a8]/15 text-[#44598a] dark:bg-[#5a74a8]/30 dark:text-[#b6c8e6];
   }
-  .level-p {
-    @apply bg-gold/25 text-gold-deep dark:bg-gold/25 dark:text-gold-soft;
+  .level-3 {
+    @apply border border-[#3d5590]/35 bg-[#3d5590]/15 text-[#32477c] dark:bg-[#3d5590]/35 dark:text-[#b0c1e8];
   }
-  .level-c {
-    @apply bg-hinomaru/15 text-hinomaru-deep dark:bg-hinomaru/25 dark:text-hinomaru-soft;
+  .level-4 {
+    @apply border border-navy/35 bg-navy/15 text-navy dark:bg-navy-soft/55 dark:text-sand;
+  }
+  .level-5 {
+    @apply border border-gold/45 bg-gold/20 text-gold-deep dark:bg-gold/25 dark:text-gold-soft;
+  }
+  .level-6 {
+    @apply border border-gold-deep/55 bg-gold-deep/25 text-gold-deep dark:bg-gold-deep/45 dark:text-gold-soft;
+  }
+  .level-7 {
+    @apply border border-hinomaru/45 bg-hinomaru/18 text-hinomaru-deep dark:bg-hinomaru/30 dark:text-hinomaru-soft;
   }
 
   /* ── ระดับความ "ดอง" ของคนนั่งรอ ── */

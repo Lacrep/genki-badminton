@@ -12,6 +12,7 @@ import {
 } from "lucide-react"
 import { displayName, formatDuration, formatMinutes, scoreLabel, thaiTime } from "@shared/types"
 import { api } from "@/lib/api"
+import { speak } from "@/lib/sound"
 import { useApp, useNow, useSession } from "@/lib/app"
 import { CourtCard } from "@/components/CourtCard"
 import { MatchProposal } from "@/components/MatchProposal"
@@ -23,7 +24,7 @@ const QUEUE_PREVIEW = 6
 
 export function LivePage({ navigate }: { navigate: (to: string) => void }) {
   const { view, sessionId } = useSession()
-  const { run, needPin } = useApp()
+  const { run, toast, needPin } = useApp()
   const now = useNow()
 
   const [proposal, setProposal] = useState<{ courtIndex: number | null; mode: "auto" | "manual" } | null>(null)
@@ -49,8 +50,16 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
     nextPlan += 1
   }
 
-  const startPlanned = (plannedId: string, courtIndex: number) =>
-    void run("เริ่มเกมจากคิวแล้ว", () => api.startPlan(sessionId, plannedId, courtIndex))
+  /** เริ่มเกมจากคิว — ต้องเรียกชื่อออกเสียงเหมือนตอนสุ่มจัดเกม ไม่งั้นคนไม่รู้ว่าถึงคิวตัวเอง */
+  const startPlanned = async (plannedId: string, courtIndex: number) => {
+    const reply = await run("เริ่มเกมจากคิวแล้ว", () => api.startPlan(sessionId, plannedId, courtIndex), {
+      silent: true,
+    })
+    if (reply && "callText" in reply && reply.callText) {
+      if (view.session.settings.callSound) speak(reply.callText)
+      toast(reply.callText, "ok")
+    }
+  }
   const recent = [...view.session.matches]
     .filter((m) => m.endedAt)
     .sort((a, b) => (b.endedAt ?? 0) - (a.endedAt ?? 0))

@@ -38,15 +38,36 @@ export interface LevelInfo {
   tone: string
 }
 
+/**
+ * ระดับมือทั้ง 7 ขั้น — แต่ละขั้นมีสีของตัวเอง ไม่ใช้สีซ้ำกัน
+ *
+ * ไล่เฉดจากฟ้าอ่อน (มือใหม่) → น้ำเงินเข้ม (มือกลาง) → ทอง (มือเก่ง) → แดง (มือเปิด)
+ * เพราะหัวก๊วนต้องกวาดตาดูทีเดียวแล้วรู้ว่าใครมือไหน ถ้าสองขั้นสีเหมือนกันก็แยกไม่ออก
+ */
 export const LEVELS: LevelInfo[] = [
-  { level: 1, code: "หน้าบ้าน", name: "มือหน้าบ้าน", hint: "ตีสนุก ๆ ยังไม่เคยเล่นในก๊วนจริงจัง", tone: "level-n" },
-  { level: 2, code: "BG", name: "มือ BG", hint: "เริ่มเล่นในก๊วน ตีโต้ได้ เริ่มจับตำแหน่งยืน", tone: "level-n" },
-  { level: 3, code: "N-", name: "มือ N-", hint: "เล่นคู่ได้ ลูกยังไม่นิ่งตลอดเกม", tone: "level-s" },
-  { level: 4, code: "N", name: "มือ N", hint: "เล่นคู่ลื่น รู้จังหวะสลับหน้า-หลัง", tone: "level-s" },
-  { level: 5, code: "S", name: "มือ S", hint: "ตบ/ดรอป/หน้าเน็ตคม คุมเกมได้", tone: "level-p" },
-  { level: 6, code: "P", name: "มือ P", hint: "ระดับก๊วนแข่ง ครบเครื่องทุกลูก", tone: "level-p" },
-  { level: 7, code: "OPEN", name: "มือ OPEN", hint: "ระดับแข่งรายการ / มือเปิด", tone: "level-c" },
+  { level: 1, code: "หน้าบ้าน", name: "มือหน้าบ้าน", hint: "ตีสนุก ๆ ยังไม่เคยเล่นในก๊วนจริงจัง", tone: "level-1" },
+  { level: 2, code: "BG", name: "มือ BG", hint: "เริ่มเล่นในก๊วน ตีโต้ได้ เริ่มจับตำแหน่งยืน", tone: "level-2" },
+  { level: 3, code: "N-", name: "มือ N-", hint: "เล่นคู่ได้ ลูกยังไม่นิ่งตลอดเกม", tone: "level-3" },
+  { level: 4, code: "N", name: "มือ N", hint: "เล่นคู่ลื่น รู้จังหวะสลับหน้า-หลัง", tone: "level-4" },
+  { level: 5, code: "S", name: "มือ S", hint: "ตบ/ดรอป/หน้าเน็ตคม คุมเกมได้", tone: "level-5" },
+  { level: 6, code: "P", name: "มือ P", hint: "ระดับก๊วนแข่ง ครบเครื่องทุกลูก", tone: "level-6" },
+  { level: 7, code: "OPEN", name: "มือ OPEN", hint: "ระดับแข่งรายการ / มือเปิด", tone: "level-7" },
 ]
+
+/** สีพื้นวงกลมชื่อ/ป้ายบนจอใหญ่ — เข้มพอให้ตัวอักษรขาวอ่านออกจากระยะไกล */
+export const LEVEL_SOLID: Record<number, string> = {
+  1: "#8fa3bf",
+  2: "#5a74a8",
+  3: "#3d5590",
+  4: "#1d2447",
+  5: "#bf9d65",
+  6: "#9c7c47",
+  7: "#c2223c",
+}
+
+export function levelSolid(level: number): string {
+  return LEVEL_SOLID[Math.min(MAX_LEVEL, Math.max(1, Math.round(level)))] ?? LEVEL_SOLID[4]!
+}
 
 export const MAX_LEVEL = LEVELS.length
 

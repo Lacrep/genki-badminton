@@ -61,18 +61,28 @@ export function MatchProposal({
    */
   const pickable = useMemo(() => {
     if (!planning) {
-      return view.queue.map((q) => ({ player: q.player, note: formatDuration(q.waitMs) }))
+      return view.queue.map((q) => ({ player: q.player, note: `รอ ${formatDuration(q.waitMs)}`, waitMs: q.waitMs }))
     }
     const taken = new Set(view.planned.flatMap((p) => p.players.map((x) => x.player.id)))
+    const waitOf = new Map(view.queue.map((q) => [q.player.id, q.waitMs]))
     return view.session.players
       .filter((sp) => sp.status !== "left" && !taken.has(sp.playerId))
       .map((sp) => {
         const player = rosterById.get(sp.playerId)
-        return player
-          ? { player, note: sp.status === "playing" ? "อยู่ในคอร์ต" : sp.status === "resting" ? "พัก" : "รอคิว" }
-          : null
+        if (!player) return null
+        // เวลารอคือข้อมูลหลักที่ใช้ตัดสินว่าจะจัดใครลง จึงต้องเห็นตอนเลือกคนด้วย
+        const wait = waitOf.get(sp.playerId)
+        const note =
+          sp.status === "playing"
+            ? "อยู่ในคอร์ต"
+            : sp.status === "resting"
+              ? "พัก"
+              : `รอ ${formatDuration(wait ?? 0)}`
+        return { player, note, waitMs: wait ?? -1 }
       })
-      .filter((x): x is { player: RosterPlayer; note: string } => !!x)
+      .filter((x): x is { player: RosterPlayer; note: string; waitMs: number } => !!x)
+      // คนที่รอนานสุดอยู่บนสุด คนที่ยังเล่นอยู่ไปท้ายสุด
+      .sort((a, b) => b.waitMs - a.waitMs)
   }, [planning, view.queue, view.planned, view.session.players, rosterById])
   const need = playersPerMatch(type === "auto" ? (view.queue.length >= 4 ? "D" : "S") : type)
 

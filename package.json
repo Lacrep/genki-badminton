@@ -13,7 +13,8 @@
     "test:watch": "vitest",
     "lint": "tsc -b",
     "serve": "npm run build && npm start",
-    "demo": "node scripts/demo.mjs"
+    "demo": "node scripts/demo.mjs",
+    "reset-sessions": "node scripts/reset-sessions.mjs"
   },
   "dependencies": {
     "@hono/node-server": "^1.14.3",
