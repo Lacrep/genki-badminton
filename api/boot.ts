@@ -8,7 +8,7 @@
 import { Hono } from "hono"
 import type { HttpBindings } from "@hono/node-server"
 import { z } from "zod"
-import { type Level, type MatchType, MAX_LEVEL, displayName, scoreLabel, thaiTime } from "@shared/types"
+import { type Level, type MatchType, type RosterPlayer, MAX_LEVEL, displayName, scoreLabel, thaiTime } from "@shared/types"
 import { suggestMatch } from "./matching"
 import { billFilename, billWorkbook } from "./billsheet"
 import {
@@ -153,10 +153,7 @@ app.post("/api/players", async (c) => {
 
 app.patch("/api/players/:id", async (c) => {
   const input = await body(c, playerSchema.partial())
-  const player = updatePlayer(c.req.param("id"), {
-    ...input,
-    level: input.level as Level | undefined,
-  })
+  const player = updatePlayer(c.req.param("id"), input as Partial<RosterPlayer>)
   return c.json({ player, roster: getRoster() })
 })
 

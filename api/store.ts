@@ -173,6 +173,11 @@ function migrateRoster(list: RosterPlayer[]): { list: RosterPlayer[]; changed: b
   let changed = false
   const next = list.map((raw) => {
     const legacy = raw as RosterPlayer & LegacyPlayerFields
+    // ทะเบียนที่ระดับมือหายไป (เคยโดนบันทึกทับด้วยค่าว่าง) — เติมขั้นกลางคืนให้
+    if (typeof raw.level !== "number" || !Number.isFinite(raw.level)) {
+      changed = true
+      return { ...raw, level: 3 as RosterPlayer["level"] }
+    }
     const isLegacy =
       legacy.nickname !== undefined ||
       legacy.gender !== undefined ||
@@ -302,16 +307,43 @@ export function updatePlayer(playerId: string, patch: Partial<RosterPlayer>): Ro
   const list = getRoster()
   const i = list.findIndex((p) => p.id === playerId)
   if (i < 0) throw new StoreError("ไม่พบผู้เล่นคนนี้ในทะเบียน", 404)
-  list[i] = { ...list[i], ...patch, id: list[i].id, createdAt: list[i].createdAt }
+  // ตัดคีย์ที่เป็น undefined ทิ้งก่อน — ไม่งั้นการแก้ชื่ออย่างเดียวจะลบระดับมือหาย
+  const clean = Object.fromEntries(Object.entries(patch).filter(([, v]) => v !== undefined))
+  list[i] = { ...list[i], ...clean, id: list[i].id, createdAt: list[i].createdAt }
   saveRoster(list)
   return list[i]
 }
 
+/**
+ * ลบคนออกจากทะเบียน — ทำได้เฉพาะคนที่ยังไม่เคยลงก๊วนเลย (เช่นพิมพ์ชื่อผิด)
+ *
+ * ทะเบียนสมาชิกคือที่มาของ "ชื่อ" ในบิลและสถิติทุกครั้งที่ผ่านมา ลบทิ้งเมื่อไร
+ * ก๊วนเก่าจะเหลือแต่รหัส p_xxxx แทนชื่อ และคนนั้นจะหายจากสถิติรวมไปเลย
+ * คนที่เคยลงเล่นแล้วให้ "เก็บเข้ากรุ" (archived) แทน — หายจากรายชื่อเช็คอิน
+ * แต่ชื่อกับประวัติยังอยู่ครบ
+ */
 export function deletePlayer(playerId: string) {
   const list = getRoster()
-  const next = list.filter((p) => p.id !== playerId)
-  if (next.length === list.length) throw new StoreError("ไม่พบผู้เล่นคนนี้ในทะเบียน", 404)
-  saveRoster(next)
+  const target = list.find((p) => p.id === playerId)
+  if (!target) throw new StoreError("ไม่พบผู้เล่นคนนี้ในทะเบียน", 404)
+
+  let played = 0
+  for (const s of listSessions()) {
+    const sp = s.players.find((x) => x.playerId === playerId)
+    if (!sp) continue
+    if (s.status === "live" && sp.status !== "left") {
+      throw new StoreError(`${displayName(target)} อยู่ในก๊วนที่กำลังเล่นอยู่ ลบไม่ได้`, 400)
+    }
+    played += 1
+  }
+  if (played > 0) {
+    throw new StoreError(
+      `${displayName(target)} เคยลงก๊วนมาแล้ว ${played} ครั้ง ลบแล้วชื่อจะหายจากบิลและสถิติเก่า — ใช้ "เก็บเข้ากรุ" แทน`,
+      400,
+    )
+  }
+
+  saveRoster(list.filter((p) => p.id !== playerId))
 }
 
 // ── ก๊วน ─────────────────────────────────────────────────────────────────────

@@ -95,6 +95,64 @@ describe("ไฟล์ทะเบียนเสีย", () => {
   })
 })
 
+describe("ทะเบียนสมาชิกต้องอยู่ตลอด", () => {
+  it("แก้ชื่ออย่างเดียวแล้วระดับมือต้องไม่หาย", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ต้น", level: 7 })
+
+    store.updatePlayer(a.id, { archived: true })
+    store.updatePlayer(a.id, { name: "ต้นใหญ่" })
+
+    const again = store.getRoster().find((p) => p.id === a.id)
+    expect(again?.level).toBe(7)
+    expect(again?.name).toBe("ต้นใหญ่")
+    expect(again?.archived).toBe(true)
+  })
+
+  it("คนที่เคยลงก๊วนแล้วลบไม่ได้ — ชื่อในบิลเก่าต้องไม่หาย", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ต้น", level: 5 })
+    const session = store.createSession({})
+    store.checkIn(session.id, a.id)
+    store.endSession(session.id)
+
+    expect(() => store.deletePlayer(a.id)).toThrow()
+    expect(store.getRoster().map((p) => p.id)).toContain(a.id)
+  })
+
+  it("คนที่อยู่ในก๊วนที่กำลังเล่นอยู่ ลบไม่ได้", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "บอย", level: 4 })
+    const session = store.createSession({})
+    store.checkIn(session.id, a.id)
+
+    expect(() => store.deletePlayer(a.id)).toThrow()
+    expect(store.getRoster().map((p) => p.id)).toContain(a.id)
+  })
+
+  it("คนที่เพิ่งพิมพ์ชื่อผิด (ยังไม่เคยลง) ลบได้", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "พิมพ์ผิด", level: 3 })
+
+    store.deletePlayer(a.id)
+    expect(store.getRoster().map((p) => p.id)).not.toContain(a.id)
+  })
+
+  it("ทะเบียนที่ระดับมือหายไป เปิดใหม่แล้วซ่อมให้ ไม่ใช่ทำเว็บพัง", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "แนน", level: 6 })
+
+    const file = path.join(dir, "roster.json")
+    const raw = JSON.parse(fs.readFileSync(file, "utf8"))
+    delete raw[0].level
+    fs.writeFileSync(file, JSON.stringify(raw))
+
+    const reopened = await loadStore()
+    const again = reopened.getRoster().find((p) => p.id === a.id)
+    expect(typeof again?.level).toBe("number")
+  })
+})
+
 describe("ข้อมูลก๊วนที่กำลังเล่นอยู่", () => {
   it("ปิดเซิร์ฟเวอร์กลางคันแล้วเปิดใหม่ ก๊วนยังอยู่ครบ", async () => {
     const store = await loadStore()

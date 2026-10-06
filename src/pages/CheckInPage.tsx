@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react"
-import { Check, Pencil, Search, Trash2, UserPlus, Users } from "lucide-react"
+import { Archive, ArchiveRestore, Check, Pencil, Search, Trash2, UserPlus, Users } from "lucide-react"
 import { type Level, type RosterPlayer, LEVELS, displayName, levelInfo, recordLabel } from "@shared/types"
 import { api, type PlayerInput } from "@/lib/api"
 import { useApp, useSession } from "@/lib/app"
@@ -24,6 +24,12 @@ export function CheckInPage() {
       .filter((p) => !q || p.name.toLowerCase().includes(q))
       .sort((a, b) => b.level - a.level || a.name.localeCompare(b.name, "th"))
   }, [view.roster, term, inSession])
+
+  /** คนที่เก็บเข้ากรุไว้ — ซ่อนจากรายชื่อเช็คอิน แต่ต้องมีทางเอากลับมา */
+  const archived = useMemo(
+    () => view.roster.filter((p) => p.archived).sort((a, b) => a.name.localeCompare(b.name, "th")),
+    [view.roster],
+  )
 
   const checkedIn = view.session.players
     .filter((p) => p.status !== "left")
@@ -127,6 +133,34 @@ export function CheckInPage() {
         )}
       </section>
 
+      {/* คนที่เก็บเข้ากรุ — ไม่รกรายชื่อหลัก แต่กดเอากลับมาได้ตลอด */}
+      {archived.length > 0 ? (
+        <details className="card card-pad">
+          <summary className="cursor-pointer font-heading text-[13.5px] font-medium text-ink-soft">
+            คนที่เก็บเข้ากรุ ({archived.length})
+          </summary>
+          <p className="mt-1.5 text-[11.5px] text-ink-faint">
+            ไม่ขึ้นในรายชื่อเช็คอิน แต่ชื่อและสถิติเก่ายังอยู่ครบ — กดแก้ข้อมูลเพื่อเอากลับมา
+          </p>
+          <div className="mt-2.5 grid gap-1.5 sm:grid-cols-2">
+            {archived.map((p) => (
+              <div key={p.id} className="flex items-center gap-2.5 rounded-xl border border-line/70 px-2.5 py-2">
+                <PlayerAvatar player={p} size={28} />
+                <span className="min-w-0 flex-1 truncate font-heading text-[13.5px] text-ink-soft">
+                  {displayName(p)}
+                </span>
+                <LevelBadge level={p.level} />
+                {canControl ? (
+                  <button className="btn-quiet !px-1.5 !py-1" onClick={() => setEditing(p)} aria-label="แก้ข้อมูล">
+                    <Pencil size={14} />
+                  </button>
+                ) : null}
+              </div>
+            ))}
+          </div>
+        </details>
+      ) : null}
+
       {/* คนที่เช็คอินแล้ว */}
       <section className="flex flex-col gap-2">
         <h2 className="section-title">เช็คอินแล้ว ({checkedIn.length})</h2>
@@ -222,9 +256,22 @@ export function PlayerForm({
 
   const remove = async () => {
     if (!player) return
-    if (!window.confirm(`ลบ ${displayName(player)} ออกจากทะเบียน? สถิติเก่าของก๊วนที่ผ่านมาจะยังอยู่`)) return
+    // ลบได้เฉพาะคนที่ยังไม่เคยลงก๊วน (เซิร์ฟเวอร์เป็นคนกัน) คนที่เคยเล่นแล้วให้เก็บเข้ากรุ
+    if (!window.confirm(`ลบ ${displayName(player)} ออกจากทะเบียน? ใช้ได้เฉพาะคนที่ยังไม่เคยลงก๊วน`)) return
     setBusy(true)
     const reply = await run("ลบออกจากทะเบียนแล้ว", () => api.deletePlayer(player.id))
+    if (reply && "roster" in reply) setRoster(reply.roster)
+    setBusy(false)
+    onClose()
+  }
+
+  /** เก็บเข้ากรุ = หายจากรายชื่อเช็คอิน แต่ชื่อกับประวัติยังอยู่ครบ */
+  const setArchived = async (archived: boolean) => {
+    if (!player) return
+    setBusy(true)
+    const reply = await run(archived ? "เก็บเข้ากรุแล้ว" : "เอากลับมาแล้ว", () =>
+      api.updatePlayer(player.id, { archived }),
+    )
     if (reply && "roster" in reply) setRoster(reply.roster)
     setBusy(false)
     onClose()
@@ -239,10 +286,23 @@ export function PlayerForm({
       footer={
         <div className="flex items-center gap-2">
           {player ? (
-            <button className="btn-quiet !text-hinomaru" onClick={remove} disabled={busy}>
-              <Trash2 size={16} />
-              ลบ
-            </button>
+            player.archived ? (
+              <button className="btn-quiet" onClick={() => setArchived(false)} disabled={busy}>
+                <ArchiveRestore size={16} />
+                เอากลับมา
+              </button>
+            ) : (
+              <>
+                <button className="btn-quiet" onClick={() => setArchived(true)} disabled={busy}>
+                  <Archive size={16} />
+                  เก็บเข้ากรุ
+                </button>
+                <button className="btn-quiet !text-hinomaru" onClick={remove} disabled={busy}>
+                  <Trash2 size={16} />
+                  ลบ
+                </button>
+              </>
+            )
           ) : null}
           <div className="flex-1" />
           <button className="btn-quiet" onClick={onClose}>

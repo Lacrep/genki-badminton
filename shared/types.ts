@@ -72,6 +72,9 @@ export function levelSolid(level: number): string {
 export const MAX_LEVEL = LEVELS.length
 
 export function levelInfo(level: number): LevelInfo {
+  // ข้อมูลเพี้ยน (ไม่มีระดับมือ / ไม่ใช่ตัวเลข) ต้องไม่ทำให้ทั้งหน้าจอขาว
+  // คืนขั้นกลางไปก่อน แล้วให้หัวก๊วนแก้ระดับมือเอาเองได้
+  if (!Number.isFinite(level)) return LEVELS[2]
   return LEVELS[Math.min(MAX_LEVEL, Math.max(1, Math.round(level))) - 1]
 }
 
