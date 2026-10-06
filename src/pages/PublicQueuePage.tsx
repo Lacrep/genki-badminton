@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react"
-import { Clock, RefreshCw, UserCheck } from "lucide-react"
+import { CalendarClock, Clock, RefreshCw, UserCheck } from "lucide-react"
 import { type SessionView, displayName, formatDuration, levelInfo, thaiTime } from "@shared/types"
 import { api } from "@/lib/api"
 import { BrushDivider, EmptyState, Logo, Wordmark } from "@/components/ui"
@@ -85,6 +85,12 @@ export function PublicQueuePage({ code }: { code: string }) {
   }
 
   const myEntry = me ? view.queue.find((q) => q.player.id === me) : undefined
+  /**
+   * ถูกจัดไว้ในคู่ที่รอลงหรือยัง — ข้อมูลที่ลูกก๊วนอยากรู้ที่สุด
+   * สำคัญกว่าเลขคิวดิบ เพราะพอถูกจัดคู่แล้วคือรู้แน่ว่าได้ลงเกมไหน
+   */
+  const myPlanIndex = me ? view.planned.findIndex((pv) => pv.players.some((x) => x.player.id === me)) : -1
+  const myPlan = myPlanIndex >= 0 ? view.planned[myPlanIndex] : undefined
   const myPlaying = me ? view.courts.find((c) => c.players.some((p) => p.player.id === me)) : undefined
   const mySp = me ? view.session.players.find((p) => p.playerId === me) : undefined
   const myIndex = myEntry ? view.queue.findIndex((q) => q.player.id === me) : -1
@@ -128,6 +134,29 @@ export function PublicQueuePage({ code }: { code: string }) {
                 </p>
                 <p className="nums text-[13px] text-ink-soft">
                   เล่นมาแล้ว {formatDuration(now - (myPlaying.match?.startedAt ?? now))}
+                </p>
+              </>
+            ) : myPlan ? (
+              <>
+                <p className="font-heading text-[13px] text-ink-soft">คุณถูกจัดไว้แล้ว</p>
+                <p className="font-heading text-[30px] font-bold leading-tight text-navy dark:text-gold-soft">
+                  คู่ที่ {myPlanIndex + 1} ที่รอลง
+                </p>
+                <p className="text-[13.5px] leading-snug text-ink-soft">
+                  {myPlan.players
+                    .filter((x) => x.team === (myPlan.players.find((y) => y.player.id === me)?.team ?? "A"))
+                    .map((x) => displayName(x.player))
+                    .join(" + ")}
+                  <span className="mx-1.5 text-ink-faint">vs</span>
+                  {myPlan.players
+                    .filter((x) => x.team !== (myPlan.players.find((y) => y.player.id === me)?.team ?? "A"))
+                    .map((x) => displayName(x.player))
+                    .join(" + ")}
+                </p>
+                <p className="font-heading text-[14px] font-medium text-ink">
+                  {myPlan.ready
+                    ? "🏸 พร้อมลงแล้ว — รอคอร์ตว่าง เตรียมตัวไว้"
+                    : `รอ ${myPlan.waitingFor.join(", ")} จบเกมก่อน`}
                 </p>
               </>
             ) : myEntry ? (
@@ -209,6 +238,44 @@ export function PublicQueuePage({ code }: { code: string }) {
             ))}
           </div>
         </section>
+
+        {/* คู่ที่จัดรอไว้ — ลูกก๊วนจะได้เห็นว่าเกมถัดไปเป็นใครบ้าง */}
+        {view.planned.length > 0 ? (
+          <section className="flex flex-col gap-2">
+            <h2 className="section-title">
+              <CalendarClock size={14} className="text-gold-deep" />
+              คู่ที่รอลง ({view.planned.length})
+            </h2>
+            <div className="card divide-y divide-line/60">
+              {view.planned.map((pv, i) => {
+                const mine = pv.players.some((x) => x.player.id === me)
+                return (
+                  <div
+                    key={pv.planned.id}
+                    className={cn("flex items-start gap-2.5 px-3.5 py-2.5", mine && "bg-gold/[0.1]")}
+                  >
+                    <span className="nums flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-subtle font-heading text-[12.5px] font-semibold text-ink-soft">
+                      {i + 1}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-heading text-[13.5px] font-medium leading-snug text-ink">
+                        {pv.players.filter((x) => x.team === "A").map((x) => displayName(x.player)).join(" + ")}
+                        <span className="mx-1.5 text-ink-faint">vs</span>
+                        {pv.players.filter((x) => x.team === "B").map((x) => displayName(x.player)).join(" + ")}
+                      </span>
+                      <span className="block text-[11.5px] leading-snug text-ink-faint">
+                        {pv.ready ? "พร้อมลง รอคอร์ตว่าง" : `รอ ${pv.waitingFor.join(", ")} จบเกมก่อน`}
+                      </span>
+                    </span>
+                    {mine ? (
+                      <span className="chip shrink-0 bg-gold/25 text-gold-deep dark:text-gold-soft">คุณ</span>
+                    ) : null}
+                  </div>
+                )
+              })}
+            </div>
+          </section>
+        ) : null}
 
         {/* คิวทั้งหมด */}
         <section className="flex flex-col gap-2">

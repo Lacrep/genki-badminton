@@ -532,6 +532,8 @@ export function endSession(sessionId: string): Session {
     if (live.length > 0) throw new StoreError("ยังมีเกมค้างในคอร์ต — จบเกมให้ครบก่อนปิดก๊วน", 400)
     s.status = "ended"
     s.endAt = Date.now()
+    // คู่ที่จัดรอไว้แต่ไม่ได้ลง ไม่มีความหมายอีกแล้ว — ล้างทิ้ง ไม่งั้นเปิดก๊วนกลับมาเจอของค้างจากเมื่อวาน
+    s.planned = []
     for (const sp of s.players) {
       if (sp.status !== "left") {
         closeWait(sp, s.endAt)

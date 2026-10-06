@@ -75,7 +75,7 @@ for (const [name, level] of ROSTER) {
 
 console.log("▸ เปิดก๊วนและเช็คอินทุกคน")
 // ตั้งชื่อให้รู้ทันทีว่าเป็นของปลอม จะได้กดลบทิ้งถูกตัวตอนเริ่มใช้งานจริง
-const { view } = await post("/api/session", { name: "ก๊วนตัวอย่าง (ข้อมูลเดโม่ — ลบทิ้งได้)" })
+const { view } = await post("/api/session", { name: "ก๊วนตัวอย่าง (เดโม่)" })
 const sid = view.session.id
 await post(`/api/session/${sid}/checkin-many`, { playerIds: players.map((p) => p.id) })
 

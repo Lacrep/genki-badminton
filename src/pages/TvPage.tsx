@@ -1,6 +1,6 @@
 import { X } from "lucide-react"
 import { displayName, formatDuration, levelInfo, levelSolid, thaiTime } from "@shared/types"
-import type { CourtView, PlannedView, QueueEntry } from "@shared/types"
+import type { CourtView, PlannedView } from "@shared/types"
 import { useApp, useNow } from "@/lib/app"
 import { Logo } from "@/components/ui"
 import { cn } from "@/lib/util"
@@ -53,37 +53,20 @@ export function TvPage({ navigate }: { navigate: (to: string) => void }) {
           </div>
         </section>
 
-        {/* ── ขวา: คิวคู่ที่รอลง แล้วตามด้วยคนที่รออยู่ ── */}
-        <section className="flex min-h-0 flex-col gap-4">
-          <div className="flex min-h-0 flex-[3] flex-col">
-            <TvHeading>คู่ต่อไปที่รอลง ({view.planned.length})</TvHeading>
-            <div className="min-h-0 flex-1 space-y-2 overflow-hidden">
-              {view.planned.length === 0 ? (
-                <EmptyPanel>ยังไม่มีคู่ที่จัดรอไว้</EmptyPanel>
-              ) : (
-                view.planned.slice(0, 3).map((pv, i) => <PlannedPanel key={pv.planned.id} pv={pv} order={i + 1} />)
-              )}
-              {view.planned.length > 3 ? (
-                <p className="pt-0.5 text-center font-heading text-[13px] text-sand/55">
-                  + อีก {view.planned.length - 3} คู่ที่จัดรอไว้
-                </p>
-              ) : null}
-            </div>
-          </div>
-
-          <div className="flex min-h-0 flex-[2] flex-col">
-            <TvHeading>คิวรอ ({view.queue.length})</TvHeading>
-            <div className="min-h-0 flex-1 overflow-hidden">
-              {view.queue.length === 0 ? (
-                <EmptyPanel>ไม่มีใครรอคิว</EmptyPanel>
-              ) : (
-                <div className="grid grid-cols-2 gap-2">
-                  {view.queue.slice(0, 8).map((q, i) => (
-                    <QueueChip key={q.player.id} q={q} order={i + 1} now={now} />
-                  ))}
-                </div>
-              )}
-            </div>
+        {/* ── ขวา: คู่ที่รอลง (ไม่เอาคิวรายคนแล้ว จอจะได้ไม่รก) ── */}
+        <section className="flex min-h-0 flex-col">
+          <TvHeading>คู่ต่อไปที่รอลง ({view.planned.length})</TvHeading>
+          <div className="min-h-0 flex-1 space-y-2.5 overflow-hidden">
+            {view.planned.length === 0 ? (
+              <EmptyPanel>ยังไม่มีคู่ที่จัดรอไว้</EmptyPanel>
+            ) : (
+              view.planned.slice(0, 6).map((pv, i) => <PlannedPanel key={pv.planned.id} pv={pv} order={i + 1} />)
+            )}
+            {view.planned.length > 6 ? (
+              <p className="pt-0.5 text-center font-heading text-[14px] text-sand/55">
+                + อีก {view.planned.length - 6} คู่ที่จัดรอไว้
+              </p>
+            ) : null}
           </div>
         </section>
       </div>
@@ -252,30 +235,6 @@ function PlannedPanel({ pv, order }: { pv: PlannedView; order: number }) {
           </div>
         ))}
       </div>
-    </div>
-  )
-}
-
-function QueueChip({ q, order, now }: { q: QueueEntry; order: number; now: number }) {
-  const wait = q.sp.queueSince ? Math.max(0, now - q.sp.queueSince) : q.waitMs
-  return (
-    <div
-      className={cn(
-        "rounded-xl border px-3 py-2",
-        q.tier === "dong"
-          ? "animate-dong-pulse border-hinomaru bg-hinomaru/25"
-          : q.tier === "warn"
-            ? "border-gold/70 bg-gold/15"
-            : "border-sand/20 bg-navy-deep/45",
-      )}
-    >
-      <div className="flex items-center gap-2">
-        <span className="nums shrink-0 font-heading text-[13px] font-bold text-gold-soft">{order}</span>
-        <PlayerTag name={displayName(q.player)} level={q.player.level} size="md" />
-      </div>
-      <p className="nums mt-0.5 pl-6 text-[13px] text-sand/70">
-        รอ {formatDuration(wait)} · ลงไป {q.sp.gamesPlayed} เกม
-      </p>
     </div>
   )
 }

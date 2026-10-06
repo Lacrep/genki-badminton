@@ -189,6 +189,17 @@ describe("เกมในคิวที่คนยังเล่นอยู�
   })
 })
 
+describe("ปิดก๊วน", () => {
+  it("คู่ที่จัดรอไว้แต่ไม่ได้ลง ถูกล้างทิ้งตอนปิดก๊วน", async () => {
+    const { store, sessionId, ids } = await setup()
+    store.planMatch(sessionId, { type: "D", teamA: [ids[0]!, ids[1]!], teamB: [ids[2]!, ids[3]!] })
+    expect(store.getSession(sessionId).planned).toHaveLength(1)
+
+    store.endSession(sessionId)
+    expect(store.getSession(sessionId).planned).toHaveLength(0)
+  })
+})
+
 describe("ลบก๊วนทิ้ง", () => {
   it("ก๊วนที่ยังเปิดอยู่ลบไม่ได้ ต้องปิดก่อน", async () => {
     const { store, sessionId } = await setup()

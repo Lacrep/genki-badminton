@@ -185,12 +185,13 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
                     {i + 1}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-heading text-[13.5px] font-medium text-ink">
+                    {/* ปล่อยให้ตกบรรทัด — ชื่อสี่คนยาวเกินจอมือถือ ถ้า truncate จะไม่รู้ว่าใครอยู่ในคู่ */}
+                    <p className="font-heading text-[13.5px] font-medium leading-snug text-ink">
                       {pv.players.filter((x) => x.team === "A").map((x) => displayName(x.player)).join(" + ")}
                       <span className="mx-1.5 text-ink-faint">vs</span>
                       {pv.players.filter((x) => x.team === "B").map((x) => displayName(x.player)).join(" + ")}
                     </p>
-                    <p className="truncate text-[11.5px] text-ink-faint">
+                    <p className="text-[11.5px] leading-snug text-ink-faint">
                       {pv.problems.length > 0 ? (
                         <span className="text-hinomaru-deep dark:text-hinomaru-soft">{pv.problems.join(" · ")}</span>
                       ) : pv.waitingFor.length > 0 ? (
