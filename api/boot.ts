@@ -483,7 +483,8 @@ app.get("/api/session/:id/matches.csv", (c) => {
     return p ? displayName(p) : pid
   }
   const rows = [
-    ["court", "type", "start", "end", "minutes", "teamA", "teamB", "score", "winner", "shuttles", "levelGap"],
+    // หัวตารางภาษาไทย — เปิดใน Excel แล้วอ่านรู้เรื่องเลย ไม่ต้องเดาว่าคอลัมน์ไหนคืออะไร
+    ["คอร์ต", "ประเภท", "เริ่ม", "จบ", "นาที", "ฝั่ง A", "ฝั่ง B", "สกอร์", "ผล", "ลูกที่ใช้", "ห่างระดับมือ"],
     ...session.matches.map((m) => [
       session.courts[m.courtIndex]?.name ?? `คอร์ต ${m.courtIndex + 1}`,
       m.type,
@@ -493,20 +494,21 @@ app.get("/api/session/:id/matches.csv", (c) => {
       m.teamA.map(nameOf).join(" + "),
       m.teamB.map(nameOf).join(" + "),
       scoreLabel(m),
-      m.winner === "draw" ? "เสมอ" : (m.winner ?? ""),
+      m.winner === "draw" ? "เสมอ" : m.winner ? `ฝั่ง ${m.winner} ชนะ` : "",
       String(m.shuttles),
       String(m.levelGap),
     ]),
   ]
-  const csv = "﻿" + rows.map((r) => r.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n")
+  const csv = "\ufeff" + rows.map((r) => r.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n")
+  // ชื่อไฟล์ไทยต้องส่งแบบ RFC 5987 คู่กับชื่อ ascii เหมือนไฟล์ Excel
+  const csvName = `รายเกมเกงกิเดสซ์-${session.date}.csv`
   return new Response(csv, {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
-      "Content-Disposition": `attachment; filename="genki-${session.date}.csv"`,
+      "Content-Disposition": `attachment; filename="genki-matches-${session.date}.csv"; filename*=UTF-8''${encodeURIComponent(csvName)}`,
       "Cache-Control": "no-store",
     },
-  })
-})
+  })})
 
 app.get("/api/session/:id/bill.xlsx", (c) => {
   const session = getSession(c.req.param("id"))
