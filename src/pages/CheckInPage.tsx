@@ -284,20 +284,20 @@ export function PlayerForm({
       title={player ? `แก้ข้อมูล ${displayName(player)}` : "เพิ่มผู้เล่นใหม่"}
       subtitle="ใช้ชื่อที่เรียกกันในก๊วนได้เลย ไม่ต้องเป็นชื่อจริง"
       footer={
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 whitespace-nowrap">
           {player ? (
             player.archived ? (
-              <button className="btn-quiet" onClick={() => setArchived(false)} disabled={busy}>
+              <button className="btn-quiet !px-2" onClick={() => setArchived(false)} disabled={busy}>
                 <ArchiveRestore size={16} />
                 เอากลับมา
               </button>
             ) : (
               <>
-                <button className="btn-quiet" onClick={() => setArchived(true)} disabled={busy}>
+                <button className="btn-quiet !px-2" onClick={() => setArchived(true)} disabled={busy}>
                   <Archive size={16} />
                   เก็บเข้ากรุ
                 </button>
-                <button className="btn-quiet !text-hinomaru" onClick={remove} disabled={busy}>
+                <button className="btn-quiet !px-2 !text-hinomaru" onClick={remove} disabled={busy}>
                   <Trash2 size={16} />
                   ลบ
                 </button>
@@ -305,7 +305,7 @@ export function PlayerForm({
             )
           ) : null}
           <div className="flex-1" />
-          <button className="btn-quiet" onClick={onClose}>
+          <button className="btn-quiet !px-2" onClick={onClose}>
             ยกเลิก
           </button>
           <button className="btn-primary" onClick={save} disabled={busy || !name.trim()}>
