@@ -118,6 +118,13 @@ export interface SessionPlayer {
   boost: number
   paid: boolean
   paidAt?: number
+  /**
+   * ยกเว้นค่าสนามให้คนนี้ — จ่ายแต่ค่าลูก (กับค่าอื่น ๆ)
+   *
+   * หัวก๊วนที่ลงไปตีเองมักไม่เก็บค่าสนามตัวเอง เพราะเป็นคนออกค่าสนามให้ก๊วนอยู่แล้ว
+   * ยอดที่หายไปจะไปโผล่ที่ "เหลือเข้าก๊วน/ขาดอยู่" ไม่ได้ไปบวกเพิ่มให้คนอื่น
+   */
+  noCourtFee?: boolean
 }
 
 // ── คอร์ตและเกม ───────────────────────────────────────────────────────────────
@@ -278,6 +285,7 @@ export interface SessionEvent {
     | "plan.remove"
     | "plan.move"
     | "pay"
+    | "fee"
     | "undo"
   text: string
   /** ข้อมูลพอให้ย้อน (undo) การกระทำล่าสุดได้ */
@@ -360,6 +368,8 @@ export interface BillLine {
   /** ยอดที่ต้องจ่าย (ปัดเศษแล้ว) */
   amount: number
   paid: boolean
+  /** ยกเว้นค่าสนามให้คนนี้ — จ่ายแต่ค่าลูก */
+  noCourtFee: boolean
 }
 
 export interface Bill {

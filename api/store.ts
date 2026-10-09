@@ -683,6 +683,24 @@ export function setBoost(sessionId: string, playerId: string, boost: number): Se
   }).session
 }
 
+/** ยกเว้น/คิดค่าสนามรายคน — หัวก๊วนที่ลงไปตีเองมักจ่ายแค่ค่าลูก */
+export function setNoCourtFee(sessionId: string, playerId: string, noCourtFee: boolean): Session {
+  return mutate(sessionId, (s) => {
+    const sp = s.players.find((p) => p.playerId === playerId)
+    if (!sp) throw new StoreError("คนนี้ยังไม่ได้เช็คอิน", 404)
+    if (noCourtFee) sp.noCourtFee = true
+    else delete sp.noCourtFee
+    const name = rosterMap().get(playerId)
+    s.events.push(
+      event(
+        "fee",
+        `${name ? displayName(name) : playerId} ${noCourtFee ? "ยกเว้นค่าสนาม" : "กลับมาคิดค่าสนาม"}`,
+        { playerId },
+      ),
+    )
+  }).session
+}
+
 export function setPaid(sessionId: string, playerId: string, paid: boolean): Session {
   return mutate(sessionId, (s) => {
     const sp = s.players.find((p) => p.playerId === playerId)
@@ -1044,7 +1062,9 @@ export function computeBill(session: Session, roster: Map<string, RosterPlayer>)
   const lines: BillLine[] = people.map((sp) => {
     const player = roster.get(sp.playerId)
     // หารเท่า: เอาต้นทุนทั้งก้อนหารจำนวนคน — ช่องค่าอื่น ๆ ถูกบวกแยกด้านล่างอยู่แล้ว
-    const courtPart = fees.mode === "club" ? fees.courtFeePerHead : fees.courtCost / n
+    const fullCourt = fees.mode === "club" ? fees.courtFeePerHead : fees.courtCost / n
+    // ยกเว้นค่าสนามรายคน (หัวก๊วนที่ลงไปตีเอง) — เก็บแต่ค่าลูก ส่วนที่หายไปไม่ผลักให้คนอื่น
+    const courtPart = sp.noCourtFee ? 0 : fullCourt
     const shuttlePart = fees.mode === "club" ? (shuttleShare.get(sp.playerId) ?? 0) : shuttleCost / n
 
     return {
@@ -1056,6 +1076,7 @@ export function computeBill(session: Session, roster: Map<string, RosterPlayer>)
       extraPart: round2(extraPerHead),
       amount: roundUpTo(courtPart + shuttlePart + extraPerHead, fees.roundTo),
       paid: sp.paid,
+      noCourtFee: sp.noCourtFee === true,
     }
   })
 

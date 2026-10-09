@@ -41,6 +41,7 @@ import {
   rosterMap,
   setBoost,
   setCourtCount,
+  setNoCourtFee,
   setPaid,
   setRest,
   startMatch,
@@ -305,6 +306,13 @@ app.post("/api/session/:id/boost", async (c) => {
 app.post("/api/session/:id/paid", async (c) => {
   const { playerId, paid } = await body(c, playerIdSchema.extend({ paid: z.boolean() }))
   const session = setPaid(c.req.param("id"), playerId, paid)
+  return c.json(view(session.id))
+})
+
+/** ยกเว้นค่าสนามรายคน — หัวก๊วนที่ลงไปตีเองจ่ายแค่ค่าลูก */
+app.post("/api/session/:id/court-fee", async (c) => {
+  const { playerId, noCourtFee } = await body(c, playerIdSchema.extend({ noCourtFee: z.boolean() }))
+  const session = setNoCourtFee(c.req.param("id"), playerId, noCourtFee)
   return c.json(view(session.id))
 })
 

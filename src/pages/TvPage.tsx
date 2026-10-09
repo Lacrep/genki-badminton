@@ -1,6 +1,6 @@
 import { X } from "lucide-react"
 import { displayName, formatDuration, levelInfo, levelSolid, thaiTime } from "@shared/types"
-import type { CourtView, PlannedView } from "@shared/types"
+import type { CourtView, PlannedView, RosterPlayer } from "@shared/types"
 import { useApp, useNow } from "@/lib/app"
 import { Logo } from "@/components/ui"
 import { cn } from "@/lib/util"
@@ -34,6 +34,25 @@ export function TvPage({ navigate }: { navigate: (to: string) => void }) {
   const courts = view.courts.filter((c) => !c.court.disabled)
 
   /**
+   * เลือกจำนวนคอลัมน์ให้เหลือแถวน้อยที่สุด — 5 คอร์ตต้องเป็น 3 คอลัมน์ 2 แถว
+   * ถ้าปล่อยเป็น 2 คอลัมน์ จะกลายเป็น 3 แถว แล้วคอร์ตสุดท้ายโดนขอบจอตัดหัวท้าย
+   * (จอก๊วนจริงมี 5 คอร์ต เจอปัญหานี้เต็ม ๆ) ยิ่งแน่นยิ่งต้องย่อตัวอักษรลง
+   * ไม่งั้นเนื้อในล้นออกนอกการ์ด
+   */
+  const cols = courts.length <= 2 ? 1 : courts.length <= 4 ? 2 : courts.length <= 9 ? 3 : 4
+  const density: Density = { rows: Math.ceil(courts.length / cols) || 1, cols }
+  /**
+   * แถวสุดท้ายมักมีคอร์ตไม่ครบ (5 คอร์ต 3 คอลัมน์ → แถวล่างเหลือ 2 ใบ)
+   * ถ้าปล่อยไว้จะมีช่องว่างโหว่ข้างขวา เลยยืดใบที่เหลือให้เต็มแถวแทน
+   * ใช้ตาราง 12 ช่องเพราะหารด้วย 1·2·3·4·6 ลงตัวหมด
+   */
+  const remainder = courts.length % cols
+  const lastRow = remainder === 0 ? cols : remainder
+  // ฝั่งคู่ที่รอลงมีงบความสูงของตัวเอง — โชว์กี่ใบก็หารความสูงตามจำนวนนั้น
+  const shown = Math.min(view.planned.length, 6)
+  const plannedDensity: Density = { rows: Math.max(3, shown * 0.8 + 1), cols: 1 }
+
+  /**
    * คอร์ตว่างใบแรกได้คู่ที่พร้อมคู่แรก ใบถัดไปได้คู่ถัดไป — ตรงกับหน้าคุมเกม
    * ถ้าไม่โชว์ คนดูจะเห็นคอร์ตว่างพร้อมคู่ที่พร้อมลง แล้วงงว่าทำไมยังไม่มีใครลง
    */
@@ -55,23 +74,28 @@ export function TvPage({ navigate }: { navigate: (to: string) => void }) {
     <div className="flex h-dvh flex-col overflow-hidden bg-navy-deep px-6 py-4 text-sand">
       <TvHeader view={view} now={now} onExit={() => navigate("/")} />
 
-      <div className="grid min-h-0 flex-1 gap-5 lg:grid-cols-[1.55fr_1fr]">
+      <div
+        className={cn(
+          "grid min-h-0 flex-1 gap-5",
+          courts.length >= 5 ? "lg:grid-cols-[2.1fr_1fr]" : "lg:grid-cols-[1.55fr_1fr]",
+        )}
+      >
         {/* ── ซ้าย: คอร์ตที่กำลังเล่น ── */}
         <section className="flex min-h-0 flex-col">
           <TvHeading>คอร์ต</TvHeading>
           <div
-            className={cn(
-              "grid min-h-0 flex-1 auto-rows-fr gap-4",
-              courts.length <= 2 ? "grid-cols-1" : courts.length <= 6 ? "grid-cols-2" : "grid-cols-3",
-            )}
+            className="grid min-h-0 flex-1 auto-rows-fr"
+            style={{ gridTemplateColumns: "repeat(12, minmax(0, 1fr))", gap: sizes(density).gap }}
           >
-            {courts.map((cv) => (
+            {courts.map((cv, i) => (
               <CourtPanel
                 key={cv.court.index}
+                span={i >= courts.length - lastRow ? 12 / lastRow : 12 / cols}
                 cv={cv}
                 now={now}
                 targetMinutes={view.session.settings.targetGameMinutes}
                 nextUp={planForCourt.get(cv.court.index) ?? null}
+                density={density}
               />
             ))}
           </div>
@@ -92,6 +116,7 @@ export function TvPage({ navigate }: { navigate: (to: string) => void }) {
                     pv={pv}
                     order={i + 1}
                     courtName={courtForPlan.get(pv.planned.id) ?? null}
+                    density={plannedDensity}
                   />
                 ))
             )}
@@ -132,24 +157,51 @@ function EmptyPanel({ children }: { children: React.ReactNode }) {
   )
 }
 
+/**
+ * ขนาดตัวอักษรบนจอใหญ่คิดจาก "ความสูงที่การ์ดหนึ่งใบได้จริง" ไม่ใช่ค่าตายตัว
+ *
+ * ก๊วนมีตั้งแต่ 2 ถึง 8 คอร์ต และทีวีก็มีหลายขนาด ถ้าใช้ค่าตายตัว คอร์ตเยอะ ๆ
+ * จะล้นออกนอกการ์ดจนโดนขอบจอตัด (ก๊วน 5 คอร์ตเจอเต็ม ๆ) ส่วนคอร์ตน้อย ๆ
+ * จะเหลือที่ว่างครึ่งจอเปล่า ๆ สูตรนี้โตและหดตามจำนวนแถวกับความสูงจอเอง
+ */
+type Density = { rows: number; cols: number }
+
+/** ความสูงที่เหลือให้ตารางคอร์ต หลังหักหัวจอกับหัวข้อออกแล้ว */
+const GRID_SPACE = "(100dvh - 148px)"
+
+/** ขนาดที่ยืดหยุ่นตามความสูงต่อหนึ่งแถว — บีบไว้ไม่ให้เล็กเกินอ่านหรือใหญ่เกินการ์ด */
+function fluid(d: Density, factor: number, min: number, max: number): string {
+  return `clamp(${min}px, calc(${GRID_SPACE} / ${d.rows} * ${factor}), ${max}px)`
+}
+
+const sizes = (d: Density) => ({
+  name: fluid(d, 0.082, 15, 30),
+  code: fluid(d, 0.042, 9, 15),
+  dot: fluid(d, 0.038, 8, 14),
+  head: fluid(d, 0.07, 14, 24),
+  clock: fluid(d, 0.09, 17, 32),
+  vs: fluid(d, 0.042, 10, 15),
+  pad: fluid(d, 0.045, 10, 16),
+  rowY: fluid(d, 0.03, 5, 11),
+  gap: fluid(d, 0.025, 4, 9),
+})
+
 /** ชื่อ + ป้ายระดับมือ — หน่วยที่ใช้ซ้ำทั้งจอ ให้ขนาดตัวอักษรสั่งจากข้างนอกได้ */
-function PlayerTag({ name, level, size }: { name: string; level: number; size: "lg" | "md" }) {
+function PlayerTag({ name, level, size }: { name: string; level: number; size: Density }) {
+  const s = sizes(size)
   return (
-    <span className="flex min-w-0 items-center gap-2">
+    <span className="flex min-w-0 items-center" style={{ gap: s.gap }}>
       <span
-        className="inline-block h-3 w-3 shrink-0 rounded-full ring-1 ring-white/25"
-        style={{ backgroundColor: levelSolid(level) }}
+        className="inline-block shrink-0 rounded-full ring-1 ring-white/25"
+        style={{ backgroundColor: levelSolid(level), width: s.dot, height: s.dot }}
         aria-hidden
       />
-      <span className={cn("truncate font-heading font-semibold text-white", size === "lg" ? "text-[26px]" : "text-[18px]")}>
+      <span className="truncate font-heading font-semibold leading-tight text-white" style={{ fontSize: s.name }}>
         {name}
       </span>
       <span
-        className={cn(
-          "shrink-0 rounded-md px-1.5 py-0.5 font-heading font-bold text-white/95",
-          size === "lg" ? "text-[13px]" : "text-[11px]",
-        )}
-        style={{ backgroundColor: levelSolid(level) }}
+        className="shrink-0 rounded-md px-1.5 py-0.5 font-heading font-bold leading-tight text-white/95"
+        style={{ backgroundColor: levelSolid(level), fontSize: s.code }}
       >
         {levelInfo(level).code}
       </span>
@@ -162,89 +214,109 @@ function CourtPanel({
   now,
   targetMinutes,
   nextUp,
+  density,
+  span,
 }: {
   cv: CourtView
   now: number
   targetMinutes: number
   /** คู่ที่พร้อมลงคอร์ตนี้เป็นคิวถัดไป — โชว์ไว้เลยให้คนเตรียมตัวได้ก่อนถูกเรียก */
   nextUp: { order: number; pv: PlannedView } | null
+  density: Density
+  /** กินกี่ช่องจากตาราง 12 ช่อง — แถวสุดท้ายที่ไม่เต็มจะกินช่องละมากกว่าปกติ */
+  span: number
 }) {
   const elapsed = cv.match ? now - cv.match.startedAt : 0
   const over = elapsed > targetMinutes * 60_000
+  const s = sizes(density)
+
+  /** ฝั่ง A / ฝั่ง B — ยืดเต็มความสูงที่เหลือ ไม่ปล่อยที่ว่างคาการ์ด */
+  const side = (team: "A" | "B", players: { player: RosterPlayer; team: "A" | "B" }[]) => (
+    <div
+      className={cn(
+        "flex min-h-0 min-w-0 flex-1 items-center rounded-xl bg-navy-deep/65 px-2.5",
+        team === "A" ? "" : "",
+      )}
+      style={{ paddingTop: s.rowY, paddingBottom: s.rowY, gap: s.pad }}
+    >
+      <span
+        className={cn(
+          "flex shrink-0 items-center justify-center rounded-lg font-heading font-bold leading-none",
+          team === "A" ? "bg-sand text-navy-deep" : "bg-hinomaru text-white",
+        )}
+        style={{ width: `calc(${s.name} * 1.15)`, height: `calc(${s.name} * 1.15)`, fontSize: s.code }}
+      >
+        {team}
+      </span>
+      <span className="flex min-w-0 flex-1 flex-col justify-center" style={{ gap: s.gap }}>
+        {players
+          .filter((x) => x.team === team)
+          .map((x) => <PlayerTag key={x.player.id} name={displayName(x.player)} level={x.player.level} size={density} />)}
+      </span>
+    </div>
+  )
+
+  const vs = (
+    <p
+      className="shrink-0 text-center font-heading font-bold leading-none tracking-widest text-sand/40"
+      style={{ fontSize: s.vs }}
+    >
+      VS
+    </p>
+  )
 
   return (
     <div
       className={cn(
-        "flex min-h-0 flex-col rounded-2xl border-2 p-4",
+        "flex min-h-0 flex-col overflow-hidden rounded-2xl border-2",
         cv.match ? "border-sand/25 bg-navy/55" : "border-dashed border-gold/45 bg-navy/20",
       )}
+      style={{ padding: s.pad, gap: s.gap, gridColumn: `span ${span} / span ${span}` }}
     >
-      <div className="mb-3 flex shrink-0 items-baseline gap-3">
-        <h3 className="flex-1 truncate font-heading text-[22px] font-bold text-white">{cv.court.name}</h3>
+      <div className="flex shrink-0 items-baseline gap-3">
+        <h3 className="flex-1 truncate font-heading font-bold text-white" style={{ fontSize: s.head }}>
+          {cv.court.name}
+        </h3>
         {cv.match ? (
           <span
-            className={cn(
-              "nums font-heading text-[30px] font-bold leading-none",
-              over ? "text-hinomaru-soft" : "text-gold-soft",
-            )}
+            className={cn("nums font-heading font-bold leading-none", over ? "text-hinomaru-soft" : "text-gold-soft")}
+            style={{ fontSize: s.clock }}
           >
             {formatDuration(elapsed)}
           </span>
         ) : (
-          <span className="rounded-lg bg-gold/20 px-2.5 py-1 font-heading text-[17px] font-bold text-gold-soft">ว่าง</span>
+          <span
+            className="shrink-0 rounded-lg bg-gold/20 px-2 py-0.5 font-heading font-bold text-gold-soft"
+            style={{ fontSize: s.vs }}
+          >
+            ว่าง
+          </span>
         )}
       </div>
 
       {cv.match ? (
-        <div className="flex min-h-0 flex-1 flex-col justify-center gap-2">
-          {(["A", "B"] as const).map((team, i) => (
-            <div key={team}>
-              {i === 1 ? (
-                <p className="my-1 text-center font-heading text-[14px] font-bold tracking-widest text-sand/40">VS</p>
-              ) : null}
-              <div className="flex items-center gap-3 rounded-xl bg-navy-deep/65 px-3 py-2.5">
-                <span
-                  className={cn(
-                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg font-heading text-[16px] font-bold",
-                    team === "A" ? "bg-sand text-navy-deep" : "bg-hinomaru text-white",
-                  )}
-                >
-                  {team}
-                </span>
-                <span className="flex min-w-0 flex-1 flex-col gap-1">
-                  {cv.players
-                    .filter((p) => p.team === team)
-                    .map((p) => (
-                      <PlayerTag key={p.player.id} name={displayName(p.player)} level={p.player.level} size="lg" />
-                    ))}
-                </span>
-              </div>
-            </div>
-          ))}
+        <div className="flex min-h-0 flex-1 flex-col" style={{ gap: s.gap }}>
+          {side("A", cv.players)}
+          {vs}
+          {side("B", cv.players)}
         </div>
       ) : nextUp ? (
-        <div className="flex min-h-0 flex-1 flex-col justify-center gap-2">
-          <p className="text-center font-heading text-[16px] font-bold uppercase tracking-[0.14em] text-gold-soft">
+        <div className="flex min-h-0 flex-1 flex-col" style={{ gap: s.gap }}>
+          <p
+            className="shrink-0 text-center font-heading font-bold uppercase leading-none tracking-[0.14em] text-gold-soft"
+            style={{ fontSize: s.vs }}
+          >
             คู่ที่ {nextUp.order} · เตรียมลง
           </p>
-          {(["A", "B"] as const).map((team, i) => (
-            <div key={team}>
-              {i === 1 ? (
-                <p className="my-1 text-center font-heading text-[14px] font-bold tracking-widest text-sand/40">VS</p>
-              ) : null}
-              <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 rounded-xl bg-navy-deep/45 px-3 py-2.5">
-                {nextUp.pv.players
-                  .filter((p) => p.team === team)
-                  .map((p) => (
-                    <PlayerTag key={p.player.id} name={displayName(p.player)} level={p.player.level} size="lg" />
-                  ))}
-              </div>
-            </div>
-          ))}
+          {side("A", nextUp.pv.players)}
+          {vs}
+          {side("B", nextUp.pv.players)}
         </div>
       ) : (
         <div className="flex flex-1 items-center justify-center">
-          <p className="text-center font-heading text-[17px] text-sand/50">รอหัวก๊วนจัดคนลง</p>
+          <p className="text-center font-heading text-sand/50" style={{ fontSize: s.head }}>
+            รอหัวก๊วนจัดคนลง
+          </p>
         </div>
       )}
     </div>
@@ -255,7 +327,18 @@ function CourtPanel({
  * การ์ดคู่ที่รอลง — บีบให้เตี้ย (ฝั่งละบรรทัด) เพราะจอ 768px สูงไม่พอ
  * ถ้าการ์ดสูง จะโดนตัดครึ่งคาตา ซึ่งอ่านแล้วงงกว่าไม่โชว์เลย
  */
-function PlannedPanel({ pv, order, courtName }: { pv: PlannedView; order: number; courtName: string | null }) {
+function PlannedPanel({
+  pv,
+  order,
+  courtName,
+  density,
+}: {
+  pv: PlannedView
+  order: number
+  courtName: string | null
+  density: Density
+}) {
+  const s = sizes(density)
   const side = (team: "A" | "B") => pv.players.filter((p) => p.team === team)
   const status =
     pv.problems.length > 0
@@ -294,11 +377,16 @@ function PlannedPanel({ pv, order, courtName }: { pv: PlannedView; order: number
         {(["A", "B"] as const).map((team, i) => (
           <div key={team}>
             {i === 1 ? (
-              <p className="py-0.5 font-heading text-[10.5px] font-bold tracking-[0.2em] text-sand/35">VS</p>
+              <p
+                className="py-0.5 font-heading font-bold leading-none tracking-[0.2em] text-sand/35"
+                style={{ fontSize: s.vs }}
+              >
+                VS
+              </p>
             ) : null}
             <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5">
               {side(team).map((p) => (
-                <PlayerTag key={p.player.id} name={displayName(p.player)} level={p.player.level} size="md" />
+                <PlayerTag key={p.player.id} name={displayName(p.player)} level={p.player.level} size={density} />
               ))}
             </div>
           </div>

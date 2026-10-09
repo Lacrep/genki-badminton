@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Check, ClipboardList, Download, FileSpreadsheet, QrCode, Receipt, Volleyball, Wallet } from "lucide-react"
+import { Ban, Check, ClipboardList, Download, FileSpreadsheet, QrCode, Receipt, Volleyball, Wallet } from "lucide-react"
 import { type BillLine, type FeeMode, FEE_MODE_LABEL, displayName, thaiTime } from "@shared/types"
 import { CLUB } from "@shared/club"
 import { api } from "@/lib/api"
@@ -14,7 +14,7 @@ const nz = (v: number | undefined | null): number => (typeof v === "number" && N
 
 /** ที่มาของยอดคนนี้ แยกเป็นก้อน ๆ */
 function feeBreakdown(line: BillLine, long = false): string {
-  const parts = [`${long ? "ค่าสนาม" : "สนาม"} ${baht(nz(line.courtPart))}`]
+  const parts = [line.noCourtFee ? "ยกเว้นค่าสนาม" : `${long ? "ค่าสนาม" : "สนาม"} ${baht(nz(line.courtPart))}`]
   if (nz(line.shuttlePart) > 0) parts.push(`${long ? "ค่าลูก" : "ลูก"} ${baht(nz(line.shuttlePart))}`)
   if (nz(line.extraPart) > 0) parts.push(`${long ? "อื่น ๆ" : "อื่น"} ${baht(nz(line.extraPart))}`)
   return parts.join(" + ")
@@ -61,6 +61,13 @@ export function BillPage() {
   const missingShuttles = playedMatches.filter((m) => m.shuttles === 0).length
   const setPaid = (playerId: string, paid: boolean) =>
     run(paid ? "รับเงินแล้ว" : "ยกเลิกการจ่าย", () => api.paid(sessionId, playerId, paid), { silent: true })
+  const waived = bill.lines.filter((l) => l.noCourtFee).length
+  const payingCourt = bill.lines.length - waived
+  /** หัวก๊วนที่ลงไปตีเองมักไม่เก็บค่าสนามตัวเอง — เก็บแต่ค่าลูก */
+  const setCourtFee = (playerId: string, noCourtFee: boolean) =>
+    run(noCourtFee ? "ยกเว้นค่าสนามให้แล้ว" : "กลับมาคิดค่าสนามแล้ว", () =>
+      api.courtFee(sessionId, playerId, noCourtFee),
+    )
 
   return (
     <div className="flex flex-col gap-4">
@@ -265,7 +272,10 @@ export function BillPage() {
           <Receipt size={15} className="text-gold-deep" />
           คนละเท่าไร ({bill.lines.length} คน)
         </h2>
-        <p className="mb-3 text-[11.5px] text-ink-faint">แตะที่ชื่อเพื่อเปิด QR พร้อมยอดของคนนั้น</p>
+        <p className="mb-3 text-[11.5px] leading-snug text-ink-faint">
+          แตะที่ชื่อเพื่อเปิด QR พร้อมยอดของคนนั้น · ปุ่ม <Ban size={11} className="inline -mt-0.5" /> คือ
+          ไม่คิดค่าสนามคนนั้น (เก็บแต่ค่าลูก) สำหรับหัวก๊วนที่ลงไปตีเอง
+        </p>
 
         <div className="flex flex-col">
           {bill.lines.map((l) => {
@@ -297,6 +307,22 @@ export function BillPage() {
                 <button
                   type="button"
                   disabled={!canControl}
+                  onClick={() => void setCourtFee(l.playerId, !l.noCourtFee)}
+                  className={cn(
+                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-all",
+                    l.noCourtFee
+                      ? "border-navy bg-navy text-sand dark:border-gold-soft dark:bg-navy-soft dark:text-gold-soft"
+                      : "border-line bg-surface text-ink-faint hover:bg-subtle",
+                  )}
+                  title={l.noCourtFee ? "ยกเว้นค่าสนามอยู่ — กดเพื่อกลับมาคิด" : "ไม่คิดค่าสนามคนนี้ (เก็บแต่ค่าลูก)"}
+                  aria-label={l.noCourtFee ? "ยกเว้นค่าสนามอยู่" : "ไม่คิดค่าสนามคนนี้"}
+                  aria-pressed={l.noCourtFee}
+                >
+                  <Ban size={15} />
+                </button>
+                <button
+                  type="button"
+                  disabled={!canControl}
                   onClick={() => void setPaid(l.playerId, !l.paid)}
                   className={cn(
                     "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-all",
@@ -317,9 +343,12 @@ export function BillPage() {
         <div className="mt-3 flex flex-col gap-1 border-t border-line pt-3 text-[13px]">
           {fees.mode === "club" ? (
             <>
+              {/* นับเฉพาะคนที่คิดค่าสนามจริง — มีคนถูกยกเว้น ยอดบรรทัดนี้ต้องลดตาม */}
               <Row
-                label={`ค่าสนาม ${baht(fees.courtFeePerHead)} × ${bill.lines.length} คน`}
-                value={`${baht(fees.courtFeePerHead * bill.lines.length)} ฿`}
+                label={`ค่าสนาม ${baht(fees.courtFeePerHead)} × ${payingCourt} คน${
+                  waived > 0 ? ` (ยกเว้น ${waived} คน)` : ""
+                }`}
+                value={`${baht(fees.courtFeePerHead * payingCourt)} ฿`}
               />
               <Row label={`ค่าลูกที่เก็บได้ (ใช้ ${bill.shuttlesUsed} ลูก)`} value={`${baht(bill.shuttleCharged)} ฿`} />
             </>
@@ -458,6 +487,10 @@ export function BillPage() {
             await setPaid(collecting.playerId, !collecting.paid)
             setCollecting(null)
           }}
+          onToggleCourtFee={async () => {
+            await setCourtFee(collecting.playerId, !collecting.noCourtFee)
+            setCollecting(null)
+          }}
         />
       ) : null}
 
@@ -480,6 +513,7 @@ function CollectModal({
   canControl,
   onClose,
   onPaid,
+  onToggleCourtFee,
 }: {
   line: BillLine
   promptPay: string
@@ -487,6 +521,7 @@ function CollectModal({
   canControl: boolean
   onClose: () => void
   onPaid: () => void
+  onToggleCourtFee: () => void
 }) {
   return (
     <Modal
@@ -496,10 +531,18 @@ function CollectModal({
       subtitle={`ลง ${line.games} เกม`}
       footer={
         canControl ? (
-          <button className={cn("btn-lg w-full", line.paid ? "btn-ghost" : "btn-gold")} onClick={onPaid}>
-            <Check size={18} />
-            {line.paid ? "ยกเลิกว่าจ่ายแล้ว" : "รับเงินแล้ว"}
-          </button>
+          <div className="flex w-full flex-col gap-2">
+            <button className={cn("btn-lg w-full", line.paid ? "btn-ghost" : "btn-gold")} onClick={onPaid}>
+              <Check size={18} />
+              {line.paid ? "ยกเลิกว่าจ่ายแล้ว" : "รับเงินแล้ว"}
+            </button>
+            {mode === "club" ? (
+              <button className="btn-quiet w-full !text-[12.5px]" onClick={onToggleCourtFee}>
+                <Ban size={15} />
+                {line.noCourtFee ? "กลับมาคิดค่าสนามคนนี้" : "ไม่คิดค่าสนามคนนี้ (เก็บแต่ค่าลูก)"}
+              </button>
+            ) : null}
+          </div>
         ) : null
       }
     >
@@ -517,8 +560,11 @@ function CollectModal({
 
         <PromptPayQr amount={line.amount} size={250} />
         <p className="text-center font-heading text-[13.5px] font-medium text-ink">{promptPay}</p>
+        {/* ยอด 0 ผูกลงใน QR ไม่ได้ อย่าบอกว่าผูกไว้แล้วทั้งที่ไม่ได้ผูก */}
         <p className="text-center text-[12px] leading-snug text-ink-faint">
-          QR นี้ผูกยอด {baht(line.amount)} บาทไว้แล้ว — สแกนแล้วแอปธนาคารขึ้นจำนวนเงินให้เลย
+          {line.amount > 0
+            ? `QR นี้ผูกยอด ${baht(line.amount)} บาทไว้แล้ว — สแกนแล้วแอปธนาคารขึ้นจำนวนเงินให้เลย`
+            : "คนนี้ไม่มียอดต้องเก็บ — กด “รับเงินแล้ว” เพื่อปิดยอดได้เลย"}
         </p>
       </div>
     </Modal>

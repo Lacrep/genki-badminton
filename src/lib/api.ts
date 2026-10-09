@@ -163,6 +163,8 @@ export const api = {
   boost: (id: string, playerId: string, boost: number) =>
     post<ViewReply>(`/api/session/${id}/boost`, { playerId, boost }),
   paid: (id: string, playerId: string, paid: boolean) => post<ViewReply>(`/api/session/${id}/paid`, { playerId, paid }),
+  courtFee: (id: string, playerId: string, noCourtFee: boolean) =>
+    post<ViewReply>(`/api/session/${id}/court-fee`, { playerId, noCourtFee }),
 
   // เกม
   suggest: (

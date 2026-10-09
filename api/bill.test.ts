@@ -32,7 +32,7 @@ function match(id: string, ids: string[], shuttles: number): Match {
  * ก๊วนตัวอย่างตามโปสเตอร์: ค่าสนามคนละ 70 · ลูกละ 25
  * 2 เกม — เกมแรก a,b vs c,d ใช้ 2 ลูก · เกมสอง a,b vs c,e ใช้ 1 ลูก
  */
-function makeSession(fees: Partial<Fees> = {}, games: Record<string, number> = {}) {
+function makeSession(fees: Partial<Fees> = {}, games: Record<string, number> = {}, noCourtFee: string[] = []) {
   const ids = ["a", "b", "c", "d", "e"]
   const roster = new Map<string, RosterPlayer>()
   const players: SessionPlayer[] = []
@@ -54,6 +54,7 @@ function makeSession(fees: Partial<Fees> = {}, games: Record<string, number> = {
       draws: 0,
       boost: 0,
       paid: false,
+      ...(noCourtFee.includes(id) ? { noCourtFee: true } : {}),
     })
   }
 
@@ -220,5 +221,42 @@ describe("การปัดเศษและยอดที่เก็บไ�
     const bill = computeBill(session, roster)
     expect(bill.lines.length).toBe(5)
     expect(amountOf(bill, "e")).toBe(95) // 70 + ค่าลูกเกมที่ลงไว้ก่อนกลับ
+  })
+})
+
+describe("ยกเว้นค่าสนามรายคน — หัวก๊วนที่ลงไปตีเอง", () => {
+  it("โหมดระบบก๊วน: คนที่ยกเว้นจ่ายแต่ค่าลูก", () => {
+    const { session, roster } = makeSession({}, {}, ["a"])
+    const bill = computeBill(session, roster)
+    // a ลงทั้งสองเกม = ค่าลูก 50 + 25 = 75 ไม่มีค่าสนาม 70
+    expect(amountOf(bill, "a")).toBe(75)
+    expect(bill.lines.find((l) => l.playerId === "a")!.courtPart).toBe(0)
+    expect(bill.lines.find((l) => l.playerId === "a")!.noCourtFee).toBe(true)
+  })
+
+  it("ยอดที่ยกเว้นไม่ถูกผลักไปให้คนอื่น", () => {
+    const plain = computeBill(makeSession().session, makeSession().roster)
+    const { session, roster } = makeSession({}, {}, ["a"])
+    const bill = computeBill(session, roster)
+    for (const id of ["b", "c", "d", "e"]) {
+      expect(amountOf(bill, id)).toBe(amountOf(plain, id))
+    }
+    // ก๊วนเก็บได้น้อยลงเท่ากับค่าสนามหนึ่งหัวพอดี
+    expect(plain.billed - bill.billed).toBe(70)
+  })
+
+  it("โหมดหารเท่า: คนที่ยกเว้นไม่ต้องจ่ายส่วนค่าสนาม แต่ยังจ่ายค่าลูกกับค่าอื่น ๆ", () => {
+    const fees = { mode: "equal" as const, courtCost: 1000, shuttleCostTotal: 500, extraCost: 0 }
+    const { session, roster } = makeSession(fees, {}, ["a"])
+    const bill = computeBill(session, roster)
+    // 5 คน → ค่าสนามหัวละ 200 · ค่าลูกหัวละ 100
+    expect(amountOf(bill, "b")).toBe(300)
+    expect(amountOf(bill, "a")).toBe(100)
+  })
+
+  it("ไม่ตั้งธง ก็คิดค่าสนามตามปกติ", () => {
+    const { session, roster } = makeSession()
+    const bill = computeBill(session, roster)
+    expect(bill.lines.every((l) => l.noCourtFee === false)).toBe(true)
   })
 })

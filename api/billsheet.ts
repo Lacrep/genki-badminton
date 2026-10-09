@@ -68,6 +68,8 @@ export function billWorkbook(session: Session, bill: Bill, roster: Map<string, R
       { v: line.amount, style: "moneyBold" },
       payStatus(line.paid),
       sp?.paidAt ? thaiTime(sp.paidAt) : "",
+      // ค่าสนาม 0 เฉย ๆ อ่านแล้วงง ต้องบอกว่าตั้งใจยกเว้นให้
+      line.noCourtFee ? "ยกเว้นค่าสนาม" : "",
     ]
   })
 
@@ -89,12 +91,13 @@ export function billWorkbook(session: Session, bill: Bill, roster: Map<string, R
       { header: "รวมต้องจ่าย", width: 13 },
       { header: "สถานะ", width: 12 },
       { header: "จ่ายเมื่อ", width: 10 },
+      { header: "หมายเหตุ", width: 14 },
     ],
     rows: [
       ...peopleRows,
       totalRow(
         "รวมทุกคน",
-        15,
+        16,
         {
           9: bill.lines.reduce((s, l) => s + l.courtPart, 0),
           10: bill.lines.reduce((s, l) => s + l.shuttlePart, 0),
@@ -116,7 +119,7 @@ export function billWorkbook(session: Session, bill: Bill, roster: Map<string, R
       player ? levelInfo(player.level).code : "",
       { v: line.games, style: "int" },
       { v: line.amount, style: "moneyBold" },
-      player?.note ?? "",
+      [line.noCourtFee ? "ยกเว้นค่าสนาม" : "", player?.note ?? ""].filter(Boolean).join(" · "),
     ]
   })
 
