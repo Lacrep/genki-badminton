@@ -300,6 +300,8 @@ export function BillPage() {
                     {/* ที่มาของยอดอยู่บรรทัดของตัวเอง — ยัดรวมบรรทัดเดียวแล้วโดนตัดหายบนจอมือถือ */}
                     {view.session.fees.mode === "club" ? (
                       <span className="block text-[11px] leading-snug text-ink-faint/80">{feeBreakdown(l)}</span>
+                    ) : l.noCourtFee ? (
+                      <span className="block text-[11px] leading-snug text-ink-faint/80">ยกเว้นค่าสนาม</span>
                     ) : null}
                   </span>
                 </button>
@@ -536,12 +538,11 @@ function CollectModal({
               <Check size={18} />
               {line.paid ? "ยกเลิกว่าจ่ายแล้ว" : "รับเงินแล้ว"}
             </button>
-            {mode === "club" ? (
-              <button className="btn-quiet w-full !text-[12.5px]" onClick={onToggleCourtFee}>
-                <Ban size={15} />
-                {line.noCourtFee ? "กลับมาคิดค่าสนามคนนี้" : "ไม่คิดค่าสนามคนนี้ (เก็บแต่ค่าลูก)"}
-              </button>
-            ) : null}
+            {/* ยกเว้นค่าสนามใช้ได้ทั้งสองโหมด — โหมดหารเท่าก็หักส่วนค่าสนามออกให้เหมือนกัน */}
+            <button className="btn-quiet w-full !text-[12.5px]" onClick={onToggleCourtFee}>
+              <Ban size={15} />
+              {line.noCourtFee ? "กลับมาคิดค่าสนามคนนี้" : "ไม่คิดค่าสนามคนนี้ (เก็บแต่ค่าลูก)"}
+            </button>
           </div>
         ) : null
       }
