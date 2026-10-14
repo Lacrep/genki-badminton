@@ -1,8 +1,8 @@
 /**
  * เก็บเฉพาะคนที่มาก๊วนวันที่ระบุ — คนที่เหลือเก็บเข้ากรุทั้งหมด
  *
- *   npm run keep-session -- 2026-10-10
- *   npm run keep-session -- 2026-10-10 --delete   (ลบถาวรเฉพาะคนที่ไม่เคยลงเล่นที่ไหนเลย)
+ *   npm run keep-session -- 2026-10-10            (เก็บเข้ากรุ — ชื่อยังอยู่ กู้ได้)
+ *   npm run keep-session -- 2026-10-10 --delete   (ลบทิ้งจริง ทั้งก๊วนอื่นและคนที่เหลือ)
  *
  * "เก็บเข้ากรุ" = หายจากรายชื่อเช็คอินและรายชื่อตอนจัดเกม แต่ชื่อยังอยู่ในทะเบียน
  * บิลกับสถิติของก๊วนเก่าจึงยังเห็นชื่อถูกต้อง ไม่กลายเป็นรหัส p_xxxx
@@ -57,11 +57,19 @@ if (target.length === 0) {
 const keep = new Set()
 for (const s of target) for (const p of s.players ?? []) keep.add(p.playerId)
 
-// คนที่เคยลงเล่นที่อื่นด้วยไหม — ใช้ตัดสินว่าลบถาวรได้หรือไม่
+const otherSessions = sessions.filter((s) => !target.some((t) => t.id === s.id))
+
+/**
+ * โหมด --delete คือ "ล้างให้เกลี้ยง" — เอาก๊วนอื่นออกไปด้วย
+ *
+ * ถ้าลบแต่คนแต่ยังเก็บก๊วนเทสไว้ ก๊วนนั้นจะเหลือแต่รหัส p_xxxx แทนชื่อคน
+ * ดูแล้วงงกว่าเดิม เลยพักไฟล์ก๊วนอื่นไปด้วย (เปลี่ยนชื่อไฟล์ ไม่ได้ลบจริง กู้ได้)
+ */
 const playedElsewhere = new Set()
-for (const s of sessions) {
-  if (target.some((t) => t.id === s.id)) continue
-  for (const p of s.players ?? []) if ((p.gamesPlayed ?? 0) > 0) playedElsewhere.add(p.playerId)
+if (!hardDelete) {
+  for (const s of otherSessions) {
+    for (const p of s.players ?? []) if ((p.gamesPlayed ?? 0) > 0) playedElsewhere.add(p.playerId)
+  }
 }
 
 const byId = new Map(roster.map((p) => [p.id, p]))
@@ -79,8 +87,17 @@ if (others.length === 0) {
 }
 
 const deletable = others.filter((p) => !playedElsewhere.has(p.id))
-console.log(`     · เคยลงเล่นก๊วนอื่น ${others.length - deletable.length} คน → เก็บเข้ากรุ (ชื่อในสถิติเก่าต้องไม่หาย)`)
-console.log(`     · ไม่เคยลงเล่นเลย  ${deletable.length} คน → ${hardDelete ? "ลบถาวร" : "เก็บเข้ากรุ"}`)
+if (hardDelete) {
+  console.log(`\n   โหมดลบทิ้ง:`)
+  console.log(`     · ลบคนที่ไม่ได้มาก๊วนนั้น ${others.length} คน ออกจากทะเบียน`)
+  if (otherSessions.length > 0) {
+    console.log(`     · พักก๊วนอื่นอีก ${otherSessions.length} ครั้งไปด้วย (เปลี่ยนชื่อไฟล์ ไม่ได้ลบจริง กู้ได้):`)
+    for (const s of otherSessions) console.log(`         ${s.date}  ${s.name}  (${s.matches?.length ?? 0} เกม)`)
+  }
+} else {
+  console.log(`     · เคยลงเล่นก๊วนอื่น ${others.length - deletable.length} คน → เก็บเข้ากรุ (ชื่อในสถิติเก่าต้องไม่หาย)`)
+  console.log(`     · ไม่เคยลงเล่นเลย  ${deletable.length} คน → เก็บเข้ากรุ`)
+}
 
 // สำรองก่อนเสมอ
 const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19)
@@ -96,7 +113,7 @@ for (const p of roster) {
     next.push(rest) // คนที่มาก๊วนนั้น เอาออกจากกรุให้ด้วยถ้าเคยถูกเก็บไว้
     continue
   }
-  if (hardDelete && !playedElsewhere.has(p.id)) {
+  if (hardDelete) {
     removed += 1
     continue
   }
@@ -105,6 +122,21 @@ for (const p of roster) {
 }
 
 fs.writeFileSync(path.join(dir, "roster.json"), JSON.stringify(next, null, 2))
+
+// โหมดลบทิ้ง: พักไฟล์ก๊วนอื่นไว้ (เปลี่ยนชื่อ ไม่ได้ลบ) แล้วชี้ไปก๊วนที่เก็บไว้
+let parked = 0
+if (hardDelete) {
+  for (const s of otherSessions) {
+    const f = path.join(sdir, `${s.id}.json`)
+    if (fs.existsSync(f)) {
+      fs.renameSync(f, `${f}.deleted-${Date.now()}`)
+      parked += 1
+    }
+    const bak = `${f}.bak`
+    if (fs.existsSync(bak)) fs.rmSync(bak, { force: true })
+  }
+  fs.writeFileSync(path.join(dir, "current.json"), JSON.stringify({ id: target[0].id }, null, 2))
+}
 
 // ลบรูปของคนที่ลบถาวรไปแล้ว
 if (removed > 0) {
@@ -120,9 +152,10 @@ if (removed > 0) {
 console.log(`\n✅ เสร็จแล้ว — ทะเบียนเหลือ ${next.length} คน`)
 console.log(`   ใช้งานปกติ : ${next.filter((p) => !p.archived).length} คน`)
 if (archived > 0) console.log(`   เก็บเข้ากรุ : ${archived} คน  (กดเอากลับมาได้ที่หน้าเช็คอิน)`)
-if (removed > 0) console.log(`   ลบถาวร     : ${removed} คน`)
-if (!hardDelete && deletable.length > 0) {
-  console.log(`\n   ℹ️ มี ${deletable.length} คนที่ไม่เคยลงเล่นที่ไหนเลย ลบถาวรได้ถ้าต้องการ:`)
+if (removed > 0) console.log(`   ลบออกแล้ว  : ${removed} คน`)
+if (parked > 0) console.log(`   ก๊วนที่พักไว้ : ${parked} ครั้ง  (ไฟล์ยังอยู่ กู้ได้จากโฟลเดอร์สำรอง)`)
+if (!hardDelete && others.length > 0) {
+  console.log(`\n   ℹ️ ถ้าอยากลบทิ้งจริง ๆ (ทั้งคนและก๊วนเทส) สั่ง:`)
   console.log(`      npm run keep-session -- ${want} --delete`)
 }
 console.log("\n   สั่ง npm start แล้วเปิดดูได้เลย\n")

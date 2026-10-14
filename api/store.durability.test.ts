@@ -182,6 +182,39 @@ describe("รับเงินแล้วต้องเช็คเอาท�
   })
 })
 
+describe("ห้ามชื่อซ้ำกันในทะเบียน", () => {
+  it("เพิ่มชื่อที่มีอยู่แล้วไม่ได้", async () => {
+    const store = await loadStore()
+    store.addPlayer({ name: "ต้น", level: 5 })
+    expect(() => store.addPlayer({ name: "ต้น", level: 3 })).toThrow()
+    expect(store.getRoster()).toHaveLength(1)
+  })
+
+  it("ช่องว่างหัวท้ายหรือเว้นวรรคต่างกัน ก็ถือว่าซ้ำ", async () => {
+    const store = await loadStore()
+    store.addPlayer({ name: "พี่หมู", level: 5 })
+    expect(() => store.addPlayer({ name: "  พี่หมู  ", level: 3 })).toThrow()
+    expect(() => store.addPlayer({ name: "พี่  หมู", level: 3 })).toThrow()
+  })
+
+  it("แก้ชื่อไปชนกับคนอื่นไม่ได้ แต่แก้ชื่อตัวเองได้", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ต้น", level: 5 })
+    store.addPlayer({ name: "บอย", level: 4 })
+
+    expect(() => store.updatePlayer(a.id, { name: "บอย" })).toThrow()
+    // แก้ข้อมูลอื่นของตัวเองโดยส่งชื่อเดิมมาด้วย ต้องผ่าน
+    expect(store.updatePlayer(a.id, { name: "ต้น", level: 6 }).level).toBe(6)
+  })
+
+  it("ชื่อที่ถูกเก็บเข้ากรุก็ยังกันซ้ำ และบอกให้เอากลับมาใช้", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "แนน", level: 4 })
+    store.updatePlayer(a.id, { archived: true })
+    expect(() => store.addPlayer({ name: "แนน", level: 4 })).toThrow(/เก็บเข้ากรุ/)
+  })
+})
+
 describe("ทะเบียนสมาชิกต้องอยู่ตลอด", () => {
   it("แก้ชื่ออย่างเดียวแล้วระดับมือต้องไม่หาย", async () => {
     const store = await loadStore()

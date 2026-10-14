@@ -304,8 +304,37 @@ export function rosterMap(): Map<string, RosterPlayer> {
   return new Map(getRoster().map((p) => [p.id, p]))
 }
 
+/**
+ * ชื่อที่ใช้เทียบว่าซ้ำกันไหม — ตัดช่องว่างทิ้งหมด ไม่สนตัวพิมพ์เล็กใหญ่
+ *
+ * "พี่หมู" · "พี่ หมู" · " พี่หมู " ในก๊วนคือคนเดียวกันแน่ ๆ คนพิมพ์ชื่อเล่น
+ * เว้นวรรคไม่เหมือนกันทุกครั้งอยู่แล้ว ถ้าเทียบตรงตัวจะหลุดเป็นสองคนในทะเบียน
+ * แล้วสถิติแยกกันคนละท่อน (ชื่อที่โชว์ยังเก็บช่องว่างตามที่พิมพ์ไว้เหมือนเดิม)
+ */
+function nameKey(name: string): string {
+  return name.replace(/\s+/g, "").toLowerCase()
+}
+
+/** หาคนที่ชื่อชนกัน (ข้ามตัวเองตอนแก้ชื่อ) */
+function findSameName(list: RosterPlayer[], name: string, exceptId?: string): RosterPlayer | undefined {
+  const key = nameKey(name)
+  return list.find((p) => p.id !== exceptId && nameKey(p.name) === key)
+}
+
+function assertNameFree(list: RosterPlayer[], name: string, exceptId?: string) {
+  const clash = findSameName(list, name, exceptId)
+  if (!clash) return
+  throw new StoreError(
+    clash.archived
+      ? `มีชื่อ "${clash.name}" อยู่แล้ว (เก็บเข้ากรุไว้) — เอากลับมาใช้แทนการสร้างใหม่ได้`
+      : `มีชื่อ "${clash.name}" อยู่ในทะเบียนแล้ว ใช้ชื่อซ้ำกันไม่ได้`,
+    400,
+  )
+}
+
 export function addPlayer(input: Omit<RosterPlayer, "id" | "createdAt">): RosterPlayer {
   const list = getRoster()
+  assertNameFree(list, input.name)
   const player: RosterPlayer = { ...input, id: id("p_"), createdAt: Date.now() }
   list.push(player)
   saveRoster(list)
@@ -316,6 +345,7 @@ export function updatePlayer(playerId: string, patch: Partial<RosterPlayer>): Ro
   const list = getRoster()
   const i = list.findIndex((p) => p.id === playerId)
   if (i < 0) throw new StoreError("ไม่พบผู้เล่นคนนี้ในทะเบียน", 404)
+  if (typeof patch.name === "string") assertNameFree(list, patch.name, playerId)
   // ตัดคีย์ที่เป็น undefined ทิ้งก่อน — ไม่งั้นการแก้ชื่ออย่างเดียวจะลบระดับมือหาย
   const clean = Object.fromEntries(Object.entries(patch).filter(([, v]) => v !== undefined))
   list[i] = { ...list[i], ...clean, id: list[i].id, createdAt: list[i].createdAt }

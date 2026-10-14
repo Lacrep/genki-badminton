@@ -293,10 +293,15 @@ export function PlayerForm({
   // เปลี่ยนรูปแล้วทะเบียนอัปเดต แต่ของที่ส่งเข้ามาเป็นสำเนาตอนเปิดหน้าต่าง
   // ถ้าไม่อ่านใหม่ รูปในหน้าต่างจะยังเป็นของเก่าจนกว่าจะปิดแล้วเปิดใหม่
   const live = openedPlayer ? (roster.find((r) => r.id === openedPlayer.id) ?? openedPlayer) : null
+
   const [name, setName] = useState(live?.name ?? "")
   const [level, setLevel] = useState<Level>(live?.level ?? 3)
   const [busy, setBusy] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
+
+  /** ชื่อซ้ำกับคนที่มีอยู่แล้วไหม — เทียบแบบไม่สนช่องว่างกับตัวพิมพ์ เหมือนฝั่งเซิร์ฟเวอร์ */
+  const nameKey = (v: string) => v.replace(/\s+/g, "").toLowerCase()
+  const clash = roster.find((r) => r.id !== live?.id && nameKey(r.name) === nameKey(name) && name.trim() !== "")
 
   /** เลือกรูปจากกล้องหรือคลังภาพ — ย่อในเครื่องก่อนส่ง จะได้ไม่ช้าและไม่กินที่ */
   const pickPhoto = async (file: File | undefined) => {
@@ -392,7 +397,7 @@ export function PlayerForm({
           <button className="btn-quiet !px-2" onClick={onClose}>
             ยกเลิก
           </button>
-          <button className="btn-primary" onClick={save} disabled={busy || !name.trim()}>
+          <button className="btn-primary" onClick={save} disabled={busy || !name.trim() || !!clash}>
             {live ? "บันทึก" : checkInAfterCreate ? "เพิ่มและเช็คอิน" : "เพิ่ม"}
           </button>
         </div>
@@ -440,6 +445,12 @@ export function PlayerForm({
             placeholder="เช่น ต้น, พี่หมู, แนน"
             autoFocus
           />
+          {clash ? (
+            <p className="mt-1.5 text-[12px] leading-snug text-hinomaru">
+              มีชื่อ “{clash.name}” อยู่ในทะเบียนแล้ว — ใช้ชื่อซ้ำกันไม่ได้
+              {clash.archived ? " (ถูกเก็บเข้ากรุไว้ เอากลับมาใช้แทนได้)" : ""}
+            </p>
+          ) : null}
         </div>
 
         <div>
