@@ -15,7 +15,8 @@
     "serve": "npm run build && npm start",
     "demo": "node scripts/demo.mjs",
     "reset-sessions": "node scripts/reset-sessions.mjs",
-    "fetch-fonts": "node scripts/fetch-fonts.mjs public/fonts"
+    "fetch-fonts": "node scripts/fetch-fonts.mjs public/fonts",
+    "find-data": "node scripts/find-data.mjs"
   },
   "dependencies": {
     "@hono/node-server": "^1.14.3",

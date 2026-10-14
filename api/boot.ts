@@ -648,6 +648,58 @@ if (process.env.NODE_ENV !== "development") {
       `   ข้อมูลเก็บที่      ${path.resolve(process.env.DATA_DIR || "./data")}`,
       "",
     ]
+
+    /**
+     * เตือนดัง ๆ ถ้าเปิดมาแล้วไม่มีข้อมูลเลย แต่มีโฟลเดอร์ data อื่นอยู่ใกล้ ๆ
+     *
+     * data/ อยู่ "ข้าง ๆ ที่สั่งรัน" ไม่ได้ผูกกับตัวโค้ด โคลนโปรเจกต์ใหม่ไว้อีกที่
+     * แล้วรันจากที่ใหม่ แอปจะสร้าง data/ เปล่าขึ้นมา ก๊วนเก่าอยู่ครบในโฟลเดอร์เดิม
+     * แต่หน้าเว็บจะดูเหมือนข้อมูลหายเกลี้ยง ซึ่งน่าตกใจมากถ้าไม่มีใครบอก
+     */
+    const dataDir = path.resolve(process.env.DATA_DIR || "./data")
+    const count = (dir: string) => {
+      try {
+        return fs.readdirSync(path.join(dir, "sessions")).filter((f) => f.endsWith(".json")).length
+      } catch {
+        return 0
+      }
+    }
+    if (count(dataDir) === 0) {
+      // ไล่ดูโฟลเดอร์รอบ ๆ (ขึ้นไป 3 ชั้น ลงไปอีก 2 ชั้น) ว่ามี data ที่มีก๊วนอยู่ไหม
+      const near = new Map<string, number>()
+      const look = (dir: string, depth: number) => {
+        if (depth > 2) return
+        let kids: string[] = []
+        try {
+          kids = fs.readdirSync(dir, { withFileTypes: true })
+            .filter((e) => e.isDirectory() && e.name !== "node_modules" && !e.name.startsWith("."))
+            .map((e) => e.name)
+        } catch {
+          return
+        }
+        for (const k of kids) {
+          const d = path.join(dir, k)
+          const n = count(d)
+          if (n > 0 && path.resolve(d) !== dataDir) near.set(path.resolve(d), n)
+          else look(d, depth + 1)
+        }
+      }
+      let base = path.dirname(dataDir)
+      for (let up = 0; up < 3 && near.size === 0; up++) {
+        look(base, 0)
+        base = path.dirname(base)
+      }
+      if (near.size > 0) {
+        lines.push(
+          "⚠️  โฟลเดอร์ข้อมูลที่กำลังใช้ยังว่างเปล่า แต่เจอข้อมูลก๊วนอยู่ที่อื่น:",
+          ...[...near].map(([d, n]) => `     ${d}  (${n} ก๊วน)`),
+          "",
+          "   ถ้าก๊วนเก่าหาย ให้สั่งรันจากโฟลเดอร์แม่ของที่นั่น หรือก๊อปโฟลเดอร์ data มาวางที่นี่",
+          "   ดูรายละเอียดทั้งหมด:  npm run find-data",
+          "",
+        )
+      }
+    }
     console.log(lines.join("\n"))
   })
 }
