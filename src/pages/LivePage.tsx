@@ -17,7 +17,7 @@ import { useApp, useNow, useSession } from "@/lib/app"
 import { CourtCard } from "@/components/CourtCard"
 import { MatchProposal } from "@/components/MatchProposal"
 import { FinishSheet, SwapSheet } from "@/components/MatchSheets"
-import { QueueRow } from "@/components/player"
+import { PlayerAvatar, QueueRow } from "@/components/player"
 import { EmptyState, Stat } from "@/components/ui"
 
 const QUEUE_PREVIEW = 6
@@ -137,7 +137,7 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
                 const plan = planForCourt.get(cv.court.index)
                 if (!plan) return null
                 return {
-                  names: plan.players.map((x) => displayName(x.player)),
+                  players: plan.players,
                   onStart: () => startPlanned(plan.planned.id, cv.court.index),
                 }
               })()}
@@ -199,13 +199,27 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
                     {i + 1}
                   </span>
                   <div className="min-w-0 flex-1">
-                    {/* ปล่อยให้ตกบรรทัด — ชื่อสี่คนยาวเกินจอมือถือ ถ้า truncate จะไม่รู้ว่าใครอยู่ในคู่ */}
-                    <p className="font-heading text-[13.5px] font-medium leading-snug text-ink">
-                      {pv.players.filter((x) => x.team === "A").map((x) => displayName(x.player)).join(" + ")}
-                      <span className="mx-1.5 text-ink-faint">vs</span>
-                      {pv.players.filter((x) => x.team === "B").map((x) => displayName(x.player)).join(" + ")}
-                    </p>
-                    <p className="text-[11.5px] leading-snug text-ink-faint">
+                    {/* รูป + ชื่อ แทนบรรทัดตัวหนังสือยาว ๆ — เห็นหน้าชัดว่าคู่นี้คือใคร */}
+                    <div className="flex items-start gap-2">
+                      {(["A", "B"] as const).map((team, ti) => (
+                        <div key={team} className="flex min-w-0 flex-1 items-start gap-1.5">
+                          {ti === 1 ? (
+                            <span className="self-center font-heading text-[10px] font-bold text-ink-faint">VS</span>
+                          ) : null}
+                          {pv.players
+                            .filter((x) => x.team === team)
+                            .map((x) => (
+                              <span key={x.player.id} className="flex min-w-0 flex-1 flex-col items-center gap-0.5">
+                                <PlayerAvatar player={x.player} size={38} />
+                                <span className="w-full truncate text-center font-heading text-[11px] font-semibold leading-tight text-ink">
+                                  {displayName(x.player)}
+                                </span>
+                              </span>
+                            ))}
+                        </div>
+                      ))}
+                    </div>
+                    <p className="mt-1 text-[11.5px] leading-snug text-ink-faint">
                       {pv.problems.length > 0 ? (
                         <span className="text-hinomaru-deep dark:text-hinomaru-soft">{pv.problems.join(" · ")}</span>
                       ) : pv.waitingFor.length > 0 ? (
@@ -305,29 +319,37 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
                 return p ? displayName(p) : "—"
               }
               return (
-                <div key={m.id} className="flex items-center gap-2.5 px-3.5 py-2.5">
-                  {/* เลขเกม — ใช้เทียบกับไฟล์ Excel ได้ตรง ๆ */}
-                  <span className="nums shrink-0 rounded-md bg-subtle px-1.5 py-0.5 font-heading text-[11px] font-bold text-ink-soft">
-                    #{m.no}
-                  </span>
-                  <span className="nums shrink-0 text-[11.5px] text-ink-faint">{thaiTime(m.endedAt ?? m.startedAt)}</span>
-                  <span className="min-w-0 flex-1 truncate text-[13px] text-ink">
+                /*
+                  สองบรรทัด: บรรทัดบนเป็นข้อมูลเกม บรรทัดล่างเป็นรายชื่อแบบไม่ตัดทิ้ง
+                  บนมือถือแถวเดียวจะเหลือที่ให้ชื่อแค่นิดเดียว จนอ่านไม่ออกว่าใครตีกับใคร
+                */
+                <div key={m.id} className="flex flex-col gap-1 px-3.5 py-2.5">
+                  <div className="flex items-center gap-2">
+                    {/* เลขเกม — ใช้เทียบกับไฟล์ Excel ได้ตรง ๆ */}
+                    <span className="nums shrink-0 rounded-md bg-subtle px-1.5 py-0.5 font-heading text-[11px] font-bold text-ink-soft">
+                      #{m.no}
+                    </span>
+                    <span className="nums shrink-0 text-[11.5px] text-ink-faint">
+                      {thaiTime(m.endedAt ?? m.startedAt)}
+                    </span>
+                    {scoreLabel(m) ? (
+                      <span className="nums chip shrink-0 bg-subtle text-ink-soft">{scoreLabel(m)}</span>
+                    ) : null}
+                    {/* เกมที่เสมอต้องอ่านออกว่าเสมอ ไม่ใช่ปล่อยให้เดาเอาจากคะแนน */}
+                    {m.winner === "draw" ? (
+                      <span className="chip shrink-0 bg-gold/20 text-gold-deep">เสมอ</span>
+                    ) : !scoreLabel(m) && m.winner ? (
+                      <span className="chip shrink-0 bg-gold/20 text-gold-deep">ฝั่ง {m.winner} ชนะ</span>
+                    ) : null}
+                    <span className="nums ml-auto shrink-0 text-[11.5px] text-ink-faint">
+                      {formatMinutes((m.endedAt ?? m.startedAt) - m.startedAt)}
+                    </span>
+                  </div>
+                  <p className="text-[13px] leading-snug text-ink">
                     {m.teamA.map(nameOf).join(" + ")}
                     <span className="mx-1.5 text-ink-faint">vs</span>
                     {m.teamB.map(nameOf).join(" + ")}
-                  </span>
-                  {scoreLabel(m) ? (
-                    <span className="nums chip shrink-0 bg-subtle text-ink-soft">{scoreLabel(m)}</span>
-                  ) : null}
-                  {/* เกมที่เสมอต้องอ่านออกว่าเสมอ ไม่ใช่ปล่อยให้เดาเอาจากคะแนน */}
-                  {m.winner === "draw" ? (
-                    <span className="chip shrink-0 bg-gold/20 text-gold-deep">เสมอ</span>
-                  ) : !scoreLabel(m) && m.winner ? (
-                    <span className="chip shrink-0 bg-gold/20 text-gold-deep">ฝั่ง {m.winner} ชนะ</span>
-                  ) : null}
-                  <span className="nums shrink-0 text-[11.5px] text-ink-faint">
-                    {formatMinutes((m.endedAt ?? m.startedAt) - m.startedAt)}
-                  </span>
+                  </p>
                 </div>
               )
             })}

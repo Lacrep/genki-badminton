@@ -96,7 +96,7 @@ export function FinishSheet({
     <Modal
       open={open}
       onClose={onClose}
-      title={`จบเกม ${cv.court.name}`}
+      title={`จบเกม #${cv.match?.no ?? "?"} · ${cv.court.name}`}
       subtitle={`เล่นไป ${formatDuration(cv.elapsedMs)} — ทุกคนจะกลับเข้าคิวโดยเริ่มนับเวลารอใหม่`}
       footer={
         <button className="btn-primary w-full btn-lg" onClick={submit} disabled={busy}>
@@ -319,7 +319,7 @@ export function SwapSheet({
     <Modal
       open={open}
       onClose={onClose}
-      title={`สลับตัวใน ${cv.court.name}`}
+      title={`สลับตัวในเกม #${cv.match?.no ?? "?"} · ${cv.court.name}`}
       subtitle="ใช้ตอนมีคนเจ็บ หรือขอเปลี่ยนตัวกลางเกม — คนที่ออกจะกลับไปต่อคิว"
     >
       <div className="flex flex-col gap-4">

@@ -2,12 +2,14 @@ import { useState } from "react"
 import { CheckCircle2, Hand, MoreVertical, MoveRight, Play, Plus, Shuffle, Sparkles, Trash2 } from "lucide-react"
 import {
   type CourtView,
+  type RosterPlayer,
   type SessionSettings,
   MATCH_TYPE_LABEL,
   displayName,
   formatDuration,
   levelInfo,
 } from "@shared/types"
+import { PlayerAvatar } from "@/components/player"
 import { cn } from "@/lib/util"
 
 /** สีของนาฬิกาในเกม: ปกติ → เกินเป้าเล็กน้อย → เกินเป้าไปมาก (คนอื่นรอนานแล้ว) */
@@ -39,7 +41,7 @@ export function CourtCard({
   onAuto: () => void
   onManual: () => void
   /** เกมถัดไปในคิวที่จัดไว้ — คอร์ตว่างเมื่อไรกดลงได้ทันที */
-  nextPlanned?: { names: string[]; onStart: () => void } | null
+  nextPlanned?: { players: { player: RosterPlayer; team: "A" | "B" }[]; onStart: () => void } | null
   onFinish: () => void
   onCancel: () => void
   onSwap: () => void
@@ -198,9 +200,26 @@ export function CourtCard({
                   <p className="text-center font-heading text-[11.5px] text-gold-deep dark:text-gold-soft">
                     เกมถัดไปในคิว
                   </p>
-                  <p className="mb-2 text-center text-[12.5px] leading-snug text-ink">
-                    {nextPlanned.names.join(" · ")}
-                  </p>
+                  {/* เห็นหน้าคู่ที่จะลงก่อนกด — จะได้ไม่ลงผิดคู่ตอนสนามวุ่น */}
+                  <div className="mb-2 mt-1.5 flex items-start gap-1">
+                    {(["A", "B"] as const).map((team, ti) => (
+                      <div key={team} className="flex min-w-0 flex-1 items-start gap-1">
+                        {ti === 1 ? (
+                          <span className="self-center font-heading text-[10px] font-bold text-ink-faint">VS</span>
+                        ) : null}
+                        {nextPlanned.players
+                          .filter((x) => x.team === team)
+                          .map((x) => (
+                            <span key={x.player.id} className="flex min-w-0 flex-1 flex-col items-center gap-0.5">
+                              <PlayerAvatar player={x.player} size={40} />
+                              <span className="w-full truncate text-center font-heading text-[11.5px] font-semibold leading-tight text-ink">
+                                {displayName(x.player)}
+                              </span>
+                            </span>
+                          ))}
+                      </div>
+                    ))}
+                  </div>
                   <button className="btn-primary w-full" onClick={nextPlanned.onStart}>
                     <Play size={16} />
                     ลงคอร์ตนี้เลย
@@ -250,14 +269,18 @@ function TeamRow({
       >
         {side}
       </span>
-      <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-0.5">
+      {/* รูปใหญ่ + ชื่อ — หัวก๊วนกวาดตาผ่านคอร์ตแล้วรู้ทันทีว่าใครอยู่ในสนาม */}
+      <div className="flex min-w-0 flex-1 items-start gap-1.5">
         {players.map((p) => (
-          <span key={p.player.id} className="flex items-baseline gap-1">
-            <span className="truncate font-heading text-[13.5px] font-medium text-sand">
+          <span key={p.player.id} className="flex min-w-0 flex-1 flex-col items-center gap-1">
+            <PlayerAvatar player={p.player} size={40} />
+            <span className="w-full truncate text-center font-heading text-[12.5px] font-semibold leading-tight text-sand">
               {displayName(p.player)}
             </span>
             {/* ในพื้นสนามสีเข้มใช้ตัวอักษรสีครีมแทนป้ายสี เพื่อให้อ่านชัด */}
-            <span className="font-heading text-[10.5px] text-gold-soft/80">{levelInfo(p.player.level).code}</span>
+            <span className="font-heading text-[10px] leading-none text-gold-soft/80">
+              {levelInfo(p.player.level).code}
+            </span>
           </span>
         ))}
       </div>

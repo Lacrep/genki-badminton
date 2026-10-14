@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from "react"
 import { Archive, ArchiveRestore, Camera, Check, Pencil, Search, Trash2, UserPlus, Users } from "lucide-react"
 import { type Level, type RosterPlayer, LEVELS, displayName, levelInfo, recordLabel } from "@shared/types"
 import { api, type PlayerInput } from "@/lib/api"
-import { squarePhotoDataUrl } from "@/lib/photo"
+import { PhotoCropper } from "@/components/PhotoCropper"
 import { useApp, useSession } from "@/lib/app"
 import { LevelBadge, PlayerAvatar } from "@/components/player"
 import { EmptyState, Modal } from "@/components/ui"
@@ -122,7 +122,7 @@ export function CheckInPage() {
                     onClick={() => setPicked((prev) => (on ? prev.filter((x) => x !== p.id) : [...prev, p.id]))}
                     className="flex min-w-0 flex-1 items-center gap-2.5 text-left"
                   >
-                    <PlayerAvatar player={p} size={32} />
+                    <PlayerAvatar player={p} size={40} />
                     <span className="min-w-0 flex-1">
                       <span className="block truncate font-heading text-[14px] font-medium text-ink">
                         {displayName(p)}
@@ -297,25 +297,36 @@ export function PlayerForm({
   const [name, setName] = useState(live?.name ?? "")
   const [level, setLevel] = useState<Level>(live?.level ?? 3)
   const [busy, setBusy] = useState(false)
+  const [cropping, setCropping] = useState<File | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
 
   /** ชื่อซ้ำกับคนที่มีอยู่แล้วไหม — เทียบแบบไม่สนช่องว่างกับตัวพิมพ์ เหมือนฝั่งเซิร์ฟเวอร์ */
   const nameKey = (v: string) => v.replace(/\s+/g, "").toLowerCase()
   const clash = roster.find((r) => r.id !== live?.id && nameKey(r.name) === nameKey(name) && name.trim() !== "")
 
-  /** เลือกรูปจากกล้องหรือคลังภาพ — ย่อในเครื่องก่อนส่ง จะได้ไม่ช้าและไม่กินที่ */
-  const pickPhoto = async (file: File | undefined) => {
+  /** เลือกไฟล์แล้วเปิดหน้าต่างปรับรูปก่อน ไม่บันทึกทันที */
+  const pickPhoto = (file: File | undefined) => {
+    if (fileRef.current) fileRef.current.value = ""
     if (!file || !live) return
+    if (!file.type.startsWith("image/")) {
+      toast("ไฟล์นี้ไม่ใช่รูปภาพ", "error")
+      return
+    }
+    setCropping(file)
+  }
+
+  /** ปรับเสร็จแล้วค่อยส่งขึ้นเซิร์ฟเวอร์ */
+  const savePhoto = async (data: string) => {
+    if (!live) return
+    setCropping(null)
     setBusy(true)
     try {
-      const data = await squarePhotoDataUrl(file)
       const reply = await run("ใส่รูปแล้ว", () => api.setPhoto(live.id, data))
       if (reply && "roster" in reply) setRoster(reply.roster)
     } catch (err) {
       toast(err instanceof Error ? err.message : "ใส่รูปไม่สำเร็จ", "error")
     } finally {
       setBusy(false)
-      if (fileRef.current) fileRef.current.value = ""
     }
   }
 
@@ -414,7 +425,7 @@ export function PlayerForm({
                 accept="image/*"
                 // บนมือถือจะมีทั้ง "ถ่ายรูป" และ "เลือกจากคลังภาพ" ให้เลือกเอง
                 className="hidden"
-                onChange={(e) => void pickPhoto(e.target.files?.[0])}
+                onChange={(e) => pickPhoto(e.target.files?.[0])}
               />
               <div className="flex flex-wrap gap-1.5">
                 <button className="btn-ghost !py-1.5 !text-[12.5px]" onClick={() => fileRef.current?.click()} disabled={busy}>
@@ -445,6 +456,9 @@ export function PlayerForm({
             placeholder="เช่น ต้น, พี่หมู, แนน"
             autoFocus
           />
+          {cropping ? (
+            <PhotoCropper file={cropping} onCancel={() => setCropping(null)} onDone={(d) => void savePhoto(d)} />
+          ) : null}
           {clash ? (
             <p className="mt-1.5 text-[12px] leading-snug text-hinomaru">
               มีชื่อ “{clash.name}” อยู่ในทะเบียนแล้ว — ใช้ชื่อซ้ำกันไม่ได้

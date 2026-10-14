@@ -55,18 +55,40 @@ export const LEVELS: LevelInfo[] = [
 ]
 
 /** สีพื้นวงกลมชื่อ/ป้ายบนจอใหญ่ — เข้มพอให้ตัวอักษรขาวอ่านออกจากระยะไกล */
+/**
+ * สีประจำระดับมือ 7 ขั้น — ไล่จาก "ฟ้าอ่อน → น้ำเงิน → กรมท่า → เหลือง → ส้ม → แดง"
+ *
+ * ไล่แบบนี้เพราะกวาดตาทีเดียวต้องรู้ทันทีว่าใครมือแข็งกว่าใคร ถ้าใช้เฉดน้ำเงิน
+ * ทั้งเจ็ดขั้นเหมือนเดิม ขั้นที่ติดกันจะแยกไม่ออกตอนรีบจัดคิวกลางก๊วน
+ * ทุกสีทึบเต็ม ไม่ใช่พื้นจาง ๆ จะได้เห็นชัดทั้งบนมือถือและบนทีวีที่ยืนดูไกล ๆ
+ */
 export const LEVEL_SOLID: Record<number, string> = {
-  1: "#8fa3bf",
-  2: "#5a74a8",
-  3: "#3d5590",
+  1: "#8fa8c8",
+  2: "#4a7fb5",
+  3: "#2e5fa3",
   4: "#1d2447",
-  5: "#bf9d65",
-  6: "#9c7c47",
+  5: "#c9962f",
+  6: "#d1672a",
   7: "#c2223c",
+}
+
+/** สีตัวอักษรที่วางบนสีข้างบนแล้วยังอ่านออก (ขั้นที่พื้นสว่างต้องใช้ตัวเข้ม) */
+export const LEVEL_INK: Record<number, string> = {
+  1: "#16203f",
+  2: "#ffffff",
+  3: "#ffffff",
+  4: "#ffffff",
+  5: "#16203f",
+  6: "#ffffff",
+  7: "#ffffff",
 }
 
 export function levelSolid(level: number): string {
   return LEVEL_SOLID[Math.min(MAX_LEVEL, Math.max(1, Math.round(level)))] ?? LEVEL_SOLID[4]!
+}
+
+export function levelInk(level: number): string {
+  return LEVEL_INK[Math.min(MAX_LEVEL, Math.max(1, Math.round(level)))] ?? "#ffffff"
 }
 
 export const MAX_LEVEL = LEVELS.length

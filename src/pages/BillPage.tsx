@@ -407,6 +407,10 @@ export function BillPage() {
               })
               return (
                 <div key={m.id} className="flex items-center gap-2.5 py-2">
+                  {/* เลขเกม — ไว้ไล่เทียบกับไฟล์ Excel ตอนตรวจเงินย้อนหลัง */}
+                  <span className="nums shrink-0 rounded-md bg-subtle px-1.5 py-0.5 font-heading text-[11px] font-bold text-ink-soft">
+                    #{m.no}
+                  </span>
                   <span className="nums shrink-0 text-[11.5px] text-ink-faint">{thaiTime(m.endedAt ?? m.startedAt)}</span>
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-[13px] text-ink">

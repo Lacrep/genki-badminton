@@ -1079,7 +1079,9 @@ export function finishMatch(
     const label = scoreLabel(match)
     const score = label ? ` ${label}` : ""
     s.events.push(
-      event("match.end", `จบเกม ${court?.name ?? `คอร์ต ${match.courtIndex + 1}`}${score}`, { matchId: match.id }),
+      event("match.end", `จบเกม #${match.no} ${court?.name ?? `คอร์ต ${match.courtIndex + 1}`}${score}`, {
+        matchId: match.id,
+      }),
     )
   }).session
 }

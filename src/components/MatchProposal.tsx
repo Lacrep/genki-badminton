@@ -7,7 +7,6 @@ import {
   MATCH_TYPE_LABEL,
   displayName,
   formatDuration,
-  levelInfo,
   playersPerMatch,
 } from "@shared/types"
 import { api, type Suggestion } from "@/lib/api"
@@ -15,7 +14,7 @@ import { useApp } from "@/lib/app"
 import { speak } from "@/lib/sound"
 import { cn } from "@/lib/util"
 import { Modal, Segmented } from "./ui"
-import { LevelBadge, PlayerAvatar } from "./player"
+import { LevelBadge, PlayerAvatar, PlayerFace } from "./player"
 
 /** คนหนึ่งคนในรายชื่อที่เลือกได้ — เก็บสถานะจริงไว้ จะได้ย้อมสีให้เห็นชัด */
 type Pickable = { player: RosterPlayer; status: "queue" | "playing" | "resting"; waitMs: number }
@@ -315,13 +314,13 @@ export function MatchProposal({
               </div>
 
               <div className="flex flex-col gap-2">
-                <TeamPanel ids={suggestion.teamA} side="A" nameOf={nameOf} levels={rosterById} />
+                <TeamPanel ids={suggestion.teamA} side="A" players={rosterById} levels={rosterById} />
                 <div className="flex items-center gap-2">
                   <span className="h-px flex-1 bg-line" />
                   <span className="font-heading text-[11px] font-semibold text-ink-faint">VS</span>
                   <span className="h-px flex-1 bg-line" />
                 </div>
-                <TeamPanel ids={suggestion.teamB} side="B" nameOf={nameOf} levels={rosterById} />
+                <TeamPanel ids={suggestion.teamB} side="B" players={rosterById} levels={rosterById} />
               </div>
             </div>
 
@@ -364,7 +363,7 @@ export function MatchProposal({
                     type="button"
                     onClick={() => togglePick(c.player.id)}
                     className={cn(
-                      "flex items-center gap-2.5 rounded-xl border px-2.5 py-2 text-left transition-all",
+                      "flex items-center gap-3 rounded-xl border px-2.5 py-2 text-left transition-all",
                       on
                         ? "border-navy bg-navy/[0.07] ring-1 ring-navy/40"
                         : c.status === "playing"
@@ -373,20 +372,22 @@ export function MatchProposal({
                           : "border-line/70 bg-surface hover:bg-subtle",
                     )}
                   >
-                    {/* โหมดเลือกเอง: เลขบอกว่าใครคู่กับใคร (1-2 ฝั่ง A · 3-4 ฝั่ง B) */}
-                    {on && mode === "manual" ? (
-                      <span
-                        className={cn(
-                          "flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-full font-heading text-[13px] font-bold text-white",
-                          at < need / 2 ? "bg-navy" : "bg-hinomaru",
-                        )}
-                      >
-                        {at + 1}
-                      </span>
-                    ) : (
-                      <PlayerAvatar player={c.player} size={30} />
-                    )}
-                    <span className="min-w-0 flex-1 truncate font-heading text-[14px] font-medium text-ink">
+                    {/* รูปใหญ่ — หัวก๊วนนึกชื่อไม่ออกก็ดูหน้าได้ทันที */}
+                    <span className="relative shrink-0">
+                      <PlayerAvatar player={c.player} size={46} />
+                      {/* โหมดเลือกเอง: เลขบอกว่าใครคู่กับใคร (1-2 ฝั่ง A · 3-4 ฝั่ง B) */}
+                      {on && mode === "manual" ? (
+                        <span
+                          className={cn(
+                            "absolute -bottom-0.5 -right-0.5 flex h-[22px] w-[22px] items-center justify-center rounded-full font-heading text-[12px] font-bold text-white ring-2 ring-surface",
+                            at < need / 2 ? "bg-navy" : "bg-hinomaru",
+                          )}
+                        >
+                          {at + 1}
+                        </span>
+                      ) : null}
+                    </span>
+                    <span className="min-w-0 flex-1 truncate font-heading text-[15px] font-semibold text-ink">
                       {displayName(c.player)}
                     </span>
                     <LevelBadge level={c.player.level} />
@@ -418,37 +419,45 @@ export function MatchProposal({
   )
 }
 
+/** ฝั่ง A / ฝั่ง B ของคู่ที่จัดได้ — โชว์รูปใหญ่ให้เห็นหน้าชัดก่อนกดเริ่มเกม */
 function TeamPanel({
   ids,
   side,
-  nameOf,
+  players,
   levels,
 }: {
   ids: string[]
   side: "A" | "B"
-  nameOf: (id: string) => string
+  players: Map<string, RosterPlayer>
   levels: Map<string, { level: number }>
 }) {
   const sum = ids.reduce((n, id) => n + (levels.get(id)?.level ?? 0), 0)
   return (
-    <div className="flex items-center gap-2 rounded-xl border border-line/70 bg-surface px-3 py-2.5">
+    <div
+      className={cn(
+        "flex items-center gap-3 rounded-xl border-2 px-3 py-2.5",
+        side === "A" ? "border-navy/35 bg-navy/[0.05]" : "border-hinomaru/35 bg-hinomaru/[0.05]",
+      )}
+    >
       <span
         className={cn(
-          "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg font-heading text-[11px] font-semibold",
-          side === "A" ? "bg-navy text-white" : "bg-hinomaru text-white",
+          "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg font-heading text-[12px] font-bold text-white",
+          side === "A" ? "bg-navy" : "bg-hinomaru",
         )}
       >
         {side}
       </span>
-      <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1">
-        {ids.map((id) => (
-          <span key={id} className="flex items-center gap-1.5">
-            <span className="truncate font-heading text-[14px] font-medium text-ink">{nameOf(id)}</span>
-            <span className={cn("chip", levelInfo(levels.get(id)?.level ?? 1).tone)}>
-              {levelInfo(levels.get(id)?.level ?? 1).code}
+      <div className="flex min-w-0 flex-1 items-start justify-around gap-2">
+        {ids.map((id) => {
+          const p = players.get(id)
+          return p ? (
+            <PlayerFace key={id} player={p} size={52} stack />
+          ) : (
+            <span key={id} className="text-[13px] text-ink-faint">
+              —
             </span>
-          </span>
-        ))}
+          )
+        })}
       </div>
       <span className="nums shrink-0 font-heading text-[11px] text-ink-faint" title="ผลรวมระดับมือ">
         Σ{sum}

@@ -1,5 +1,5 @@
 import { X } from "lucide-react"
-import { displayName, formatDuration, levelInfo, levelSolid, photoUrl, thaiTime } from "@shared/types"
+import { displayName, formatDuration, levelInfo, levelInk, levelSolid, photoUrl, thaiTime } from "@shared/types"
 import type { CourtView, PlannedView, RosterPlayer } from "@shared/types"
 import { useApp, useNow } from "@/lib/app"
 import { Logo } from "@/components/ui"
@@ -175,11 +175,11 @@ function fluid(d: Density, factor: number, min: number, max: number): string {
 }
 
 const sizes = (d: Density) => ({
-  name: fluid(d, 0.082, 15, 30),
-  code: fluid(d, 0.042, 9, 15),
+  name: fluid(d, 0.082, 15, 40),
+  code: fluid(d, 0.042, 9, 19),
   dot: fluid(d, 0.038, 8, 14),
-  head: fluid(d, 0.07, 14, 24),
-  clock: fluid(d, 0.09, 17, 32),
+  head: fluid(d, 0.07, 14, 32),
+  clock: fluid(d, 0.09, 17, 44),
   vs: fluid(d, 0.042, 10, 15),
   pad: fluid(d, 0.045, 10, 16),
   rowY: fluid(d, 0.03, 5, 11),
@@ -197,26 +197,35 @@ function PlayerTag({ name, level, size, photo }: { name: string; level: number; 
           src={photo}
           alt=""
           className="shrink-0 rounded-full object-cover"
+          // รูปใหญ่กว่าตัวหนังสือเกือบสองเท่า — คนยืนดูห่างหลายเมตรต้องจำหน้าได้
           style={{
-            width: `calc(${s.name} * 1.1)`,
-            height: `calc(${s.name} * 1.1)`,
-            boxShadow: `0 0 0 2px ${levelSolid(level)}`,
+            width: `calc(${s.name} * 1.8)`,
+            height: `calc(${s.name} * 1.8)`,
+            boxShadow: `0 0 0 3px ${levelSolid(level)}`,
           }}
           loading="lazy"
         />
       ) : (
         <span
-          className="inline-block shrink-0 rounded-full ring-1 ring-white/25"
-          style={{ backgroundColor: levelSolid(level), width: s.dot, height: s.dot }}
+          className="inline-flex shrink-0 items-center justify-center rounded-full font-heading font-bold ring-1 ring-white/25"
+          style={{
+            backgroundColor: levelSolid(level),
+            color: levelInk(level),
+            width: `calc(${s.name} * 1.8)`,
+            height: `calc(${s.name} * 1.8)`,
+            fontSize: `calc(${s.name} * 0.7)`,
+          }}
           aria-hidden
-        />
+        >
+          {name.trim().slice(0, 1)}
+        </span>
       )}
       <span className="truncate font-heading font-semibold leading-tight text-white" style={{ fontSize: s.name }}>
         {name}
       </span>
       <span
-        className="shrink-0 rounded-md px-1.5 py-0.5 font-heading font-bold leading-tight text-white/95"
-        style={{ backgroundColor: levelSolid(level), fontSize: s.code }}
+        className="shrink-0 rounded-md px-1.5 py-0.5 font-heading font-bold leading-tight"
+        style={{ backgroundColor: levelSolid(level), color: levelInk(level), fontSize: s.code }}
       >
         {levelInfo(level).code}
       </span>
@@ -298,6 +307,15 @@ function CourtPanel({
         <h3 className="flex-1 truncate font-heading font-bold text-white" style={{ fontSize: s.head }}>
           {cv.court.name}
         </h3>
+        {/* เลขเกม — คนดูจดไว้แล้วไปเทียบกับบิลทีหลังได้ */}
+        {cv.match ? (
+          <span
+            className="nums shrink-0 rounded-md bg-sand/15 px-1.5 font-heading font-bold leading-snug text-sand/70"
+            style={{ fontSize: s.code }}
+          >
+            #{cv.match.no}
+          </span>
+        ) : null}
         {cv.match ? (
           <span
             className={cn("nums font-heading font-bold leading-none", over ? "text-hinomaru-soft" : "text-gold-soft")}

@@ -7,6 +7,7 @@ import {
   recordLabel,
   formatDuration,
   levelInfo,
+  levelInk,
   levelSolid,
   photoUrl,
 } from "@shared/types"
@@ -20,6 +21,51 @@ export function LevelBadge({ level, showName = false }: { level: number; showNam
     <span className={cn("chip", info.tone)} title={`${info.name} — ${info.hint}`}>
       {info.code}
       {showName ? <span className="font-normal opacity-80">· {info.name}</span> : null}
+    </span>
+  )
+}
+
+/**
+ * รูป + ชื่อ + ป้ายระดับมือ เป็นก้อนเดียว — ใช้ตอนต้อง "จำหน้าให้ได้"
+ *
+ * หัวก๊วนหลายคนจำชื่อเล่นไม่ได้ทุกคน แต่จำหน้าได้ รายชื่อตอนจัดเกมกับคิวที่รอลง
+ * จึงต้องเห็นรูปใหญ่พอดูออกจริง ไม่ใช่วงกลมจิ๋ว ๆ ข้างชื่อ
+ */
+export function PlayerFace({
+  player,
+  size = 44,
+  sub,
+  stack = false,
+}: {
+  player: RosterPlayer
+  size?: number
+  /** บรรทัดเล็กใต้ชื่อ เช่น เวลารอ หรือสถานะ */
+  sub?: React.ReactNode
+  /** true = รูปอยู่บน ชื่ออยู่ล่าง (ใช้ตอนเรียงเป็นตาราง) */
+  stack?: boolean
+}) {
+  if (stack) {
+    return (
+      <span className="flex min-w-0 flex-col items-center gap-1 text-center">
+        <PlayerAvatar player={player} size={size} />
+        <span className="w-full truncate font-heading text-[12.5px] font-semibold leading-tight text-ink">
+          {displayName(player)}
+        </span>
+        <LevelBadge level={player.level} />
+        {sub ? <span className="w-full truncate text-[10.5px] leading-tight text-ink-faint">{sub}</span> : null}
+      </span>
+    )
+  }
+  return (
+    <span className="flex min-w-0 flex-1 items-center gap-2.5">
+      <PlayerAvatar player={player} size={size} />
+      <span className="min-w-0 flex-1">
+        <span className="block truncate font-heading text-[14.5px] font-semibold leading-tight text-ink">
+          {displayName(player)}
+        </span>
+        {sub ? <span className="block truncate text-[11.5px] leading-tight text-ink-faint">{sub}</span> : null}
+      </span>
+      <LevelBadge level={player.level} />
     </span>
   )
 }
@@ -43,10 +89,11 @@ export function PlayerAvatar({ player, size = 34 }: { player: RosterPlayer; size
   }
   return (
     <span
-      className="inline-flex shrink-0 items-center justify-center rounded-full font-heading font-semibold text-white"
+      className="inline-flex shrink-0 items-center justify-center rounded-full font-heading font-bold"
       // สีวงกลมไล่ตามระดับมือทั้ง 7 ขั้น — กวาดตาดูคิวทีเดียวก็รู้ว่าใครมือไหน
       style={{
         backgroundColor: levelSolid(player.level),
+        color: levelInk(player.level),
         width: size,
         height: size,
         fontSize: Math.round(size * 0.4),
@@ -134,7 +181,7 @@ export function QueueRow({
 
       {/* ชื่อ + คิวของคนนี้ — ต้องเห็นบนมือถือด้วย ไม่ใช่เฉพาะจอกว้าง */}
       <span className="flex min-w-0 flex-1 items-center gap-2">
-        <PlayerAvatar player={player} size={compact ? 28 : 32} />
+        <PlayerAvatar player={player} size={compact ? 30 : 40} />
         <span className="min-w-0 flex-1">
           <span className="block truncate font-heading text-[14px] font-medium text-ink">{displayName(player)}</span>
           {/*
