@@ -3,6 +3,7 @@ import { type Match, DEFAULT_SETTINGS, scoreLabel, setsWon, winnerFromSets } fro
 
 const base: Match = {
   id: "m1",
+  no: 1,
   courtIndex: 0,
   type: "D",
   teamA: ["a", "b"],

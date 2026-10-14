@@ -72,6 +72,7 @@ function makeSession(specs: Spec[], overrides: Partial<Session> = {}) {
 function finishedMatch(teamA: string[], teamB: string[], endedAt: number): Match {
   return {
     id: `m_${endedAt}`,
+    no: 1,
     courtIndex: 0,
     type: "D",
     teamA,

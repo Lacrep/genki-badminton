@@ -143,13 +143,14 @@ export function billWorkbook(session: Session, bill: Bill, roster: Map<string, R
   }
 
   // ── ชีต 3: ที่มาของค่าลูก (รายเกม) ─────────────────────────────────────────
-  const matchRows: Cell[][] = session.matches.map((m, i) => {
+  const matchRows: Cell[][] = session.matches.map((m) => {
     const sets = m.sets ?? []
     const head = [...m.teamA, ...m.teamB].length
     const perHead = m.shuttles * session.fees.shuttlePrice
     const collected = perHead * head
     return [
-      { v: i + 1, style: "int" },
+      // เลขเกมจริง ไม่ใช่ลำดับในตาราง — เกมที่ถูกยกเลิกไปจะได้ไม่ทำให้เลขเลื่อน
+      { v: m.no, style: "int" },
       session.courts[m.courtIndex]?.name ?? `คอร์ต ${m.courtIndex + 1}`,
       m.type === "D" ? "คู่" : "เดี่ยว",
       thaiTime(m.startedAt),

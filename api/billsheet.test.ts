@@ -56,6 +56,7 @@ function numbersOf(sheets: Map<string, string>, index: number): number[] {
 function match(id: string, ids: string[], shuttles: number): Match {
   return {
     id,
+    no: 1,
     courtIndex: 0,
     type: "D",
     teamA: ids.slice(0, 2),

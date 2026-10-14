@@ -1,5 +1,5 @@
 import { X } from "lucide-react"
-import { displayName, formatDuration, levelInfo, levelSolid, thaiTime } from "@shared/types"
+import { displayName, formatDuration, levelInfo, levelSolid, photoUrl, thaiTime } from "@shared/types"
 import type { CourtView, PlannedView, RosterPlayer } from "@shared/types"
 import { useApp, useNow } from "@/lib/app"
 import { Logo } from "@/components/ui"
@@ -187,15 +187,30 @@ const sizes = (d: Density) => ({
 })
 
 /** ชื่อ + ป้ายระดับมือ — หน่วยที่ใช้ซ้ำทั้งจอ ให้ขนาดตัวอักษรสั่งจากข้างนอกได้ */
-function PlayerTag({ name, level, size }: { name: string; level: number; size: Density }) {
+function PlayerTag({ name, level, size, photo }: { name: string; level: number; size: Density; photo?: string }) {
   const s = sizes(size)
   return (
     <span className="flex min-w-0 items-center" style={{ gap: s.gap }}>
-      <span
-        className="inline-block shrink-0 rounded-full ring-1 ring-white/25"
-        style={{ backgroundColor: levelSolid(level), width: s.dot, height: s.dot }}
-        aria-hidden
-      />
+      {photo ? (
+        // มีรูปก็ใช้รูป — คนยืนดูห่าง ๆ จำหน้าได้ง่ายกว่าจำชื่อ
+        <img
+          src={photo}
+          alt=""
+          className="shrink-0 rounded-full object-cover"
+          style={{
+            width: `calc(${s.name} * 1.1)`,
+            height: `calc(${s.name} * 1.1)`,
+            boxShadow: `0 0 0 2px ${levelSolid(level)}`,
+          }}
+          loading="lazy"
+        />
+      ) : (
+        <span
+          className="inline-block shrink-0 rounded-full ring-1 ring-white/25"
+          style={{ backgroundColor: levelSolid(level), width: s.dot, height: s.dot }}
+          aria-hidden
+        />
+      )}
       <span className="truncate font-heading font-semibold leading-tight text-white" style={{ fontSize: s.name }}>
         {name}
       </span>
@@ -251,7 +266,13 @@ function CourtPanel({
       <span className="flex min-w-0 flex-1 flex-col justify-center" style={{ gap: s.gap }}>
         {players
           .filter((x) => x.team === team)
-          .map((x) => <PlayerTag key={x.player.id} name={displayName(x.player)} level={x.player.level} size={density} />)}
+          .map((x) => <PlayerTag
+              key={x.player.id}
+              name={displayName(x.player)}
+              level={x.player.level}
+              size={density}
+              photo={photoUrl(x.player)}
+            />)}
       </span>
     </div>
   )
@@ -386,7 +407,13 @@ function PlannedPanel({
             ) : null}
             <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5">
               {side(team).map((p) => (
-                <PlayerTag key={p.player.id} name={displayName(p.player)} level={p.player.level} size={density} />
+                <PlayerTag
+                  key={p.player.id}
+                  name={displayName(p.player)}
+                  level={p.player.level}
+                  size={density}
+                  photo={photoUrl(p.player)}
+                />
               ))}
             </div>
           </div>

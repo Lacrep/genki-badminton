@@ -51,6 +51,7 @@ const DATA_DIR = path.resolve(process.cwd(), process.env.DATA_DIR || "./data")
 const ROSTER_FILE = path.join(DATA_DIR, "roster.json")
 const SESSION_DIR = path.join(DATA_DIR, "sessions")
 const POINTER_FILE = path.join(DATA_DIR, "current.json")
+const PHOTO_DIR = path.join(DATA_DIR, "photos")
 
 function ensureDirs() {
   fs.mkdirSync(SESSION_DIR, { recursive: true })
@@ -259,6 +260,14 @@ function migrateSession(session: Session): { session: Session; changed: boolean 
     changed = true
   }
 
+  // ก๊วนเก่าไม่มีเลขเกม — ไล่ใส่ตามลำดับที่เริ่มเล่นจริง
+  if (session.matches.some((m) => typeof m.no !== "number")) {
+    const order = [...session.matches].sort((a, b) => a.startedAt - b.startedAt)
+    order.forEach((m, i) => {
+      m.no = i + 1
+    })
+    changed = true
+  }
   for (const m of session.matches) {
     if (!MATCH_TYPES.includes(m.type)) {
       m.type = m.teamA.length <= 1 ? "S" : "D"
@@ -314,6 +323,83 @@ export function updatePlayer(playerId: string, patch: Partial<RosterPlayer>): Ro
   return list[i]
 }
 
+// ── รูปโปรไฟล์ ───────────────────────────────────────────────────────────────
+
+/** ชนิดไฟล์ที่รับ — เบราว์เซอร์ส่งมาได้แค่สามอย่างนี้หลังย่อรูปแล้ว */
+const PHOTO_TYPES: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+}
+
+function photoFile(playerId: string, ext: string) {
+  return path.join(PHOTO_DIR, `${playerId}.${ext}`)
+}
+
+/** ลบรูปทุกนามสกุลของคนนี้ — กันไฟล์เก่าค้างตอนเปลี่ยนชนิดรูป */
+function removePhotoFiles(playerId: string) {
+  for (const ext of Object.values(PHOTO_TYPES)) {
+    try {
+      fs.rmSync(photoFile(playerId, ext), { force: true })
+    } catch {
+      /* ไม่มีไฟล์ก็ไม่เป็นไร */
+    }
+  }
+}
+
+/**
+ * บันทึกรูปโปรไฟล์จาก data URL ที่หน้าเว็บย่อมาแล้ว
+ *
+ * รูปเก็บเป็นไฟล์แยก ไม่ยัดลง roster.json เพราะ base64 จะทำให้ไฟล์ทะเบียน
+ * บวมหลายเมกะไบต์ แล้วการเขียนแบบปลอดภัย (เขียน temp + สำรอง + rename)
+ * จะช้าลงทุกครั้งที่แก้ชื่อคนเดียว
+ */
+export function setPlayerPhoto(playerId: string, dataUrl: string): RosterPlayer {
+  const list = getRoster()
+  const i = list.findIndex((p) => p.id === playerId)
+  if (i < 0) throw new StoreError("ไม่พบผู้เล่นคนนี้ในทะเบียน", 404)
+
+  const m = /^data:([a-z/+-]+);base64,(.+)$/i.exec(dataUrl.trim())
+  if (!m) throw new StoreError("ไฟล์รูปไม่ถูกต้อง", 400)
+  const ext = PHOTO_TYPES[m[1]!.toLowerCase()]
+  if (!ext) throw new StoreError("รองรับเฉพาะรูป JPG · PNG · WebP", 400)
+
+  const bytes = Buffer.from(m[2]!, "base64")
+  if (bytes.length === 0) throw new StoreError("ไฟล์รูปว่างเปล่า", 400)
+  if (bytes.length > 3_000_000) throw new StoreError("รูปใหญ่เกินไป (เกิน 3 MB)", 400)
+
+  fs.mkdirSync(PHOTO_DIR, { recursive: true })
+  removePhotoFiles(playerId)
+  fs.writeFileSync(photoFile(playerId, ext), bytes)
+
+  list[i] = { ...list[i]!, photoAt: Date.now() }
+  saveRoster(list)
+  return list[i]!
+}
+
+export function clearPlayerPhoto(playerId: string): RosterPlayer {
+  const list = getRoster()
+  const i = list.findIndex((p) => p.id === playerId)
+  if (i < 0) throw new StoreError("ไม่พบผู้เล่นคนนี้ในทะเบียน", 404)
+  removePhotoFiles(playerId)
+  const next = { ...list[i]! }
+  delete next.photoAt
+  list[i] = next
+  saveRoster(list)
+  return next
+}
+
+/** อ่านรูปกลับมาส่งให้เบราว์เซอร์ */
+export function readPlayerPhoto(playerId: string): { bytes: Buffer; type: string } | null {
+  // กัน path traversal — id มาจาก URL ตรง ๆ
+  if (!/^[A-Za-z0-9_-]+$/.test(playerId)) return null
+  for (const [type, ext] of Object.entries(PHOTO_TYPES)) {
+    const file = photoFile(playerId, ext)
+    if (fs.existsSync(file)) return { bytes: fs.readFileSync(file), type }
+  }
+  return null
+}
+
 /**
  * ลบคนออกจากทะเบียน — ทำได้เฉพาะคนที่ยังไม่เคยลงก๊วนเลย (เช่นพิมพ์ชื่อผิด)
  *
@@ -343,6 +429,7 @@ export function deletePlayer(playerId: string) {
     )
   }
 
+  removePhotoFiles(playerId)
   saveRoster(list.filter((p) => p.id !== playerId))
 }
 
@@ -701,16 +788,37 @@ export function setNoCourtFee(sessionId: string, playerId: string, noCourtFee: b
   }).session
 }
 
+/**
+ * รับเงินแล้ว = คนนั้นกลับบ้านได้ ระบบจึงเช็คเอาท์ให้เลย
+ *
+ * เมื่อก่อนต้องไปกดเช็คเอาท์อีกทีแยกต่างหาก ซึ่งลืมกันประจำ แล้วชื่อคนที่
+ * จ่ายเงินกลับบ้านไปแล้วยังค้างอยู่ในคิว โผล่มาตอนจัดเกมรอบถัดไป
+ *
+ * ถ้ายังอยู่ในคอร์ตจะไม่ดึงออกกลางเกม — พอจบเกมนั้น finishMatch จะส่งกลับบ้านให้เอง
+ * กดยกเลิกการจ่ายก็พากลับเข้าคิวให้เหมือนเดิม
+ */
 export function setPaid(sessionId: string, playerId: string, paid: boolean): Session {
   return mutate(sessionId, (s) => {
     const sp = s.players.find((p) => p.playerId === playerId)
     if (!sp) throw new StoreError("คนนี้ยังไม่ได้เช็คอิน", 404)
+    const now = Date.now()
     sp.paid = paid
-    sp.paidAt = paid ? Date.now() : undefined
+    sp.paidAt = paid ? now : undefined
     const name = rosterMap().get(playerId)
-    s.events.push(
-      event("pay", `${name ? displayName(name) : playerId} ${paid ? "จ่ายแล้ว" : "ยกเลิกการจ่าย"}`, { playerId }),
-    )
+    const label = name ? displayName(name) : playerId
+    s.events.push(event("pay", `${label} ${paid ? "จ่ายแล้ว" : "ยกเลิกการจ่าย"}`, { playerId }))
+
+    if (paid && sp.status !== "playing" && sp.status !== "left") {
+      closeWait(sp, now)
+      sp.status = "left"
+      sp.leftAt = now
+      s.events.push(event("player.checkout", `${label} จ่ายเงินแล้วกลับบ้าน`, { playerId }))
+    } else if (!paid && sp.status === "left") {
+      sp.status = "queue"
+      sp.queueSince = now
+      sp.leftAt = undefined
+      s.events.push(event("player.checkin", `${label} กลับเข้าคิว`, { playerId }))
+    }
   }).session
 }
 
@@ -746,6 +854,8 @@ export function startMatch(
     const levels = ids.map((pid) => roster.get(pid)?.level ?? 1)
     const match: Match = {
       id: id("m_"),
+      // นับต่อจากเลขสูงสุดที่เคยใช้ เกมที่ถูกยกเลิกไปไม่ดันเลขให้ข้าม
+      no: Math.max(0, ...s.matches.map((m) => m.no ?? 0)) + 1,
       courtIndex: input.courtIndex,
       type: input.type,
       teamA: input.teamA,
@@ -920,8 +1030,13 @@ export function finishMatch(
         if (match.winner === "draw") sp.draws += 1
         else if (match.winner === team) sp.wins += 1
         else if (match.winner) sp.losses += 1
-        // กลับเข้าคิว → เริ่มจับเวลารอใหม่ทันที (คนที่เพิ่งลงจึงอยู่ท้ายคิวเอง)
-        if (sp.status === "playing") {
+        // จ่ายเงินไปแล้วระหว่างยังเล่นอยู่ → จบเกมนี้คือกลับบ้าน ไม่ต้องกลับเข้าคิว
+        if (sp.status === "playing" && sp.paid) {
+          sp.status = "left"
+          sp.leftAt = now
+          sp.queueSince = null
+        } else if (sp.status === "playing") {
+          // กลับเข้าคิว → เริ่มจับเวลารอใหม่ทันที (คนที่เพิ่งลงจึงอยู่ท้ายคิวเอง)
           sp.status = "queue"
           sp.queueSince = now
         }
@@ -935,6 +1050,32 @@ export function finishMatch(
     const score = label ? ` ${label}` : ""
     s.events.push(
       event("match.end", `จบเกม ${court?.name ?? `คอร์ต ${match.courtIndex + 1}`}${score}`, { matchId: match.id }),
+    )
+  }).session
+}
+
+/**
+ * ย้ายเกมที่กำลังเล่นไปคอร์ตอื่น — ใช้ตอนคอร์ตเดิมต้องคืนสนามแต่เกมยังไม่จบ
+ * เวลาที่เล่นไปแล้วไม่รีเซ็ต เพราะเป็นเกมเดิม แค่เปลี่ยนที่ยืน
+ */
+export function moveMatch(sessionId: string, matchId: string, toCourtIndex: number): Session {
+  return mutate(sessionId, (s) => {
+    const match = s.matches.find((m) => m.id === matchId)
+    if (!match) throw new StoreError("ไม่พบเกมนี้", 404)
+    if (match.endedAt) throw new StoreError("เกมนี้จบไปแล้ว ย้ายไม่ได้", 400)
+
+    const to = s.courts[toCourtIndex]
+    if (!to) throw new StoreError("ไม่พบคอร์ตปลายทาง", 404)
+    if (to.index === match.courtIndex) throw new StoreError("เกมนี้อยู่คอร์ตนี้อยู่แล้ว", 400)
+    if (to.currentMatchId) throw new StoreError(`${to.name} มีเกมอยู่แล้ว`, 400)
+    if (to.disabled) throw new StoreError(`${to.name} ถูกปิดอยู่ เปิดคอร์ตก่อน`, 400)
+
+    const from = s.courts[match.courtIndex]
+    if (from && from.currentMatchId === match.id) from.currentMatchId = null
+    match.courtIndex = to.index
+    to.currentMatchId = match.id
+    s.events.push(
+      event("match.move", `ย้ายเกม #${match.no} จาก ${from?.name ?? "คอร์ตเดิม"} ไป ${to.name}`, { matchId }),
     )
   }).session
 }

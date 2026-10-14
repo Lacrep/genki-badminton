@@ -251,3 +251,65 @@ describe("ผลเสมอ", () => {
     }
   })
 })
+
+describe("ย้ายเกมไปคอร์ตอื่น", () => {
+  it("ย้ายได้ และเวลาที่เล่นไปแล้วไม่รีเซ็ต", async () => {
+    const { store, sessionId, ids } = await setup()
+    const { match } = store.startMatch(sessionId, {
+      courtIndex: 0,
+      type: "D",
+      teamA: [ids[0]!, ids[1]!],
+      teamB: [ids[2]!, ids[3]!],
+    })
+
+    const after = store.moveMatch(sessionId, match.id, 1)
+    const moved = after.matches.find((m) => m.id === match.id)!
+    expect(moved.courtIndex).toBe(1)
+    expect(moved.startedAt).toBe(match.startedAt)
+    expect(after.courts[0]!.currentMatchId).toBeNull()
+    expect(after.courts[1]!.currentMatchId).toBe(match.id)
+  })
+
+  it("ย้ายไปคอร์ตที่มีเกมอยู่แล้วไม่ได้", async () => {
+    const { store, sessionId, ids } = await setup()
+    const { match } = store.startMatch(sessionId, {
+      courtIndex: 0,
+      type: "D",
+      teamA: [ids[0]!, ids[1]!],
+      teamB: [ids[2]!, ids[3]!],
+    })
+    store.startMatch(sessionId, { courtIndex: 1, type: "D", teamA: [ids[4]!, ids[5]!], teamB: [ids[6]!, ids[7]!] })
+
+    expect(() => store.moveMatch(sessionId, match.id, 1)).toThrow()
+  })
+
+  it("เกมที่จบแล้วย้ายไม่ได้", async () => {
+    const { store, sessionId, ids } = await setup()
+    const { match } = store.startMatch(sessionId, {
+      courtIndex: 0,
+      type: "D",
+      teamA: [ids[0]!, ids[1]!],
+      teamB: [ids[2]!, ids[3]!],
+    })
+    store.finishMatch(sessionId, { matchId: match.id, sets: [{ a: 21, b: 15 }], shuttles: 1 })
+
+    expect(() => store.moveMatch(sessionId, match.id, 1)).toThrow()
+  })
+})
+
+describe("เลขเกม", () => {
+  it("ไล่เลข 1, 2, 3 ตามลำดับที่เริ่ม", async () => {
+    const { store, sessionId, ids } = await setup()
+    const a = store.startMatch(sessionId, { courtIndex: 0, type: "D", teamA: [ids[0]!, ids[1]!], teamB: [ids[2]!, ids[3]!] })
+    const b = store.startMatch(sessionId, { courtIndex: 1, type: "D", teamA: [ids[4]!, ids[5]!], teamB: [ids[6]!, ids[7]!] })
+    expect(a.match.no).toBe(1)
+    expect(b.match.no).toBe(2)
+  })
+
+  it("ย้ายคอร์ตแล้วเลขเกมไม่เปลี่ยน", async () => {
+    const { store, sessionId, ids } = await setup()
+    const { match } = store.startMatch(sessionId, { courtIndex: 0, type: "D", teamA: [ids[0]!, ids[1]!], teamB: [ids[2]!, ids[3]!] })
+    const after = store.moveMatch(sessionId, match.id, 1)
+    expect(after.matches.find((m) => m.id === match.id)!.no).toBe(match.no)
+  })
+})

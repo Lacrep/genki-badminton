@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { CheckCircle2, Hand, MoreVertical, Play, Plus, Shuffle, Sparkles, Trash2 } from "lucide-react"
+import { CheckCircle2, Hand, MoreVertical, MoveRight, Play, Plus, Shuffle, Sparkles, Trash2 } from "lucide-react"
 import {
   type CourtView,
   type SessionSettings,
@@ -30,6 +30,8 @@ export function CourtCard({
   onSwap,
   onShuttle,
   onToggleCourt,
+  onMove,
+  moveTargets,
 }: {
   cv: CourtView
   settings: SessionSettings
@@ -43,6 +45,10 @@ export function CourtCard({
   onSwap: () => void
   onShuttle: (delta: number) => void
   onToggleCourt: (disabled: boolean) => void
+  /** ย้ายเกมนี้ไปคอร์ตอื่น — ใช้ตอนคอร์ตเดิมต้องคืนสนามแต่เกมยังไม่จบ */
+  onMove: (toCourtIndex: number) => void
+  /** คอร์ตว่างที่ย้ายไปได้ตอนนี้ */
+  moveTargets: { index: number; name: string }[]
 }) {
   const [menu, setMenu] = useState(false)
   const { court, match, players, elapsedMs } = cv
@@ -57,9 +63,13 @@ export function CourtCard({
         <span className="hinomaru-dot" />
         <h3 className="flex-1 truncate font-heading text-[14.5px] font-semibold text-ink">{court.name}</h3>
         {match ? (
-          <span className="chip bg-navy/10 text-navy dark:bg-navy-soft/40 dark:text-sand">
-            {MATCH_TYPE_LABEL[match.type]}
-          </span>
+          <>
+            {/* เลขเกม — จดไว้แล้วเอาไปเทียบกับไฟล์ Excel ทีหลังได้ */}
+            <span className="nums chip bg-subtle font-bold text-ink-soft">#{match.no}</span>
+            <span className="chip bg-navy/10 text-navy dark:bg-navy-soft/40 dark:text-sand">
+              {MATCH_TYPE_LABEL[match.type]}
+            </span>
+          </>
         ) : court.disabled ? (
           <span className="chip bg-subtle text-ink-faint">ปิดอยู่</span>
         ) : (
@@ -84,6 +94,25 @@ export function CourtCard({
                           onSwap()
                         }}
                       />
+                      {moveTargets.length > 0 ? (
+                        <>
+                          <p className="px-3 pb-1 pt-2 font-heading text-[10.5px] font-semibold uppercase tracking-wider text-ink-faint">
+                            ย้ายเกมนี้ไป
+                          </p>
+                          {moveTargets.map((t) => (
+                            <MenuItem
+                              key={t.index}
+                              icon={<MoveRight size={14} />}
+                              label={t.name}
+                              onClick={() => {
+                                setMenu(false)
+                                onMove(t.index)
+                              }}
+                            />
+                          ))}
+                          <div className="my-1 border-t border-line/70" />
+                        </>
+                      ) : null}
                       <MenuItem
                         icon={<Plus size={14} />}
                         label="เพิ่มลูกแบด 1 ลูก"

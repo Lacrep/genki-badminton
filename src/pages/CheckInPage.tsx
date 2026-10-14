@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react"
-import { Archive, ArchiveRestore, Check, Pencil, Search, Trash2, UserPlus, Users } from "lucide-react"
+import { useMemo, useRef, useState } from "react"
+import { Archive, ArchiveRestore, Camera, Check, Pencil, Search, Trash2, UserPlus, Users } from "lucide-react"
 import { type Level, type RosterPlayer, LEVELS, displayName, levelInfo, recordLabel } from "@shared/types"
 import { api, type PlayerInput } from "@/lib/api"
+import { squarePhotoDataUrl } from "@/lib/photo"
 import { useApp, useSession } from "@/lib/app"
 import { LevelBadge, PlayerAvatar } from "@/components/player"
 import { EmptyState, Modal } from "@/components/ui"
@@ -223,27 +224,56 @@ export function CheckInPage() {
 // ── ฟอร์มเพิ่ม/แก้ผู้เล่น — เก็บแค่ชื่อที่ใช้เรียกกับระดับมือ ────────────────────
 
 export function PlayerForm({
-  player,
+  player: openedPlayer,
   onClose,
   sessionId,
   checkInAfterCreate = false,
 }: {
+  /** ตัวที่เปิดมา — ใช้แค่ id ส่วนข้อมูลอ่านสด ๆ จากทะเบียนทุกครั้ง */
   player: RosterPlayer | null
   onClose: () => void
   sessionId?: string
   checkInAfterCreate?: boolean
 }) {
-  const { run, setRoster } = useApp()
-  const [name, setName] = useState(player?.name ?? "")
-  const [level, setLevel] = useState<Level>(player?.level ?? 3)
+  const { run, setRoster, toast, roster } = useApp()
+  // เปลี่ยนรูปแล้วทะเบียนอัปเดต แต่ของที่ส่งเข้ามาเป็นสำเนาตอนเปิดหน้าต่าง
+  // ถ้าไม่อ่านใหม่ รูปในหน้าต่างจะยังเป็นของเก่าจนกว่าจะปิดแล้วเปิดใหม่
+  const live = openedPlayer ? (roster.find((r) => r.id === openedPlayer.id) ?? openedPlayer) : null
+  const [name, setName] = useState(live?.name ?? "")
+  const [level, setLevel] = useState<Level>(live?.level ?? 3)
   const [busy, setBusy] = useState(false)
+  const fileRef = useRef<HTMLInputElement>(null)
+
+  /** เลือกรูปจากกล้องหรือคลังภาพ — ย่อในเครื่องก่อนส่ง จะได้ไม่ช้าและไม่กินที่ */
+  const pickPhoto = async (file: File | undefined) => {
+    if (!file || !live) return
+    setBusy(true)
+    try {
+      const data = await squarePhotoDataUrl(file)
+      const reply = await run("ใส่รูปแล้ว", () => api.setPhoto(live.id, data))
+      if (reply && "roster" in reply) setRoster(reply.roster)
+    } catch (err) {
+      toast(err instanceof Error ? err.message : "ใส่รูปไม่สำเร็จ", "error")
+    } finally {
+      setBusy(false)
+      if (fileRef.current) fileRef.current.value = ""
+    }
+  }
+
+  const removePhoto = async () => {
+    if (!live) return
+    setBusy(true)
+    const reply = await run("เอารูปออกแล้ว", () => api.clearPhoto(live.id))
+    if (reply && "roster" in reply) setRoster(reply.roster)
+    setBusy(false)
+  }
 
   const save = async () => {
     const input: PlayerInput = { name: name.trim(), level }
     if (!input.name) return
     setBusy(true)
-    if (player) {
-      await run("บันทึกข้อมูลแล้ว", () => api.updatePlayer(player.id, input))
+    if (live) {
+      await run("บันทึกข้อมูลแล้ว", () => api.updatePlayer(live.id, input))
     } else if (checkInAfterCreate && sessionId) {
       await run(`เพิ่ม ${input.name} และเช็คอินแล้ว`, () => api.checkInNew(sessionId, input))
     } else {
@@ -255,11 +285,11 @@ export function PlayerForm({
   }
 
   const remove = async () => {
-    if (!player) return
+    if (!live) return
     // ลบได้เฉพาะคนที่ยังไม่เคยลงก๊วน (เซิร์ฟเวอร์เป็นคนกัน) คนที่เคยเล่นแล้วให้เก็บเข้ากรุ
-    if (!window.confirm(`ลบ ${displayName(player)} ออกจากทะเบียน? ใช้ได้เฉพาะคนที่ยังไม่เคยลงก๊วน`)) return
+    if (!window.confirm(`ลบ ${displayName(live)} ออกจากทะเบียน? ใช้ได้เฉพาะคนที่ยังไม่เคยลงก๊วน`)) return
     setBusy(true)
-    const reply = await run("ลบออกจากทะเบียนแล้ว", () => api.deletePlayer(player.id))
+    const reply = await run("ลบออกจากทะเบียนแล้ว", () => api.deletePlayer(live.id))
     if (reply && "roster" in reply) setRoster(reply.roster)
     setBusy(false)
     onClose()
@@ -267,10 +297,10 @@ export function PlayerForm({
 
   /** เก็บเข้ากรุ = หายจากรายชื่อเช็คอิน แต่ชื่อกับประวัติยังอยู่ครบ */
   const setArchived = async (archived: boolean) => {
-    if (!player) return
+    if (!live) return
     setBusy(true)
     const reply = await run(archived ? "เก็บเข้ากรุแล้ว" : "เอากลับมาแล้ว", () =>
-      api.updatePlayer(player.id, { archived }),
+      api.updatePlayer(live.id, { archived }),
     )
     if (reply && "roster" in reply) setRoster(reply.roster)
     setBusy(false)
@@ -281,12 +311,12 @@ export function PlayerForm({
     <Modal
       open
       onClose={onClose}
-      title={player ? `แก้ข้อมูล ${displayName(player)}` : "เพิ่มผู้เล่นใหม่"}
+      title={live ? `แก้ข้อมูล ${displayName(live)}` : "เพิ่มผู้เล่นใหม่"}
       subtitle="ใช้ชื่อที่เรียกกันในก๊วนได้เลย ไม่ต้องเป็นชื่อจริง"
       footer={
         <div className="flex items-center gap-1 whitespace-nowrap">
-          {player ? (
-            player.archived ? (
+          {live ? (
+            live.archived ? (
               <button className="btn-quiet !px-2" onClick={() => setArchived(false)} disabled={busy}>
                 <ArchiveRestore size={16} />
                 เอากลับมา
@@ -309,12 +339,41 @@ export function PlayerForm({
             ยกเลิก
           </button>
           <button className="btn-primary" onClick={save} disabled={busy || !name.trim()}>
-            {player ? "บันทึก" : checkInAfterCreate ? "เพิ่มและเช็คอิน" : "เพิ่ม"}
+            {live ? "บันทึก" : checkInAfterCreate ? "เพิ่มและเช็คอิน" : "เพิ่ม"}
           </button>
         </div>
       }
     >
       <div className="flex flex-col gap-4">
+        {live ? (
+          <div className="flex items-center gap-3">
+            <PlayerAvatar player={live} size={64} />
+            <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                // บนมือถือจะมีทั้ง "ถ่ายรูป" และ "เลือกจากคลังภาพ" ให้เลือกเอง
+                className="hidden"
+                onChange={(e) => void pickPhoto(e.target.files?.[0])}
+              />
+              <div className="flex flex-wrap gap-1.5">
+                <button className="btn-ghost !py-1.5 !text-[12.5px]" onClick={() => fileRef.current?.click()} disabled={busy}>
+                  <Camera size={15} />
+                  {live.photoAt ? "เปลี่ยนรูป" : "ใส่รูป"}
+                </button>
+                {live.photoAt ? (
+                  <button className="btn-quiet !py-1.5 !text-[12.5px] !text-hinomaru" onClick={() => void removePhoto()} disabled={busy}>
+                    <Trash2 size={15} />
+                    เอารูปออก
+                  </button>
+                ) : null}
+              </div>
+              <p className="text-[11px] leading-snug text-ink-faint">ถ่ายใหม่หรือเลือกจากคลังภาพก็ได้ · ระบบย่อรูปให้เอง</p>
+            </div>
+          </div>
+        ) : null}
+
         <div>
           <label className="label" htmlFor="pf-name">
             ชื่อที่ใช้เรียกในก๊วน

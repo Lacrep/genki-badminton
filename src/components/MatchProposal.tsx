@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { CheckCheck, Dices, Info, ListPlus, Play, Users } from "lucide-react"
+import { AlertTriangle, ArrowLeftRight, CheckCheck, Dices, Info, ListPlus, Play, Users } from "lucide-react"
 import {
   type MatchType,
   type RosterPlayer,
@@ -16,6 +16,9 @@ import { speak } from "@/lib/sound"
 import { cn } from "@/lib/util"
 import { Modal, Segmented } from "./ui"
 import { LevelBadge, PlayerAvatar } from "./player"
+
+/** คนหนึ่งคนในรายชื่อที่เลือกได้ — เก็บสถานะจริงไว้ จะได้ย้อมสีให้เห็นชัด */
+type Pickable = { player: RosterPlayer; status: "queue" | "playing" | "resting"; waitMs: number }
 
 const TYPE_OPTIONS: { value: MatchType | "auto"; label: string }[] = [
   { value: "auto", label: "อัตโนมัติ" },
@@ -61,7 +64,7 @@ export function MatchProposal({
    */
   const pickable = useMemo(() => {
     if (!planning) {
-      return view.queue.map((q) => ({ player: q.player, note: `รอ ${formatDuration(q.waitMs)}`, waitMs: q.waitMs }))
+      return view.queue.map((q) => ({ player: q.player, status: "queue" as const, waitMs: q.waitMs }))
     }
     const taken = new Set(view.planned.flatMap((p) => p.players.map((x) => x.player.id)))
     const waitOf = new Map(view.queue.map((q) => [q.player.id, q.waitMs]))
@@ -72,15 +75,9 @@ export function MatchProposal({
         if (!player) return null
         // เวลารอคือข้อมูลหลักที่ใช้ตัดสินว่าจะจัดใครลง จึงต้องเห็นตอนเลือกคนด้วย
         const wait = waitOf.get(sp.playerId)
-        const note =
-          sp.status === "playing"
-            ? "อยู่ในคอร์ต"
-            : sp.status === "resting"
-              ? "พัก"
-              : `รอ ${formatDuration(wait ?? 0)}`
-        return { player, note, waitMs: wait ?? -1 }
+        return { player, status: sp.status, waitMs: wait ?? -1 }
       })
-      .filter((x): x is { player: RosterPlayer; note: string; waitMs: number } => !!x)
+      .filter((x): x is Pickable => !!x)
       // คนที่รอนานสุดอยู่บนสุด คนที่ยังเล่นอยู่ไปท้ายสุด
       .sort((a, b) => b.waitMs - a.waitMs)
   }, [planning, view.queue, view.planned, view.session.players, rosterById])
@@ -149,15 +146,54 @@ export function MatchProposal({
     })
   }
 
-  // เลือกครบตามจำนวน → ให้เซิร์ฟเวอร์แบ่งฝั่งให้สูสี
+  /**
+   * โหมดเลือกเอง: จับคู่ตามลำดับที่กดเป๊ะ ๆ — คนที่ 1-2 ฝั่ง A · 3-4 ฝั่ง B
+   *
+   * เมื่อก่อนส่งรายชื่อกลับไปให้เซิร์ฟเวอร์แบ่งฝั่งใหม่ให้สูสี ผลคือจัดคู่เดิม
+   * กี่ครั้งก็โดนสลับสมาชิกทุกที ทั้งที่บางคู่เขาอยากลงด้วยกันตลอด
+   * ตอนนี้จับมาแบบไหนก็ได้แบบนั้น ซ้ำคู่เดิมได้ไม่มีใครมาห้าม
+   */
   useEffect(() => {
     if (mode !== "manual") return
-    if (picked.length === need) void fetchSuggestion({ include: picked })
-    else setSuggestion(null)
-  }, [mode, picked, need, fetchSuggestion])
+    if (picked.length !== need) {
+      setSuggestion(null)
+      setAlternatives([])
+      return
+    }
+    const half = need / 2
+    const teamA = picked.slice(0, half)
+    const teamB = picked.slice(half)
+    const levelOf = (id: string) => rosterById.get(id)?.level ?? 1
+    const levels = picked.map(levelOf)
+    const sum = (ids: string[]) => ids.reduce((n, id) => n + levelOf(id), 0)
+    setSuggestion({
+      type: need === 2 ? "S" : "D",
+      teamA,
+      teamB,
+      levelGap: Math.max(...levels) - Math.min(...levels),
+      teamDiff: Math.abs(sum(teamA) - sum(teamB)),
+      maxWaitMs: Math.max(0, ...picked.map((id) => pickable.find((c) => c.player.id === id)?.waitMs ?? 0)),
+      reasons: ["หัวก๊วนจับคู่เอง — ระบบไม่สลับให้"],
+    })
+    setAlternatives([])
+  }, [mode, picked, need, rosterById, pickable])
+
+  /** สลับฝั่ง A↔B โดยไม่เปลี่ยนว่าใครคู่กับใคร */
+  const swapSides = () => setPicked((prev) => [...prev.slice(need / 2), ...prev.slice(0, need / 2)])
 
   const start = async () => {
     if (!suggestion) return
+    if (
+      stillPlaying.length > 0 &&
+      !window.confirm(
+        `${stillPlaying.join(", ")} ยังอยู่ในคอร์ตตอนนี้\n\n` +
+          (planning
+            ? "จัดเข้าคิวได้ แต่คู่นี้จะลงไม่ได้จนกว่าเขาจะจบเกม — ยืนยันไหม?"
+            : "ต้องจบเกมที่เขาเล่นอยู่ก่อนถึงจะลงคอร์ตนี้ได้ — ยืนยันไหม?"),
+      )
+    ) {
+      return
+    }
     setBusy(true)
     const payload = {
       type: suggestion.type,
@@ -181,6 +217,16 @@ export function MatchProposal({
     return p ? displayName(p) : id
   }
 
+  /** คนในเกมนี้ที่ยังไม่ลงจากคอร์ต — ต้องเตือนก่อนจัด ไม่งั้นพลาดได้ง่าย */
+  const stillPlaying = useMemo(() => {
+    if (!suggestion) return []
+    const ids = new Set([...suggestion.teamA, ...suggestion.teamB])
+    return view.session.players
+      .filter((sp) => ids.has(sp.playerId) && sp.status === "playing")
+      .map((sp) => nameOf(sp.playerId))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [suggestion, view.session.players, rosterById])
+
   return (
     <Modal
       open={open}
@@ -192,14 +238,21 @@ export function MatchProposal({
           ? "เกมนี้จะไปต่อท้ายคิว — คอร์ตไหนว่างก่อนก็กดลงได้เลย ไม่ต้องมาจัดใหม่ตอนนั้น"
           : mode === "auto"
             ? "ระบบเลือกคนที่รอนานสุด + มือใกล้เคียง + ไม่ซ้ำคู่เดิม"
-            : `เลือกผู้เล่นเอง ${picked.length}/${need} คน แล้วระบบจะแบ่งฝั่งให้สูสี`
+            : `เลือกเอง ${picked.length}/${need} คน — กดตามลำดับ คนที่ 1-2 อยู่ฝั่ง A คนที่ 3-4 ฝั่ง B`
       }
       footer={
         <div className="flex items-center gap-2">
-          <button className="btn-ghost" onClick={shuffleAgain} disabled={busy || (!suggestion && !problem)}>
-            <Dices size={16} />
-            สุ่มใหม่
-          </button>
+          {mode === "manual" ? (
+            <button className="btn-ghost" onClick={swapSides} disabled={busy || picked.length !== need}>
+              <ArrowLeftRight size={16} />
+              สลับฝั่ง
+            </button>
+          ) : (
+            <button className="btn-ghost" onClick={shuffleAgain} disabled={busy || (!suggestion && !problem)}>
+              <Dices size={16} />
+              สุ่มใหม่
+            </button>
+          )}
           <div className="flex-1" />
           <button className="btn-quiet" onClick={onClose}>
             ยกเลิก
@@ -212,6 +265,19 @@ export function MatchProposal({
       }
     >
       <div className="flex flex-col gap-4">
+        {stillPlaying.length > 0 ? (
+          <div className="flex items-start gap-2.5 rounded-xl border-2 border-hinomaru/55 bg-hinomaru/[0.1] px-3 py-2.5">
+            <AlertTriangle size={17} className="mt-0.5 shrink-0 text-hinomaru" />
+            <p className="text-[12.5px] leading-snug text-ink">
+              <b className="font-heading">{stillPlaying.join(", ")}</b> ยังอยู่ในคอร์ตตอนนี้
+              <span className="block text-ink-soft">
+                {planning
+                  ? "จัดเข้าคิวได้ แต่คู่นี้จะลงไม่ได้จนกว่าเขาจะจบเกม"
+                  : "ต้องจบเกมที่เขาเล่นอยู่ก่อน ถึงจะลงคอร์ตนี้ได้"}
+              </span>
+            </p>
+          </div>
+        ) : null}
         <Segmented
           value={mode}
           onChange={(m) => {
@@ -290,7 +356,8 @@ export function MatchProposal({
             ) : null}
             <div className="flex flex-col gap-1.5">
               {pickable.map((c) => {
-                const on = picked.includes(c.player.id)
+                const at = picked.indexOf(c.player.id)
+                const on = at >= 0
                 return (
                   <button
                     key={c.player.id}
@@ -298,15 +365,42 @@ export function MatchProposal({
                     onClick={() => togglePick(c.player.id)}
                     className={cn(
                       "flex items-center gap-2.5 rounded-xl border px-2.5 py-2 text-left transition-all",
-                      on ? "border-navy bg-navy/[0.07] ring-1 ring-navy/40" : "border-line/70 bg-surface hover:bg-subtle",
+                      on
+                        ? "border-navy bg-navy/[0.07] ring-1 ring-navy/40"
+                        : c.status === "playing"
+                          ? // คนที่ยังอยู่ในคอร์ตต้องสะดุดตา ไม่งั้นจัดลงซ้ำโดยไม่ทันสังเกต
+                            "border-hinomaru/45 bg-hinomaru/[0.07] hover:bg-hinomaru/[0.12]"
+                          : "border-line/70 bg-surface hover:bg-subtle",
                     )}
                   >
-                    <PlayerAvatar player={c.player} size={30} />
+                    {/* โหมดเลือกเอง: เลขบอกว่าใครคู่กับใคร (1-2 ฝั่ง A · 3-4 ฝั่ง B) */}
+                    {on && mode === "manual" ? (
+                      <span
+                        className={cn(
+                          "flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-full font-heading text-[13px] font-bold text-white",
+                          at < need / 2 ? "bg-navy" : "bg-hinomaru",
+                        )}
+                      >
+                        {at + 1}
+                      </span>
+                    ) : (
+                      <PlayerAvatar player={c.player} size={30} />
+                    )}
                     <span className="min-w-0 flex-1 truncate font-heading text-[14px] font-medium text-ink">
                       {displayName(c.player)}
                     </span>
                     <LevelBadge level={c.player.level} />
-                    <span className="nums text-[12px] text-ink-soft">{c.note}</span>
+                    {c.status === "playing" ? (
+                      <span className="chip shrink-0 border border-hinomaru/40 bg-hinomaru/15 font-semibold text-hinomaru-deep dark:text-hinomaru-soft">
+                        อยู่ในคอร์ต
+                      </span>
+                    ) : c.status === "resting" ? (
+                      <span className="chip shrink-0 border border-gold/50 bg-gold/20 font-semibold text-gold-deep dark:text-gold-soft">
+                        ขอพัก
+                      </span>
+                    ) : (
+                      <span className="nums text-[12px] text-ink-soft">รอ {formatDuration(c.waitMs)}</span>
+                    )}
                     {on ? <CheckCheck size={16} className="text-navy dark:text-gold-soft" /> : null}
                   </button>
                 )

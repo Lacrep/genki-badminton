@@ -95,6 +95,50 @@ describe("ไฟล์ทะเบียนเสีย", () => {
   })
 })
 
+describe("รับเงินแล้วต้องเช็คเอาท์ให้เอง", () => {
+  it("คนที่นั่งรออยู่ จ่ายเงินแล้วออกจากก๊วนทันที", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ต้น", level: 5 })
+    const session = store.createSession({})
+    store.checkIn(session.id, a.id)
+
+    const after = store.setPaid(session.id, a.id, true)
+    expect(after.players.find((p) => p.playerId === a.id)?.status).toBe("left")
+  })
+
+  it("ยกเลิกการจ่าย พากลับเข้าคิวให้", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ต้น", level: 5 })
+    const session = store.createSession({})
+    store.checkIn(session.id, a.id)
+    store.setPaid(session.id, a.id, true)
+
+    const after = store.setPaid(session.id, a.id, false)
+    expect(after.players.find((p) => p.playerId === a.id)?.status).toBe("queue")
+  })
+
+  it("คนที่อยู่ในคอร์ต จ่ายแล้วไม่โดนดึงออกกลางเกม แต่จบเกมแล้วกลับบ้านเลย", async () => {
+    const store = await loadStore()
+    const ids = ["ต้น", "บอย", "แนน", "โจ้"].map((name) => store.addPlayer({ name, level: 4 }).id)
+    const session = store.createSession({})
+    for (const id of ids) store.checkIn(session.id, id)
+    const { match } = store.startMatch(session.id, {
+      courtIndex: 0,
+      type: "D",
+      teamA: ids.slice(0, 2),
+      teamB: ids.slice(2),
+    })
+
+    const mid = store.setPaid(session.id, ids[0], true)
+    expect(mid.players.find((p) => p.playerId === ids[0])?.status).toBe("playing")
+
+    const done = store.finishMatch(session.id, { matchId: match.id, sets: [{ a: 21, b: 15 }], shuttles: 1 })
+    expect(done.players.find((p) => p.playerId === ids[0])?.status).toBe("left")
+    // คนที่ยังไม่จ่ายกลับเข้าคิวตามปกติ
+    expect(done.players.find((p) => p.playerId === ids[1])?.status).toBe("queue")
+  })
+})
+
 describe("ทะเบียนสมาชิกต้องอยู่ตลอด", () => {
   it("แก้ชื่ออย่างเดียวแล้วระดับมือต้องไม่หาย", async () => {
     const store = await loadStore()

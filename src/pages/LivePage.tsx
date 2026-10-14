@@ -137,6 +137,12 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
               onManual={() => setProposal({ courtIndex: cv.court.index, mode: "manual" })}
               onFinish={() => setFinishing(cv.court.index)}
               onSwap={() => setSwapping(cv.court.index)}
+              moveTargets={liveCourts
+                .filter((o) => o.court.index !== cv.court.index && !o.match && !o.court.disabled)
+                .map((o) => ({ index: o.court.index, name: o.court.name }))}
+              onMove={(to) =>
+                void run("ย้ายคอร์ตแล้ว", () => api.moveMatch(sessionId, cv.match!.id, to))
+              }
               onCancel={() => {
                 if (!cv.match) return
                 if (!window.confirm(`ยกเลิกเกมใน ${cv.court.name}? ทุกคนจะกลับไปที่คิวเดิม`)) return
@@ -292,6 +298,10 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
               }
               return (
                 <div key={m.id} className="flex items-center gap-2.5 px-3.5 py-2.5">
+                  {/* เลขเกม — ใช้เทียบกับไฟล์ Excel ได้ตรง ๆ */}
+                  <span className="nums shrink-0 rounded-md bg-subtle px-1.5 py-0.5 font-heading text-[11px] font-bold text-ink-soft">
+                    #{m.no}
+                  </span>
                   <span className="nums shrink-0 text-[11.5px] text-ink-faint">{thaiTime(m.endedAt ?? m.startedAt)}</span>
                   <span className="min-w-0 flex-1 truncate text-[13px] text-ink">
                     {m.teamA.map(nameOf).join(" + ")}

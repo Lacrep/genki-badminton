@@ -137,6 +137,10 @@ export const api = {
   updatePlayer: (id: string, input: Partial<PlayerInput>) =>
     patch<{ player: RosterPlayer; roster: RosterPlayer[] }>(`/api/players/${id}`, input),
   deletePlayer: (id: string) => request<{ roster: RosterPlayer[] }>(`/api/players/${id}`, { method: "DELETE" }),
+  setPhoto: (id: string, data: string) =>
+    post<{ player: RosterPlayer; roster: RosterPlayer[] }>(`/api/players/${id}/photo`, { data }),
+  clearPhoto: (id: string) =>
+    request<{ player: RosterPlayer; roster: RosterPlayer[] }>(`/api/players/${id}/photo`, { method: "DELETE" }),
 
   // ก๊วน
   createSession: (input: {
@@ -163,6 +167,8 @@ export const api = {
   boost: (id: string, playerId: string, boost: number) =>
     post<ViewReply>(`/api/session/${id}/boost`, { playerId, boost }),
   paid: (id: string, playerId: string, paid: boolean) => post<ViewReply>(`/api/session/${id}/paid`, { playerId, paid }),
+  moveMatch: (id: string, matchId: string, toCourtIndex: number) =>
+    post<ViewReply>(`/api/session/${id}/move`, { matchId, toCourtIndex }),
   courtFee: (id: string, playerId: string, noCourtFee: boolean) =>
     post<ViewReply>(`/api/session/${id}/court-fee`, { playerId, noCourtFee }),
 

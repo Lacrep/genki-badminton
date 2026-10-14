@@ -19,18 +19,21 @@ import {
   allTimeStats,
   buildView,
   cancelMatch,
+  moveMatch,
   checkIn,
   checkOut,
   committedPlayerIds,
   computeBill,
   createSession,
   currentSession,
+  clearPlayerPhoto,
   deletePlayer,
   deleteSession,
   endSession,
   findSessionByCode,
   finishMatch,
   getRoster,
+  readPlayerPhoto,
   getSession,
   listSessions,
   movePlanned,
@@ -42,6 +45,7 @@ import {
   setBoost,
   setCourtCount,
   setNoCourtFee,
+  setPlayerPhoto,
   setPaid,
   setRest,
   startMatch,
@@ -156,6 +160,33 @@ app.patch("/api/players/:id", async (c) => {
   const input = await body(c, playerSchema.partial())
   const player = updatePlayer(c.req.param("id"), input as Partial<RosterPlayer>)
   return c.json({ player, roster: getRoster() })
+})
+
+// ── รูปโปรไฟล์ ───────────────────────────────────────────────────────────────
+
+/** รูปที่หน้าเว็บย่อเป็นสี่เหลี่ยมจัตุรัสเล็ก ๆ แล้วส่งมาเป็น data URL */
+app.post("/api/players/:id/photo", async (c) => {
+  const { data } = await body(c, z.object({ data: z.string().min(1).max(4_200_000) }))
+  const player = setPlayerPhoto(c.req.param("id"), data)
+  return c.json({ player, roster: getRoster() })
+})
+
+app.delete("/api/players/:id/photo", (c) => {
+  const player = clearPlayerPhoto(c.req.param("id"))
+  return c.json({ player, roster: getRoster() })
+})
+
+app.get("/api/photos/:id", (c) => {
+  const photo = readPlayerPhoto(c.req.param("id"))
+  if (!photo) return c.json({ error: "ไม่พบรูป" }, 404)
+  return new Response(new Uint8Array(photo.bytes), {
+    headers: {
+      "Content-Type": photo.type,
+      "Content-Length": String(photo.bytes.length),
+      // URL มี ?v=<เวลาอัปโหลด> อยู่แล้ว เปลี่ยนรูปเมื่อไร URL ก็เปลี่ยนตาม
+      "Cache-Control": "public, max-age=31536000, immutable",
+    },
+  })
 })
 
 app.delete("/api/players/:id", (c) => {
@@ -405,6 +436,16 @@ app.post("/api/session/:id/cancel", async (c) => {
   return c.json(view(session.id))
 })
 
+/** ย้ายเกมที่กำลังเล่นไปคอร์ตว่าง — คอร์ตเดิมต้องคืนสนามแต่เกมยังไม่จบ */
+app.post("/api/session/:id/move", async (c) => {
+  const { matchId, toCourtIndex } = await body(
+    c,
+    z.object({ matchId: z.string().min(1), toCourtIndex: z.number().int().min(0).max(19) }),
+  )
+  const session = moveMatch(c.req.param("id"), matchId, toCourtIndex)
+  return c.json(view(session.id))
+})
+
 app.post("/api/session/:id/swap", async (c) => {
   const input = await body(
     c,
@@ -492,8 +533,9 @@ app.get("/api/session/:id/matches.csv", (c) => {
   }
   const rows = [
     // หัวตารางภาษาไทย — เปิดใน Excel แล้วอ่านรู้เรื่องเลย ไม่ต้องเดาว่าคอลัมน์ไหนคืออะไร
-    ["คอร์ต", "ประเภท", "เริ่ม", "จบ", "นาที", "ฝั่ง A", "ฝั่ง B", "สกอร์", "ผล", "ลูกที่ใช้", "ห่างระดับมือ"],
+    ["เกมที่", "คอร์ต", "ประเภท", "เริ่ม", "จบ", "นาที", "ฝั่ง A", "ฝั่ง B", "สกอร์", "ผล", "ลูกที่ใช้", "ห่างระดับมือ"],
     ...session.matches.map((m) => [
+      String(m.no),
       session.courts[m.courtIndex]?.name ?? `คอร์ต ${m.courtIndex + 1}`,
       m.type,
       thaiTime(m.startedAt),

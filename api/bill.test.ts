@@ -15,6 +15,7 @@ const NOW = 1_700_000_000_000
 function match(id: string, ids: string[], shuttles: number): Match {
   return {
     id,
+    no: 1,
     courtIndex: 0,
     type: "D",
     teamA: ids.slice(0, 2),

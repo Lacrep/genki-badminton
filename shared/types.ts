@@ -71,6 +71,11 @@ export function levelSolid(level: number): string {
 
 export const MAX_LEVEL = LEVELS.length
 
+/** URL รูปโปรไฟล์ — undefined ถ้ายังไม่มีรูป */
+export function photoUrl(player: RosterPlayer): string | undefined {
+  return player.photoAt ? `/api/photos/${player.id}?v=${player.photoAt}` : undefined
+}
+
 export function levelInfo(level: number): LevelInfo {
   // ข้อมูลเพี้ยน (ไม่มีระดับมือ / ไม่ใช่ตัวเลข) ต้องไม่ทำให้ทั้งหน้าจอขาว
   // คืนขั้นกลางไปก่อน แล้วให้หัวก๊วนแก้ระดับมือเอาเองได้
@@ -88,6 +93,14 @@ export interface RosterPlayer {
   note?: string
   /** เก็บเข้ากรุ — ไม่โชว์ในรายชื่อเช็คอิน แต่สถิติเก่ายังอยู่ */
   archived?: boolean
+  /**
+   * มีรูปโปรไฟล์ไหม — เก็บเป็นเวลาที่อัปโหลดล่าสุด
+   *
+   * ตัวรูปอยู่เป็นไฟล์แยกใน data/photos ไม่ได้ยัดลง roster.json เพราะ base64
+   * จะทำให้ไฟล์ทะเบียนบวมจนเขียน-สำรองช้า เลขนี้ใช้ต่อท้าย URL กันเบราว์เซอร์
+   * ค้างรูปเก่าไว้ในแคชหลังเปลี่ยนรูป
+   */
+  photoAt?: number
   createdAt: number
 }
 
@@ -145,6 +158,8 @@ export interface MatchSet {
 
 export interface Match {
   id: string
+  /** เลขเกมในก๊วนนี้ (เกมที่ 1, 2, 3...) — ใช้อ้างอิงข้ามไปไฟล์ Excel ได้ */
+  no: number
   courtIndex: number
   type: MatchType
   teamA: string[]
@@ -279,6 +294,7 @@ export interface SessionEvent {
     | "match.start"
     | "match.end"
     | "match.cancel"
+    | "match.move"
     | "match.swap"
     | "shuttle.add"
     | "plan.add"

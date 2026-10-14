@@ -8,6 +8,7 @@ import {
   formatDuration,
   levelInfo,
   levelSolid,
+  photoUrl,
 } from "@shared/types"
 import { cn } from "@/lib/util"
 
@@ -27,6 +28,19 @@ export function LevelBadge({ level, showName = false }: { level: number; showNam
 
 export function PlayerAvatar({ player, size = 34 }: { player: RosterPlayer; size?: number }) {
   const label = displayName(player).trim().slice(0, 2)
+  const photo = photoUrl(player)
+  if (photo) {
+    return (
+      <img
+        src={photo}
+        alt=""
+        // ขอบสีระดับมือยังอยู่ จะได้กวาดตาดูมือได้เหมือนเดิมแม้มีรูปแล้ว
+        className="inline-block shrink-0 rounded-full object-cover"
+        style={{ width: size, height: size, boxShadow: `0 0 0 2px ${levelSolid(player.level)}` }}
+        loading="lazy"
+      />
+    )
+  }
   return (
     <span
       className="inline-flex shrink-0 items-center justify-center rounded-full font-heading font-semibold text-white"

@@ -59,8 +59,16 @@ export function BillPage() {
     .filter((m) => m.endedAt)
     .sort((a, b) => (b.endedAt ?? 0) - (a.endedAt ?? 0))
   const missingShuttles = playedMatches.filter((m) => m.shuttles === 0).length
-  const setPaid = (playerId: string, paid: boolean) =>
-    run(paid ? "รับเงินแล้ว" : "ยกเลิกการจ่าย", () => api.paid(sessionId, playerId, paid), { silent: true })
+  /** รับเงิน = เช็คเอาท์ให้เลย (ถ้ายังอยู่ในคอร์ต จะรอจบเกมก่อน) */
+  const setPaid = (playerId: string, paid: boolean) => {
+    const sp = view.session.players.find((p) => p.playerId === playerId)
+    const msg = !paid
+      ? "ยกเลิกการจ่าย — กลับเข้าคิวให้แล้ว"
+      : sp?.status === "playing"
+        ? "รับเงินแล้ว — จบเกมนี้แล้วจะเช็คเอาท์ให้เอง"
+        : "รับเงินแล้ว — เช็คเอาท์ให้แล้ว"
+    return run(msg, () => api.paid(sessionId, playerId, paid))
+  }
   const waived = bill.lines.filter((l) => l.noCourtFee).length
   const payingCourt = bill.lines.length - waived
   /** หัวก๊วนที่ลงไปตีเองมักไม่เก็บค่าสนามตัวเอง — เก็บแต่ค่าลูก */
