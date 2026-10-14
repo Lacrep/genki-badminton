@@ -95,6 +95,49 @@ describe("ไฟล์ทะเบียนเสีย", () => {
   })
 })
 
+describe("เก็บเงินครบแล้วข้อมูลก๊วนต้องไม่หาย", () => {
+  it("เก็บเงินครบทุกคน รายชื่อคนที่มาและสถิติยังอยู่ครบ", async () => {
+    const store = await loadStore()
+    const ids = ["ต้น", "บอย", "แนน", "โจ้"].map((name) => store.addPlayer({ name, level: 4 }).id)
+    const session = store.createSession({})
+    for (const id of ids) store.checkIn(session.id, id)
+    const { match } = store.startMatch(session.id, {
+      courtIndex: 0,
+      type: "D",
+      teamA: ids.slice(0, 2),
+      teamB: ids.slice(2),
+    })
+    store.finishMatch(session.id, { matchId: match.id, sets: [{ a: 21, b: 15 }], shuttles: 1 })
+
+    // จบก๊วน: เก็บเงินครบทุกคน (ซึ่งเช็คเอาท์ให้อัตโนมัติ)
+    for (const id of ids) store.setPaid(session.id, id, true)
+
+    const after = store.getSession(session.id)
+    expect(after.players).toHaveLength(4)
+    expect(after.players.every((p) => p.status === "left")).toBe(true)
+    // ตัวเลขสถิติต้องไม่ถูกล้าง
+    expect(after.players.every((p) => p.gamesPlayed === 1)).toBe(true)
+    expect(after.matches).toHaveLength(1)
+    expect(store.getRoster()).toHaveLength(4)
+
+    // "มาวันนี้" ต้องยังเป็น 4 ไม่ใช่ 0
+    const view = store.buildView(after)
+    expect(view.stats.checkedIn).toBe(4)
+    expect(view.stats.present).toBe(0)
+  })
+
+  it("สถิติรวมทุกครั้งยังนับก๊วนที่เก็บเงินครบแล้ว", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ต้น", level: 5 })
+    const session = store.createSession({})
+    store.checkIn(session.id, a.id)
+    store.setPaid(session.id, a.id, true)
+
+    const stats = store.allTimeStats()
+    expect(stats.find((x) => x.playerId === a.id)?.sessions).toBe(1)
+  })
+})
+
 describe("รับเงินแล้วต้องเช็คเอาท์ให้เอง", () => {
   it("คนที่นั่งรออยู่ จ่ายเงินแล้วออกจากก๊วนทันที", async () => {
     const store = await loadStore()

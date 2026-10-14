@@ -438,7 +438,10 @@ export interface SessionView {
   /** เตือนว่ามีคนถูกดอง */
   dongAlerts: string[]
   stats: {
+    /** คนที่มาก๊วนวันนี้ทั้งหมด — นับคนที่กลับบ้านไปแล้วด้วย */
     checkedIn: number
+    /** คนที่ยังอยู่ในสนามตอนนี้ (ยังไม่กลับบ้าน) */
+    present: number
     playing: number
     waiting: number
     matchesDone: number

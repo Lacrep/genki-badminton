@@ -16,7 +16,9 @@ export function CheckInPage() {
   const [editing, setEditing] = useState<RosterPlayer | "new" | null>(null)
 
   const canControl = !needPin && view.session.status === "live"
-  const inSession = new Set(view.session.players.filter((p) => p.status !== "left").map((p) => p.playerId))
+  // ใครที่มาก๊วนนี้แล้วถือว่าอยู่ในรายชื่อ "มาวันนี้" ด้านล่าง ไม่ต้องโผล่ซ้ำข้างบน
+  // คนที่กลับบ้านไปแล้วเรียกกลับได้จากปุ่มในรายชื่อนั้นเลย
+  const inSession = new Set(view.session.players.map((p) => p.playerId))
 
   const available = useMemo(() => {
     const q = term.trim().toLowerCase()
@@ -32,10 +34,18 @@ export function CheckInPage() {
     [view.roster],
   )
 
+  /**
+   * ทุกคนที่มาก๊วนวันนี้ รวมคนที่กลับบ้านไปแล้ว
+   *
+   * เดิมกรองคนที่ "กลับบ้านแล้ว" ทิ้ง พอเก็บเงินครบตอนจบก๊วน (ซึ่งเช็คเอาท์
+   * ให้อัตโนมัติ) รายชื่อเลยว่างเปล่าเหมือนไม่มีใครมาเลย ทั้งที่ข้อมูลยังอยู่ครบ
+   * คนที่กลับแล้วให้เรียงไว้ท้ายสุดและทำให้จางลง แต่ต้องเห็นเสมอ
+   */
   const checkedIn = view.session.players
-    .filter((p) => p.status !== "left")
     .map((sp) => ({ sp, player: view.roster.find((p) => p.id === sp.playerId) }))
     .filter((x): x is { sp: typeof x.sp; player: RosterPlayer } => !!x.player)
+    .sort((a, b) => Number(a.sp.status === "left") - Number(b.sp.status === "left"))
+  const stillHere = checkedIn.filter((x) => x.sp.status !== "left").length
 
   const checkInPicked = async () => {
     if (picked.length === 0) return
@@ -164,38 +174,62 @@ export function CheckInPage() {
 
       {/* คนที่เช็คอินแล้ว */}
       <section className="flex flex-col gap-2">
-        <h2 className="section-title">เช็คอินแล้ว ({checkedIn.length})</h2>
+        <h2 className="section-title">
+          มาวันนี้ ({checkedIn.length})
+          {stillHere < checkedIn.length ? (
+            <span className="font-normal text-ink-faint">· ยังอยู่ {stillHere} คน</span>
+          ) : null}
+        </h2>
         <div className="card divide-y divide-line/60">
           {checkedIn.length === 0 ? (
-            <EmptyState title="ยังไม่มีใครเช็คอิน" hint="เลือกชื่อจากด้านบนเพื่อเริ่มนับเวลารอ" />
+            <EmptyState title="ยังไม่มีใครมาก๊วนนี้" hint="เลือกชื่อจากด้านบนเพื่อเริ่มนับเวลารอ" />
           ) : (
             checkedIn.map(({ sp, player }) => (
-              <div key={sp.playerId} className="flex items-center gap-2.5 px-3 py-2">
+              <div
+                key={sp.playerId}
+                className={cn("flex items-center gap-2.5 px-3 py-2", sp.status === "left" && "opacity-60")}
+              >
                 <PlayerAvatar player={player} size={30} />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-heading text-[14px] font-medium text-ink">
                     {displayName(player)}
                   </span>
-                  <span className="block text-[11px] text-ink-faint">
+                  <span className="block truncate text-[11px] text-ink-faint">
                     {sp.gamesPlayed} เกม
                     {sp.wins + sp.losses + sp.draws > 0 ? ` · ${recordLabel(sp)}` : ""}
                     {sp.paid ? " · จ่ายแล้ว" : ""}
                   </span>
                 </span>
-                <LevelBadge level={player.level} />
+                {/* คนที่กลับแล้วไม่ต้องโชว์ระดับมือ — เอาที่ว่างไว้ให้ชื่อกับสถิติพอดีบรรทัด */}
+                {sp.status === "left" ? null : <LevelBadge level={player.level} />}
                 <span
                   className={cn(
-                    "chip",
+                    "chip shrink-0",
                     sp.status === "playing"
                       ? "bg-navy text-white"
                       : sp.status === "resting"
                         ? "bg-gold/25 text-gold-deep"
-                        : "bg-subtle text-ink-soft",
+                        : sp.status === "left"
+                          ? "bg-subtle text-ink-faint"
+                          : "bg-subtle text-ink-soft",
                   )}
                 >
-                  {sp.status === "playing" ? "ในคอร์ต" : sp.status === "resting" ? "พัก" : "รอคิว"}
+                  {sp.status === "playing"
+                    ? "ในคอร์ต"
+                    : sp.status === "resting"
+                      ? "พัก"
+                      : sp.status === "left"
+                        ? "กลับแล้ว"
+                        : "รอคิว"}
                 </span>
-                {canControl && sp.status !== "playing" ? (
+                {canControl && sp.status === "left" ? (
+                  <button
+                    className="btn-quiet btn-sm"
+                    onClick={() => void run("กลับเข้าคิวแล้ว", () => api.checkIn(sessionId, sp.playerId))}
+                  >
+                    เรียกกลับ
+                  </button>
+                ) : canControl && sp.status !== "playing" ? (
                   <button
                     className="btn-quiet btn-sm"
                     onClick={() => void run("บันทึกว่ากลับบ้านแล้ว", () => api.checkOut(sessionId, sp.playerId))}

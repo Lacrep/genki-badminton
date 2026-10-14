@@ -1407,7 +1407,10 @@ export function buildView(session: Session, now = Date.now()): SessionView {
     now,
     dongAlerts,
     stats: {
-      checkedIn: session.players.filter((p) => p.status !== "left").length,
+      // "มาวันนี้" ต้องนับทุกคนที่เช็คอิน ไม่งั้นพอเก็บเงินครบทุกคนตอนจบก๊วน
+      // (ซึ่งเช็คเอาท์ให้อัตโนมัติ) ตัวเลขจะกลายเป็น 0 เหมือนไม่มีใครมาเลย
+      checkedIn: session.players.length,
+      present: session.players.filter((p) => p.status !== "left").length,
       playing: session.players.filter((p) => p.status === "playing").length,
       waiting: queue.length,
       matchesDone: session.matches.filter((m) => m.endedAt).length,

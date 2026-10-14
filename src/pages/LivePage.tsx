@@ -95,7 +95,15 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
       <div className="card card-pad">
         {/* 4 ช่อง — ลงตัวทั้งจอมือถือ (2×2) และจอคอม (1×4) ไม่ตกบรรทัดแหว่ง */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <Stat label="มาวันนี้" value={view.stats.checkedIn} hint={`${view.roster.length} คนในทะเบียน`} />
+          <Stat
+            label="มาวันนี้"
+            value={view.stats.checkedIn}
+            hint={
+              view.stats.present < view.stats.checkedIn
+                ? `ยังอยู่ ${view.stats.present} คน · กลับแล้ว ${view.stats.checkedIn - view.stats.present}`
+                : `${view.roster.length} คนในทะเบียน`
+            }
+          />
           <Stat label="อยู่ในคอร์ต" value={view.stats.playing} hint={`ว่าง ${freeCourts} คอร์ต`} />
           <Stat
             label="รอคิว"
