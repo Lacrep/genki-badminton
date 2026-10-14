@@ -181,7 +181,9 @@ export function CheckInPage() {
           ) : null}
         </h2>
         {canControl && checkedIn.length > 0 ? (
-          <p className="-mt-1 text-[11.5px] text-ink-faint">แตะที่ชื่อเพื่อแก้ข้อมูลหรือใส่รูป — ไม่ต้องเช็คเอาท์ก่อน</p>
+          <p className="-mt-1 text-[11.5px] text-ink-faint">
+            กดปุ่มดินสอ (หรือแตะที่ชื่อ) เพื่อแก้ชื่อ · ระดับมือ · ใส่รูป — ไม่ต้องเช็คเอาท์ก่อน
+          </p>
         ) : null}
         <div className="card divide-y divide-line/60">
           {checkedIn.length === 0 ? (
@@ -213,26 +215,33 @@ export function CheckInPage() {
                 </button>
                 {/* คนที่กลับแล้วไม่ต้องโชว์ระดับมือ — เอาที่ว่างไว้ให้ชื่อกับสถิติพอดีบรรทัด */}
                 {sp.status === "left" ? null : <LevelBadge level={player.level} />}
-                <span
-                  className={cn(
-                    "chip shrink-0",
-                    sp.status === "playing"
-                      ? "bg-navy text-white"
-                      : sp.status === "resting"
-                        ? "bg-gold/25 text-gold-deep"
-                        : sp.status === "left"
-                          ? "bg-subtle text-ink-faint"
-                          : "bg-subtle text-ink-soft",
-                  )}
-                >
-                  {sp.status === "playing"
-                    ? "ในคอร์ต"
-                    : sp.status === "resting"
-                      ? "พัก"
-                      : sp.status === "left"
-                        ? "กลับแล้ว"
-                        : "รอคิว"}
-                </span>
+                {/* "รอคิว" คือสถานะปกติของเกือบทุกคน ไม่ต้องติดป้ายให้รกและเบียดที่ชื่อ
+                    ติดเฉพาะตอนที่ต่างไปจากปกติเท่านั้น */}
+                {sp.status === "queue" ? null : (
+                  <span
+                    className={cn(
+                      "chip shrink-0",
+                      sp.status === "playing"
+                        ? "bg-navy text-white"
+                        : sp.status === "resting"
+                          ? "bg-gold/25 text-gold-deep"
+                          : "bg-subtle text-ink-faint",
+                    )}
+                  >
+                    {sp.status === "playing" ? "ในคอร์ต" : sp.status === "resting" ? "พัก" : "กลับแล้ว"}
+                  </span>
+                )}
+                {/* ปุ่มแก้ข้อมูล/ใส่รูป — ต้องมีให้เห็น ไม่ใช่ซ่อนไว้ให้แตะที่ชื่อเอาเอง */}
+                {canControl ? (
+                  <button
+                    className="btn-quiet !px-1.5 !py-1"
+                    onClick={() => setEditing(player)}
+                    aria-label={`แก้ข้อมูล ${displayName(player)}`}
+                    title="แก้ชื่อ · ระดับมือ · ใส่รูป"
+                  >
+                    <Pencil size={14} />
+                  </button>
+                ) : null}
                 {canControl && sp.status === "left" ? (
                   <button
                     className="btn-quiet btn-sm"
