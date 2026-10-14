@@ -180,6 +180,9 @@ export function CheckInPage() {
             <span className="font-normal text-ink-faint">· ยังอยู่ {stillHere} คน</span>
           ) : null}
         </h2>
+        {canControl && checkedIn.length > 0 ? (
+          <p className="-mt-1 text-[11.5px] text-ink-faint">แตะที่ชื่อเพื่อแก้ข้อมูลหรือใส่รูป — ไม่ต้องเช็คเอาท์ก่อน</p>
+        ) : null}
         <div className="card divide-y divide-line/60">
           {checkedIn.length === 0 ? (
             <EmptyState title="ยังไม่มีใครมาก๊วนนี้" hint="เลือกชื่อจากด้านบนเพื่อเริ่มนับเวลารอ" />
@@ -189,17 +192,25 @@ export function CheckInPage() {
                 key={sp.playerId}
                 className={cn("flex items-center gap-2.5 px-3 py-2", sp.status === "left" && "opacity-60")}
               >
-                <PlayerAvatar player={player} size={30} />
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate font-heading text-[14px] font-medium text-ink">
-                    {displayName(player)}
+                {/* แตะชื่อเพื่อแก้ข้อมูล/ใส่รูปได้เลย ไม่ต้องเช็คเอาท์ออกมาก่อน */}
+                <button
+                  type="button"
+                  className="flex min-w-0 flex-1 items-center gap-2.5 text-left"
+                  onClick={() => setEditing(player)}
+                  disabled={!canControl}
+                >
+                  <PlayerAvatar player={player} size={30} />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate font-heading text-[14px] font-medium text-ink">
+                      {displayName(player)}
+                    </span>
+                    <span className="block truncate text-[11px] text-ink-faint">
+                      {sp.gamesPlayed} เกม
+                      {sp.wins + sp.losses + sp.draws > 0 ? ` · ${recordLabel(sp)}` : ""}
+                      {sp.paid ? " · จ่ายแล้ว" : ""}
+                    </span>
                   </span>
-                  <span className="block truncate text-[11px] text-ink-faint">
-                    {sp.gamesPlayed} เกม
-                    {sp.wins + sp.losses + sp.draws > 0 ? ` · ${recordLabel(sp)}` : ""}
-                    {sp.paid ? " · จ่ายแล้ว" : ""}
-                  </span>
-                </span>
+                </button>
                 {/* คนที่กลับแล้วไม่ต้องโชว์ระดับมือ — เอาที่ว่างไว้ให้ชื่อกับสถิติพอดีบรรทัด */}
                 {sp.status === "left" ? null : <LevelBadge level={player.level} />}
                 <span
