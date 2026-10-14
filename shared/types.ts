@@ -76,6 +76,20 @@ export function photoUrl(player: RosterPlayer): string | undefined {
   return player.photoAt ? `/api/photos/${player.id}?v=${player.photoAt}` : undefined
 }
 
+/** เวลาที่ build ตัวที่กำลังรันอยู่ — ฝังตอน build ทั้งฝั่งเว็บและเซิร์ฟเวอร์ */
+declare const __BUILD_STAMP__: string
+export const BUILD_STAMP = typeof __BUILD_STAMP__ === "string" ? __BUILD_STAMP__ : ""
+
+/** เวลาที่ build แบบอ่านง่าย (เวลาไทย) — ใช้ตรวจว่าอัปเดตแล้วจริงหรือยัง */
+export function buildLabel(): string {
+  if (!BUILD_STAMP) return "ยังไม่ได้ build"
+  const d = new Date(BUILD_STAMP)
+  if (Number.isNaN(d.getTime())) return BUILD_STAMP
+  const t = new Date(d.getTime() + 7 * 3600_000)
+  const p2 = (n: number) => String(n).padStart(2, "0")
+  return `${p2(t.getUTCDate())}/${p2(t.getUTCMonth() + 1)}/${t.getUTCFullYear()} ${p2(t.getUTCHours())}:${p2(t.getUTCMinutes())}`
+}
+
 export function levelInfo(level: number): LevelInfo {
   // ข้อมูลเพี้ยน (ไม่มีระดับมือ / ไม่ใช่ตัวเลข) ต้องไม่ทำให้ทั้งหน้าจอขาว
   // คืนขั้นกลางไปก่อน แล้วให้หัวก๊วนแก้ระดับมือเอาเองได้

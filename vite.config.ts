@@ -5,7 +5,11 @@ import { defineConfig } from "vite"
 
 const __dirname = import.meta.dirname
 
+/** เวลาที่ build — เอาไว้ตอบคำถาม "อัปเดตแล้วจริงหรือยัง" ได้ในวินาทีเดียว */
+const BUILD_STAMP = new Date().toISOString()
+
 export default defineConfig({
+  define: { __BUILD_STAMP__: JSON.stringify(BUILD_STAMP) },
   plugins: [
     // Serve the Hono API from the same origin in dev, so the phone on the
     // gym Wi-Fi only ever needs one address.

@@ -8,7 +8,7 @@
 import { Hono } from "hono"
 import type { HttpBindings } from "@hono/node-server"
 import { z } from "zod"
-import { type Level, type MatchType, type RosterPlayer, MAX_LEVEL, displayName, scoreLabel, thaiTime } from "@shared/types"
+import { type Level, type MatchType, type RosterPlayer, MAX_LEVEL, buildLabel, displayName, scoreLabel, thaiTime } from "@shared/types"
 import { suggestMatch } from "./matching"
 import { billFilename, billWorkbook } from "./billsheet"
 import {
@@ -646,6 +646,7 @@ if (process.env.NODE_ENV !== "development") {
       `   เครื่องนี้        http://localhost:${port}/`,
       ...lanAddresses().map((ip) => `   มือถือใน Wi-Fi นี้  http://${ip}:${port}/`),
       `   ข้อมูลเก็บที่      ${path.resolve(process.env.DATA_DIR || "./data")}`,
+      `   เวอร์ชันที่รันอยู่   build เมื่อ ${buildLabel()}`,
       "",
     ]
 

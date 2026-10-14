@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { ChevronDown, Flag, Gauge, LayoutGrid, Settings2, Volume2 } from "lucide-react"
-import { type MatchType, type SessionSettings, DEFAULT_SETTINGS, MAX_LEVEL } from "@shared/types"
+import { buildLabel, DEFAULT_SETTINGS, MAX_LEVEL, type MatchType, type SessionSettings } from "@shared/types"
 import { api } from "@/lib/api"
 import { useApp } from "@/lib/app"
 import { EmptyState, Segmented, Stepper, Toggle } from "@/components/ui"
@@ -288,6 +288,12 @@ export function SettingsPage({ navigate }: { navigate: (to: string) => void }) {
           </button>
         </div>
       </section>
+
+      {/* เวอร์ชัน — ตอบคำถาม "อัปเดตแล้วจริงหรือยัง" ได้จากมือถือเลย ไม่ต้องดูหน้าจอดำ */}
+      <p className="pb-1 text-center text-[11.5px] text-ink-faint">
+        เวอร์ชันที่ใช้อยู่ · build เมื่อ {buildLabel()}
+        <span className="block">อัปเดตแล้วเลขนี้ต้องเปลี่ยน — ถ้าไม่เปลี่ยน แปลว่ายังรันตัวเก่าอยู่</span>
+      </p>
     </div>
   )
 }
