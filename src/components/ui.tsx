@@ -101,7 +101,12 @@ export function Modal({
         role="dialog"
         aria-modal="true"
         className={cn(
-          "relative z-10 max-h-[92vh] w-full overflow-hidden rounded-t-washi border border-line/80 bg-surface shadow-lift",
+          /*
+            svh ไม่ใช่ vh — บน Safari ของ iPhone ค่า vh คือความสูงตอน "แถบบน/ล่างหุบ"
+            พอแถบที่อยู่ของ Safari โผล่ขึ้นมา ท้ายหน้าต่าง (ปุ่มรับเงิน ปุ่มใช้รูปนี้)
+            จะมุดไปอยู่ใต้แถบจนกดไม่ได้ svh คือค่าตอนแถบกางเต็ม จึงพอดีเสมอ
+          */
+          "relative z-10 max-h-[92svh] w-full overflow-hidden rounded-t-washi border border-line/80 bg-surface shadow-lift",
           "animate-slide-up sm:rounded-washi",
           wide ? "sm:max-w-2xl" : "sm:max-w-md",
         )}
@@ -115,8 +120,9 @@ export function Modal({
             <X size={18} />
           </button>
         </div>
-        <div className="max-h-[calc(92vh-9rem)] overflow-y-auto px-4 py-4 sm:px-5">{children}</div>
-        {footer ? <div className="border-t border-line/70 bg-subtle/60 px-4 py-3 sm:px-5">{footer}</div> : null}
+        <div className="max-h-[calc(92svh-9rem)] overflow-y-auto px-4 py-4 sm:px-5">{children}</div>
+        {/* ท้ายหน้าต่างเผื่อที่ให้แถบ home indicator ของ iPhone ด้วย ปุ่มจะได้ไม่ติดขอบ */}
+        {footer ? <div className="pb-safe border-t border-line/70 bg-subtle/60 px-4 py-3 sm:px-5">{footer}</div> : null}
       </div>
     </div>
   )

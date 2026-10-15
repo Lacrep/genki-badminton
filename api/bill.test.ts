@@ -33,7 +33,12 @@ function match(id: string, ids: string[], shuttles: number): Match {
  * ก๊วนตัวอย่างตามโปสเตอร์: ค่าสนามคนละ 70 · ลูกละ 25
  * 2 เกม — เกมแรก a,b vs c,d ใช้ 2 ลูก · เกมสอง a,b vs c,e ใช้ 1 ลูก
  */
-function makeSession(fees: Partial<Fees> = {}, games: Record<string, number> = {}, noCourtFee: string[] = []) {
+function makeSession(
+  fees: Partial<Fees> = {},
+  games: Record<string, number> = {},
+  noCourtFee: string[] = [],
+  noBill: string[] = [],
+) {
   const ids = ["a", "b", "c", "d", "e"]
   const roster = new Map<string, RosterPlayer>()
   const players: SessionPlayer[] = []
@@ -56,6 +61,7 @@ function makeSession(fees: Partial<Fees> = {}, games: Record<string, number> = {
       boost: 0,
       paid: false,
       ...(noCourtFee.includes(id) ? { noCourtFee: true } : {}),
+      ...(noBill.includes(id) ? { noBill: true } : {}),
     })
   }
 
@@ -259,5 +265,50 @@ describe("ยกเว้นค่าสนามรายคน — หัว�
     const { session, roster } = makeSession()
     const bill = computeBill(session, roster)
     expect(bill.lines.every((l) => l.noCourtFee === false)).toBe(true)
+  })
+})
+
+describe("เอาคนออกจากบิล — ไม่คิดเงินเลยสักบาท", () => {
+  it("ยอดเป็น 0 ทั้งค่าสนาม ค่าลูก และค่าอื่น ๆ", () => {
+    const { session, roster } = makeSession({ extraCost: 500 }, {}, [], ["a"])
+    const bill = computeBill(session, roster)
+    const line = bill.lines.find((l) => l.playerId === "a")!
+    expect(line.amount).toBe(0)
+    expect(line.courtPart).toBe(0)
+    expect(line.shuttlePart).toBe(0)
+    expect(line.extraPart).toBe(0)
+    expect(line.noBill).toBe(true)
+  })
+
+  it("ยอดที่หายไปไม่ถูกผลักไปให้คนอื่น เหมือนการยกเว้นค่าสนาม", () => {
+    const plain = computeBill(makeSession().session, makeSession().roster)
+    const { session, roster } = makeSession({}, {}, [], ["a"])
+    const bill = computeBill(session, roster)
+    for (const id of ["b", "c", "d", "e"]) {
+      expect(amountOf(bill, id)).toBe(amountOf(plain, id))
+    }
+    // a เคยจ่าย 70 + 75 = 145 → ก๊วนเก็บได้น้อยลงเท่านั้นพอดี
+    expect(plain.billed - bill.billed).toBe(amountOf(plain, "a"))
+  })
+
+  it("เอาออกจากบิลกินขาดกว่าการยกเว้นค่าสนาม", () => {
+    const { session, roster } = makeSession({}, {}, ["a"], ["a"])
+    const bill = computeBill(session, roster)
+    expect(amountOf(bill, "a")).toBe(0)
+  })
+
+  it("โหมดหารเท่าก็ไม่คิดเหมือนกัน", () => {
+    const fees = { mode: "equal" as const, courtCost: 1000, shuttleCostTotal: 500, extraCost: 0 }
+    const { session, roster } = makeSession(fees, {}, [], ["a"])
+    const bill = computeBill(session, roster)
+    expect(amountOf(bill, "a")).toBe(0)
+    // คนอื่นยังหารจาก 5 หัวเท่าเดิม ไม่ใช่ 4
+    expect(amountOf(bill, "b")).toBe(300)
+  })
+
+  it("ไม่ตั้งธง ก็คิดเงินตามปกติ", () => {
+    const { session, roster } = makeSession()
+    const bill = computeBill(session, roster)
+    expect(bill.lines.every((l) => l.noBill === false)).toBe(true)
   })
 })

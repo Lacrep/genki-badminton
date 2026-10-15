@@ -7,6 +7,10 @@ import {
   MATCH_TYPE_LABEL,
   displayName,
   formatDuration,
+  levelInfo,
+  levelInk,
+  levelSolid,
+  photoUrl,
   playersPerMatch,
 } from "@shared/types"
 import { api, type Suggestion } from "@/lib/api"
@@ -14,7 +18,15 @@ import { useApp } from "@/lib/app"
 import { speak } from "@/lib/sound"
 import { cn } from "@/lib/util"
 import { Modal, Segmented } from "./ui"
-import { LevelBadge, PlayerAvatar, PlayerFace } from "./player"
+import { PlayerFace } from "./player"
+
+/** เวลารอแบบสั้นที่สุด — การ์ดกว้างแค่ ~100px ใส่ "2 ชม. 14 นาที" ไม่ลง */
+function shortWait(ms: number): string {
+  const min = Math.round(ms / 60_000)
+  if (min < 1) return "เพิ่งเข้าคิว"
+  if (min < 60) return `รอ ${min} น.`
+  return `รอ ${Math.floor(min / 60)} ชม.`
+}
 
 /** คนหนึ่งคนในรายชื่อที่เลือกได้ — เก็บสถานะจริงไว้ จะได้ย้อมสีให้เห็นชัด */
 type Pickable = { player: RosterPlayer; status: "queue" | "playing" | "resting"; waitMs: number }
@@ -353,56 +365,102 @@ export function MatchProposal({
                 (คนที่ถูกจัดไว้ในคิวเกมอื่นแล้วจะไม่ขึ้นให้เลือกซ้ำ)
               </p>
             ) : null}
-            <div className="flex flex-col gap-1.5">
+            {/*
+              การ์ดจัตุรัสรูปเต็มใบ แทนแถวผืนผ้ายาว ๆ
+
+              หัวก๊วนต้องกวาดตาหาคนให้เจอเร็วตอนสนามกำลังวุ่น รูปกว้างเกือบเต็มการ์ด
+              จำหน้าได้จากระยะแขน และเห็นได้ทีละ 9 คนต่อหน้าจอแทนที่จะเป็น 6 แถว
+            */}
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
               {pickable.map((c) => {
                 const at = picked.indexOf(c.player.id)
                 const on = at >= 0
+                const photo = photoUrl(c.player)
                 return (
                   <button
                     key={c.player.id}
                     type="button"
                     onClick={() => togglePick(c.player.id)}
+                    title={`${displayName(c.player)} · ${levelInfo(c.player.level).name}`}
                     className={cn(
-                      "flex items-center gap-3 rounded-xl border px-2.5 py-2 text-left transition-all",
+                      "relative flex flex-col overflow-hidden rounded-xl border-2 text-left transition-all active:scale-[0.97]",
                       on
-                        ? "border-navy bg-navy/[0.07] ring-1 ring-navy/40"
+                        ? "border-navy ring-2 ring-navy/35 dark:border-gold-soft dark:ring-gold/35"
                         : c.status === "playing"
                           ? // คนที่ยังอยู่ในคอร์ตต้องสะดุดตา ไม่งั้นจัดลงซ้ำโดยไม่ทันสังเกต
-                            "border-hinomaru/45 bg-hinomaru/[0.07] hover:bg-hinomaru/[0.12]"
-                          : "border-line/70 bg-surface hover:bg-subtle",
+                            "border-hinomaru/60 hover:border-hinomaru"
+                          : "border-line/70 hover:border-navy/40",
                     )}
                   >
-                    {/* รูปใหญ่ — หัวก๊วนนึกชื่อไม่ออกก็ดูหน้าได้ทันที */}
-                    <span className="relative shrink-0">
-                      <PlayerAvatar player={c.player} size={46} />
-                      {/* โหมดเลือกเอง: เลขบอกว่าใครคู่กับใคร (1-2 ฝั่ง A · 3-4 ฝั่ง B) */}
+                    <span className="relative block aspect-square w-full bg-subtle">
+                      {photo ? (
+                        <img src={photo} alt="" className="h-full w-full object-cover" loading="lazy" />
+                      ) : (
+                        // ไม่มีรูปก็ใช้ตัวอักษรแรกบนสีระดับมือ — ยังกวาดตาดูมือได้เหมือนกัน
+                        <span
+                          className="flex h-full w-full items-center justify-center font-heading text-[34px] font-bold"
+                          style={{
+                            backgroundColor: levelSolid(c.player.level),
+                            color: levelInk(c.player.level),
+                          }}
+                          aria-hidden
+                        >
+                          {displayName(c.player).trim().slice(0, 1)}
+                        </span>
+                      )}
+
+                      {/* เลือกแล้ว: ย้อมทับ + เลขลำดับ (1-2 ฝั่ง A · 3-4 ฝั่ง B) */}
+                      {on ? (
+                        <span className="absolute inset-0 bg-navy/35 dark:bg-navy-deep/45" aria-hidden />
+                      ) : null}
                       {on && mode === "manual" ? (
                         <span
                           className={cn(
-                            "absolute -bottom-0.5 -right-0.5 flex h-[22px] w-[22px] items-center justify-center rounded-full font-heading text-[12px] font-bold text-white ring-2 ring-surface",
+                            "absolute left-1 top-1 flex h-7 w-7 items-center justify-center rounded-full font-heading text-[14px] font-bold text-white shadow-lift",
                             at < need / 2 ? "bg-navy" : "bg-hinomaru",
                           )}
                         >
                           {at + 1}
                         </span>
+                      ) : on ? (
+                        <span className="absolute left-1 top-1 rounded-full bg-navy p-1 text-white shadow-lift">
+                          <CheckCheck size={14} />
+                        </span>
+                      ) : null}
+
+                      {/* ป้ายระดับมือมุมขวาบน — สีทึบ เห็นแต่ไกล */}
+                      <span
+                        className="absolute right-1 top-1 rounded-md px-1.5 py-0.5 font-heading text-[11px] font-bold leading-tight"
+                        style={{ backgroundColor: levelSolid(c.player.level), color: levelInk(c.player.level) }}
+                      >
+                        {levelInfo(c.player.level).code}
+                      </span>
+
+                      {/* สถานะคาดไว้ท้ายรูป — อยู่ในคอร์ต/ขอพักต้องเห็นก่อนกด */}
+                      {c.status === "playing" ? (
+                        <span className="absolute inset-x-0 bottom-0 bg-hinomaru py-0.5 text-center font-heading text-[10.5px] font-bold text-white">
+                          อยู่ในคอร์ต
+                        </span>
+                      ) : c.status === "resting" ? (
+                        <span className="absolute inset-x-0 bottom-0 bg-gold py-0.5 text-center font-heading text-[10.5px] font-bold text-navy-deep">
+                          ขอพัก
+                        </span>
                       ) : null}
                     </span>
-                    <span className="min-w-0 flex-1 truncate font-heading text-[15px] font-semibold text-ink">
-                      {displayName(c.player)}
+
+                    <span className={cn("block px-1.5 py-1", on ? "bg-navy text-white dark:bg-navy-soft" : "bg-surface")}>
+                      <span className="block truncate text-center font-heading text-[13px] font-semibold leading-tight">
+                        {displayName(c.player)}
+                      </span>
+                      <span
+                        className={cn(
+                          "nums block truncate text-center text-[10.5px] leading-tight",
+                          on ? "text-sand/80" : "text-ink-faint",
+                        )}
+                      >
+                        {c.status === "queue" ? shortWait(c.waitMs) : levelInfo(c.player.level).name}
+                      </span>
                     </span>
-                    <LevelBadge level={c.player.level} />
-                    {c.status === "playing" ? (
-                      <span className="chip shrink-0 border border-hinomaru/40 bg-hinomaru/15 font-semibold text-hinomaru-deep dark:text-hinomaru-soft">
-                        อยู่ในคอร์ต
-                      </span>
-                    ) : c.status === "resting" ? (
-                      <span className="chip shrink-0 border border-gold/50 bg-gold/20 font-semibold text-gold-deep dark:text-gold-soft">
-                        ขอพัก
-                      </span>
-                    ) : (
-                      <span className="nums text-[12px] text-ink-soft">รอ {formatDuration(c.waitMs)}</span>
-                    )}
-                    {on ? <CheckCheck size={16} className="text-navy dark:text-gold-soft" /> : null}
                   </button>
                 )
               })}

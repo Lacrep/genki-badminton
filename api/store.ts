@@ -819,6 +819,36 @@ export function setNoCourtFee(sessionId: string, playerId: string, noCourtFee: b
 }
 
 /**
+ * เอาคนออกจากบิล / เอากลับเข้าบิล — ไม่คิดเงินคนนี้เลยสักบาท
+ *
+ * ต่างจาก noCourtFee ตรงที่อันนั้นยังเก็บค่าลูกอยู่ อันนี้คือไม่เก็บอะไรเลย
+ * ใช้กับแขกที่ก๊วนเชิญมา หรือคนที่เคลียร์กันไปแล้วทางอื่น
+ */
+export function setNoBill(sessionId: string, playerId: string, noBill: boolean): Session {
+  return mutate(sessionId, (s) => {
+    const sp = s.players.find((p) => p.playerId === playerId)
+    if (!sp) throw new StoreError("คนนี้ยังไม่ได้เช็คอิน", 404)
+    /*
+      ธง "จ่ายแล้ว" เก็บไว้เหมือนเดิม ไม่เคลียร์ทิ้ง
+
+      ยอดของคนที่ไม่อยู่ในบิลเป็น 0 อยู่แล้ว เลขรวมจึงไม่เพี้ยนแม้ธงยังอยู่
+      แต่ถ้าเคลียร์ทิ้ง พอกดพลาดแล้วเอากลับเข้าบิล ประวัติว่าเขาจ่ายมาแล้วจะหายไป
+      กลายเป็นต้องไปตามเก็บเงินคนที่จ่ายไปแล้วซ้ำอีกรอบ
+    */
+    if (noBill) sp.noBill = true
+    else delete sp.noBill
+    const name = rosterMap().get(playerId)
+    s.events.push(
+      event(
+        "fee",
+        `${name ? displayName(name) : playerId} ${noBill ? "ไม่คิดเงิน (เอาออกจากบิล)" : "กลับเข้าบิลตามปกติ"}`,
+        { playerId },
+      ),
+    )
+  }).session
+}
+
+/**
  * รับเงินแล้ว = คนนั้นกลับบ้านได้ ระบบจึงเช็คเอาท์ให้เลย
  *
  * เมื่อก่อนต้องไปกดเช็คเอาท์อีกทีแยกต่างหาก ซึ่งลืมกันประจำ แล้วชื่อคนที่
@@ -831,6 +861,8 @@ export function setPaid(sessionId: string, playerId: string, paid: boolean): Ses
   return mutate(sessionId, (s) => {
     const sp = s.players.find((p) => p.playerId === playerId)
     if (!sp) throw new StoreError("คนนี้ยังไม่ได้เช็คอิน", 404)
+    // คนที่เอาออกจากบิลแล้วไม่มียอดให้จ่าย กดรับเงินไปก็ทำให้เลขรวมเพี้ยนเปล่า ๆ
+    if (paid && sp.noBill) throw new StoreError("คนนี้ไม่ได้อยู่ในบิล — เอากลับเข้าบิลก่อนถึงจะรับเงินได้", 400)
     const now = Date.now()
     sp.paid = paid
     sp.paidAt = paid ? now : undefined
@@ -1237,8 +1269,10 @@ export function computeBill(session: Session, roster: Map<string, RosterPlayer>)
     // หารเท่า: เอาต้นทุนทั้งก้อนหารจำนวนคน — ช่องค่าอื่น ๆ ถูกบวกแยกด้านล่างอยู่แล้ว
     const fullCourt = fees.mode === "club" ? fees.courtFeePerHead : fees.courtCost / n
     // ยกเว้นค่าสนามรายคน (หัวก๊วนที่ลงไปตีเอง) — เก็บแต่ค่าลูก ส่วนที่หายไปไม่ผลักให้คนอื่น
-    const courtPart = sp.noCourtFee ? 0 : fullCourt
-    const shuttlePart = fees.mode === "club" ? (shuttleShare.get(sp.playerId) ?? 0) : shuttleCost / n
+    const noBill = sp.noBill === true
+    const courtPart = noBill || sp.noCourtFee ? 0 : fullCourt
+    const shuttlePart = noBill ? 0 : fees.mode === "club" ? (shuttleShare.get(sp.playerId) ?? 0) : shuttleCost / n
+    const extraPart = noBill ? 0 : extraPerHead
 
     return {
       playerId: sp.playerId,
@@ -1246,10 +1280,11 @@ export function computeBill(session: Session, roster: Map<string, RosterPlayer>)
       games: sp.gamesPlayed,
       courtPart: round2(courtPart),
       shuttlePart: round2(shuttlePart),
-      extraPart: round2(extraPerHead),
-      amount: roundUpTo(courtPart + shuttlePart + extraPerHead, fees.roundTo),
+      extraPart: round2(extraPart),
+      amount: noBill ? 0 : roundUpTo(courtPart + shuttlePart + extraPart, fees.roundTo),
       paid: sp.paid,
       noCourtFee: sp.noCourtFee === true,
+      noBill,
     }
   })
 
@@ -1305,6 +1340,11 @@ export function summaryText(session: Session): string {
 
   lines.push("💸 คนละ")
   for (const l of bill.lines) {
+    // คนที่เอาออกจากบิลต้องอ่านออกว่าตั้งใจไม่เก็บ ไม่ใช่ลืมใส่ยอด
+    if (l.noBill) {
+      lines.push(`   🙅 ${l.name} ไม่คิดเงิน · ${l.games} เกม`)
+      continue
+    }
     const detail = fees.mode === "club" ? ` [สนาม ${baht(l.courtPart)} + ลูก ${baht(l.shuttlePart)}]` : ""
     lines.push(`   ${l.paid ? "✅" : "⬜"} ${l.name} ${baht(l.amount)} บาท · ${l.games} เกม${detail}`)
   }

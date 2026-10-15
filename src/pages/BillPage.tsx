@@ -1,5 +1,17 @@
 import { useEffect, useState } from "react"
-import { Ban, Check, ClipboardList, Download, FileSpreadsheet, QrCode, Receipt, Volleyball, Wallet } from "lucide-react"
+import {
+  Ban,
+  Check,
+  ClipboardList,
+  Download,
+  FileSpreadsheet,
+  QrCode,
+  Receipt,
+  UserMinus,
+  UserPlus,
+  Volleyball,
+  Wallet,
+} from "lucide-react"
 import { type BillLine, type FeeMode, FEE_MODE_LABEL, displayName, thaiTime } from "@shared/types"
 import { CLUB } from "@shared/club"
 import { api } from "@/lib/api"
@@ -14,6 +26,7 @@ const nz = (v: number | undefined | null): number => (typeof v === "number" && N
 
 /** ที่มาของยอดคนนี้ แยกเป็นก้อน ๆ */
 function feeBreakdown(line: BillLine, long = false): string {
+  if (line.noBill) return "ไม่คิดเงินคนนี้"
   const parts = [line.noCourtFee ? "ยกเว้นค่าสนาม" : `${long ? "ค่าสนาม" : "สนาม"} ${baht(nz(line.courtPart))}`]
   if (nz(line.shuttlePart) > 0) parts.push(`${long ? "ค่าลูก" : "ลูก"} ${baht(nz(line.shuttlePart))}`)
   if (nz(line.extraPart) > 0) parts.push(`${long ? "อื่น ๆ" : "อื่น"} ${baht(nz(line.extraPart))}`)
@@ -54,7 +67,12 @@ export function BillPage() {
     return Number.isFinite(n) ? n : 0
   }
 
-  const unpaid = bill.lines.filter((l) => !l.paid)
+  /**
+   * "ยังไม่จ่าย" นับเฉพาะคนที่ยังมียอดค้างจริง
+   * คนที่เอาออกจากบิลไม่มียอดให้จ่าย ถ้านับรวมจะขึ้นค้างอยู่ตลอดทั้งที่เคลียร์แล้ว
+   */
+  const unpaid = bill.lines.filter((l) => !l.paid && !l.noBill)
+  const billable = bill.lines.filter((l) => !l.noBill)
   const playedMatches = [...view.session.matches]
     .filter((m) => m.endedAt)
     .sort((a, b) => (b.endedAt ?? 0) - (a.endedAt ?? 0))
@@ -76,6 +94,12 @@ export function BillPage() {
     run(noCourtFee ? "ยกเว้นค่าสนามให้แล้ว" : "กลับมาคิดค่าสนามแล้ว", () =>
       api.courtFee(sessionId, playerId, noCourtFee),
     )
+  /** เอาคนออกจากบิลไปเลย — แขกที่ก๊วนเชิญมา หรือคนที่เคลียร์กันแล้วทางอื่น */
+  const setNoBill = (playerId: string, noBill: boolean) =>
+    run(noBill ? "เอาออกจากบิลแล้ว — ไม่คิดเงินคนนี้" : "เอากลับเข้าบิลแล้ว", () =>
+      api.noBill(sessionId, playerId, noBill),
+    )
+  const offBill = bill.lines.filter((l) => l.noBill).length
 
   return (
     <div className="flex flex-col gap-4">
@@ -90,7 +114,7 @@ export function BillPage() {
           <Stat
             label="เก็บแล้ว"
             value={`${baht(bill.collected)} ฿`}
-            hint={`${bill.lines.length - unpaid.length}/${bill.lines.length} คน`}
+            hint={`${billable.length - unpaid.length}/${billable.length} คน`}
             tone="gold"
           />
           <Stat label="ยังไม่จ่าย" value={`${baht(bill.billed - bill.collected)} ฿`} tone="red" hint={`${unpaid.length} คน`} />
@@ -282,7 +306,9 @@ export function BillPage() {
         </h2>
         <p className="mb-3 text-[11.5px] leading-snug text-ink-faint">
           แตะที่ชื่อเพื่อเปิด QR พร้อมยอดของคนนั้น · ปุ่ม <Ban size={11} className="inline -mt-0.5" /> คือ
-          ไม่คิดค่าสนามคนนั้น (เก็บแต่ค่าลูก) สำหรับหัวก๊วนที่ลงไปตีเอง
+          ไม่คิดค่าสนามคนนั้น (เก็บแต่ค่าลูก) · ปุ่ม <UserMinus size={11} className="inline -mt-0.5" /> คือ
+          เอาออกจากบิลไปเลย ไม่คิดเงินสักบาท
+          {offBill > 0 ? <span className="font-medium text-ink-soft"> · ตอนนี้ไม่คิดเงิน {offBill} คน</span> : null}
         </p>
 
         <div className="flex flex-col">
@@ -299,7 +325,8 @@ export function BillPage() {
                   {player ? <PlayerAvatar player={player} size={30} /> : null}
                   <span className="min-w-0 flex-1">
                     <span className="block truncate font-heading text-[14px] font-medium text-ink">{l.name}</span>
-                    <span className="block truncate text-[11.5px] text-ink-faint">
+                    {/* ปล่อยให้ตกบรรทัดแทนตัดทิ้ง — ช่องนี้แคบ สถิติแพ้ชนะโดนตัดหายทุกแถว */}
+                    <span className="block text-[11.5px] leading-snug text-ink-faint">
                       {l.games} เกม
                       {sp && sp.wins + sp.losses + sp.draws > 0
                         ? ` · ชนะ ${sp.wins}${sp.draws > 0 ? ` เสมอ ${sp.draws}` : ""} แพ้ ${sp.losses}`
@@ -313,13 +340,22 @@ export function BillPage() {
                     ) : null}
                   </span>
                 </button>
-                <span className="nums font-heading text-[15px] font-semibold text-ink">{baht(l.amount)} ฿</span>
+                {/* คนที่เอาออกจากบิลแล้วไม่มียอด — ขีดไว้ให้เห็นว่าตั้งใจ ไม่ใช่ลืมคิด */}
+                {l.noBill ? (
+                  <span className="nums shrink-0 font-heading text-[13px] font-semibold text-ink-faint line-through">
+                    {baht(l.amount)} ฿
+                  </span>
+                ) : (
+                  <span className="nums shrink-0 font-heading text-[15px] font-semibold text-ink">
+                    {baht(l.amount)} ฿
+                  </span>
+                )}
                 <button
                   type="button"
-                  disabled={!canControl}
+                  disabled={!canControl || l.noBill}
                   onClick={() => void setCourtFee(l.playerId, !l.noCourtFee)}
                   className={cn(
-                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-all",
+                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-all disabled:opacity-40",
                     l.noCourtFee
                       ? "border-navy bg-navy text-sand dark:border-gold-soft dark:bg-navy-soft dark:text-gold-soft"
                       : "border-line bg-surface text-ink-faint hover:bg-subtle",
@@ -333,11 +369,28 @@ export function BillPage() {
                 <button
                   type="button"
                   disabled={!canControl}
-                  onClick={() => void setPaid(l.playerId, !l.paid)}
+                  onClick={() => void setNoBill(l.playerId, !l.noBill)}
                   className={cn(
                     "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-all",
+                    l.noBill
+                      ? "border-hinomaru bg-hinomaru text-white"
+                      : "border-line bg-surface text-ink-faint hover:bg-subtle",
+                  )}
+                  title={l.noBill ? "ไม่คิดเงินคนนี้อยู่ — กดเพื่อเอากลับเข้าบิล" : "เอาคนนี้ออกจากบิล (ไม่คิดเงินเลย)"}
+                  aria-label={l.noBill ? "ไม่คิดเงินคนนี้อยู่" : "เอาคนนี้ออกจากบิล"}
+                  aria-pressed={l.noBill}
+                >
+                  {l.noBill ? <UserPlus size={15} /> : <UserMinus size={15} />}
+                </button>
+                <button
+                  type="button"
+                  disabled={!canControl || l.noBill}
+                  onClick={() => void setPaid(l.playerId, !l.paid)}
+                  className={cn(
+                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-all disabled:opacity-40",
                     l.paid ? "border-gold bg-gold text-navy-deep" : "border-line bg-surface text-ink-faint hover:bg-subtle",
                   )}
+                  title={l.noBill ? "ไม่คิดเงินคนนี้ — ไม่ต้องรับเงิน" : l.paid ? "จ่ายแล้ว" : "ยังไม่จ่าย"}
                   aria-label={l.paid ? "จ่ายแล้ว" : "ยังไม่จ่าย"}
                 >
                   <Check size={16} />
@@ -505,6 +558,10 @@ export function BillPage() {
             await setCourtFee(collecting.playerId, !collecting.noCourtFee)
             setCollecting(null)
           }}
+          onToggleNoBill={async () => {
+            await setNoBill(collecting.playerId, !collecting.noBill)
+            setCollecting(null)
+          }}
         />
       ) : null}
 
@@ -528,6 +585,7 @@ function CollectModal({
   onClose,
   onPaid,
   onToggleCourtFee,
+  onToggleNoBill,
 }: {
   line: BillLine
   promptPay: string
@@ -536,6 +594,7 @@ function CollectModal({
   onClose: () => void
   onPaid: () => void
   onToggleCourtFee: () => void
+  onToggleNoBill: () => void
 }) {
   return (
     <Modal
@@ -546,14 +605,26 @@ function CollectModal({
       footer={
         canControl ? (
           <div className="flex w-full flex-col gap-2">
-            <button className={cn("btn-lg w-full", line.paid ? "btn-ghost" : "btn-gold")} onClick={onPaid}>
-              <Check size={18} />
-              {line.paid ? "ยกเลิกว่าจ่ายแล้ว" : "รับเงินแล้ว"}
-            </button>
+            {/* เอาออกจากบิลแล้วไม่มียอดให้เก็บ — ปุ่มรับเงินจึงไม่ต้องมี */}
+            {line.noBill ? null : (
+              <button className={cn("btn-lg w-full", line.paid ? "btn-ghost" : "btn-gold")} onClick={onPaid}>
+                <Check size={18} />
+                {line.paid ? "ยกเลิกว่าจ่ายแล้ว" : "รับเงินแล้ว"}
+              </button>
+            )}
             {/* ยกเว้นค่าสนามใช้ได้ทั้งสองโหมด — โหมดหารเท่าก็หักส่วนค่าสนามออกให้เหมือนกัน */}
-            <button className="btn-quiet w-full !text-[12.5px]" onClick={onToggleCourtFee}>
-              <Ban size={15} />
-              {line.noCourtFee ? "กลับมาคิดค่าสนามคนนี้" : "ไม่คิดค่าสนามคนนี้ (เก็บแต่ค่าลูก)"}
+            {line.noBill ? null : (
+              <button className="btn-quiet w-full !text-[12.5px]" onClick={onToggleCourtFee}>
+                <Ban size={15} />
+                {line.noCourtFee ? "กลับมาคิดค่าสนามคนนี้" : "ไม่คิดค่าสนามคนนี้ (เก็บแต่ค่าลูก)"}
+              </button>
+            )}
+            <button
+              className={cn("w-full !text-[12.5px]", line.noBill ? "btn-gold btn-lg" : "btn-quiet")}
+              onClick={onToggleNoBill}
+            >
+              {line.noBill ? <UserPlus size={15} /> : <UserMinus size={15} />}
+              {line.noBill ? "เอากลับเข้าบิล (คิดเงินตามปกติ)" : "ไม่คิดเงินคนนี้เลย (เอาออกจากบิล)"}
             </button>
           </div>
         ) : null
@@ -571,14 +642,22 @@ function CollectModal({
           ) : null}
         </div>
 
-        <PromptPayQr amount={line.amount} size={250} />
-        <p className="text-center font-heading text-[13.5px] font-medium text-ink">{promptPay}</p>
-        {/* ยอด 0 ผูกลงใน QR ไม่ได้ อย่าบอกว่าผูกไว้แล้วทั้งที่ไม่ได้ผูก */}
-        <p className="text-center text-[12px] leading-snug text-ink-faint">
-          {line.amount > 0
-            ? `QR นี้ผูกยอด ${baht(line.amount)} บาทไว้แล้ว — สแกนแล้วแอปธนาคารขึ้นจำนวนเงินให้เลย`
-            : "คนนี้ไม่มียอดต้องเก็บ — กด “รับเงินแล้ว” เพื่อปิดยอดได้เลย"}
-        </p>
+        {line.noBill ? (
+          <p className="rounded-xl bg-subtle px-4 py-3 text-center text-[12.5px] leading-snug text-ink-soft">
+            คนนี้ถูกเอาออกจากบิลไว้ — ไม่คิดเงินสักบาท และไม่ถูกนับในยอดที่ต้องเก็บ
+          </p>
+        ) : (
+          <>
+            <PromptPayQr amount={line.amount} size={250} />
+            <p className="text-center font-heading text-[13.5px] font-medium text-ink">{promptPay}</p>
+            {/* ยอด 0 ผูกลงใน QR ไม่ได้ อย่าบอกว่าผูกไว้แล้วทั้งที่ไม่ได้ผูก */}
+            <p className="text-center text-[12px] leading-snug text-ink-faint">
+              {line.amount > 0
+                ? `QR นี้ผูกยอด ${baht(line.amount)} บาทไว้แล้ว — สแกนแล้วแอปธนาคารขึ้นจำนวนเงินให้เลย`
+                : "คนนี้ไม่มียอดต้องเก็บ — กด “รับเงินแล้ว” เพื่อปิดยอดได้เลย"}
+            </p>
+          </>
+        )}
       </div>
     </Modal>
   )

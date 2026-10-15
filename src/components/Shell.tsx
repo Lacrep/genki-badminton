@@ -57,7 +57,11 @@ export function Shell({
   return (
     <div className="min-h-dvh pb-tabbar">
       {/* ── หัวเว็บ ── */}
-      <header className="sticky top-0 z-30 border-b border-line/70 bg-paper/90 backdrop-blur-md">
+      {/*
+        pt-safe: ตอนเพิ่มลงหน้าจอโฮมของ iPhone เนื้อหาจะไหลขึ้นไปใต้แถบสถานะ
+        (apple-mobile-web-app-status-bar-style = black-translucent) โลโก้จึงไปซ้อนกับนาฬิกา
+      */}
+      <header className="pt-safe sticky top-0 z-30 border-b border-line/70 bg-paper/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl items-center gap-2.5 px-3.5 py-2.5 sm:px-5">
           <button onClick={() => navigate("/")} className="flex items-center gap-2.5" aria-label="หน้าแรก">
             <Logo size={36} />
@@ -209,7 +213,7 @@ export function Shell({
       <Toasts />
       {/* เตือนบาง ๆ ว่าเครื่องนี้ยังไม่มีสิทธิ์สั่งการ */}
       {pinRequired && needPin ? (
-        <div className="pointer-events-none fixed inset-x-0 bottom-[4.5rem] z-30 flex justify-center">
+        <div className="pointer-events-none fixed inset-x-0 bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-30 flex justify-center">
           <span className="chip bg-navy text-white shadow-lift">โหมดดูอย่างเดียว · ใส่ PIN เพื่อสั่งการ</span>
         </div>
       ) : null}
@@ -359,7 +363,7 @@ function Toasts() {
   const { toasts, dismissToast } = useApp()
   if (toasts.length === 0) return null
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-2 z-50 flex flex-col items-center gap-1.5 px-3">
+    <div className="pointer-events-none fixed inset-x-0 top-[calc(0.5rem+env(safe-area-inset-top))] z-50 flex flex-col items-center gap-1.5 px-3">
       {toasts.map((t) => (
         <div
           key={t.id}

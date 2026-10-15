@@ -353,7 +353,7 @@ export function PublicQueuePage({ code }: { code: string }) {
 function Frame({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-dvh">
-      <header className="sticky top-0 z-30 border-b border-line/70 bg-paper/90 px-3.5 py-2.5 backdrop-blur-md">
+      <header className="pt-safe sticky top-0 z-30 border-b border-line/70 bg-paper/90 px-3.5 py-2.5 backdrop-blur-md">
         <div className="mx-auto flex max-w-2xl items-center gap-2.5">
           <Logo size={34} />
           <Wordmark compact />

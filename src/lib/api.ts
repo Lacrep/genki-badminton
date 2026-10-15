@@ -171,6 +171,8 @@ export const api = {
     post<ViewReply>(`/api/session/${id}/move`, { matchId, toCourtIndex }),
   courtFee: (id: string, playerId: string, noCourtFee: boolean) =>
     post<ViewReply>(`/api/session/${id}/court-fee`, { playerId, noCourtFee }),
+  noBill: (id: string, playerId: string, noBill: boolean) =>
+    post<ViewReply>(`/api/session/${id}/no-bill`, { playerId, noBill }),
 
   // เกม
   suggest: (

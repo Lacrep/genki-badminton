@@ -44,6 +44,7 @@ import {
   rosterMap,
   setBoost,
   setCourtCount,
+  setNoBill,
   setNoCourtFee,
   setPlayerPhoto,
   setPaid,
@@ -344,6 +345,13 @@ app.post("/api/session/:id/paid", async (c) => {
 app.post("/api/session/:id/court-fee", async (c) => {
   const { playerId, noCourtFee } = await body(c, playerIdSchema.extend({ noCourtFee: z.boolean() }))
   const session = setNoCourtFee(c.req.param("id"), playerId, noCourtFee)
+  return c.json(view(session.id))
+})
+
+/** เอาคนออกจากบิล / เอากลับเข้าบิล — ไม่คิดเงินคนนี้เลยสักบาท */
+app.post("/api/session/:id/no-bill", async (c) => {
+  const { playerId, noBill } = await body(c, playerIdSchema.extend({ noBill: z.boolean() }))
+  const session = setNoBill(c.req.param("id"), playerId, noBill)
   return c.json(view(session.id))
 })
 

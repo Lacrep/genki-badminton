@@ -138,6 +138,59 @@ describe("เก็บเงินครบแล้วข้อมูลก๊�
   })
 })
 
+describe("เอาคนออกจากบิล", () => {
+  it("กดพลาดกับคนที่จ่ายแล้ว เอากลับเข้าบิลแล้วต้องยังขึ้นว่าจ่ายแล้วอยู่", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ต้น", level: 5 })
+    const session = store.createSession({})
+    store.checkIn(session.id, a.id)
+    store.setPaid(session.id, a.id, true)
+
+    const off = store.setNoBill(session.id, a.id, true)
+    expect(off.players.find((p) => p.playerId === a.id)?.noBill).toBe(true)
+
+    const on = store.setNoBill(session.id, a.id, false)
+    const sp = on.players.find((p) => p.playerId === a.id)!
+    expect(sp.noBill).toBeUndefined()
+    // ประวัติว่าจ่ายมาแล้วต้องไม่หาย ไม่งั้นต้องไปตามเก็บเงินซ้ำ
+    expect(sp.paid).toBe(true)
+  })
+
+  it("คนที่ไม่อยู่ในบิลไม่ถูกนับเป็นยอดที่เก็บได้ แม้ธงจ่ายแล้วยังอยู่", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ต้น", level: 5 })
+    const session = store.createSession({})
+    store.checkIn(session.id, a.id)
+    store.setPaid(session.id, a.id, true)
+    store.setNoBill(session.id, a.id, true)
+
+    const bill = store.computeBill(store.getSession(session.id), store.rosterMap())
+    expect(bill.lines.find((l) => l.playerId === a.id)?.amount).toBe(0)
+    expect(bill.collected).toBe(0)
+  })
+
+  it("คนที่ไม่อยู่ในบิล กดรับเงินไม่ได้", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ต้น", level: 5 })
+    const session = store.createSession({})
+    store.checkIn(session.id, a.id)
+    store.setNoBill(session.id, a.id, true)
+
+    expect(() => store.setPaid(session.id, a.id, true)).toThrow(/ไม่ได้อยู่ในบิล/)
+  })
+
+  it("เอากลับเข้าบิลได้ แล้วคิดเงินตามปกติ", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ต้น", level: 5 })
+    const session = store.createSession({})
+    store.checkIn(session.id, a.id)
+    store.setNoBill(session.id, a.id, true)
+
+    const after = store.setNoBill(session.id, a.id, false)
+    expect(after.players.find((p) => p.playerId === a.id)?.noBill).toBeUndefined()
+  })
+})
+
 describe("รับเงินแล้วต้องเช็คเอาท์ให้เอง", () => {
   it("คนที่นั่งรออยู่ จ่ายเงินแล้วออกจากก๊วนทันที", async () => {
     const store = await loadStore()

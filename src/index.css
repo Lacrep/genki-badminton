@@ -44,6 +44,9 @@
     margin: 0;
     line-height: 1.55;
     overflow-x: hidden;
+    /* ตะแคง iPhone ที่มีรอยบาก เนื้อหาจะไปจมใต้รอยบาก ถ้าไม่เผื่อขอบไว้ */
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
     /* กระดาษวาชิ: ลายคลื่นบาง ๆ + ไล่สีอุ่นจากมุมบน */
     background-image:
       radial-gradient(1100px 520px at 12% -8%, rgba(191, 157, 101, 0.13), transparent 62%),
@@ -247,7 +250,14 @@
   /* แถบเมนูล่างบนมือถือ */
   .tabbar {
     @apply fixed inset-x-0 bottom-0 z-40 border-t border-line/80 bg-surface/95 backdrop-blur-md;
-    padding-bottom: env(safe-area-inset-bottom);
+    /*
+      บน Safari ของ iPhone (ไม่ได้ติดตั้งเป็นแอป) ค่า safe-area-inset-bottom เป็น 0
+      เพราะแถบที่อยู่ของ Safari กินพื้นที่นั้นไปแล้ว ตัวหนังสือใต้ไอคอนจึงไปชนแถบพอดี
+      ใส่พื้นขั้นต่ำไว้ 10px กันชน แล้วค่อยเผื่อ home indicator เพิ่มถ้ามี
+    */
+    padding-bottom: max(env(safe-area-inset-bottom), 10px);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
   }
 
   .tab-item {
@@ -259,7 +269,8 @@
 
   /* ตารางบาง ๆ แบบใบเสร็จ */
   .receipt-row {
-    @apply flex items-center justify-between gap-3 border-b border-dashed border-line/70 py-2 last:border-0;
+    /* ช่องไฟแคบลงหน่อยเพราะมีปุ่มสามใบท้ายแถว — บนจอ 390px ชื่อจะได้ไม่โดนบีบจนหาย */
+    @apply flex items-center justify-between gap-2 border-b border-dashed border-line/70 py-2 last:border-0;
   }
 }
 
@@ -273,7 +284,14 @@
   }
   /* กันปุ่มสำคัญโดนแถบเมนูล่างทับ */
   .pb-tabbar {
-    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+    padding-bottom: calc(5.5rem + max(env(safe-area-inset-bottom), 10px));
+  }
+  /* เผื่อที่ให้ขอบจอ iPhone — ใช้กับท้ายหน้าต่างและแถบที่ตรึงไว้ */
+  .pb-safe {
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
   }
 }
 
