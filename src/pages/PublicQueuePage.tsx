@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { CalendarClock, Clock, RefreshCw, UserCheck } from "lucide-react"
-import { type SessionView, displayName, formatDuration, levelInfo, thaiTime } from "@shared/types"
+import { type SessionView, displayName, formatDuration, levelInfo, planHoldReason, thaiTime } from "@shared/types"
 import { api } from "@/lib/api"
 import { BrushDivider, EmptyState, Logo, Wordmark } from "@/components/ui"
 import { cn } from "@/lib/util"
@@ -174,7 +174,7 @@ export function PublicQueuePage({ code }: { code: string }) {
                 </p>
                 <p className="font-heading text-[14px] font-medium text-ink">
                   {!myPlan.ready
-                    ? `รอ ${myPlan.waitingFor.join(", ")} จบเกมก่อน`
+                    ? (planHoldReason(myPlan) ?? myPlan.problems.join(" · "))
                     : myCourt
                       ? `🏸 ถึงคิวแล้ว — ลง${myCourt} ได้เลย`
                       : "🏸 พร้อมลงแล้ว — รอคอร์ตว่าง เตรียมตัวไว้"}
@@ -286,7 +286,7 @@ export function PublicQueuePage({ code }: { code: string }) {
                       </span>
                       <span className="block text-[11.5px] leading-snug text-ink-faint">
                         {!pv.ready
-                          ? `รอ ${pv.waitingFor.join(", ")} จบเกมก่อน`
+                          ? (planHoldReason(pv) ?? pv.problems.join(" · "))
                           : (courtForPlan.get(pv.planned.id) ?? null)
                             ? `ถึงคิวแล้ว — ${courtForPlan.get(pv.planned.id)}`
                             : "พร้อมลง รอคอร์ตว่าง"}

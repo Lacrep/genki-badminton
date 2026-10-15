@@ -10,7 +10,7 @@ import {
   Trash2,
   Users,
 } from "lucide-react"
-import { displayName, formatDuration, formatMinutes, scoreLabel, thaiTime } from "@shared/types"
+import { displayName, formatDuration, formatMinutes, planHoldReason, scoreLabel, thaiTime } from "@shared/types"
 import { api } from "@/lib/api"
 import { speak } from "@/lib/sound"
 import { useApp, useNow, useSession } from "@/lib/app"
@@ -222,13 +222,9 @@ export function LivePage({ navigate }: { navigate: (to: string) => void }) {
                     <p className="mt-1 text-[11.5px] leading-snug text-ink-faint">
                       {pv.problems.length > 0 ? (
                         <span className="text-hinomaru-deep dark:text-hinomaru-soft">{pv.problems.join(" · ")}</span>
-                      ) : pv.waitingFor.length > 0 ? (
-                        // เรื่องปกติของเกมที่จัดล่วงหน้า — บอกเฉย ๆ ไม่ต้องทำให้ดูเหมือนพัง
-                        `รอ ${pv.waitingFor.join(", ")} จบเกมก่อน`
-                      ) : freeCourts > 0 ? (
-                        "พร้อมลง — มีคอร์ตว่างอยู่"
                       ) : (
-                        "พร้อมลง รอคอร์ตว่าง"
+                        // เรื่องปกติของเกมที่จัดล่วงหน้า — บอกเฉย ๆ ไม่ต้องทำให้ดูเหมือนพัง
+                        (planHoldReason(pv) ?? (freeCourts > 0 ? "พร้อมลง — มีคอร์ตว่างอยู่" : "พร้อมลง รอคอร์ตว่าง"))
                       )}
                     </p>
                   </div>

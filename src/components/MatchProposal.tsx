@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { AlertTriangle, ArrowLeftRight, CheckCheck, Dices, Info, ListPlus, Play, Users } from "lucide-react"
+import { AlertTriangle, ArrowLeftRight, CheckCheck, Dices, Info, ListPlus, Play, Search, Users, X } from "lucide-react"
 import {
   type MatchType,
   type RosterPlayer,
@@ -14,22 +14,28 @@ import {
   playersPerMatch,
 } from "@shared/types"
 import { api, type Suggestion } from "@/lib/api"
-import { useApp } from "@/lib/app"
+import { useApp, useNow } from "@/lib/app"
 import { speak } from "@/lib/sound"
 import { cn } from "@/lib/util"
 import { Modal, Segmented } from "./ui"
 import { PlayerFace } from "./player"
 
-/** เวลารอแบบสั้นที่สุด — การ์ดกว้างแค่ ~100px ใส่ "2 ชม. 14 นาที" ไม่ลง */
-function shortWait(ms: number): string {
-  const min = Math.round(ms / 60_000)
-  if (min < 1) return "เพิ่งเข้าคิว"
-  if (min < 60) return `รอ ${min} น.`
-  return `รอ ${Math.floor(min / 60)} ชม.`
+/** ตัดช่องว่างกับตัวพิมพ์ใหญ่เล็กทิ้งก่อนเทียบ — พิมพ์ "พี่ หมู" ก็ต้องเจอ "พี่หมู" */
+function nameKey(text: string): string {
+  return text.replace(/\s+/g, "").toLowerCase()
 }
 
 /** คนหนึ่งคนในรายชื่อที่เลือกได้ — เก็บสถานะจริงไว้ จะได้ย้อมสีให้เห็นชัด */
-type Pickable = { player: RosterPlayer; status: "queue" | "playing" | "resting"; waitMs: number }
+type Pickable = {
+  player: RosterPlayer
+  status: "queue" | "playing" | "resting"
+  /** เวลาที่เริ่มรอคิว — เอาไปลบกับนาฬิกาเดินจริงตอนแสดงผล (null = ไม่ได้รออยู่) */
+  queueSince: number | null
+  /** ลงไปกี่เกมแล้ววันนี้ — ใช้ดูว่าใครยังลงน้อย ตอนวางแผนล่วงหน้า */
+  games: number
+  /** ถูกจัดไว้ในคิวเกมที่จัดล่วงหน้าแล้วกี่เกม */
+  plannedCount: number
+}
 
 const TYPE_OPTIONS: { value: MatchType | "auto"; label: string }[] = [
   { value: "auto", label: "อัตโนมัติ" },
@@ -53,6 +59,8 @@ export function MatchProposal({
   startMode: "auto" | "manual"
 }) {
   const { run, toast } = useApp()
+  // นาฬิกาเดินจริงทุกวินาที — เวลารอบนการ์ดจะได้ขยับตามจริง ไม่ใช่ค้างตามรอบรีเฟรช
+  const now = useNow()
   const sessionId = view.session.id
   const planning = courtIndex === null
   const courtName = courtIndex === null ? "" : (view.session.courts[courtIndex]?.name ?? `คอร์ต ${courtIndex + 1}`)
@@ -60,6 +68,7 @@ export function MatchProposal({
   const [mode, setMode] = useState<"auto" | "manual">(startMode)
   const [type, setType] = useState<MatchType | "auto">(view.session.settings.defaultMatchType)
   const [picked, setPicked] = useState<string[]>([])
+  const [query, setQuery] = useState("")
   const [suggestion, setSuggestion] = useState<Suggestion | null>(null)
   const [alternatives, setAlternatives] = useState<Suggestion[]>([])
   const [problem, setProblem] = useState<string | null>(null)
@@ -74,25 +83,57 @@ export function MatchProposal({
    * จัดเข้าคิวล่วงหน้า → ทุกคนที่ยังอยู่ในก๊วน (รวมคนที่กำลังเล่น) ยกเว้นคนที่ถูกจัดไว้แล้ว
    */
   const pickable = useMemo(() => {
-    if (!planning) {
-      return view.queue.map((q) => ({ player: q.player, status: "queue" as const, waitMs: q.waitMs }))
+    /** ถูกจัดไว้ในคิวแล้วกี่เกม — จัดซ้ำได้ แต่ต้องรู้ว่าซ้ำ */
+    const plannedCount = new Map<string, number>()
+    for (const p of view.planned) {
+      for (const x of p.players) plannedCount.set(x.player.id, (plannedCount.get(x.player.id) ?? 0) + 1)
     }
-    const taken = new Set(view.planned.flatMap((p) => p.players.map((x) => x.player.id)))
-    const waitOf = new Map(view.queue.map((q) => [q.player.id, q.waitMs]))
+    if (!planning) {
+      return view.queue.map((q) => ({
+        player: q.player,
+        status: "queue" as const,
+        queueSince: q.sp.queueSince ?? null,
+        games: q.sp.gamesPlayed,
+        plannedCount: plannedCount.get(q.player.id) ?? 0,
+      }))
+    }
+    /*
+      จัดคิวล่วงหน้าเลือกได้ทุกคนที่ยังอยู่ในก๊วน
+
+      รวมคนที่กำลังเล่นอยู่ (กว่าจะถึงคิวนี้เขาก็ลงจากคอร์ตแล้ว) และรวมคนที่ถูกจัดไว้
+      ในคิวเกมอื่นแล้วด้วย เพราะหัวก๊วนวางแผนทั้งรอบล่วงหน้า คนเดิมลงหลายเกมติดกันก็มี
+      แค่ติดป้ายบอกไว้ว่าซ้ำกี่คิว แล้วไปบอกตอนแสดงคิวว่าคิวไหนต้องรอคิวก่อนหน้า
+    */
     return view.session.players
-      .filter((sp) => sp.status !== "left" && !taken.has(sp.playerId))
+      .filter((sp) => sp.status !== "left")
       .map((sp) => {
         const player = rosterById.get(sp.playerId)
         if (!player) return null
-        // เวลารอคือข้อมูลหลักที่ใช้ตัดสินว่าจะจัดใครลง จึงต้องเห็นตอนเลือกคนด้วย
-        const wait = waitOf.get(sp.playerId)
-        return { player, status: sp.status, waitMs: wait ?? -1 }
+        return {
+          player,
+          status: sp.status,
+          queueSince: sp.queueSince ?? null,
+          games: sp.gamesPlayed,
+          plannedCount: plannedCount.get(sp.playerId) ?? 0,
+        }
       })
       .filter((x): x is Pickable => !!x)
       // คนที่รอนานสุดอยู่บนสุด คนที่ยังเล่นอยู่ไปท้ายสุด
-      .sort((a, b) => b.waitMs - a.waitMs)
-  }, [planning, view.queue, view.planned, view.session.players, rosterById])
+      .sort((a, b) => (b.queueSince == null ? -1 : now - b.queueSince) - (a.queueSince == null ? -1 : now - a.queueSince))
+  }, [planning, view.queue, view.planned, view.session.players, rosterById, now])
   const need = playersPerMatch(type === "auto" ? (view.queue.length >= 4 ? "D" : "S") : type)
+
+  /**
+   * รายชื่อที่โชว์จริงหลังกรองด้วยคำค้นหา
+   *
+   * คนที่เลือกไว้แล้วต้องไม่หายไปตอนพิมพ์ค้นหาคนถัดไป ไม่งั้นเลขลำดับที่จับไว้
+   * จะหายจากตาจนไม่รู้ว่าจับไปแล้วกี่คน และกดยกเลิกคนที่เลือกผิดไม่ได้
+   */
+  const shown = useMemo(() => {
+    const key = nameKey(query)
+    if (!key) return pickable
+    return pickable.filter((c) => picked.includes(c.player.id) || nameKey(displayName(c.player)).includes(key))
+  }, [pickable, query, picked])
 
   const fetchSuggestion = useCallback(
     async (opts: { shuffle?: boolean; include?: string[] } = {}) => {
@@ -127,6 +168,7 @@ export function MatchProposal({
     if (!open) return
     setMode(startMode)
     setPicked([])
+    setQuery("")
     setSuggestion(null)
     setProblem(null)
   }, [open, startMode])
@@ -183,11 +225,17 @@ export function MatchProposal({
       teamB,
       levelGap: Math.max(...levels) - Math.min(...levels),
       teamDiff: Math.abs(sum(teamA) - sum(teamB)),
-      maxWaitMs: Math.max(0, ...picked.map((id) => pickable.find((c) => c.player.id === id)?.waitMs ?? 0)),
+      maxWaitMs: Math.max(
+        0,
+        ...picked.map((id) => {
+          const since = pickable.find((c) => c.player.id === id)?.queueSince
+          return since ? now - since : 0
+        }),
+      ),
       reasons: ["หัวก๊วนจับคู่เอง — ระบบไม่สลับให้"],
     })
     setAlternatives([])
-  }, [mode, picked, need, rosterById, pickable])
+  }, [mode, picked, need, rosterById, pickable, now])
 
   /** สลับฝั่ง A↔B โดยไม่เปลี่ยนว่าใครคู่กับใคร */
   const swapSides = () => setPicked((prev) => [...prev.slice(need / 2), ...prev.slice(0, need / 2)])
@@ -237,6 +285,22 @@ export function MatchProposal({
       .map((sp) => nameOf(sp.playerId))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [suggestion, view.session.players, rosterById])
+
+  /**
+   * คนในเกมนี้ที่ถูกจัดไว้ในคิวเกมอื่นอยู่แล้ว
+   *
+   * จัดซ้ำได้ (หัวก๊วนวางแผนทั้งรอบ คนเดิมลงหลายเกมติดกันก็มี) แค่บอกให้รู้ตัว
+   * ไม่ใช่ความผิดพลาด จึงขึ้นสีทองไม่ใช่สีแดง
+   */
+  const alsoQueued = useMemo(() => {
+    if (!suggestion) return []
+    const ids = new Set([...suggestion.teamA, ...suggestion.teamB])
+    const out = new Set<string>()
+    for (const p of view.planned) {
+      for (const x of p.players) if (ids.has(x.player.id)) out.add(displayName(x.player))
+    }
+    return [...out]
+  }, [suggestion, view.planned])
 
   return (
     <Modal
@@ -289,12 +353,26 @@ export function MatchProposal({
             </p>
           </div>
         ) : null}
+        {alsoQueued.length > 0 ? (
+          <div className="flex items-start gap-2.5 rounded-xl border border-gold/60 bg-gold/[0.12] px-3 py-2.5">
+            <ListPlus size={17} className="mt-0.5 shrink-0 text-gold-deep dark:text-gold-soft" />
+            <p className="text-[12.5px] leading-snug text-ink">
+              <b className="font-heading">{alsoQueued.join(", ")}</b> ถูกจัดไว้ในคิวเกมอื่นแล้ว
+              <span className="block text-ink-soft">
+                จัดซ้ำได้ — คิวที่ใช้คนซ้ำกันจะรอให้คิวก่อนหน้าลงจบก่อนเอง
+              </span>
+            </p>
+          </div>
+        ) : null}
         <Segmented
           value={mode}
           onChange={(m) => {
             setMode(m)
             setPicked([])
             setSuggestion(null)
+            // ข้อความ "คนไม่พอ" จากโหมดให้ระบบจัด ค้างข้ามมาโหมดเลือกเองไม่ได้
+            setProblem(null)
+            setQuery("")
           }}
           options={[
             { value: "auto", label: "ให้ระบบจัด" },
@@ -361,10 +439,33 @@ export function MatchProposal({
             </p>
             {planning ? (
               <p className="mb-2 text-[11.5px] leading-snug text-ink-faint">
-                คนที่อยู่ในคอร์ตตอนนี้ก็เลือกได้ — กว่าจะถึงคิวนี้เขาก็ลงจากคอร์ตแล้ว
-                (คนที่ถูกจัดไว้ในคิวเกมอื่นแล้วจะไม่ขึ้นให้เลือกซ้ำ)
+                เลือกได้ทุกคน ทั้งคนที่อยู่ในคอร์ตตอนนี้และคนที่ถูกจัดไว้ในคิวเกมอื่นแล้ว —
+                คิวที่ใช้คนซ้ำกันจะรอให้คิวก่อนหน้าลงจบก่อนเอง
               </p>
             ) : null}
+
+            {/* ช่องค้นหา — วันที่คนเยอะ 30-40 คน กวาดตาหาทีละการ์ดไม่ทัน */}
+            <label className="relative mb-2 block">
+              <Search size={15} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-faint" />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="ค้นหาชื่อ"
+                className="input w-full !pl-8 !pr-8"
+                autoComplete="off"
+              />
+              {query ? (
+                <button
+                  type="button"
+                  onClick={() => setQuery("")}
+                  className="absolute right-1.5 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-ink-faint hover:bg-subtle"
+                  aria-label="ล้างคำค้นหา"
+                >
+                  <X size={14} />
+                </button>
+              ) : null}
+            </label>
+
             {/*
               การ์ดจัตุรัสรูปเต็มใบ แทนแถวผืนผ้ายาว ๆ
 
@@ -372,16 +473,18 @@ export function MatchProposal({
               จำหน้าได้จากระยะแขน และเห็นได้ทีละ 9 คนต่อหน้าจอแทนที่จะเป็น 6 แถว
             */}
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-              {pickable.map((c) => {
+              {shown.map((c) => {
                 const at = picked.indexOf(c.player.id)
                 const on = at >= 0
                 const photo = photoUrl(c.player)
+                const info = levelInfo(c.player.level)
+                const waitMs = c.queueSince == null ? null : Math.max(0, now - c.queueSince)
                 return (
                   <button
                     key={c.player.id}
                     type="button"
                     onClick={() => togglePick(c.player.id)}
-                    title={`${displayName(c.player)} · ${levelInfo(c.player.level).name}`}
+                    title={`${displayName(c.player)} · ${info.name} — ${info.hint}`}
                     className={cn(
                       "relative flex flex-col overflow-hidden rounded-xl border-2 text-left transition-all active:scale-[0.97]",
                       on
@@ -399,10 +502,7 @@ export function MatchProposal({
                         // ไม่มีรูปก็ใช้ตัวอักษรแรกบนสีระดับมือ — ยังกวาดตาดูมือได้เหมือนกัน
                         <span
                           className="flex h-full w-full items-center justify-center font-heading text-[34px] font-bold"
-                          style={{
-                            backgroundColor: levelSolid(c.player.level),
-                            color: levelInk(c.player.level),
-                          }}
+                          style={{ backgroundColor: levelSolid(c.player.level), color: levelInk(c.player.level) }}
                           aria-hidden
                         >
                           {displayName(c.player).trim().slice(0, 1)}
@@ -428,13 +528,12 @@ export function MatchProposal({
                         </span>
                       ) : null}
 
-                      {/* ป้ายระดับมือมุมขวาบน — สีทึบ เห็นแต่ไกล */}
-                      <span
-                        className="absolute right-1 top-1 rounded-md px-1.5 py-0.5 font-heading text-[11px] font-bold leading-tight"
-                        style={{ backgroundColor: levelSolid(c.player.level), color: levelInk(c.player.level) }}
-                      >
-                        {levelInfo(c.player.level).code}
-                      </span>
+                      {/* ถูกจัดไว้ในคิวแล้ว — จัดซ้ำได้ แต่ต้องรู้ตัวว่าซ้ำ */}
+                      {c.plannedCount > 0 ? (
+                        <span className="absolute right-1 top-1 rounded-md bg-gold px-1.5 py-0.5 font-heading text-[10px] font-bold leading-tight text-navy-deep shadow-lift">
+                          ในคิว{c.plannedCount > 1 ? ` ×${c.plannedCount}` : ""}
+                        </span>
+                      ) : null}
 
                       {/* สถานะคาดไว้ท้ายรูป — อยู่ในคอร์ต/ขอพักต้องเห็นก่อนกด */}
                       {c.status === "playing" ? (
@@ -448,28 +547,41 @@ export function MatchProposal({
                       ) : null}
                     </span>
 
+                    {/* แถบระดับมือเต็มความกว้าง — เห็นปุ๊บรู้ว่ามืออะไร ไม่ต้องจำรหัสย่อ */}
+                    <span
+                      className="block truncate px-1 py-[3px] text-center font-heading text-[11px] font-bold leading-tight"
+                      style={{ backgroundColor: levelSolid(c.player.level), color: levelInk(c.player.level) }}
+                    >
+                      {info.name}
+                    </span>
+
                     <span className={cn("block px-1.5 py-1", on ? "bg-navy text-white dark:bg-navy-soft" : "bg-surface")}>
                       <span className="block truncate text-center font-heading text-[13px] font-semibold leading-tight">
                         {displayName(c.player)}
                       </span>
+                      {/* เวลารอเดินจริงเป็นนาที:วินาที — ตัวตัดสินว่าใครควรได้ลงก่อน */}
                       <span
                         className={cn(
-                          "nums block truncate text-center text-[10.5px] leading-tight",
-                          on ? "text-sand/80" : "text-ink-faint",
+                          "nums block truncate text-center text-[11px] leading-tight",
+                          on ? "text-sand/80" : waitMs != null ? "text-ink-soft" : "text-ink-faint",
                         )}
                       >
-                        {c.status === "queue" ? shortWait(c.waitMs) : levelInfo(c.player.level).name}
+                        {waitMs != null ? formatDuration(waitMs) : `ลงไป ${c.games} เกม`}
                       </span>
                     </span>
                   </button>
                 )
               })}
-              {pickable.length === 0 ? (
-                <p className="py-4 text-center text-[13px] text-ink-faint">
-                  {planning ? "ทุกคนถูกจัดไว้ในคิวหมดแล้ว" : "ยังไม่มีคนในคิว"}
-                </p>
-              ) : null}
             </div>
+            {shown.length === 0 ? (
+              <p className="py-4 text-center text-[13px] text-ink-faint">
+                {query.trim()
+                  ? `ไม่เจอชื่อที่มีคำว่า “${query.trim()}”`
+                  : planning
+                    ? "ทุกคนกลับบ้านไปหมดแล้ว"
+                    : "ยังไม่มีคนในคิว"}
+              </p>
+            ) : null}
           </div>
         ) : null}
       </div>

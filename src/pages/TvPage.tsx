@@ -1,5 +1,14 @@
 import { Volleyball, X } from "lucide-react"
-import { displayName, formatDuration, levelInfo, levelInk, levelSolid, photoUrl, thaiTime } from "@shared/types"
+import {
+  displayName,
+  formatDuration,
+  levelInfo,
+  levelInk,
+  levelSolid,
+  photoUrl,
+  planHoldReason,
+  thaiTime,
+} from "@shared/types"
 import type { CourtView, PlannedView, RosterPlayer } from "@shared/types"
 import { useApp, useNow } from "@/lib/app"
 import { Logo } from "@/components/ui"
@@ -352,9 +361,7 @@ function PlannedCard({ pv, order }: { pv: PlannedView; order: number }) {
   const status =
     pv.problems.length > 0
       ? pv.problems.join(" · ")
-      : pv.waitingFor.length > 0
-        ? `รอ ${pv.waitingFor.join(", ")} จบเกม`
-        : "พร้อมลงคอร์ต"
+      : (planHoldReason(pv) ?? "พร้อมลงคอร์ต")
 
   return (
     <div

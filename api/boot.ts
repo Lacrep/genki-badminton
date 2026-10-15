@@ -375,21 +375,34 @@ app.post("/api/session/:id/suggest", async (c) => {
   const session = getSession(c.req.param("id"))
   /*
    * จัดลงคอร์ตเดี๋ยวนี้  → คนที่อยู่ในคอร์ตอื่นหรือถูกจัดไว้ในคิวแล้ว เลือกไม่ได้
-   * จัดเข้าคิวล่วงหน้า → คนในคอร์ตเลือกได้ (เดี๋ยวเขาก็ลง) ห้ามแค่คนที่อยู่ในคิวแล้ว
+   * จัดเข้าคิวล่วงหน้า → คนในคอร์ตเลือกได้ (เดี๋ยวเขาก็ลง) ส่วนคนที่อยู่ในคิวแล้ว
+   *                    จัดซ้ำได้ แต่เอาไว้ทีหลัง (ดูการลองสองรอบข้างล่าง)
    */
   const taken = (input.forPlan ? plannedPlayerIds(session) : committedPlayerIds(session)).filter(
     (pid) => !input.include?.includes(pid),
   )
-  const result = suggestMatch({
-    session,
-    roster: rosterMap(),
-    now: Date.now(),
-    type: input.type ?? session.settings.defaultMatchType,
-    include: input.include,
-    exclude: [...new Set([...(input.exclude ?? []), ...taken])],
-    includePlaying: input.forPlan,
-    jitter: input.shuffle ? 4 : 0,
-  })
+  const ask = (exclude: string[]) =>
+    suggestMatch({
+      session,
+      roster: rosterMap(),
+      now: Date.now(),
+      type: input.type ?? session.settings.defaultMatchType,
+      include: input.include,
+      exclude,
+      includePlaying: input.forPlan,
+      jitter: input.shuffle ? 4 : 0,
+    })
+
+  const result = ask([...new Set([...(input.exclude ?? []), ...taken])])
+  /*
+   * คิวล่วงหน้า: ถ้าคนที่ยังไม่ถูกจัดเหลือไม่พอ ให้หยิบคนที่อยู่ในคิวแล้วมาจัดซ้ำได้
+   *
+   * เลือกคนที่ยังไม่ถูกจัดก่อนเสมอ ไม่งั้นระบบจะเสนอสี่คนเดิมที่รอนานสุดซ้ำทุกเกม
+   * แต่พอคนหมดก็ต้องจัดต่อได้ ไม่ใช่ตันอยู่แค่นั้น (หัวก๊วนวางแผนทั้งรอบล่วงหน้า)
+   */
+  if (!result.ok && input.forPlan && taken.length > 0) {
+    return c.json(ask([...new Set(input.exclude ?? [])]))
+  }
   return c.json(result)
 })
 

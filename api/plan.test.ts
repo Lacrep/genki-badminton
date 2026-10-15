@@ -44,13 +44,44 @@ describe("จัดเกมเข้าคิว", () => {
     expect(planned[1]!.teamA).toEqual([ids[4], ids[5]])
   })
 
-  it("จัดคนเดิมซ้ำสองเกมไม่ได้ — ถึงคิวแล้วจะลงพร้อมกันไม่ได้", async () => {
+  it("จัดคนเดิมซ้ำหลายเกมในคิวได้ — หัวก๊วนวางแผนทั้งรอบล่วงหน้า", async () => {
     const { store, sessionId, ids } = await setup()
     store.planMatch(sessionId, { type: "D", teamA: [ids[0]!, ids[1]!], teamB: [ids[2]!, ids[3]!] })
+    store.planMatch(sessionId, { type: "D", teamA: [ids[0]!, ids[4]!], teamB: [ids[5]!, ids[6]!] })
 
-    expect(() =>
-      store.planMatch(sessionId, { type: "D", teamA: [ids[0]!, ids[4]!], teamB: [ids[5]!, ids[6]!] }),
-    ).toThrow(/จัดไว้ในคิวเกมอื่นแล้ว/)
+    expect(store.getSession(sessionId).planned).toHaveLength(2)
+  })
+
+  it("แต่คิวหลังที่ใช้คนซ้ำกับคิวก่อนหน้า ต้องไม่ขึ้นว่าพร้อมลง", async () => {
+    const { store, sessionId, ids } = await setup()
+    store.planMatch(sessionId, { type: "D", teamA: [ids[0]!, ids[1]!], teamB: [ids[2]!, ids[3]!] })
+    store.planMatch(sessionId, { type: "D", teamA: [ids[0]!, ids[4]!], teamB: [ids[5]!, ids[6]!] })
+
+    const planned = store.buildView(store.getSession(sessionId)).planned
+    expect(planned[0]!.ready).toBe(true)
+    expect(planned[0]!.blockedBy).toEqual([])
+    // คิวที่สองใช้ ids[0] ซ้ำ จึงต้องรอคิวแรกลงจบก่อน
+    expect(planned[1]!.ready).toBe(false)
+    expect(planned[1]!.blockedBy).toHaveLength(1)
+  })
+
+  it("คิวที่ไม่ได้ใช้คนซ้ำกันเลย พร้อมลงได้ทั้งคู่", async () => {
+    const { store, sessionId, ids } = await setup()
+    store.planMatch(sessionId, { type: "D", teamA: [ids[0]!, ids[1]!], teamB: [ids[2]!, ids[3]!] })
+    store.planMatch(sessionId, { type: "D", teamA: [ids[4]!, ids[5]!], teamB: [ids[6]!, ids[7]!] })
+
+    expect(store.buildView(store.getSession(sessionId)).planned.every((p) => p.ready)).toBe(true)
+  })
+
+  it("คนที่กำลังเล่นอยู่ในคอร์ตก็จัดเข้าคิวล่วงหน้าได้", async () => {
+    const { store, sessionId, ids } = await setup()
+    store.startMatch(sessionId, { courtIndex: 0, type: "D", teamA: [ids[0]!, ids[1]!], teamB: [ids[2]!, ids[3]!] })
+
+    store.planMatch(sessionId, { type: "D", teamA: [ids[0]!, ids[4]!], teamB: [ids[5]!, ids[6]!] })
+    const pv = store.buildView(store.getSession(sessionId)).planned[0]!
+    expect(pv.ready).toBe(false)
+    expect(pv.waitingFor).toHaveLength(1)
+    expect(pv.problems).toEqual([])
   })
 
   it("คนที่กลับบ้านแล้วจัดเข้าคิวไม่ได้", async () => {

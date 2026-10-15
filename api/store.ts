@@ -979,15 +979,18 @@ export function planMatch(
     if (ids.length !== need) throw new StoreError(`เกมนี้ต้องมี ${need} คน (ส่งมา ${ids.length} คน)`, 400)
     if (new Set(ids).size !== ids.length) throw new StoreError("มีชื่อซ้ำในเกมเดียวกัน", 400)
 
-    const alreadyPlanned = new Set<string>()
-    for (const p of s.planned) for (const pid of [...p.teamA, ...p.teamB]) alreadyPlanned.add(pid)
+    /*
+      จัดคิวล่วงหน้าได้ทุกคน ทั้งคนที่อยู่ในคอร์ตและคนที่รออยู่
+
+      เมื่อก่อนห้ามจัดคนที่ถูกจัดไว้ในคิวเกมอื่นแล้ว เพราะพอถึงคิวจะลงพร้อมกันไม่ได้
+      แต่หัวก๊วนวางแผนทั้งรอบล่วงหน้าเป็นเรื่องปกติ — คนเดิมลงหลายเกมติดกันก็มี
+      ตอนนี้จัดได้หมด แล้วไปบอกเอาตอนแสดงผลแทนว่าคิวไหนต้องรอคิวก่อนหน้าลงก่อน
+      (ดู blockedBy ใน view) ส่วนการลงคอร์ตจริง startMatch กันคนซ้อนเกมอยู่แล้ว
+    */
     for (const pid of ids) {
       const sp = s.players.find((p) => p.playerId === pid)
       if (!sp) throw new StoreError("มีคนในเกมที่ยังไม่ได้เช็คอิน", 400)
       if (sp.status === "left") throw new StoreError("มีคนในเกมที่กลับบ้านแล้ว", 400)
-      // คนที่กำลังเล่นอยู่จัดเข้าคิวได้ — กว่าจะถึงคิวนั้นเขาก็ลงจากคอร์ตแล้ว
-      // แต่กันจัดคนเดิมซ้ำสองเกมในคิว เพราะพอถึงคิวจะลงพร้อมกันไม่ได้
-      if (alreadyPlanned.has(pid)) throw new StoreError("มีคนที่ถูกจัดไว้ในคิวเกมอื่นแล้ว", 400)
     }
 
     const roster = rosterMap()
@@ -1435,10 +1438,13 @@ export function buildView(session: Session, now = Date.now()): SessionView {
    * คิวเกมที่จัดไว้ — คนอาจกลับบ้านหรือถูกดึงไปลงคอร์ตอื่นหลังจากจัดไว้แล้ว
    * จึงต้องบอกตรงนี้เลยว่าเกมไหนยังลงได้ ไม่ใช่ปล่อยให้กดแล้วค่อยเด้ง error
    */
+  /** คนที่ถูกจัดไว้ในคิวก่อนหน้า — คิวหลังต้องรอคิวก่อนลงจบก่อนถึงจะลงได้ */
+  const usedEarlier = new Set<string>()
   const planned: PlannedView[] = session.planned.map((p) => {
     const players: PlannedView["players"] = []
     const waitingFor: string[] = []
     const problems: string[] = []
+    const blockedBy: string[] = []
 
     for (const team of ["A", "B"] as const) {
       for (const pid of team === "A" ? p.teamA : p.teamB) {
@@ -1451,15 +1457,18 @@ export function buildView(session: Session, now = Date.now()): SessionView {
         players.push({ player, sp, team })
         if (sp.status === "left") problems.push(`${displayName(player)} กลับบ้านแล้ว`)
         else if (sp.status === "playing") waitingFor.push(displayName(player))
+        else if (usedEarlier.has(pid)) blockedBy.push(displayName(player))
       }
     }
+    for (const pid of [...p.teamA, ...p.teamB]) usedEarlier.add(pid)
 
     return {
       planned: p,
       players,
-      ready: waitingFor.length === 0 && problems.length === 0,
+      ready: waitingFor.length === 0 && problems.length === 0 && blockedBy.length === 0,
       waitingFor: [...new Set(waitingFor)],
       problems: [...new Set(problems)],
+      blockedBy: [...new Set(blockedBy)],
     }
   })
 
