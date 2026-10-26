@@ -14,6 +14,7 @@ import {
   Tv,
   Undo2,
   UserPlus,
+  Users,
   Wallet,
   WifiOff,
   X,
@@ -109,6 +110,15 @@ export function Shell({
                     onClick={() => {
                       setMenu(false)
                       navigate("/new")
+                    }}
+                  />
+                  {/* ทะเบียนสมาชิก — เข้าได้ตลอด ไม่ต้องมีก๊วนเปิดอยู่ */}
+                  <Item
+                    icon={<Users size={15} />}
+                    label="ทะเบียนสมาชิก"
+                    onClick={() => {
+                      setMenu(false)
+                      navigate("/members")
                     }}
                   />
                   {session ? (

@@ -38,6 +38,7 @@ function makeSession(
   games: Record<string, number> = {},
   noCourtFee: string[] = [],
   noBill: string[] = [],
+  tweak: Record<string, { shuttleAdjust?: number; discount?: number }> = {},
 ) {
   const ids = ["a", "b", "c", "d", "e"]
   const roster = new Map<string, RosterPlayer>()
@@ -62,6 +63,7 @@ function makeSession(
       paid: false,
       ...(noCourtFee.includes(id) ? { noCourtFee: true } : {}),
       ...(noBill.includes(id) ? { noBill: true } : {}),
+      ...(tweak[id] ?? {}),
     })
   }
 
@@ -310,5 +312,76 @@ describe("เอาคนออกจากบิล — ไม่คิดเ�
     const { session, roster } = makeSession()
     const bill = computeBill(session, roster)
     expect(bill.lines.every((l) => l.noBill === false)).toBe(true)
+  })
+})
+
+describe("ปรับจำนวนลูกรายคน", () => {
+  it("ลดลูกให้คนนี้ ยอดค่าลูกลดตามจำนวนลูกที่ตัด", () => {
+    const plain = computeBill(makeSession().session, makeSession().roster)
+    const { session, roster } = makeSession({}, {}, [], [], { a: { shuttleAdjust: -1 } })
+    const bill = computeBill(session, roster)
+    // a ลงสองเกมใช้รวม 3 ลูก → ตัด 1 ลูกเหลือ 2 ลูก = 50 บาท
+    const line = bill.lines.find((l) => l.playerId === "a")!
+    expect(line.shuttleCount).toBe(2)
+    expect(line.shuttlePart).toBe(50)
+    expect(amountOf(plain, "a") - amountOf(bill, "a")).toBe(25)
+  })
+
+  it("เพิ่มลูกให้คนนี้ก็ได้ เผื่อทำลูกหายหรือเปิดลูกเอง", () => {
+    const { session, roster } = makeSession({}, {}, [], [], { d: { shuttleAdjust: 2 } })
+    const line = computeBill(session, roster).lines.find((l) => l.playerId === "d")!
+    // d ลงเกมเดียวใช้ 2 ลูก → +2 เป็น 4 ลูก = 100 บาท
+    expect(line.shuttleCount).toBe(4)
+    expect(line.shuttlePart).toBe(100)
+  })
+
+  it("ตัดลูกเกินจำนวนที่มี ค่าลูกลงไปหยุดที่ศูนย์ ไม่ติดลบ", () => {
+    const { session, roster } = makeSession({}, {}, [], [], { a: { shuttleAdjust: -99 } })
+    const line = computeBill(session, roster).lines.find((l) => l.playerId === "a")!
+    expect(line.shuttleCount).toBe(0)
+    expect(line.shuttlePart).toBe(0)
+    // ยังเก็บค่าสนามอยู่ตามปกติ
+    expect(amountOf(computeBill(session, roster), "a")).toBe(70)
+  })
+
+  it("ไม่ปรับอะไร ก็คิดตามเกมที่ลงจริงเหมือนเดิม", () => {
+    const bill = computeBill(makeSession().session, makeSession().roster)
+    expect(bill.lines.every((l) => l.shuttleAdjust === 0)).toBe(true)
+    expect(bill.lines.find((l) => l.playerId === "a")!.shuttleCount).toBe(3)
+  })
+})
+
+describe("ส่วนลดรายคน", () => {
+  it("ลดเป็นบาท หักจากยอดสุดท้ายตรงตามที่กรอก", () => {
+    const plain = computeBill(makeSession().session, makeSession().roster)
+    const { session, roster } = makeSession({}, {}, [], [], { a: { discount: 45 } })
+    const bill = computeBill(session, roster)
+    expect(amountOf(plain, "a") - amountOf(bill, "a")).toBe(45)
+    expect(bill.lines.find((l) => l.playerId === "a")!.discount).toBe(45)
+  })
+
+  it("ลดเกินยอด ยอดลงไปหยุดที่ศูนย์ ไม่ติดลบ", () => {
+    const { session, roster } = makeSession({}, {}, [], [], { a: { discount: 9999 } })
+    expect(amountOf(computeBill(session, roster), "a")).toBe(0)
+  })
+
+  it("ส่วนลดไม่ถูกผลักไปให้คนอื่น", () => {
+    const plain = computeBill(makeSession().session, makeSession().roster)
+    const { session, roster } = makeSession({}, {}, [], [], { a: { discount: 45 } })
+    const bill = computeBill(session, roster)
+    for (const id of ["b", "c", "d", "e"]) expect(amountOf(bill, id)).toBe(amountOf(plain, id))
+  })
+
+  it("ลดเศษไม่โดนปัดกลับขึ้นไป — ปัดเศษก่อน ค่อยหักส่วนลด", () => {
+    const { session, roster } = makeSession({ roundTo: 10 }, {}, [], [], { a: { discount: 5 } })
+    const plain = computeBill(makeSession({ roundTo: 10 }).session, makeSession().roster)
+    expect(amountOf(plain, "a") - amountOf(computeBill(session, roster), "a")).toBe(5)
+  })
+
+  it("คนที่เอาออกจากบิลอยู่แล้ว ส่วนลดไม่มีผลอะไร", () => {
+    const { session, roster } = makeSession({}, {}, [], ["a"], { a: { discount: 50 } })
+    const line = computeBill(session, roster).lines.find((l) => l.playerId === "a")!
+    expect(line.amount).toBe(0)
+    expect(line.discount).toBe(0)
   })
 })

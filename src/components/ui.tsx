@@ -106,12 +106,19 @@ export function Modal({
             พอแถบที่อยู่ของ Safari โผล่ขึ้นมา ท้ายหน้าต่าง (ปุ่มรับเงิน ปุ่มใช้รูปนี้)
             จะมุดไปอยู่ใต้แถบจนกดไม่ได้ svh คือค่าตอนแถบกางเต็ม จึงพอดีเสมอ
           */
-          "relative z-10 max-h-[92svh] w-full overflow-hidden rounded-t-washi border border-line/80 bg-surface shadow-lift",
+          /*
+            จัดเป็นคอลัมน์ยืดหยุ่น แทนที่จะเดาความสูงหัว/ท้ายเป็น rem ตายตัว
+
+            เดิมเนื้อในถูกจำกัดที่ calc(92svh - 9rem) โดยเดาว่าหัวกับท้ายรวมกัน 9rem
+            พอหน้าต่างไหนมีปุ่มท้ายหลายใบ (เก็บเงินมีสามใบ) ท้ายหน้าต่างจะโดนตัดหายไปเลย
+            ให้เนื้อในเป็น flex-1 min-h-0 แทน หัวกับท้ายจะได้ที่ของตัวเองก่อนเสมอ
+          */
+          "relative z-10 flex max-h-[92svh] w-full flex-col overflow-hidden rounded-t-washi border border-line/80 bg-surface shadow-lift",
           "animate-slide-up sm:rounded-washi",
           wide ? "sm:max-w-2xl" : "sm:max-w-md",
         )}
       >
-        <div className="flex items-start gap-3 border-b border-line/70 px-4 py-3.5 sm:px-5">
+        <div className="flex shrink-0 items-start gap-3 border-b border-line/70 px-4 py-3.5 sm:px-5">
           <div className="min-w-0 flex-1">
             <h3 className="truncate font-heading text-[16px] font-semibold text-ink">{title}</h3>
             {subtitle ? <p className="mt-0.5 text-[12.5px] text-ink-soft">{subtitle}</p> : null}
@@ -120,9 +127,11 @@ export function Modal({
             <X size={18} />
           </button>
         </div>
-        <div className="max-h-[calc(92svh-9rem)] overflow-y-auto px-4 py-4 sm:px-5">{children}</div>
+        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-5">{children}</div>
         {/* ท้ายหน้าต่างเผื่อที่ให้แถบ home indicator ของ iPhone ด้วย ปุ่มจะได้ไม่ติดขอบ */}
-        {footer ? <div className="pb-safe border-t border-line/70 bg-subtle/60 px-4 py-3 sm:px-5">{footer}</div> : null}
+        {footer ? (
+          <div className="pb-safe shrink-0 border-t border-line/70 bg-subtle/60 px-4 py-3 sm:px-5">{footer}</div>
+        ) : null}
       </div>
     </div>
   )

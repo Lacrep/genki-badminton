@@ -173,6 +173,10 @@ export const api = {
     post<ViewReply>(`/api/session/${id}/court-fee`, { playerId, noCourtFee }),
   noBill: (id: string, playerId: string, noBill: boolean) =>
     post<ViewReply>(`/api/session/${id}/no-bill`, { playerId, noBill }),
+  shuttleAdjust: (id: string, playerId: string, adjust: number) =>
+    post<ViewReply>(`/api/session/${id}/shuttle-adjust`, { playerId, adjust }),
+  discount: (id: string, playerId: string, discount: number) =>
+    post<ViewReply>(`/api/session/${id}/discount`, { playerId, discount }),
 
   // เกม
   suggest: (

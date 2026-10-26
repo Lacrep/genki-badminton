@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { CalendarDays, Clock, MapPin, PlayCircle, RotateCcw } from "lucide-react"
+import { CalendarDays, Clock, MapPin, PlayCircle, RotateCcw, Users } from "lucide-react"
 import { DEFAULT_FEES, thaiTime } from "@shared/types"
 import { CLUB } from "@shared/club"
 import { api } from "@/lib/api"
@@ -82,6 +82,13 @@ export function SetupPage({ navigate }: { navigate?: (to: string) => void }) {
           จัดคิวตามเวลารอจริง จับคู่มือใกล้เคียง สลับคู่ไม่ให้ซ้ำ
           และ<span className="font-medium text-ink"> ไม่ดองใครไว้เฉย ๆ</span>
         </p>
+        {/* แก้ทะเบียนได้โดยไม่ต้องเปิดก๊วน — ปุ่มอยู่ตรงนี้จะได้ไม่ต้องไปหาในเมนู */}
+        {navigate ? (
+          <button className="btn-ghost btn-sm mt-1" onClick={() => navigate("/members")}>
+            <Users size={15} />
+            ดู/แก้ทะเบียนสมาชิก
+          </button>
+        ) : null}
       </div>
 
       {/* เปิดก๊วนใหม่ */}

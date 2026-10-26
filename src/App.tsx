@@ -7,6 +7,7 @@ import { EmptyState, Logo, Wordmark } from "@/components/ui"
 import { BillPage } from "@/pages/BillPage"
 import { CheckInPage } from "@/pages/CheckInPage"
 import { LivePage } from "@/pages/LivePage"
+import { MembersPage } from "@/pages/MembersPage"
 import { PublicQueuePage } from "@/pages/PublicQueuePage"
 import { QueuePage } from "@/pages/QueuePage"
 import { SettingsPage } from "@/pages/SettingsPage"
@@ -46,6 +47,20 @@ function Organizer({ path, navigate }: { path: string; navigate: (to: string) =>
     return (
       <Shell path={path} navigate={navigate}>
         <SetupPage navigate={navigate} />
+      </Shell>
+    )
+  }
+
+  /*
+    ทะเบียนสมาชิก — เข้าได้เสมอเหมือนกัน
+
+    การแก้ชื่อ เปลี่ยนระดับมือ หรือใส่รูป เป็นงานที่ทำตอนว่าง ๆ ระหว่างสัปดาห์
+    ไม่ควรต้องเปิดก๊วนหลอก ๆ ก่อนแค่เพื่อจะแก้ชื่อคนเดียว
+  */
+  if (path === "/members") {
+    return (
+      <Shell path={path} navigate={navigate}>
+        <MembersPage />
       </Shell>
     )
   }
@@ -94,9 +109,15 @@ function NoSession({ navigate, tab }: { navigate: (to: string) => void; tab: str
         title={`ยังไม่ได้เปิดก๊วนวันนี้`}
         hint={`หน้า “${TAB_NAME[tab] ?? "นี้"}” จะใช้ได้หลังเปิดก๊วนแล้ว — กดปุ่มด้านล่างเพื่อเปิดก๊วน แล้วค่อยกลับมา`}
         action={
-          <button className="btn-primary btn-lg" onClick={() => navigate("/")}>
-            ไปหน้าเปิดก๊วน
-          </button>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <button className="btn-primary btn-lg" onClick={() => navigate("/")}>
+              ไปหน้าเปิดก๊วน
+            </button>
+            {/* แก้ทะเบียนไม่ต้องรอเปิดก๊วน — คนมาหน้านี้เพราะอยากแก้ชื่อกันเยอะ */}
+            <button className="btn-ghost" onClick={() => navigate("/members")}>
+              ดู/แก้ทะเบียนสมาชิก
+            </button>
+          </div>
         }
       />
     </div>

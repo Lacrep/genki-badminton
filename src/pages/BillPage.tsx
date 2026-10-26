@@ -28,9 +28,15 @@ const nz = (v: number | undefined | null): number => (typeof v === "number" && N
 function feeBreakdown(line: BillLine, long = false): string {
   if (line.noBill) return "ไม่คิดเงินคนนี้"
   const parts = [line.noCourtFee ? "ยกเว้นค่าสนาม" : `${long ? "ค่าสนาม" : "สนาม"} ${baht(nz(line.courtPart))}`]
-  if (nz(line.shuttlePart) > 0) parts.push(`${long ? "ค่าลูก" : "ลูก"} ${baht(nz(line.shuttlePart))}`)
+  if (nz(line.shuttlePart) > 0) {
+    // บอกจำนวนลูกไว้ด้วย จะได้ตรวจย้อนได้ว่ายอดค่าลูกมาจากกี่ลูก
+    const n = nz(line.shuttleCount)
+    parts.push(`${long ? "ค่าลูก" : "ลูก"} ${baht(nz(line.shuttlePart))}${n > 0 ? ` (${n} ลูก)` : ""}`)
+  }
   if (nz(line.extraPart) > 0) parts.push(`${long ? "อื่น ๆ" : "อื่น"} ${baht(nz(line.extraPart))}`)
-  return parts.join(" + ")
+  let text = parts.join(" + ")
+  if (nz(line.discount) > 0) text += ` − ลด ${baht(nz(line.discount))}`
+  return text
 }
 
 export function BillPage() {
@@ -94,6 +100,15 @@ export function BillPage() {
     run(noCourtFee ? "ยกเว้นค่าสนามให้แล้ว" : "กลับมาคิดค่าสนามแล้ว", () =>
       api.courtFee(sessionId, playerId, noCourtFee),
     )
+  /** ปรับจำนวนลูกที่คิดกับคนนี้ — มาสาย ลงครึ่งเกม หรือลดให้เป็นลูก ๆ */
+  const setShuttleAdjust = (playerId: string, adjust: number) =>
+    run("ปรับจำนวนลูกแล้ว", () => api.shuttleAdjust(sessionId, playerId, adjust), { silent: true })
+  /** ลดราคาให้คนนี้เป็นบาท */
+  const setDiscount = (playerId: string, discount: number) =>
+    run(discount > 0 ? `ลดให้ ${baht(discount)} บาทแล้ว` : "ยกเลิกส่วนลดแล้ว", () =>
+      api.discount(sessionId, playerId, discount),
+    )
+
   /** เอาคนออกจากบิลไปเลย — แขกที่ก๊วนเชิญมา หรือคนที่เคลียร์กันแล้วทางอื่น */
   const setNoBill = (playerId: string, noBill: boolean) =>
     run(noBill ? "เอาออกจากบิลแล้ว — ไม่คิดเงินคนนี้" : "เอากลับเข้าบิลแล้ว", () =>
@@ -335,8 +350,13 @@ export function BillPage() {
                     {/* ที่มาของยอดอยู่บรรทัดของตัวเอง — ยัดรวมบรรทัดเดียวแล้วโดนตัดหายบนจอมือถือ */}
                     {view.session.fees.mode === "club" ? (
                       <span className="block text-[11px] leading-snug text-ink-faint/80">{feeBreakdown(l)}</span>
-                    ) : l.noCourtFee ? (
-                      <span className="block text-[11px] leading-snug text-ink-faint/80">ยกเว้นค่าสนาม</span>
+                    ) : l.noCourtFee || nz(l.discount) > 0 ? (
+                      // โหมดหารเท่าไม่ต้องแจกแจงทุกก้อน แต่ของที่หัวก๊วนปรับเองต้องเห็น
+                      <span className="block text-[11px] leading-snug text-ink-faint/80">
+                        {[l.noCourtFee ? "ยกเว้นค่าสนาม" : "", nz(l.discount) > 0 ? `ลด ${baht(nz(l.discount))}` : ""]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </span>
                     ) : null}
                   </span>
                 </button>
@@ -545,7 +565,8 @@ export function BillPage() {
       {/* เก็บเงินรายคน */}
       {collecting ? (
         <CollectModal
-          line={collecting}
+          // อ่านบรรทัดสด ๆ จากบิล — ปรับลูกหรือใส่ส่วนลดแล้วยอดกับ QR ต้องเปลี่ยนตามทันที
+          line={bill.lines.find((l) => l.playerId === collecting.playerId) ?? collecting}
           promptPay={fees.promptPay || CLUB.payment.name}
           mode={fees.mode}
           canControl={canControl}
@@ -562,6 +583,9 @@ export function BillPage() {
             await setNoBill(collecting.playerId, !collecting.noBill)
             setCollecting(null)
           }}
+          onShuttleAdjust={(adjust) => void setShuttleAdjust(collecting.playerId, adjust)}
+          onDiscount={(discount) => void setDiscount(collecting.playerId, discount)}
+          shuttlePrice={fees.shuttlePrice}
         />
       ) : null}
 
@@ -586,6 +610,9 @@ function CollectModal({
   onPaid,
   onToggleCourtFee,
   onToggleNoBill,
+  onShuttleAdjust,
+  onDiscount,
+  shuttlePrice,
 }: {
   line: BillLine
   promptPay: string
@@ -595,6 +622,11 @@ function CollectModal({
   onPaid: () => void
   onToggleCourtFee: () => void
   onToggleNoBill: () => void
+  /** ปรับจำนวนลูกที่คิดกับคนนี้ (ส่วนต่างเป็นลูก) */
+  onShuttleAdjust: (adjust: number) => void
+  /** ลดราคาเป็นบาท */
+  onDiscount: (discount: number) => void
+  shuttlePrice: number
 }) {
   return (
     <Modal
@@ -642,6 +674,11 @@ function CollectModal({
           ) : null}
         </div>
 
+        {/* ปรับลูก + ส่วนลด — อยู่เหนือ QR เพราะต้องแก้ให้เสร็จก่อนยื่น QR ให้เขาสแกน */}
+        {canControl && !line.noBill ? (
+          <AdjustPanel line={line} shuttlePrice={shuttlePrice} onShuttleAdjust={onShuttleAdjust} onDiscount={onDiscount} />
+        ) : null}
+
         {line.noBill ? (
           <p className="rounded-xl bg-subtle px-4 py-3 text-center text-[12.5px] leading-snug text-ink-soft">
             คนนี้ถูกเอาออกจากบิลไว้ — ไม่คิดเงินสักบาท และไม่ถูกนับในยอดที่ต้องเก็บ
@@ -660,6 +697,107 @@ function CollectModal({
         )}
       </div>
     </Modal>
+  )
+}
+
+/**
+ * ปรับจำนวนลูกกับส่วนลดรายคน
+ *
+ * ปรับลูกเก็บเป็น "ส่วนต่างจำนวนลูก" ไม่ใช่ยอดบาท เพราะจำนวนลูกจริงยังขยับได้อีก
+ * ตอนบันทึกลูกที่ใช้ในเกมถัดไป ส่วนลดเก็บเป็นบาทเพราะเป็นตัวเลขที่หัวก๊วนตกลงกับเขาตรง ๆ
+ */
+function AdjustPanel({
+  line,
+  shuttlePrice,
+  onShuttleAdjust,
+  onDiscount,
+}: {
+  line: BillLine
+  shuttlePrice: number
+  onShuttleAdjust: (adjust: number) => void
+  onDiscount: (discount: number) => void
+}) {
+  const adjust = nz(line.shuttleAdjust)
+  const discount = nz(line.discount)
+  // ช่องกรอกเก็บเป็นข้อความ จะได้ลบให้ว่างแล้วพิมพ์ใหม่ได้ ไม่ใช่เด้งเป็น 0 ทุกครั้ง
+  const [draft, setDraft] = useState(discount > 0 ? String(discount) : "")
+
+  // ส่วนลดถูกเปลี่ยนจากที่อื่น (หรือเพิ่งเปิดคนใหม่) ให้ช่องกรอกตามไปด้วย
+  useEffect(() => {
+    setDraft(discount > 0 ? String(discount) : "")
+  }, [discount, line.playerId])
+
+  const commit = () => {
+    const next = Math.max(0, Math.round(Number(draft.replace(/[^\d]/g, "")) || 0))
+    if (next !== discount) onDiscount(next)
+  }
+
+  return (
+    <div className="w-full rounded-xl border border-line/70 bg-subtle/50 p-3">
+      <div className="flex items-center justify-between gap-3">
+        <span className="min-w-0">
+          <span className="block font-heading text-[13px] font-semibold text-ink">จำนวนลูกที่คิด</span>
+          <span className="block text-[11px] leading-snug text-ink-faint">
+            {adjust === 0
+              ? `ตามเกมที่ลงจริง · ลูกละ ${baht(shuttlePrice)}`
+              : `ปรับเองแล้ว ${adjust > 0 ? "+" : ""}${adjust} ลูก (${adjust > 0 ? "+" : "−"}${baht(Math.abs(adjust) * shuttlePrice)} บาท)`}
+          </span>
+        </span>
+        <Stepper
+          value={nz(line.shuttleCount)}
+          onChange={(v) => onShuttleAdjust(adjust + (v - nz(line.shuttleCount)))}
+          min={0}
+          max={99}
+          suffix="ลูก"
+        />
+      </div>
+
+      <div className="mt-2.5 border-t border-line/70 pt-2.5">
+        <div className="flex items-center justify-between gap-3">
+          <span className="min-w-0">
+            <span className="block font-heading text-[13px] font-semibold text-ink">ส่วนลด</span>
+            <span className="block text-[11px] leading-snug text-ink-faint">หักจากยอดสุดท้ายตรง ๆ ตามที่กรอก</span>
+          </span>
+          <span className="flex shrink-0 items-center gap-1">
+            <input
+              className="input nums !w-24 !py-1.5 text-right"
+              inputMode="numeric"
+              value={draft}
+              placeholder="0"
+              onChange={(e) => setDraft(e.target.value)}
+              onBlur={commit}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") (e.target as HTMLInputElement).blur()
+              }}
+              aria-label="ส่วนลดเป็นบาท"
+            />
+            <span className="font-heading text-[13px] text-ink-soft">฿</span>
+          </span>
+        </div>
+        {/* ปุ่มลัดยอดที่ลดกันบ่อย — กดทีเดียวไม่ต้องพิมพ์ */}
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {[20, 50, 70, 100].map((v) => (
+            <button
+              key={v}
+              type="button"
+              className={cn("chip border", discount === v ? "border-gold bg-gold/25 text-gold-deep dark:text-gold-soft" : "border-line bg-surface text-ink-soft")}
+              onClick={() => onDiscount(v)}
+            >
+              ลด {v}
+            </button>
+          ))}
+          {discount > 0 ? (
+            <button
+              type="button"
+              className="chip border border-line bg-surface text-hinomaru"
+              onClick={() => onDiscount(0)}
+            >
+              ยกเลิกส่วนลด
+            </button>
+          ) : null}
+        </div>
+      </div>
+    </div>
   )
 }
 

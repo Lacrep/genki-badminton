@@ -849,6 +849,47 @@ export function setNoBill(sessionId: string, playerId: string, noBill: boolean):
 }
 
 /**
+ * บวก/ลบจำนวนลูกที่คิดกับคนนี้ — มาสาย ลงครึ่งเกม หรืออยากลดให้เป็นลูก ๆ
+ *
+ * เก็บเป็นส่วนต่าง ไม่ใช่จำนวนลูกสุทธิ เพราะจำนวนลูกจริงยังขยับได้เรื่อย ๆ
+ * ตอนบันทึกลูกที่ใช้ในเกม ถ้าเก็บเป็นยอดสุทธิไว้ ยอดจะเพี้ยนทุกครั้งที่เกมใหม่จบ
+ */
+export function setShuttleAdjust(sessionId: string, playerId: string, adjust: number): Session {
+  return mutate(sessionId, (s) => {
+    const sp = s.players.find((p) => p.playerId === playerId)
+    if (!sp) throw new StoreError("คนนี้ยังไม่ได้เช็คอิน", 404)
+    const next = Math.max(-99, Math.min(99, Math.round(adjust)))
+    if (next === 0) delete sp.shuttleAdjust
+    else sp.shuttleAdjust = next
+    const name = rosterMap().get(playerId)
+    s.events.push(
+      event(
+        "fee",
+        `${name ? displayName(name) : playerId} ปรับลูกที่คิดเป็น ${next > 0 ? "+" : ""}${next} ลูก`,
+        { playerId },
+      ),
+    )
+  }).session
+}
+
+/** ลดราคาให้คนนี้เป็นบาท — หักจากยอดสุดท้ายตรง ๆ ตามที่หัวก๊วนกรอก */
+export function setDiscount(sessionId: string, playerId: string, discount: number): Session {
+  return mutate(sessionId, (s) => {
+    const sp = s.players.find((p) => p.playerId === playerId)
+    if (!sp) throw new StoreError("คนนี้ยังไม่ได้เช็คอิน", 404)
+    const next = Math.max(0, Math.min(100_000, Math.round(discount)))
+    if (next === 0) delete sp.discount
+    else sp.discount = next
+    const name = rosterMap().get(playerId)
+    s.events.push(
+      event("fee", `${name ? displayName(name) : playerId} ${next > 0 ? `ลดให้ ${next} บาท` : "ยกเลิกส่วนลด"}`, {
+        playerId,
+      }),
+    )
+  }).session
+}
+
+/**
  * รับเงินแล้ว = คนนั้นกลับบ้านได้ ระบบจึงเช็คเอาท์ให้เลย
  *
  * เมื่อก่อนต้องไปกดเช็คเอาท์อีกทีแยกต่างหาก ซึ่งลืมกันประจำ แล้วชื่อคนที่
@@ -1251,12 +1292,11 @@ export function computeBill(session: Session, roster: Map<string, RosterPlayer>)
    * เกมหนึ่งใช้ 1 ลูก ทั้งสี่คนจ่ายคนละ 25 (ไม่ใช่เอา 25 มาหารสี่)
    * ก๊วนจึงเก็บได้ 100 ต่อลูก ซึ่งพอดีกับราคาลูกที่ซื้อมา — นี่คือวิธีที่ก๊วนใช้จริง
    */
-  const shuttleShare = new Map<string, number>()
+  const shuttleUnits = new Map<string, number>()
   for (const m of session.matches) {
     const ids = [...m.teamA, ...m.teamB]
     if (ids.length === 0 || m.shuttles <= 0) continue
-    const perHead = m.shuttles * fees.shuttlePrice
-    for (const id of ids) shuttleShare.set(id, (shuttleShare.get(id) ?? 0) + perHead)
+    for (const id of ids) shuttleUnits.set(id, (shuttleUnits.get(id) ?? 0) + m.shuttles)
   }
 
   /**
@@ -1274,8 +1314,24 @@ export function computeBill(session: Session, roster: Map<string, RosterPlayer>)
     // ยกเว้นค่าสนามรายคน (หัวก๊วนที่ลงไปตีเอง) — เก็บแต่ค่าลูก ส่วนที่หายไปไม่ผลักให้คนอื่น
     const noBill = sp.noBill === true
     const courtPart = noBill || sp.noCourtFee ? 0 : fullCourt
-    const shuttlePart = noBill ? 0 : fees.mode === "club" ? (shuttleShare.get(sp.playerId) ?? 0) : shuttleCost / n
+
+    /*
+      จำนวนลูกที่คิดจริง = ลูกจากเกมที่ลง + ที่หัวก๊วนบวก/ลบเอง (ติดลบไม่ได้)
+
+      เก็บเป็น "ลูก" ไม่ใช่บาท เพราะถ้าแก้ราคาลูกทีหลัง ยอดจะขยับตามเองทั้งก๊วน
+      ส่วนโหมดหารเท่า ค่าลูกหารหัวอยู่แล้ว จึงเอาลูกที่ปรับไปคิดเป็นบาทบวกเพิ่ม/หักออก
+    */
+    const adjust = Math.round(sp.shuttleAdjust ?? 0)
+    const baseUnits = fees.mode === "club" ? (shuttleUnits.get(sp.playerId) ?? 0) : 0
+    const units = Math.max(0, baseUnits + adjust)
+    const rawShuttle =
+      fees.mode === "club" ? units * fees.shuttlePrice : shuttleCost / n + adjust * fees.shuttlePrice
+    const shuttlePart = noBill ? 0 : Math.max(0, rawShuttle)
     const extraPart = noBill ? 0 : extraPerHead
+
+    // ส่วนลดหักหลังปัดเศษ จะได้ลดตรงตามจำนวนที่กรอกเป๊ะ ๆ ไม่โดนปัดกลับขึ้นไป
+    const discount = noBill ? 0 : Math.max(0, Math.round(sp.discount ?? 0))
+    const beforeDiscount = roundUpTo(courtPart + shuttlePart + extraPart, fees.roundTo)
 
     return {
       playerId: sp.playerId,
@@ -1283,11 +1339,14 @@ export function computeBill(session: Session, roster: Map<string, RosterPlayer>)
       games: sp.gamesPlayed,
       courtPart: round2(courtPart),
       shuttlePart: round2(shuttlePart),
+      shuttleCount: fees.mode === "club" ? units : Math.max(0, baseUnits + adjust),
+      shuttleAdjust: adjust,
       extraPart: round2(extraPart),
-      amount: noBill ? 0 : roundUpTo(courtPart + shuttlePart + extraPart, fees.roundTo),
+      amount: noBill ? 0 : Math.max(0, beforeDiscount - discount),
       paid: sp.paid,
       noCourtFee: sp.noCourtFee === true,
       noBill,
+      discount,
     }
   })
 
@@ -1349,7 +1408,9 @@ export function summaryText(session: Session): string {
       continue
     }
     const detail = fees.mode === "club" ? ` [สนาม ${baht(l.courtPart)} + ลูก ${baht(l.shuttlePart)}]` : ""
-    lines.push(`   ${l.paid ? "✅" : "⬜"} ${l.name} ${baht(l.amount)} บาท · ${l.games} เกม${detail}`)
+    // ส่วนลดต้องอ่านออกในสรุปที่ส่งเข้ากลุ่ม ไม่งั้นมีคนทักว่าทำไมยอดไม่เท่ากัน
+    const cut = l.discount > 0 ? ` (ลดให้ ${baht(l.discount)})` : ""
+    lines.push(`   ${l.paid ? "✅" : "⬜"} ${l.name} ${baht(l.amount)} บาท${cut} · ${l.games} เกม${detail}`)
   }
   lines.push("")
   lines.push(`รวมที่ต้องเก็บ ${baht(bill.billed)} บาท · เก็บแล้ว ${baht(bill.collected)} บาท`)

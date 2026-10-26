@@ -69,7 +69,13 @@ export function billWorkbook(session: Session, bill: Bill, roster: Map<string, R
       payStatus(line.paid),
       sp?.paidAt ? thaiTime(sp.paidAt) : "",
       // ยอด 0 เฉย ๆ อ่านแล้วงง ต้องบอกว่าตั้งใจยกเว้นให้
-      line.noBill ? "ไม่คิดเงิน" : line.noCourtFee ? "ยกเว้นค่าสนาม" : "",
+      [
+        line.noBill ? "ไม่คิดเงิน" : line.noCourtFee ? "ยกเว้นค่าสนาม" : "",
+        line.shuttleAdjust ? `ปรับลูก ${line.shuttleAdjust > 0 ? "+" : ""}${line.shuttleAdjust}` : "",
+        line.discount ? `ลด ${line.discount}` : "",
+      ]
+        .filter(Boolean)
+        .join(" · "),
     ]
   })
 
@@ -119,7 +125,12 @@ export function billWorkbook(session: Session, bill: Bill, roster: Map<string, R
       player ? levelInfo(player.level).code : "",
       { v: line.games, style: "int" },
       { v: line.amount, style: "moneyBold" },
-      [line.noBill ? "ไม่คิดเงิน" : line.noCourtFee ? "ยกเว้นค่าสนาม" : "", player?.note ?? ""]
+      [
+        line.noBill ? "ไม่คิดเงิน" : line.noCourtFee ? "ยกเว้นค่าสนาม" : "",
+        line.shuttleAdjust ? `ปรับลูก ${line.shuttleAdjust > 0 ? "+" : ""}${line.shuttleAdjust}` : "",
+        line.discount ? `ลด ${line.discount}` : "",
+        player?.note ?? "",
+      ]
         .filter(Boolean)
         .join(" · "),
     ]

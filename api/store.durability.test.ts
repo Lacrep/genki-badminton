@@ -191,6 +191,49 @@ describe("เอาคนออกจากบิล", () => {
   })
 })
 
+describe("ปรับลูกกับส่วนลดรายคน", () => {
+  it("ปรับลูกแล้วค้างไว้ข้ามการเปิดเซิร์ฟเวอร์ใหม่", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ต้น", level: 5 })
+    const session = store.createSession({})
+    store.checkIn(session.id, a.id)
+
+    store.setShuttleAdjust(session.id, a.id, -2)
+    const again = await loadStore()
+    expect(again.getSession(session.id).players.find((p) => p.playerId === a.id)?.shuttleAdjust).toBe(-2)
+  })
+
+  it("ปรับกลับเป็น 0 แล้วธงถูกลบทิ้ง ไม่ค้างเป็นขยะในไฟล์", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ต้น", level: 5 })
+    const session = store.createSession({})
+    store.checkIn(session.id, a.id)
+
+    store.setShuttleAdjust(session.id, a.id, 3)
+    const after = store.setShuttleAdjust(session.id, a.id, 0)
+    expect(after.players.find((p) => p.playerId === a.id)?.shuttleAdjust).toBeUndefined()
+  })
+
+  it("ส่วนลดติดลบไม่ได้ — กรอกมาเท่าไรก็ถูกบีบที่ศูนย์", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ต้น", level: 5 })
+    const session = store.createSession({})
+    store.checkIn(session.id, a.id)
+
+    const after = store.setDiscount(session.id, a.id, -500)
+    expect(after.players.find((p) => p.playerId === a.id)?.discount).toBeUndefined()
+  })
+
+  it("คนที่ยังไม่ได้เช็คอิน ปรับลูกหรือลดราคาไม่ได้", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ต้น", level: 5 })
+    const session = store.createSession({})
+
+    expect(() => store.setShuttleAdjust(session.id, a.id, -1)).toThrow(/ยังไม่ได้เช็คอิน/)
+    expect(() => store.setDiscount(session.id, a.id, 50)).toThrow(/ยังไม่ได้เช็คอิน/)
+  })
+})
+
 describe("รับเงินแล้วต้องเช็คเอาท์ให้เอง", () => {
   it("คนที่นั่งรออยู่ จ่ายเงินแล้วออกจากก๊วนทันที", async () => {
     const store = await loadStore()

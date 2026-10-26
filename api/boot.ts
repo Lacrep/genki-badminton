@@ -44,8 +44,10 @@ import {
   rosterMap,
   setBoost,
   setCourtCount,
+  setDiscount,
   setNoBill,
   setNoCourtFee,
+  setShuttleAdjust,
   setPlayerPhoto,
   setPaid,
   setRest,
@@ -352,6 +354,26 @@ app.post("/api/session/:id/court-fee", async (c) => {
 app.post("/api/session/:id/no-bill", async (c) => {
   const { playerId, noBill } = await body(c, playerIdSchema.extend({ noBill: z.boolean() }))
   const session = setNoBill(c.req.param("id"), playerId, noBill)
+  return c.json(view(session.id))
+})
+
+/** บวก/ลบจำนวนลูกที่คิดกับคนนี้ (หน่วยเป็นลูก) */
+app.post("/api/session/:id/shuttle-adjust", async (c) => {
+  const { playerId, adjust } = await body(
+    c,
+    playerIdSchema.extend({ adjust: z.number().int().min(-99).max(99) }),
+  )
+  const session = setShuttleAdjust(c.req.param("id"), playerId, adjust)
+  return c.json(view(session.id))
+})
+
+/** ลดราคาให้คนนี้เป็นบาท */
+app.post("/api/session/:id/discount", async (c) => {
+  const { playerId, discount } = await body(
+    c,
+    playerIdSchema.extend({ discount: z.number().int().min(0).max(100_000) }),
+  )
+  const session = setDiscount(c.req.param("id"), playerId, discount)
   return c.json(view(session.id))
 })
 
