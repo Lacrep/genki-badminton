@@ -65,10 +65,13 @@ export function setPin(pin: string) {
 export class ApiError extends Error {
   status: number
   needPin: boolean
-  constructor(message: string, status: number, needPin = false) {
+  /** ข้อมูลเพิ่มจากเซิร์ฟเวอร์ เช่น จำนวนครั้งที่เคยลงก๊วน ตอนถามยืนยันการลบ */
+  data: Record<string, unknown>
+  constructor(message: string, status: number, needPin = false, data: Record<string, unknown> = {}) {
     super(message)
     this.status = status
     this.needPin = needPin
+    this.data = data
   }
 }
 
@@ -90,8 +93,11 @@ async function request<T>(path: string, init?: RequestInit & { json?: unknown })
   }
 
   if (!res.ok) {
-    const data = (await res.json().catch(() => ({}))) as { error?: string; needPin?: boolean }
-    throw new ApiError(data.error ?? `ผิดพลาด (${res.status})`, res.status, !!data.needPin)
+    const data = (await res.json().catch(() => ({}))) as {
+      error?: string
+      needPin?: boolean
+    } & Record<string, unknown>
+    throw new ApiError(data.error ?? `ผิดพลาด (${res.status})`, res.status, !!data.needPin, data)
   }
   return (await res.json()) as T
 }
@@ -136,7 +142,11 @@ export const api = {
   addPlayer: (input: PlayerInput) => post<{ player: RosterPlayer; roster: RosterPlayer[] }>("/api/players", input),
   updatePlayer: (id: string, input: Partial<PlayerInput>) =>
     patch<{ player: RosterPlayer; roster: RosterPlayer[] }>(`/api/players/${id}`, input),
-  deletePlayer: (id: string) => request<{ roster: RosterPlayer[] }>(`/api/players/${id}`, { method: "DELETE" }),
+  deletePlayer: (id: string, force = false) =>
+    request<{ roster: RosterPlayer[]; removed: { name: string; sessions: number; games: number } }>(
+      `/api/players/${id}${force ? "?force=1" : ""}`,
+      { method: "DELETE" },
+    ),
   setPhoto: (id: string, data: string) =>
     post<{ player: RosterPlayer; roster: RosterPlayer[] }>(`/api/players/${id}/photo`, { data }),
   clearPhoto: (id: string) =>

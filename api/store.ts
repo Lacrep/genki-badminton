@@ -49,6 +49,14 @@ import { forecastQueue } from "./matching"
 
 const DATA_DIR = path.resolve(process.cwd(), process.env.DATA_DIR || "./data")
 const ROSTER_FILE = path.join(DATA_DIR, "roster.json")
+/**
+ * ชื่อคนที่ลบออกจากทะเบียนไปแล้ว — เก็บไว้เพื่อให้บิลกับสถิติของก๊วนเก่ายังอ่านชื่อออก
+ *
+ * ถ้าลบแล้วไม่เก็บอะไรไว้เลย ใบเสร็จกับสถิติของก๊วนที่เขาเคยลงจะขึ้นเป็นรหัสดิบ
+ * อย่าง "p_a1b2c3" ซึ่งอ่านไม่รู้เรื่องว่าใคร ไฟล์นี้จึงเก็บแค่ชื่อกับระดับมือไว้
+ * ส่วนตัวคนจะหายจากทุกรายชื่อในระบบ (ทะเบียน เช็คอิน หน้าจัดคน) ตามที่สั่งลบ
+ */
+const REMOVED_FILE = path.join(DATA_DIR, "removed-players.json")
 const SESSION_DIR = path.join(DATA_DIR, "sessions")
 const POINTER_FILE = path.join(DATA_DIR, "current.json")
 const PHOTO_DIR = path.join(DATA_DIR, "photos")
@@ -145,9 +153,12 @@ export function sessionCode(): string {
 
 export class StoreError extends Error {
   status: number
-  constructor(message: string, status = 400) {
+  /** ข้อมูลเพิ่มเติมที่ส่งกลับไปให้หน้าเว็บด้วย เช่น จำนวนครั้งที่เคยลงก๊วน */
+  extra?: Record<string, unknown>
+  constructor(message: string, status = 400, extra?: Record<string, unknown>) {
     super(message)
     this.status = status
+    this.extra = extra
   }
 }
 
@@ -300,8 +311,22 @@ function saveRoster(list: RosterPlayer[]) {
   writeJson(ROSTER_FILE, list)
 }
 
+function getRemoved(): RosterPlayer[] {
+  return readJson<RosterPlayer[]>(REMOVED_FILE, []).filter((p) => p && typeof p.id === "string")
+}
+
+/**
+ * แผนที่ชื่อสำหรับ "แปลงรหัสเป็นชื่อ" — รวมคนที่ลบไปแล้วด้วย
+ *
+ * ต่างจาก getRoster() ที่เป็นรายชื่อสมาชิกปัจจุบัน (ใช้โชว์ในทะเบียน/เช็คอิน/หน้าจัดคน)
+ * อันนี้ใช้ตอนต้องรู้ว่ารหัสนี้คือใคร เช่น บิลกับสถิติของก๊วนเก่า จึงต้องมีคนที่ลบไปแล้วด้วย
+ */
 export function rosterMap(): Map<string, RosterPlayer> {
-  return new Map(getRoster().map((p) => [p.id, p]))
+  const map = new Map<string, RosterPlayer>()
+  for (const p of getRemoved()) map.set(p.id, p)
+  // สมาชิกปัจจุบันทับของเก่าเสมอ เผื่อมีรหัสซ้ำกันด้วยเหตุผลอะไรก็ตาม
+  for (const p of getRoster()) map.set(p.id, p)
+  return map
 }
 
 /**
@@ -438,29 +463,110 @@ export function readPlayerPhoto(playerId: string): { bytes: Buffer; type: string
  * คนที่เคยลงเล่นแล้วให้ "เก็บเข้ากรุ" (archived) แทน — หายจากรายชื่อเช็คอิน
  * แต่ชื่อกับประวัติยังอยู่ครบ
  */
-export function deletePlayer(playerId: string) {
+/**
+ * ลบคนออกจากทะเบียน — เผื่อเพิ่มชื่อซ้ำหรือเพิ่มผิดคน
+ *
+ * คนที่ยังไม่เคยลงก๊วนลบได้เลย ส่วนคนที่เคยลงแล้วต้องยืนยันอีกชั้น (force)
+ * เพราะเป็นคนละเรื่องกัน: อันแรกคือลบของที่ไม่ควรมีตั้งแต่แรก
+ * อันหลังคือเอาคนที่มีประวัติจริงออก ซึ่งกู้คืนเป็นสมาชิกไม่ได้
+ *
+ * ไม่ว่าทางไหน ชื่อจะถูกเก็บไว้ในไฟล์คนที่ลบแล้ว บิลกับสถิติของก๊วนเก่าจึงยังอ่านชื่อออก
+ * (ไม่กลายเป็นรหัสดิบ) ส่วนประวัติในไฟล์ก๊วนไม่ถูกแตะต้อง ยอดเงินเก่าจึงไม่ขยับสักบาท
+ */
+export function deletePlayer(playerId: string, opts: { force?: boolean } = {}) {
   const list = getRoster()
   const target = list.find((p) => p.id === playerId)
   if (!target) throw new StoreError("ไม่พบผู้เล่นคนนี้ในทะเบียน", 404)
 
-  let played = 0
+  /** ก๊วนที่กำลังเปิดอยู่และเขาแค่เช็คอินไว้เฉย ๆ — ถอนชื่อออกได้สะอาด ๆ */
+  const scrub: string[] = []
+  let sessions = 0
+  let games = 0
+
   for (const s of listSessions()) {
     const sp = s.players.find((x) => x.playerId === playerId)
     if (!sp) continue
+
+    /*
+      คนที่ยังอยู่ในก๊วนที่กำลังเล่น ลบไม่ได้ — คิวกับคอร์ตที่รันอยู่จะพัง
+
+      เคสที่เจอบ่อยสุดคือเพิ่มชื่อซ้ำจากหน้าเช็คอิน ซึ่งเพิ่มแล้วเช็คอินให้เลย
+      ชื่อที่เพิ่งเพิ่มผิดจึงติดอยู่ในก๊วนทันที ส่งข้อมูลกลับไปให้หน้าเว็บเสนอ
+      "เช็คเอาท์แล้วลบเลย" ได้ จะได้ไม่ต้องไปตามกดเองสองที่
+    */
     if (s.status === "live" && sp.status !== "left") {
-      throw new StoreError(`${displayName(target)} อยู่ในก๊วนที่กำลังเล่นอยู่ ลบไม่ได้`, 400)
+      throw new StoreError(
+        `${displayName(target)} อยู่ในก๊วนที่กำลังเล่นอยู่ — เช็คเอาท์หรือปิดก๊วนก่อนถึงจะลบได้`,
+        409,
+        {
+          needCheckout: true,
+          name: displayName(target),
+          sessionId: s.id,
+          // อยู่ในคอร์ตอยู่ เช็คเอาท์ก็ยังไม่ได้ ต้องจบเกมก่อน
+          playing: sp.status === "playing",
+        },
+      )
     }
-    played += 1
+
+    /*
+      ก๊วนที่ยังเปิดอยู่ + ไม่เคยลงสักเกม + ไม่มีเกมหรือคิวไหนอ้างถึง
+      = ชื่อที่เพิ่มผิดแล้วเช็คอินไปเฉย ๆ ถอนออกจากก๊วนวันนี้ไปเลย
+
+      ไม่งั้นบิลวันนี้จะยังมีหัวผีค้างอยู่ให้หัวก๊วนไปไล่กด "ไม่คิดเงิน" เองทีหลัง
+      ส่วนก๊วนที่ปิดไปแล้วไม่แตะต้อง — ประวัติคือประวัติ ยอดเงินเก่าต้องไม่ขยับ
+    */
+    const inMatch = s.matches.some((m) => [...m.teamA, ...m.teamB].includes(playerId))
+    const inPlan = s.planned.some((pl) => [...pl.teamA, ...pl.teamB].includes(playerId))
+    if (s.status === "live" && sp.gamesPlayed === 0 && !inMatch && !inPlan) {
+      scrub.push(s.id)
+      continue
+    }
+
+    sessions += 1
+    games += sp.gamesPlayed
   }
-  if (played > 0) {
+
+  /*
+    ถามยืนยันเมื่อยังมีก๊วนที่อ้างถึงเขาอยู่
+
+    ชื่อที่เพิ่มผิดแล้วถอนออกจากก๊วนวันนี้ได้หมด (scrub ข้างบน) จะเหลือ sessions = 0
+    จึงลบจบในคลิกเดียวตามที่ควรเป็น ส่วนคนที่มีบิลหรือสถิติค้างอยู่ในก๊วนที่ปิดไปแล้ว
+    ต้องอ่านก่อนว่าจะเสียอะไรบ้าง
+  */
+  if (sessions > 0 && !opts.force) {
     throw new StoreError(
-      `${displayName(target)} เคยลงก๊วนมาแล้ว ${played} ครั้ง ลบแล้วชื่อจะหายจากบิลและสถิติเก่า — ใช้ "เก็บเข้ากรุ" แทน`,
-      400,
+      games > 0
+        ? `${displayName(target)} เคยลงก๊วนมาแล้ว ${sessions} ครั้ง (${games} เกม)`
+        : `${displayName(target)} เคยอยู่ในก๊วนที่ปิดไปแล้ว ${sessions} ครั้ง`,
+      409,
+      { needConfirm: true, name: displayName(target), sessions, games },
     )
+  }
+
+  for (const sid of scrub) {
+    mutate(sid, (s) => {
+      s.players = s.players.filter((x) => x.playerId !== playerId)
+      s.events.push(event("player.checkout", `${displayName(target)} ถูกลบออกจากทะเบียน`, { playerId }))
+    })
   }
 
   removePhotoFiles(playerId)
   saveRoster(list.filter((p) => p.id !== playerId))
+
+  /*
+    เก็บชื่อไว้เฉพาะคนที่มีประวัติในก๊วนที่ปิดไปแล้ว
+
+    บิลกับสถิติของก๊วนเก่าอ้างถึงเขาด้วยรหัส ถ้าไม่เก็บชื่อไว้จะกลายเป็น "p_a1b2c3"
+    ส่วนชื่อที่เพิ่มผิดแล้วถอนออกหมดแล้วไม่มีใครอ้างถึง ไม่ต้องเก็บให้ไฟล์รก
+    (และจะได้ไม่ไปกันชื่อซ้ำตอนสร้างคนใหม่ด้วยชื่อเดิม)
+  */
+  if (sessions > 0) {
+    const kept = getRemoved().filter((p) => p.id !== playerId)
+    kept.push({ ...target, archived: true, photoAt: undefined })
+    writeJson(REMOVED_FILE, kept)
+  }
+
+  return { name: displayName(target), sessions, games }
 }
 
 // ── ก๊วน ─────────────────────────────────────────────────────────────────────
@@ -1450,7 +1556,12 @@ export function summaryText(session: Session): string {
 
 export function buildView(session: Session, now = Date.now()): SessionView {
   const roster = getRoster()
-  const rmap = new Map(roster.map((p) => [p.id, p]))
+  /*
+    รายชื่อที่ส่งให้หน้าเว็บ (roster) = สมาชิกปัจจุบัน ใช้โชว์ในทะเบียน/เช็คอิน/หน้าจัดคน
+    ส่วนแผนที่ชื่อ (rmap) รวมคนที่ลบไปแล้วด้วย เพราะบิลกับสถิติของก๊วนนี้อาจอ้างถึงเขาอยู่
+    ถ้าใช้ชุดเดียวกัน ชื่อในบิลจะกลายเป็นรหัสดิบทันทีที่ลบใครออกจากทะเบียน
+  */
+  const rmap = rosterMap()
   const maxGames = session.players.reduce((m, p) => (p.status === "left" ? m : Math.max(m, p.gamesPlayed)), 0)
   const forecast = forecastQueue(session, now)
 

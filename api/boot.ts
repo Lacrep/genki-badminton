@@ -88,7 +88,7 @@ app.use("/api/*", async (c, next) => {
 })
 
 app.onError((err, c) => {
-  if (err instanceof StoreError) return c.json({ error: err.message }, err.status as 400)
+  if (err instanceof StoreError) return c.json({ error: err.message, ...(err.extra ?? {}) }, err.status as 400)
   if (err instanceof z.ZodError) {
     return c.json({ error: "ข้อมูลที่ส่งมาไม่ถูกต้อง", detail: err.issues }, 400)
   }
@@ -193,8 +193,10 @@ app.get("/api/photos/:id", (c) => {
 })
 
 app.delete("/api/players/:id", (c) => {
-  deletePlayer(c.req.param("id"))
-  return c.json({ roster: getRoster() })
+  // ?force=1 = ยืนยันแล้วว่าจะลบทั้งที่เคยลงก๊วนมาแล้ว
+  const force = c.req.query("force") === "1"
+  const removed = deletePlayer(c.req.param("id"), { force })
+  return c.json({ roster: getRoster(), removed })
 })
 
 // ── ก๊วน ─────────────────────────────────────────────────────────────────────

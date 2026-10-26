@@ -325,25 +325,133 @@ describe("ทะเบียนสมาชิกต้องอยู่ตล�
     expect(again?.archived).toBe(true)
   })
 
-  it("คนที่เคยลงก๊วนแล้วลบไม่ได้ — ชื่อในบิลเก่าต้องไม่หาย", async () => {
+  it("คนที่เคยลงก๊วนแล้ว ลบเฉย ๆ ไม่ได้ ต้องยืนยันอีกชั้น", async () => {
     const store = await loadStore()
     const a = store.addPlayer({ name: "ต้น", level: 5 })
     const session = store.createSession({})
     store.checkIn(session.id, a.id)
     store.endSession(session.id)
 
-    expect(() => store.deletePlayer(a.id)).toThrow()
+    expect(() => store.deletePlayer(a.id)).toThrow(/เคยอยู่ในก๊วน|เคยลงก๊วนมาแล้ว/)
     expect(store.getRoster().map((p) => p.id)).toContain(a.id)
   })
 
-  it("คนที่อยู่ในก๊วนที่กำลังเล่นอยู่ ลบไม่ได้", async () => {
+  it("เพิ่มชื่อซ้ำจากหน้าเช็คอินแล้วลบทิ้ง — ถอนออกจากก๊วนวันนี้ให้ด้วย ไม่เหลือหัวผีในบิล", async () => {
+    const store = await loadStore()
+    const dup = store.addPlayer({ name: "บอยซ้ำ", level: 4 })
+    const session = store.createSession({})
+    store.checkIn(session.id, dup.id)
+    store.checkOut(session.id, dup.id)
+
+    // ยังไม่ได้ลงสักเกม → ลบจบในคลิกเดียว ไม่ต้องยืนยันซ้ำ
+    const out = store.deletePlayer(dup.id)
+    expect(out.sessions).toBe(0)
+    expect(store.getRoster().map((p) => p.id)).not.toContain(dup.id)
+    // ชื่อถูกถอนออกจากก๊วนวันนี้ บิลจึงไม่มีหัวที่ไม่ได้มาจริง
+    expect(store.getSession(session.id).players.map((x) => x.playerId)).not.toContain(dup.id)
+  })
+
+  it("ลงเล่นไปแล้วแม้แต่เกมเดียว ก็ไม่ถูกถอนออกจากก๊วนที่เปิดอยู่เงียบ ๆ", async () => {
+    const store = await loadStore()
+    const ids = ["ต้น", "บอย", "แนน", "โจ้"].map((name) => store.addPlayer({ name, level: 4 }).id)
+    const session = store.createSession({})
+    for (const id of ids) store.checkIn(session.id, id)
+    const { match } = store.startMatch(session.id, {
+      courtIndex: 0,
+      type: "D",
+      teamA: [ids[0]!, ids[1]!],
+      teamB: [ids[2]!, ids[3]!],
+    })
+    store.finishMatch(session.id, { matchId: match.id, sets: [{ a: 21, b: 15 }], shuttles: 1 })
+    store.checkOut(session.id, ids[0]!)
+
+    expect(() => store.deletePlayer(ids[0]!)).toThrow(/เคยลงก๊วนมาแล้ว/)
+    // ยืนยันแล้วลบได้ แต่ชื่อยังอยู่ในก๊วนนั้น ยอดเงินเก่าจึงไม่ขยับ
+    store.deletePlayer(ids[0]!, { force: true })
+    expect(store.getSession(session.id).players.map((x) => x.playerId)).toContain(ids[0])
+    expect(store.rosterMap().get(ids[0]!)?.name).toBe("ต้น")
+  })
+
+  it("ยืนยันแล้วลบได้ แม้เคยลงก๊วนมาแล้ว", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ต้น", level: 5 })
+    const session = store.createSession({})
+    store.checkIn(session.id, a.id)
+    store.endSession(session.id)
+
+    const out = store.deletePlayer(a.id, { force: true })
+    expect(out).toMatchObject({ name: "ต้น", sessions: 1 })
+    expect(store.getRoster().map((p) => p.id)).not.toContain(a.id)
+  })
+
+  it("ลบแล้วบิลกับสถิติของก๊วนเก่ายังขึ้นชื่อเดิม ไม่กลายเป็นรหัสดิบ", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ปาล์ม", level: 5 })
+    const session = store.createSession({})
+    store.checkIn(session.id, a.id)
+    store.endSession(session.id)
+    store.deletePlayer(a.id, { force: true })
+
+    // ชื่อยังอ่านออกทั้งในบิลและสถิติรวม
+    const bill = store.computeBill(store.getSession(session.id), store.rosterMap())
+    expect(bill.lines.find((l) => l.playerId === a.id)?.name).toBe("ปาล์ม")
+    expect(store.allTimeStats().find((x) => x.playerId === a.id)?.name).toBe("ปาล์ม")
+  })
+
+  it("ลบแล้วหายจากทะเบียนจริง เปิดเซิร์ฟเวอร์ใหม่ก็ไม่กลับมา", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ต้น", level: 5 })
+    const session = store.createSession({})
+    store.checkIn(session.id, a.id)
+    store.endSession(session.id)
+    store.deletePlayer(a.id, { force: true })
+
+    const again = await loadStore()
+    expect(again.getRoster().map((p) => p.id)).not.toContain(a.id)
+    // แต่ชื่อยังอยู่ในแผนที่ชื่อ เพื่อให้ของเก่าอ่านออก
+    expect(again.rosterMap().get(a.id)?.name).toBe("ต้น")
+  })
+
+  it("ลบคนเก่าแล้วใช้ชื่อเดิมสร้างคนใหม่ได้ ไม่ติดกันชื่อซ้ำ", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "ต้น", level: 5 })
+    const session = store.createSession({})
+    store.checkIn(session.id, a.id)
+    store.endSession(session.id)
+    store.deletePlayer(a.id, { force: true })
+
+    const fresh = store.addPlayer({ name: "ต้น", level: 5 })
+    expect(fresh.id).not.toBe(a.id)
+  })
+
+  it("คนที่อยู่ในก๊วนที่กำลังเล่นอยู่ ลบไม่ได้ แม้จะยืนยันแล้ว", async () => {
     const store = await loadStore()
     const a = store.addPlayer({ name: "บอย", level: 4 })
     const session = store.createSession({})
     store.checkIn(session.id, a.id)
 
-    expect(() => store.deletePlayer(a.id)).toThrow()
+    expect(() => store.deletePlayer(a.id)).toThrow(/กำลังเล่นอยู่/)
+    expect(() => store.deletePlayer(a.id, { force: true })).toThrow(/กำลังเล่นอยู่/)
     expect(store.getRoster().map((p) => p.id)).toContain(a.id)
+  })
+
+  it("เช็คเอาท์แล้วลบได้ (ยืนยันก่อน) — ก๊วนที่รันอยู่ไม่พัง", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "บอย", level: 4 })
+    const session = store.createSession({})
+    store.checkIn(session.id, a.id)
+    store.checkOut(session.id, a.id)
+
+    store.deletePlayer(a.id, { force: true })
+    expect(store.getRoster().map((p) => p.id)).not.toContain(a.id)
+  })
+
+  it("คนที่ยังไม่เคยลงก๊วน ลบแล้วไม่ต้องเก็บชื่อไว้ให้รก", async () => {
+    const store = await loadStore()
+    const a = store.addPlayer({ name: "พิมพ์ผิดซ้ำ", level: 3 })
+    store.deletePlayer(a.id)
+
+    expect(store.rosterMap().has(a.id)).toBe(false)
   })
 
   it("คนที่เพิ่งพิมพ์ชื่อผิด (ยังไม่เคยลง) ลบได้", async () => {
