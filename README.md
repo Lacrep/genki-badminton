@@ -276,6 +276,17 @@ QR พร้อมเพย์คือข้อความตามมาต�
 >
 > macOS: `brew install node@22` · Windows: โหลด LTS จาก [nodejs.org](https://nodejs.org)
 >
+> **ถ้า apt ลงไม่ได้** (มีแพ็กเกจอื่นค้างอยู่ หรือไม่มีสิทธิ์ sudo) ลงลงในโฟลเดอร์ตัวเองแทนได้
+> ไม่ต้องยุ่งกับแพ็กเกจของระบบเลย — ดูเลขเวอร์ชันล่าสุดที่ [nodejs.org/dist/latest-v22.x](https://nodejs.org/dist/latest-v22.x/)
+> แล้วแทนใน `<ver>`:
+>
+> ```bash
+> cd /tmp && curl -fLO https://nodejs.org/dist/v<ver>/node-v<ver>-linux-x64.tar.xz
+> mkdir -p ~/.local && tar -xJf node-v<ver>-linux-x64.tar.xz -C ~/.local
+> echo 'export PATH="$HOME/.local/node-v<ver>-linux-x64/bin:$PATH"' >> ~/.bashrc
+> export PATH="$HOME/.local/node-v<ver>-linux-x64/bin:$PATH"
+> ```
+>
 > ถ้า Node เก่าเกินไป `npm run build` จะบอกให้เองตั้งแต่ก่อนเริ่ม
 > (ไม่ใช่ปล่อยให้ไปตกเป็น `SyntaxError: Unexpected token '.'` ซึ่งอ่านไม่ออกว่าคืออะไร)
 
