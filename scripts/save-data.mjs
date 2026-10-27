@@ -53,6 +53,34 @@ try {
 const slug = /github\.com[/:]([^/]+\/[^/.]+)/.exec(remoteUrl)?.[1]
 if (!slug) fail(`อ่านชื่อ repo จาก remote ไม่ออก: ${remoteUrl}`)
 
+/*
+  git ต้องรู้ชื่อกับอีเมลก่อนถึงจะ commit ได้
+
+  เครื่องที่เพิ่งลง git ใหม่ยังไม่ได้ตั้ง พอไปตกตอน commit จะพ่น stack trace ของ node
+  ออกมาทั้งแผง ซึ่งอ่านแล้วตกใจทั้งที่เป็นแค่เรื่องตั้งค่าครั้งเดียว เช็คตั้งแต่ตอนนี้
+  แล้วบอกคำสั่งที่ก็อปไปวางได้เลยดีกว่า
+*/
+const who = ["user.name", "user.email"].filter((k) => {
+  try {
+    return !git(["config", "--get", k], { stdio: ["ignore", "pipe", "ignore"] })
+  } catch {
+    return true
+  }
+})
+if (who.length > 0) {
+  fail(
+    "git ยังไม่รู้ว่าคุณเป็นใคร — commit ไม่ได้",
+    [
+      `ตั้งครั้งเดียวจบ (ก็อปไปวางได้เลย):`,
+      ``,
+      `  ${c.bold('git config --global user.name "ชื่อคุณ"')}`,
+      `  ${c.bold('git config --global user.email "อีเมลที่ใช้กับ GitHub"')}`,
+      ``,
+      `แล้วสั่ง ${c.bold("npm run save-data")} อีกที`,
+    ].join("\n"),
+  )
+}
+
 // ── 2. repo เป็น private จริงไหม ─────────────────────────────────────────────
 //
 // เช็คแบบไม่ต้องล็อกอิน: repo ที่เป็น public ตอบ 200 ส่วน private ตอบ 404
@@ -119,7 +147,26 @@ if (vis === "offline" || vis === "unknown") {
 
 // ── 3. ดึงของใหม่จากเครื่องอื่นลงมาก่อน ────────────────────────────────────────
 
-const branch = git(["rev-parse", "--abbrev-ref", "HEAD"])
+/*
+  หาชื่อสาขาปัจจุบัน
+
+  rev-parse HEAD ใช้ไม่ได้ใน repo ที่ยังไม่มี commit สักอัน (เพิ่ง git init มา)
+  symbolic-ref อ่านได้ตั้งแต่ก่อนมี commit แรก จึงใช้เป็นตัวหลัก
+*/
+let branch = "main"
+try {
+  branch = git(["symbolic-ref", "--short", "HEAD"], { stdio: ["ignore", "pipe", "ignore"] })
+} catch {
+  try {
+    branch = git(["rev-parse", "--abbrev-ref", "HEAD"], { stdio: ["ignore", "pipe", "ignore"] })
+  } catch {
+    // อยู่ในสถานะ detached HEAD — เก็บข้อมูลแบบนี้แล้วหาไม่เจอทีหลัง กันไว้ดีกว่า
+    fail(
+      "ตอนนี้ไม่ได้อยู่บนสาขาไหนเลย (detached HEAD)",
+      `กลับไปสาขาหลักก่อน: ${c.bold("git checkout main")}`,
+    )
+  }
+}
 console.log(`${c.dim(`  สาขา ${branch} · ข้อมูลที่ ${DATA_DIR}`)}`)
 
 try {
@@ -176,7 +223,13 @@ for (const f of files.slice(0, 8)) console.log(`${c.dim(`    ${f}`)}`)
 if (files.length > 8) console.log(`${c.dim(`    … และอีก ${files.length - 8} ไฟล์`)}`)
 
 const stamp = new Date().toLocaleString("th-TH", { timeZone: "Asia/Bangkok", dateStyle: "medium", timeStyle: "short" })
-git(["commit", "-m", `ข้อมูลก๊วน ${stamp}`])
+try {
+  git(["commit", "-m", `ข้อมูลก๊วน ${stamp}`], { stdio: ["ignore", "pipe", "pipe"] })
+} catch (err) {
+  // อย่าปล่อยให้ stack trace ของ node หลุดออกมา — อ่านแล้วตกใจเกินเหตุ
+  const why = String(err?.stderr || err?.message || "").trim()
+  fail("commit ไม่สำเร็จ", why ? `git บอกว่า:\n\n${why}` : undefined)
+}
 
 try {
   git(["push", "-u", "origin", branch], { stdio: "inherit" })

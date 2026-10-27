@@ -458,7 +458,16 @@ genki-badminton/
 
 1. เปิด `https://github.com/<ชื่อคุณ>/genki-badminton/settings`
 2. เลื่อนลงล่างสุด **Danger Zone** → **Change repository visibility** → **Make private**
-3. กลับมาที่เครื่อง แล้วสั่ง `npm run save-data`
+3. ถ้าเครื่องนี้ยังไม่เคยใช้ git มาก่อน ตั้งชื่อกับอีเมลครั้งเดียว:
+
+   ```bash
+   git config --global user.name "ชื่อคุณ"
+   git config --global user.email "อีเมลที่ใช้กับ GitHub"
+   ```
+
+4. สั่ง `npm run save-data`
+
+> ข้อ 3 ลืมได้ไม่เป็นไร — สคริปต์เช็คให้ตั้งแต่ก่อนเริ่ม แล้วบอกคำสั่งที่ต้องรันให้เลย
 
 **ใช้งานประจำ**
 
