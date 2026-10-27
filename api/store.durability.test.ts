@@ -16,6 +16,13 @@ async function loadStore() {
   return import("./store")
 }
 
+/** จำลอง "คอมอีกเครื่อง" — โฟลเดอร์ข้อมูลคนละอัน ของเดิมยังอยู่ */
+async function loadStoreAt(other: string) {
+  vi.resetModules()
+  process.env.DATA_DIR = other
+  return import("./store")
+}
+
 beforeEach(() => {
   dir = fs.mkdtempSync(path.join(os.tmpdir(), "genki-store-"))
 })
@@ -508,5 +515,117 @@ describe("ข้อมูลก๊วนที่กำลังเล่นอ�
     const fees = reopened.currentSession()?.fees as { shuttleCostTotal: number; shuttleCostReal?: number }
     expect(fees.shuttleCostTotal).toBe(1200)
     expect(fees.shuttleCostReal).toBeUndefined()
+  })
+})
+
+describe("สำรอง / กู้ข้อมูลไปเครื่องอื่น", () => {
+  it("กู้ที่เครื่องใหม่แล้วได้ทะเบียน ประวัติก๊วน บิล และรูปครบเหมือนเดิม", async () => {
+    const a = await loadStore()
+    const ids = ["ต้น", "บอย", "แนน", "โจ้"].map((name) => a.addPlayer({ name, level: 4 }).id)
+    const session = a.createSession({})
+    for (const id of ids) a.checkIn(session.id, id)
+    const { match } = a.startMatch(session.id, {
+      courtIndex: 0,
+      type: "D",
+      teamA: [ids[0]!, ids[1]!],
+      teamB: [ids[2]!, ids[3]!],
+    })
+    a.finishMatch(session.id, { matchId: match.id, sets: [{ a: 21, b: 15 }], shuttles: 2 })
+    const png =
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAFUlEQVR4nGP8z4AATAxQxhCVAAgwAA3lAQSWvWrZAAAAAElFTkSuQmCC"
+    a.setPlayerPhoto(ids[0]!, png)
+    const billA = a.computeBill(a.getSession(session.id), a.rosterMap())
+    const backup = JSON.parse(JSON.stringify(a.exportBackup()))
+
+    // เครื่องใหม่ที่ยังไม่มีอะไรเลย
+    const other = fs.mkdtempSync(path.join(os.tmpdir(), "genki-other-"))
+    try {
+      const b = await loadStoreAt(other)
+      expect(b.getRoster()).toHaveLength(0)
+
+      b.restoreBackup(b.readBackup(backup))
+      expect(b.getRoster().map((p) => p.name).sort()).toEqual(["ต้น", "บอย", "แนน", "โจ้"].sort())
+      expect(b.currentSessionId()).toBe(session.id)
+
+      const billB = b.computeBill(b.getSession(session.id), b.rosterMap())
+      expect(billB.billed).toBe(billA.billed)
+      expect(billB.shuttlesUsed).toBe(billA.shuttlesUsed)
+      // รูปต้องไปด้วย ไม่ใช่หายไปเหลือแต่ชื่อ
+      expect(b.readPlayerPhoto(ids[0]!)).not.toBeNull()
+      expect(b.getRoster().find((p) => p.id === ids[0])?.photoAt).toBeTruthy()
+    } finally {
+      fs.rmSync(other, { recursive: true, force: true })
+    }
+  })
+
+  it("ชื่อคนที่ลบไปแล้วไปด้วย — บิลเก่าที่เครื่องใหม่ไม่กลายเป็นรหัสดิบ", async () => {
+    const a = await loadStore()
+    const gone = a.addPlayer({ name: "ปาล์ม", level: 5 })
+    const session = a.createSession({})
+    a.checkIn(session.id, gone.id)
+    a.endSession(session.id)
+    a.deletePlayer(gone.id, { force: true })
+    const backup = JSON.parse(JSON.stringify(a.exportBackup()))
+
+    const other = fs.mkdtempSync(path.join(os.tmpdir(), "genki-other-"))
+    try {
+      const b = await loadStoreAt(other)
+      b.restoreBackup(b.readBackup(backup))
+      expect(b.getRoster().map((p) => p.id)).not.toContain(gone.id)
+      expect(b.rosterMap().get(gone.id)?.name).toBe("ปาล์ม")
+      const bill = b.computeBill(b.getSession(session.id), b.rosterMap())
+      expect(bill.lines.find((l) => l.playerId === gone.id)?.name).toBe("ปาล์ม")
+    } finally {
+      fs.rmSync(other, { recursive: true, force: true })
+    }
+  })
+
+  it("กู้ทับของเดิม — ยกโฟลเดอร์เก่าไปเก็บไว้ก่อนเสมอ กดผิดก็เอากลับได้", async () => {
+    const a = await loadStore()
+    a.addPlayer({ name: "คนในไฟล์สำรอง", level: 3 })
+    const backup = JSON.parse(JSON.stringify(a.exportBackup()))
+
+    const other = fs.mkdtempSync(path.join(os.tmpdir(), "genki-other-"))
+    try {
+      const b = await loadStoreAt(other)
+      b.addPlayer({ name: "คนที่จะโดนทับ", level: 6 })
+
+      const out = b.restoreBackup(b.readBackup(backup))
+      expect(b.getRoster().map((p) => p.name)).toEqual(["คนในไฟล์สำรอง"])
+      expect(out.movedTo).toBeTruthy()
+      // ของเดิมยังอ่านได้จากโฟลเดอร์ที่ยกไปเก็บ
+      const old = JSON.parse(fs.readFileSync(path.join(out.movedTo!, "roster.json"), "utf8"))
+      expect(old.map((p: { name: string }) => p.name)).toEqual(["คนที่จะโดนทับ"])
+    } finally {
+      fs.rmSync(other, { recursive: true, force: true })
+    }
+  })
+
+  it("ก๊วนที่ไม่มีในไฟล์สำรองต้องไม่ค้างปนอยู่หลังกู้", async () => {
+    const a = await loadStore()
+    a.addPlayer({ name: "ต้น", level: 4 })
+    const backup = JSON.parse(JSON.stringify(a.exportBackup()))
+
+    const other = fs.mkdtempSync(path.join(os.tmpdir(), "genki-other-"))
+    try {
+      const b = await loadStoreAt(other)
+      const stale = b.createSession({ name: "ก๊วนที่ไม่ควรเหลือ" })
+      b.endSession(stale.id)
+      expect(b.listSessions()).toHaveLength(1)
+
+      b.restoreBackup(b.readBackup(backup))
+      expect(b.listSessions()).toHaveLength(0)
+      expect(b.currentSessionId()).toBeNull()
+    } finally {
+      fs.rmSync(other, { recursive: true, force: true })
+    }
+  })
+
+  it("ไฟล์ที่ไม่ใช่ไฟล์สำรอง ต้องไม่ยอมกู้", async () => {
+    const store = await loadStore()
+    expect(() => store.readBackup({ hello: "world" })).toThrow(/ไม่ใช่ไฟล์สำรอง/)
+    expect(() => store.readBackup(null)).toThrow(/ไม่ใช่ไฟล์สำรอง/)
+    expect(() => store.readBackup({ genki: "backup", version: 999 })).toThrow(/รุ่นใหม่กว่า/)
+    expect(() => store.readBackup({ genki: "backup", version: 1, roster: "nope" })).toThrow(/เสียหาย/)
   })
 })

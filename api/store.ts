@@ -1724,3 +1724,145 @@ export function allTimeStats(): AllTimeStat[] {
   }
   return [...acc.values()].sort((a, b) => b.games - a.games)
 }
+
+// ── สำรอง / กู้ข้อมูลทั้งก้อน ──────────────────────────────────────────────────
+//
+// ทำไมเป็นไฟล์เดียว: หัวก๊วนพกคอมไปคนละเครื่อง ถ้าต้องไล่ก็อปโฟลเดอร์ data/ เอง
+// มีโอกาสตกหล่น (ลืมโฟลเดอร์ photos/ หรือ sessions/ ทั้งอัน) ไฟล์เดียวจบคือก็อปยาก
+// ที่จะผิด — เอาไปวางใน Google Drive หรือส่งเข้าไลน์ตัวเองก็ได้
+
+/** รุ่นของรูปแบบไฟล์สำรอง — ขึ้นเลขเมื่อโครงสร้างเปลี่ยนจนของเก่าอ่านไม่ได้ */
+const BACKUP_VERSION = 1
+
+export interface BackupFile {
+  /** ป้ายบอกว่าเป็นไฟล์สำรองของระบบนี้จริง กันเลือกไฟล์ผิดมากู้ */
+  genki: "backup"
+  version: number
+  createdAt: number
+  counts: { players: number; sessions: number; photos: number }
+  roster: RosterPlayer[]
+  /** ชื่อคนที่ลบไปแล้ว — ต้องไปด้วย ไม่งั้นบิลเก่าที่เครื่องใหม่จะขึ้นรหัสดิบ */
+  removed: RosterPlayer[]
+  current: { id: string | null }
+  sessions: Session[]
+  /** รูปสมาชิก เก็บเป็น base64 ในไฟล์เดียวกัน */
+  photos: { id: string; ext: string; data: string }[]
+}
+
+export function exportBackup(): BackupFile {
+  ensureDirs()
+  const sessions = listSessions()
+  const photos: BackupFile["photos"] = []
+  if (fs.existsSync(PHOTO_DIR)) {
+    for (const f of fs.readdirSync(PHOTO_DIR)) {
+      const m = /^([A-Za-z0-9_-]+)\.([a-z]+)$/.exec(f)
+      if (!m || !Object.values(PHOTO_TYPES).includes(m[2]!)) continue
+      try {
+        photos.push({ id: m[1]!, ext: m[2]!, data: fs.readFileSync(path.join(PHOTO_DIR, f)).toString("base64") })
+      } catch {
+        // รูปใบไหนอ่านไม่ได้ก็ข้ามไป ดีกว่าสำรองไม่ได้ทั้งก้อนเพราะรูปใบเดียว
+      }
+    }
+  }
+  const roster = getRoster()
+  return {
+    genki: "backup",
+    version: BACKUP_VERSION,
+    createdAt: Date.now(),
+    counts: { players: roster.length, sessions: sessions.length, photos: photos.length },
+    roster,
+    removed: getRemoved(),
+    current: { id: currentSessionId() },
+    sessions,
+    photos,
+  }
+}
+
+/** ตรวจว่าไฟล์ที่เลือกมาเป็นไฟล์สำรองจริง ไม่ใช่ไฟล์อื่นที่หน้าตาคล้าย ๆ */
+export function readBackup(raw: unknown): BackupFile {
+  const b = raw as Partial<BackupFile> | null
+  if (!b || typeof b !== "object" || b.genki !== "backup") {
+    throw new StoreError("ไฟล์นี้ไม่ใช่ไฟล์สำรองของระบบก๊วน", 400)
+  }
+  if (typeof b.version !== "number" || b.version > BACKUP_VERSION) {
+    throw new StoreError("ไฟล์สำรองนี้มาจากระบบรุ่นใหม่กว่า — อัปเดตเว็บก่อนแล้วค่อยกู้", 400)
+  }
+  if (!Array.isArray(b.roster) || !Array.isArray(b.sessions)) {
+    throw new StoreError("ไฟล์สำรองเสียหาย — ไม่มีทะเบียนหรือประวัติก๊วนอยู่ข้างใน", 400)
+  }
+  return {
+    genki: "backup",
+    version: b.version,
+    createdAt: typeof b.createdAt === "number" ? b.createdAt : Date.now(),
+    counts: b.counts ?? { players: b.roster.length, sessions: b.sessions.length, photos: 0 },
+    roster: b.roster,
+    removed: Array.isArray(b.removed) ? b.removed : [],
+    current: b.current && typeof b.current === "object" ? b.current : { id: null },
+    sessions: b.sessions,
+    photos: Array.isArray(b.photos) ? b.photos : [],
+  }
+}
+
+/**
+ * กู้ข้อมูลจากไฟล์สำรอง — ทับของที่อยู่ในเครื่องนี้ทั้งหมด
+ *
+ * ก่อนทับจะยกโฟลเดอร์ data/ เดิมไปเก็บไว้เป็น data.before-restore-<เวลา> เสมอ
+ * กดกู้ผิดไฟล์ก็ยังเอาของเดิมกลับมาได้ (ชื่อโฟลเดอร์อยู่ในผลลัพธ์ที่ตอบกลับไป)
+ */
+export function restoreBackup(backup: BackupFile): { movedTo: string | null; counts: BackupFile["counts"] } {
+  ensureDirs()
+
+  let movedTo: string | null = null
+  if (fs.existsSync(DATA_DIR)) {
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-")
+    const dest = `${DATA_DIR}.before-restore-${stamp}`
+    try {
+      fs.cpSync(DATA_DIR, dest, { recursive: true })
+      movedTo = dest
+    } catch {
+      throw new StoreError("สำรองข้อมูลเดิมไว้ก่อนกู้ไม่สำเร็จ — ยังไม่ได้แตะข้อมูลเก่า", 500)
+    }
+  }
+
+  // ล้างของเดิมออกก่อน ไม่งั้นก๊วนที่ไม่มีในไฟล์สำรองจะค้างปนอยู่
+  for (const f of fs.readdirSync(SESSION_DIR)) {
+    if (f.endsWith(".json") || f.endsWith(".bak")) fs.rmSync(path.join(SESSION_DIR, f), { force: true })
+  }
+  if (fs.existsSync(PHOTO_DIR)) fs.rmSync(PHOTO_DIR, { recursive: true, force: true })
+
+  for (const s of backup.sessions) {
+    if (!s || typeof s.id !== "string") continue
+    writeJson(sessionFile(s.id), s)
+  }
+  writeJson(ROSTER_FILE, backup.roster)
+  writeJson(REMOVED_FILE, backup.removed)
+
+  if (backup.photos.length > 0) {
+    fs.mkdirSync(PHOTO_DIR, { recursive: true })
+    for (const p of backup.photos) {
+      if (!/^[A-Za-z0-9_-]+$/.test(p.id)) continue
+      if (!Object.values(PHOTO_TYPES).includes(p.ext)) continue
+      try {
+        fs.writeFileSync(photoFile(p.id, p.ext), Buffer.from(p.data, "base64"))
+      } catch {
+        // รูปใบไหนเขียนไม่ได้ก็ข้าม ไม่ต้องล้มทั้งการกู้เพราะรูปใบเดียว
+      }
+    }
+  }
+
+  // ตัวชี้ "ก๊วนปัจจุบัน" ต้องชี้ไปที่ก๊วนที่มีอยู่จริงในไฟล์สำรองเท่านั้น
+  const ids = new Set(backup.sessions.map((s) => s.id))
+  writeJson(POINTER_FILE, { id: backup.current.id && ids.has(backup.current.id) ? backup.current.id : null })
+
+  // ประวัติ undo ของเครื่องนี้อ้างถึงก๊วนชุดเก่า ใช้ต่อไม่ได้แล้ว
+  undoStacks.clear()
+
+  return {
+    movedTo,
+    counts: {
+      players: backup.roster.length,
+      sessions: backup.sessions.length,
+      photos: backup.photos.length,
+    },
+  }
+}

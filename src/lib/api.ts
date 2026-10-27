@@ -14,6 +14,15 @@ export interface SessionSummary {
   endAt?: number
 }
 
+/** สรุปสิ่งที่อยู่ในไฟล์สำรอง — โชว์ให้ดูก่อนกดกู้ทับของเดิม */
+export interface BackupInfo {
+  createdAt: number
+  players: number
+  sessions: number
+  photos: number
+  latestSession: { name: string; date: string } | null
+}
+
 export interface Bootstrap {
   pinRequired: boolean
   roster: RosterPlayer[]
@@ -137,6 +146,16 @@ export const api = {
         longestWaitMs: number
       }[]
     }>("/api/stats"),
+
+  // สำรอง / กู้ข้อมูลทั้งก้อน
+  inspectBackup: (raw: unknown) => post<BackupInfo>("/api/backup/inspect", raw),
+  restoreBackup: (raw: unknown) =>
+    post<{
+      ok: true
+      movedTo: string | null
+      counts: { players: number; sessions: number; photos: number }
+      roster: RosterPlayer[]
+    }>("/api/restore", raw),
 
   // ทะเบียนผู้เล่น
   addPlayer: (input: PlayerInput) => post<{ player: RosterPlayer; roster: RosterPlayer[] }>("/api/players", input),

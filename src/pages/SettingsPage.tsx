@@ -3,6 +3,7 @@ import { ChevronDown, Flag, Gauge, LayoutGrid, Settings2, Volume2 } from "lucide
 import { buildLabel, DEFAULT_SETTINGS, MAX_LEVEL, type MatchType, type SessionSettings } from "@shared/types"
 import { api } from "@/lib/api"
 import { useApp } from "@/lib/app"
+import { BackupCard } from "@/components/BackupCard"
 import { EmptyState, Segmented, Stepper, Toggle } from "@/components/ui"
 import { cn } from "@/lib/util"
 
@@ -23,18 +24,27 @@ export function SettingsPage({ navigate }: { navigate: (to: string) => void }) {
     setVenue(view?.session.venue ?? "")
   }, [view?.session.name, view?.session.venue])
 
+  /*
+    ยังไม่เปิดก๊วนก็เข้าหน้านี้ได้ และต้องเห็นปุ่มสำรอง/กู้ข้อมูลด้วย
+
+    เคสหลักของการกู้คือเครื่องใหม่ที่เพิ่งโคลนมา ซึ่งยังไม่มีก๊วนอะไรเลย
+    ถ้าซ่อนปุ่มไว้หลังการเปิดก๊วน จะกลายเป็นต้องเปิดก๊วนหลอก ๆ ก่อนถึงจะกู้ของจริงได้
+  */
   if (!view) {
     return (
-      <div className="card">
-        <EmptyState
-          title="ยังไม่มีก๊วนที่เปิดอยู่"
-          hint="เปิดก๊วนก่อน แล้วค่อยกลับมาปรับกฎการจัดคิว"
-          action={
-            <button className="btn-primary" onClick={() => navigate("/")}>
-              ไปหน้าเปิดก๊วน
-            </button>
-          }
-        />
+      <div className="flex flex-col gap-4">
+        <div className="card">
+          <EmptyState
+            title="ยังไม่มีก๊วนที่เปิดอยู่"
+            hint="เปิดก๊วนก่อน แล้วค่อยกลับมาปรับกฎการจัดคิว"
+            action={
+              <button className="btn-primary" onClick={() => navigate("/")}>
+                ไปหน้าเปิดก๊วน
+              </button>
+            }
+          />
+        </div>
+        <BackupCard />
       </div>
     )
   }
@@ -245,6 +255,8 @@ export function SettingsPage({ navigate }: { navigate: (to: string) => void }) {
         ) : null}
       </section>
 
+      <BackupCard />
+
       {/* ปิดก๊วน */}
       <section className="card card-pad flex flex-col gap-3">
         <h2 className="section-title">
@@ -267,7 +279,8 @@ export function SettingsPage({ navigate }: { navigate: (to: string) => void }) {
               disabled={!canControl || liveMatches > 0}
               onClick={() => {
                 if (!window.confirm("ปิดก๊วนวันนี้เลยไหม?")) return
-                void run("ปิดก๊วนแล้ว", () => api.endSession(sessionId))
+                // เตือนให้สำรองตอนนี้เลย เป็นจังหวะเดียวที่ข้อมูลของวันนี้นิ่งแล้ว
+                void run("ปิดก๊วนแล้ว — อย่าลืมกดสำรองข้อมูลด้านล่าง", () => api.endSession(sessionId))
               }}
             >
               <Flag size={16} />

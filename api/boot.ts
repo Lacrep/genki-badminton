@@ -29,6 +29,7 @@ import {
   clearPlayerPhoto,
   deletePlayer,
   deleteSession,
+  exportBackup,
   endSession,
   findSessionByCode,
   finishMatch,
@@ -41,6 +42,8 @@ import {
   plannedPlayerIds,
   renameCourt,
   reopenSession,
+  readBackup,
+  restoreBackup,
   rosterMap,
   setBoost,
   setCourtCount,
@@ -629,6 +632,43 @@ app.delete("/api/sessions/:id", (c) => {
 })
 
 app.get("/api/stats", (c) => c.json({ stats: allTimeStats() }))
+
+// ── สำรอง / กู้ข้อมูลทั้งก้อน ──────────────────────────────────────────────────
+
+/** ดาวน์โหลดข้อมูลทั้งก๊วนเป็นไฟล์เดียว — เอาไปวางใน Drive หรือกู้ที่เครื่องอื่นได้ */
+app.get("/api/backup", () => {
+  const backup = exportBackup()
+  const stamp = new Date(backup.createdAt + 7 * 3600_000).toISOString().slice(0, 16).replace("T", "-").replace(":", "")
+  const body = JSON.stringify(backup)
+  return new Response(body, {
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "Content-Disposition": `attachment; filename="genki-backup-${stamp}.json"`,
+      "Content-Length": String(Buffer.byteLength(body)),
+      "Cache-Control": "no-store",
+    },
+  })
+})
+
+/** ดูว่าไฟล์สำรองที่เลือกมามีอะไรอยู่ข้างใน ก่อนตัดสินใจกู้ทับของเดิม */
+app.post("/api/backup/inspect", async (c) => {
+  const backup = readBackup(await c.req.json().catch(() => null))
+  return c.json({
+    createdAt: backup.createdAt,
+    counts: backup.counts,
+    players: backup.roster.length,
+    sessions: backup.sessions.length,
+    photos: backup.photos.length,
+    latestSession: backup.sessions[0] ? { name: backup.sessions[0].name, date: backup.sessions[0].date } : null,
+  })
+})
+
+/** กู้ข้อมูลจากไฟล์สำรอง — ทับของเดิมทั้งหมด (ยกของเดิมไปเก็บไว้ก่อนเสมอ) */
+app.post("/api/restore", async (c) => {
+  const backup = readBackup(await c.req.json().catch(() => null))
+  const out = restoreBackup(backup)
+  return c.json({ ok: true, ...out, roster: getRoster() })
+})
 
 app.get("/api/sessions", (c) =>
   c.json({
