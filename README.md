@@ -265,6 +265,20 @@ QR พร้อมเพย์คือข้อความตามมาต�
 
 ## เริ่มใช้งาน
 
+> **ต้องมี Node 20.19 ขึ้นไป** (แนะนำ v22 LTS) — เช็คด้วย `node -v`
+>
+> Ubuntu/Debian แถม Node 12 มาให้ ซึ่งเก่าเกินไป ลงตัวใหม่ทับได้เลย:
+>
+> ```bash
+> curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+> sudo apt-get install -y nodejs
+> ```
+>
+> macOS: `brew install node@22` · Windows: โหลด LTS จาก [nodejs.org](https://nodejs.org)
+>
+> ถ้า Node เก่าเกินไป `npm run build` จะบอกให้เองตั้งแต่ก่อนเริ่ม
+> (ไม่ใช่ปล่อยให้ไปตกเป็น `SyntaxError: Unexpected token '.'` ซึ่งอ่านไม่ออกว่าคืออะไร)
+
 ```bash
 npm install
 npm run dev          # เปิด http://localhost:3100 (มือถือในวง Wi-Fi เดียวกันเปิดได้ด้วย)
@@ -475,7 +489,7 @@ genki-badminton/
 |---|---|
 | จบก๊วนแล้วเก็บข้อมูลขึ้น GitHub | `npm run save-data` |
 | ไปถึงอีกเครื่อง ดึงข้อมูลล่าสุดลงมา | `git pull` แล้ว `npm start` |
-| เครื่องใหม่ตั้งแต่ต้น | `git clone …` → `npm ci` → `npm start` |
+| เครื่องใหม่ตั้งแต่ต้น | `git clone …` → `npm ci` → `npm start` (เช็ค `node -v` ให้ได้ 20.19+ ก่อน) |
 
 `npm run save-data` จะ:
 
