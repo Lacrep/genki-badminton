@@ -19,6 +19,7 @@
     "find-data": "node scripts/find-data.mjs",
     "use-data": "node scripts/use-data.mjs",
     "merge-data": "node scripts/merge-data.mjs",
+    "save-data": "node scripts/save-data.mjs",
     "prestart": "npm run build",
     "keep-session": "node scripts/keep-session.mjs"
   },
