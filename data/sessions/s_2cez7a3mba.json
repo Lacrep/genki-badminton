@@ -1,0 +1,3460 @@
+{
+  "id": "s_2cez7a3mba",
+  "name": "ก๊วนเสาร์เช้า",
+  "date": "2026-10-17",
+  "venue": "The 18 Badminton Club",
+  "startAt": 1792202508981,
+  "status": "ended",
+  "code": "YXBS",
+  "courts": [
+    {
+      "index": 0,
+      "name": "คอร์ต 1",
+      "currentMatchId": null,
+      "disabled": false
+    },
+    {
+      "index": 1,
+      "name": "คอร์ต 2",
+      "currentMatchId": null,
+      "disabled": true
+    },
+    {
+      "index": 2,
+      "name": "คอร์ต 3",
+      "currentMatchId": null
+    },
+    {
+      "index": 3,
+      "name": "คอร์ต 4",
+      "currentMatchId": null,
+      "disabled": true
+    },
+    {
+      "index": 4,
+      "name": "คอร์ต 5",
+      "currentMatchId": null
+    }
+  ],
+  "players": [
+    {
+      "playerId": "p_hwixawkd5d",
+      "status": "left",
+      "checkInAt": 1792202589583,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 4662011,
+      "waitedMs": 4825853,
+      "longestWaitMs": 1527738,
+      "wins": 0,
+      "losses": 0,
+      "draws": 1,
+      "boost": 0,
+      "paid": true,
+      "leftAt": 1792212077447,
+      "paidAt": 1792212906177
+    },
+    {
+      "playerId": "p_xzrzqm0ok1",
+      "status": "left",
+      "checkInAt": 1792202589588,
+      "queueSince": null,
+      "gamesPlayed": 3,
+      "playedMs": 5114776,
+      "waitedMs": 3844014,
+      "longestWaitMs": 1769767,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "leftAt": 1792211548378,
+      "paidAt": 1792213195828
+    },
+    {
+      "playerId": "p_wkxmea5l6k",
+      "status": "left",
+      "checkInAt": 1792202600839,
+      "queueSince": null,
+      "gamesPlayed": 2,
+      "playedMs": 2252444,
+      "waitedMs": 2839743,
+      "longestWaitMs": 1337481,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792207693026,
+      "leftAt": 1792207693026
+    },
+    {
+      "playerId": "p_7abt4a6j42",
+      "status": "left",
+      "checkInAt": 1792202644807,
+      "queueSince": null,
+      "gamesPlayed": 3,
+      "playedMs": 2859811,
+      "waitedMs": 7589572,
+      "longestWaitMs": 3074036,
+      "wins": 0,
+      "losses": 1,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213178495,
+      "leftAt": 1792213178495
+    },
+    {
+      "playerId": "p_5pmcrc7d7c",
+      "status": "left",
+      "checkInAt": 1792202683807,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 4694324,
+      "waitedMs": 8223918,
+      "longestWaitMs": 2619392,
+      "wins": 0,
+      "losses": 1,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213180565,
+      "leftAt": 1792213180565
+    },
+    {
+      "playerId": "p_vrlbf0860e",
+      "status": "left",
+      "checkInAt": 1792202721142,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 5462994,
+      "waitedMs": 4365405,
+      "longestWaitMs": 1293636,
+      "wins": 0,
+      "losses": 0,
+      "draws": 1,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792212648888,
+      "leftAt": 1792212648888
+    },
+    {
+      "playerId": "p_4en2989rj3",
+      "status": "left",
+      "checkInAt": 1792202795690,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 3237202,
+      "waitedMs": 3922755,
+      "longestWaitMs": 1935556,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792209955647,
+      "leftAt": 1792209955647
+    },
+    {
+      "playerId": "p_hlqouzbfjc",
+      "status": "left",
+      "checkInAt": 1792202873464,
+      "queueSince": null,
+      "gamesPlayed": 5,
+      "playedMs": 3987192,
+      "waitedMs": 5491005,
+      "longestWaitMs": 1759776,
+      "wins": 1,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792212351661,
+      "leftAt": 1792212351661
+    },
+    {
+      "playerId": "p_oa3k98c1qy",
+      "status": "left",
+      "checkInAt": 1792202902248,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 5231589,
+      "waitedMs": 6682675,
+      "longestWaitMs": 2619392,
+      "wins": 1,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792212334369,
+      "leftAt": 1792212395028
+    },
+    {
+      "playerId": "p_6y1jo5emkk",
+      "status": "left",
+      "checkInAt": 1792203022538,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 6834570,
+      "waitedMs": 3300095,
+      "longestWaitMs": 1769767,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213157203,
+      "leftAt": 1792213157203
+    },
+    {
+      "playerId": "p_m3ojvdfpn0",
+      "status": "left",
+      "checkInAt": 1792203073177,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 4662011,
+      "waitedMs": 4345234,
+      "longestWaitMs": 1527738,
+      "wins": 0,
+      "losses": 0,
+      "draws": 1,
+      "boost": 0,
+      "paid": true,
+      "leftAt": 1792212080422,
+      "paidAt": 1792212907991
+    },
+    {
+      "playerId": "p_3fd83nijoe",
+      "status": "left",
+      "checkInAt": 1792203205418,
+      "queueSince": null,
+      "gamesPlayed": 3,
+      "playedMs": 4181902,
+      "waitedMs": 3180882,
+      "longestWaitMs": 1270776,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 1,
+      "paid": true,
+      "leftAt": 1792210568202,
+      "paidAt": 1792213316656
+    },
+    {
+      "playerId": "p_vlg61a1abs",
+      "status": "left",
+      "checkInAt": 1792203247425,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 6114937,
+      "waitedMs": 4137660,
+      "longestWaitMs": 1983800,
+      "wins": 0,
+      "losses": 0,
+      "draws": 1,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213500022,
+      "leftAt": 1792213500022
+    },
+    {
+      "playerId": "p_wse74h0bhl",
+      "status": "left",
+      "checkInAt": 1792203296692,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 5080287,
+      "waitedMs": 5250550,
+      "longestWaitMs": 1596681,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 1,
+      "paid": true,
+      "paidAt": 1792213627529,
+      "leftAt": 1792213627529
+    },
+    {
+      "playerId": "p_xf3iqplno6",
+      "status": "left",
+      "checkInAt": 1792203296710,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 5362683,
+      "waitedMs": 4947614,
+      "longestWaitMs": 1401249,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 1,
+      "paid": true,
+      "paidAt": 1792213607007,
+      "leftAt": 1792213607007
+    },
+    {
+      "playerId": "p_04n5grksuu",
+      "status": "left",
+      "checkInAt": 1792203310626,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 5113743,
+      "waitedMs": 5189175,
+      "longestWaitMs": 1813506,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 1,
+      "paid": true,
+      "paidAt": 1792213613544,
+      "leftAt": 1792213613544
+    },
+    {
+      "playerId": "p_0aamglvm9a",
+      "status": "left",
+      "checkInAt": 1792203461148,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 5138834,
+      "waitedMs": 7155034,
+      "longestWaitMs": 2619392,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213333532,
+      "leftAt": 1792213333532
+    },
+    {
+      "playerId": "p_cnm4rzo5t5",
+      "status": "left",
+      "checkInAt": 1792203467383,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 5138834,
+      "waitedMs": 7424377,
+      "longestWaitMs": 2619392,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213609110,
+      "leftAt": 1792213609110
+    },
+    {
+      "playerId": "p_is0bppr1va",
+      "status": "left",
+      "checkInAt": 1792203602242,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 2402590,
+      "waitedMs": 8627670,
+      "longestWaitMs": 3381248,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792214645616,
+      "leftAt": 1792214645616
+    },
+    {
+      "playerId": "p_hgw4qts55x",
+      "status": "left",
+      "checkInAt": 1792203839402,
+      "queueSince": null,
+      "gamesPlayed": 3,
+      "playedMs": 2067274,
+      "waitedMs": 4626229,
+      "longestWaitMs": 2512814,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792210532905,
+      "leftAt": 1792210532905
+    },
+    {
+      "playerId": "p_3bvix9nerq",
+      "status": "left",
+      "checkInAt": 1792203932341,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 5131654,
+      "waitedMs": 4176984,
+      "longestWaitMs": 1985849,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213240979,
+      "leftAt": 1792213240979
+    },
+    {
+      "playerId": "p_famr27ywr8",
+      "status": "left",
+      "checkInAt": 1792203968869,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 4604822,
+      "waitedMs": 5028157,
+      "longestWaitMs": 1985849,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213601848,
+      "leftAt": 1792213601848
+    },
+    {
+      "playerId": "p_hlkq1h3rk3",
+      "status": "left",
+      "checkInAt": 1792204195408,
+      "queueSince": null,
+      "gamesPlayed": 3,
+      "playedMs": 4324694,
+      "waitedMs": 4830282,
+      "longestWaitMs": 1751364,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213350384,
+      "leftAt": 1792213350384
+    },
+    {
+      "playerId": "p_5t6kdv3w2i",
+      "status": "left",
+      "checkInAt": 1792204201258,
+      "queueSince": null,
+      "gamesPlayed": 3,
+      "playedMs": 3676687,
+      "waitedMs": 12815847,
+      "longestWaitMs": 8643659,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false,
+      "leftAt": 1792223284683
+    },
+    {
+      "playerId": "p_ej2y8e5kee",
+      "status": "left",
+      "checkInAt": 1792204279441,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 4887498,
+      "waitedMs": 4089432,
+      "longestWaitMs": 1414684,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213256371,
+      "leftAt": 1792213256371
+    },
+    {
+      "playerId": "p_q165dvkkxi",
+      "status": "left",
+      "checkInAt": 1792204544633,
+      "queueSince": null,
+      "gamesPlayed": 3,
+      "playedMs": 5573330,
+      "waitedMs": 3035495,
+      "longestWaitMs": 1769767,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213058834,
+      "leftAt": 1792213141971
+    },
+    {
+      "playerId": "p_ecpq3j2g0k",
+      "status": "left",
+      "checkInAt": 1792204865203,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 5162676,
+      "waitedMs": 3945774,
+      "longestWaitMs": 1744384,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "noCourtFee": true,
+      "paidAt": 1792213874306,
+      "leftAt": 1792213874306
+    },
+    {
+      "playerId": "p_manw7oisvz",
+      "status": "left",
+      "checkInAt": 1792204896967,
+      "queueSince": null,
+      "gamesPlayed": 4,
+      "playedMs": 4345884,
+      "waitedMs": 4566899,
+      "longestWaitMs": 1473634,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213809750,
+      "leftAt": 1792213809750
+    },
+    {
+      "playerId": "p_amfjf7pwe1",
+      "status": "left",
+      "checkInAt": 1792205228108,
+      "queueSince": null,
+      "gamesPlayed": 2,
+      "playedMs": 2639591,
+      "waitedMs": 4403845,
+      "longestWaitMs": 2599191,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792212271544,
+      "leftAt": 1792212271544
+    },
+    {
+      "playerId": "p_2kfe5lxq8k",
+      "status": "left",
+      "checkInAt": 1792205593378,
+      "queueSince": null,
+      "gamesPlayed": 3,
+      "playedMs": 3792174,
+      "waitedMs": 5261974,
+      "longestWaitMs": 3048506,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792214647526,
+      "leftAt": 1792214647526
+    },
+    {
+      "playerId": "p_797m3xxwrp",
+      "status": "left",
+      "checkInAt": 1792205601844,
+      "queueSince": null,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 137071,
+      "longestWaitMs": 137071,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false,
+      "leftAt": 1792205738915,
+      "noBill": true
+    },
+    {
+      "playerId": "p_suzv413d26",
+      "status": "left",
+      "checkInAt": 1792205856239,
+      "queueSince": null,
+      "gamesPlayed": 3,
+      "playedMs": 2643660,
+      "waitedMs": 4971712,
+      "longestWaitMs": 1884363,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213471611,
+      "leftAt": 1792213471611
+    },
+    {
+      "playerId": "p_fpacic3m1r",
+      "status": "left",
+      "checkInAt": 1792205867888,
+      "queueSince": null,
+      "gamesPlayed": 2,
+      "playedMs": 2278029,
+      "waitedMs": 1531916,
+      "longestWaitMs": 781415,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792209677833,
+      "leftAt": 1792209677833
+    },
+    {
+      "playerId": "p_i49lweh5l9",
+      "status": "left",
+      "checkInAt": 1792206124813,
+      "queueSince": null,
+      "gamesPlayed": 3,
+      "playedMs": 2643660,
+      "waitedMs": 4498762,
+      "longestWaitMs": 1884363,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213267235,
+      "leftAt": 1792213267235
+    },
+    {
+      "playerId": "p_7wcobglk7y",
+      "status": "left",
+      "checkInAt": 1792206191023,
+      "queueSince": null,
+      "gamesPlayed": 3,
+      "playedMs": 4027656,
+      "waitedMs": 3694352,
+      "longestWaitMs": 2314011,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "noCourtFee": true,
+      "paidAt": 1792213913031,
+      "leftAt": 1792213913031
+    },
+    {
+      "playerId": "p_2jd5ehh4i6",
+      "status": "left",
+      "checkInAt": 1792206340081,
+      "queueSince": null,
+      "gamesPlayed": 2,
+      "playedMs": 2303791,
+      "waitedMs": 4846719,
+      "longestWaitMs": 2491714,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213490591,
+      "leftAt": 1792213490591
+    },
+    {
+      "playerId": "p_m56exs4ags",
+      "status": "left",
+      "checkInAt": 1792207579144,
+      "queueSince": null,
+      "gamesPlayed": 2,
+      "playedMs": 2164684,
+      "waitedMs": 3673011,
+      "longestWaitMs": 2759786,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213416839,
+      "leftAt": 1792213416839
+    },
+    {
+      "playerId": "p_rixt6110zo",
+      "status": "left",
+      "checkInAt": 1792207772735,
+      "queueSince": null,
+      "gamesPlayed": 1,
+      "playedMs": 1916237,
+      "waitedMs": 4286266,
+      "longestWaitMs": 4163879,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "noCourtFee": true,
+      "paidAt": 1792213975238,
+      "leftAt": 1792213975238
+    },
+    {
+      "playerId": "p_3rve3mtxq3",
+      "status": "left",
+      "checkInAt": 1792207810107,
+      "queueSince": null,
+      "gamesPlayed": 2,
+      "playedMs": 2164684,
+      "waitedMs": 3372641,
+      "longestWaitMs": 1925255,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213382772,
+      "leftAt": 1792213382772
+    },
+    {
+      "playerId": "p_3lw85dks0g",
+      "status": "left",
+      "checkInAt": 1792207919725,
+      "queueSince": null,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 41149,
+      "longestWaitMs": 41149,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false,
+      "leftAt": 1792207960874,
+      "noBill": true
+    },
+    {
+      "playerId": "p_0tkx8luk7o",
+      "status": "left",
+      "checkInAt": 1792207927536,
+      "queueSince": null,
+      "gamesPlayed": 2,
+      "playedMs": 2785465,
+      "waitedMs": 2743571,
+      "longestWaitMs": 2168521,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213456572,
+      "leftAt": 1792213456572
+    },
+    {
+      "playerId": "p_bis0ufc9h8",
+      "status": "left",
+      "checkInAt": 1792207951110,
+      "queueSince": null,
+      "gamesPlayed": 3,
+      "playedMs": 3577894,
+      "waitedMs": 1919563,
+      "longestWaitMs": 949845,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213448567,
+      "leftAt": 1792213448567
+    },
+    {
+      "playerId": "p_gwdzyqk46n",
+      "status": "left",
+      "checkInAt": 1792208317503,
+      "queueSince": null,
+      "gamesPlayed": 2,
+      "playedMs": 2380688,
+      "waitedMs": 3032176,
+      "longestWaitMs": 1650619,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213706514,
+      "leftAt": 1792213706514
+    },
+    {
+      "playerId": "p_zaui6hkcn1",
+      "status": "left",
+      "checkInAt": 1792208328463,
+      "queueSince": null,
+      "gamesPlayed": 2,
+      "playedMs": 1416974,
+      "waitedMs": 3906841,
+      "longestWaitMs": 1884363,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": true,
+      "paidAt": 1792213652278,
+      "leftAt": 1792213652278
+    }
+  ],
+  "matches": [
+    {
+      "id": "m_dbtmk6he1k",
+      "no": 1,
+      "courtIndex": 4,
+      "type": "D",
+      "teamA": [
+        "p_oa3k98c1qy",
+        "p_hlqouzbfjc"
+      ],
+      "teamB": [
+        "p_5pmcrc7d7c",
+        "p_7abt4a6j42"
+      ],
+      "startedAt": 1792203151444,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 1,
+      "maxWaitAtStart": 506637,
+      "endedAt": 1792203852352,
+      "winner": "A"
+    },
+    {
+      "id": "m_s8rucvik93",
+      "no": 2,
+      "courtIndex": 3,
+      "type": "D",
+      "teamA": [
+        "p_xzrzqm0ok1",
+        "p_wkxmea5l6k"
+      ],
+      "teamB": [
+        "p_6y1jo5emkk",
+        "p_4en2989rj3"
+      ],
+      "startedAt": 1792203206150,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 616562,
+      "endedAt": 1792204467390
+    },
+    {
+      "id": "m_oant7qju5w",
+      "no": 3,
+      "courtIndex": 2,
+      "type": "D",
+      "teamA": [
+        "p_hwixawkd5d",
+        "p_m3ojvdfpn0"
+      ],
+      "teamB": [
+        "p_vlg61a1abs",
+        "p_vrlbf0860e"
+      ],
+      "startedAt": 1792203265650,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 1,
+      "maxWaitAtStart": 676067,
+      "endedAt": 1792204201071,
+      "winner": "draw"
+    },
+    {
+      "id": "m_gagku8wixg",
+      "no": 4,
+      "courtIndex": 4,
+      "type": "D",
+      "teamA": [
+        "p_wse74h0bhl",
+        "p_3fd83nijoe"
+      ],
+      "teamB": [
+        "p_04n5grksuu",
+        "p_xf3iqplno6"
+      ],
+      "startedAt": 1792203857619,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 652201,
+      "endedAt": 1792205283982
+    },
+    {
+      "id": "m_eobgwl44lg",
+      "no": 5,
+      "courtIndex": 2,
+      "type": "D",
+      "teamA": [
+        "p_0aamglvm9a",
+        "p_3bvix9nerq"
+      ],
+      "teamB": [
+        "p_cnm4rzo5t5",
+        "p_famr27ywr8"
+      ],
+      "startedAt": 1792204212291,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 751143,
+      "endedAt": 1792205418215
+    },
+    {
+      "id": "m_gksras76ku",
+      "no": 6,
+      "courtIndex": 1,
+      "type": "D",
+      "teamA": [
+        "p_is0bppr1va",
+        "p_hgw4qts55x"
+      ],
+      "teamB": [
+        "p_5pmcrc7d7c",
+        "p_hlqouzbfjc"
+      ],
+      "startedAt": 1792204354829,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 0,
+      "maxWaitAtStart": 752587,
+      "endedAt": 1792205726265
+    },
+    {
+      "id": "m_pehi7kaswh",
+      "no": 7,
+      "courtIndex": 3,
+      "type": "D",
+      "teamA": [
+        "p_5t6kdv3w2i",
+        "p_ej2y8e5kee"
+      ],
+      "teamB": [
+        "p_vrlbf0860e",
+        "p_4en2989rj3"
+      ],
+      "startedAt": 1792204523728,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 322657,
+      "endedAt": 1792205803852
+    },
+    {
+      "id": "m_27pzger6y7",
+      "no": 8,
+      "courtIndex": 4,
+      "type": "D",
+      "teamA": [
+        "p_7abt4a6j42",
+        "p_ecpq3j2g0k"
+      ],
+      "teamB": [
+        "p_hlkq1h3rk3",
+        "p_oa3k98c1qy"
+      ],
+      "startedAt": 1792205288430,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 3,
+      "maxWaitAtStart": 1436078,
+      "endedAt": 1792206365675
+    },
+    {
+      "id": "m_0jzigyu0qn",
+      "no": 9,
+      "courtIndex": 2,
+      "type": "D",
+      "teamA": [
+        "p_xzrzqm0ok1",
+        "p_vlg61a1abs"
+      ],
+      "teamB": [
+        "p_6y1jo5emkk",
+        "p_q165dvkkxi"
+      ],
+      "startedAt": 1792205420350,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 1,
+      "maxWaitAtStart": 1219279,
+      "endedAt": 1792207625499
+    },
+    {
+      "id": "m_jic85w0mqz",
+      "no": 10,
+      "courtIndex": 1,
+      "type": "D",
+      "teamA": [
+        "p_hwixawkd5d",
+        "p_m3ojvdfpn0"
+      ],
+      "teamB": [
+        "p_3fd83nijoe",
+        "p_manw7oisvz"
+      ],
+      "startedAt": 1792205728809,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 1527738,
+      "endedAt": 1792206764446
+    },
+    {
+      "id": "m_p5d0j229fs",
+      "no": 11,
+      "courtIndex": 3,
+      "type": "D",
+      "teamA": [
+        "p_wse74h0bhl",
+        "p_wkxmea5l6k"
+      ],
+      "teamB": [
+        "p_amfjf7pwe1",
+        "p_2kfe5lxq8k"
+      ],
+      "startedAt": 1792205804871,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 1,
+      "maxWaitAtStart": 1337481,
+      "endedAt": 1792206796075
+    },
+    {
+      "id": "m_u49jw5ekdy",
+      "no": 12,
+      "courtIndex": 4,
+      "type": "D",
+      "teamA": [
+        "p_0aamglvm9a",
+        "p_xf3iqplno6"
+      ],
+      "teamB": [
+        "p_cnm4rzo5t5",
+        "p_fpacic3m1r"
+      ],
+      "startedAt": 1792206378933,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 1,
+      "maxWaitAtStart": 1094951,
+      "endedAt": 1792207402389
+    },
+    {
+      "id": "m_gs8w97mwpx",
+      "no": 13,
+      "courtIndex": 1,
+      "type": "D",
+      "teamA": [
+        "p_4en2989rj3",
+        "p_hgw4qts55x"
+      ],
+      "teamB": [
+        "p_is0bppr1va",
+        "p_hlqouzbfjc"
+      ],
+      "startedAt": 1792206768163,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 0,
+      "maxWaitAtStart": 1041898,
+      "endedAt": 1792207093786
+    },
+    {
+      "id": "m_q169kjnk08",
+      "no": 14,
+      "courtIndex": 3,
+      "type": "D",
+      "teamA": [
+        "p_suzv413d26",
+        "p_7wcobglk7y"
+      ],
+      "teamB": [
+        "p_ej2y8e5kee",
+        "p_i49lweh5l9"
+      ],
+      "startedAt": 1792206798341,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 994489,
+      "endedAt": 1792208025027
+    },
+    {
+      "id": "m_dfca0ptytu",
+      "no": 15,
+      "courtIndex": 1,
+      "type": "D",
+      "teamA": [
+        "p_ecpq3j2g0k",
+        "p_04n5grksuu"
+      ],
+      "teamB": [
+        "p_5pmcrc7d7c",
+        "p_2jd5ehh4i6"
+      ],
+      "startedAt": 1792207097488,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 1813506,
+      "endedAt": 1792208182269
+    },
+    {
+      "id": "m_yhgbzw0jdu",
+      "no": 16,
+      "courtIndex": 4,
+      "type": "D",
+      "teamA": [
+        "p_3bvix9nerq",
+        "p_manw7oisvz"
+      ],
+      "teamB": [
+        "p_5t6kdv3w2i",
+        "p_famr27ywr8"
+      ],
+      "startedAt": 1792207404064,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 1985849,
+      "endedAt": 1792208390990
+    },
+    {
+      "id": "m_atqsbt5t1x",
+      "no": 17,
+      "courtIndex": 2,
+      "type": "D",
+      "teamA": [
+        "p_4en2989rj3",
+        "p_hlqouzbfjc"
+      ],
+      "teamB": [
+        "p_is0bppr1va",
+        "p_hgw4qts55x"
+      ],
+      "startedAt": 1792207649876,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 0,
+      "maxWaitAtStart": 556090,
+      "endedAt": 1792208020091
+    },
+    {
+      "id": "m_mffid0b2ab",
+      "no": 18,
+      "courtIndex": 0,
+      "type": "D",
+      "teamA": [
+        "p_hlkq1h3rk3",
+        "p_rixt6110zo"
+      ],
+      "teamB": [
+        "p_oa3k98c1qy",
+        "p_vrlbf0860e"
+      ],
+      "startedAt": 1792207895122,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 3,
+      "maxWaitAtStart": 1529447,
+      "endedAt": 1792209811359
+    },
+    {
+      "id": "m_ixb1x2dryi",
+      "no": 19,
+      "courtIndex": 2,
+      "type": "D",
+      "teamA": [
+        "p_m56exs4ags",
+        "p_3rve3mtxq3"
+      ],
+      "teamB": [
+        "p_0aamglvm9a",
+        "p_cnm4rzo5t5"
+      ],
+      "startedAt": 1792208021705,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 0,
+      "maxWaitAtStart": 619316,
+      "endedAt": 1792209393960
+    },
+    {
+      "id": "m_m8tqkie2e0",
+      "no": 20,
+      "courtIndex": 3,
+      "type": "D",
+      "teamA": [
+        "p_hwixawkd5d",
+        "p_m3ojvdfpn0"
+      ],
+      "teamB": [
+        "p_xf3iqplno6",
+        "p_3fd83nijoe"
+      ],
+      "startedAt": 1792208035222,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 1,
+      "maxWaitAtStart": 1270776,
+      "endedAt": 1792209755124
+    },
+    {
+      "id": "m_2vuqxwh919",
+      "no": 21,
+      "courtIndex": 1,
+      "type": "D",
+      "teamA": [
+        "p_vlg61a1abs",
+        "p_fpacic3m1r"
+      ],
+      "teamB": [
+        "p_bis0ufc9h8",
+        "p_0tkx8luk7o"
+      ],
+      "startedAt": 1792208183804,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 781415,
+      "endedAt": 1792209438377
+    },
+    {
+      "id": "m_d6q0q6lq9h",
+      "no": 22,
+      "courtIndex": 4,
+      "type": "D",
+      "teamA": [
+        "p_7wcobglk7y",
+        "p_2kfe5lxq8k"
+      ],
+      "teamB": [
+        "p_wse74h0bhl",
+        "p_ecpq3j2g0k"
+      ],
+      "startedAt": 1792208392756,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 1596681,
+      "endedAt": 1792209862514
+    },
+    {
+      "id": "m_v9faxo77t0",
+      "no": 23,
+      "courtIndex": 2,
+      "type": "D",
+      "teamA": [
+        "p_6y1jo5emkk",
+        "p_amfjf7pwe1"
+      ],
+      "teamB": [
+        "p_xzrzqm0ok1",
+        "p_q165dvkkxi"
+      ],
+      "startedAt": 1792209395266,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 2599191,
+      "endedAt": 1792211043653
+    },
+    {
+      "id": "m_shxqh2863l",
+      "no": 24,
+      "courtIndex": 1,
+      "type": "D",
+      "teamA": [
+        "p_ej2y8e5kee",
+        "p_gwdzyqk46n"
+      ],
+      "teamB": [
+        "p_5t6kdv3w2i",
+        "p_04n5grksuu"
+      ],
+      "startedAt": 1792209439711,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 3074036,
+      "endedAt": 1792210849348
+    },
+    {
+      "id": "m_fdctk8fgkc",
+      "no": 25,
+      "courtIndex": 3,
+      "type": "D",
+      "teamA": [
+        "p_hlqouzbfjc",
+        "p_3bvix9nerq"
+      ],
+      "teamB": [
+        "p_famr27ywr8",
+        "p_2jd5ehh4i6"
+      ],
+      "startedAt": 1792209779867,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 1,
+      "maxWaitAtStart": 1759776,
+      "endedAt": 1792210998877
+    },
+    {
+      "id": "m_yvotz2gpwj",
+      "no": 26,
+      "courtIndex": 0,
+      "type": "D",
+      "teamA": [
+        "p_i49lweh5l9",
+        "p_zaui6hkcn1"
+      ],
+      "teamB": [
+        "p_suzv413d26",
+        "p_is0bppr1va"
+      ],
+      "startedAt": 1792209838626,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 0,
+      "maxWaitAtStart": 1818535,
+      "endedAt": 1792210173942
+    },
+    {
+      "id": "m_uyn9yuh9yq",
+      "no": 27,
+      "courtIndex": 4,
+      "type": "D",
+      "teamA": [
+        "p_manw7oisvz",
+        "p_m56exs4ags"
+      ],
+      "teamB": [
+        "p_3rve3mtxq3",
+        "p_bis0ufc9h8"
+      ],
+      "startedAt": 1792209864624,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 1,
+      "maxWaitAtStart": 1473634,
+      "endedAt": 1792210657053
+    },
+    {
+      "id": "m_kdchbapx2a",
+      "no": 28,
+      "courtIndex": 0,
+      "type": "D",
+      "teamA": [
+        "p_hlkq1h3rk3",
+        "p_7wcobglk7y"
+      ],
+      "teamB": [
+        "p_vrlbf0860e",
+        "p_2kfe5lxq8k"
+      ],
+      "startedAt": 1792210267808,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 3,
+      "maxWaitAtStart": 456449,
+      "endedAt": 1792211599020
+    },
+    {
+      "id": "m_ro1htp2kbq",
+      "no": 29,
+      "courtIndex": 1,
+      "type": "D",
+      "teamA": [
+        "p_5pmcrc7d7c",
+        "p_cnm4rzo5t5"
+      ],
+      "teamB": [
+        "p_0aamglvm9a",
+        "p_oa3k98c1qy"
+      ],
+      "startedAt": 1792210857829,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 3,
+      "maxWaitAtStart": 2619392,
+      "endedAt": 1792212395028
+    },
+    {
+      "id": "m_mhu2f45vwe",
+      "no": 30,
+      "courtIndex": 3,
+      "type": "D",
+      "teamA": [
+        "p_xf3iqplno6",
+        "p_04n5grksuu"
+      ],
+      "teamB": [
+        "p_wse74h0bhl",
+        "p_famr27ywr8"
+      ],
+      "startedAt": 1792211012796,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 1257672,
+      "endedAt": 1792212205758
+    },
+    {
+      "id": "m_rpnxdk7fhp",
+      "no": 31,
+      "courtIndex": 2,
+      "type": "D",
+      "teamA": [
+        "p_hwixawkd5d",
+        "p_m3ojvdfpn0"
+      ],
+      "teamB": [
+        "p_gwdzyqk46n",
+        "p_ej2y8e5kee"
+      ],
+      "startedAt": 1792211084844,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 1329720,
+      "endedAt": 1792212055895
+    },
+    {
+      "id": "m_kt7ledens2",
+      "no": 32,
+      "courtIndex": 4,
+      "type": "D",
+      "teamA": [
+        "p_vlg61a1abs",
+        "p_q165dvkkxi"
+      ],
+      "teamB": [
+        "p_3bvix9nerq",
+        "p_6y1jo5emkk"
+      ],
+      "startedAt": 1792211422177,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 1983800,
+      "endedAt": 1792213141971
+    },
+    {
+      "id": "m_m11q95imb7",
+      "no": 33,
+      "courtIndex": 0,
+      "type": "D",
+      "teamA": [
+        "p_0tkx8luk7o",
+        "p_bis0ufc9h8"
+      ],
+      "teamB": [
+        "p_ecpq3j2g0k",
+        "p_manw7oisvz"
+      ],
+      "startedAt": 1792211606898,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 2168521,
+      "endedAt": 1792213137790
+    },
+    {
+      "id": "m_byjgemsamb",
+      "no": 34,
+      "courtIndex": 2,
+      "type": "D",
+      "teamA": [
+        "p_i49lweh5l9",
+        "p_zaui6hkcn1"
+      ],
+      "teamB": [
+        "p_7abt4a6j42",
+        "p_suzv413d26"
+      ],
+      "startedAt": 1792212058305,
+      "shuttles": 1,
+      "createdBy": "manual",
+      "levelGap": 1,
+      "maxWaitAtStart": 2534289,
+      "endedAt": 1792213139963
+    }
+  ],
+  "planned": [],
+  "events": [
+    {
+      "at": 1792202508982,
+      "kind": "session.start",
+      "text": "เปิดก๊วน"
+    },
+    {
+      "at": 1792202589584,
+      "kind": "player.checkin",
+      "text": "พี่ตี๋ เช็คอิน",
+      "playerId": "p_hwixawkd5d"
+    },
+    {
+      "at": 1792202589588,
+      "kind": "player.checkin",
+      "text": "ไว เช็คอิน",
+      "playerId": "p_xzrzqm0ok1"
+    },
+    {
+      "at": 1792202600839,
+      "kind": "player.checkin",
+      "text": "มิ้นชาย เช็คอิน",
+      "playerId": "p_wkxmea5l6k"
+    },
+    {
+      "at": 1792202644807,
+      "kind": "player.checkin",
+      "text": "แนน เช็คอิน",
+      "playerId": "p_7abt4a6j42"
+    },
+    {
+      "at": 1792202683807,
+      "kind": "player.checkin",
+      "text": "โอม เช็คอิน",
+      "playerId": "p_5pmcrc7d7c"
+    },
+    {
+      "at": 1792202721142,
+      "kind": "player.checkin",
+      "text": "เน เช็คอิน",
+      "playerId": "p_vrlbf0860e"
+    },
+    {
+      "at": 1792202795690,
+      "kind": "player.checkin",
+      "text": "ชาญนุ เช็คอิน",
+      "playerId": "p_4en2989rj3"
+    },
+    {
+      "at": 1792202873464,
+      "kind": "player.checkin",
+      "text": "แน็ค เช็คอิน",
+      "playerId": "p_hlqouzbfjc"
+    },
+    {
+      "at": 1792202902248,
+      "kind": "player.checkin",
+      "text": "น้ำ เช็คอิน",
+      "playerId": "p_oa3k98c1qy"
+    },
+    {
+      "at": 1792203022538,
+      "kind": "player.checkin",
+      "text": "พี่ฟิว เช็คอิน",
+      "playerId": "p_6y1jo5emkk"
+    },
+    {
+      "at": 1792203073177,
+      "kind": "player.checkin",
+      "text": "พี่บอม เช็คอิน",
+      "playerId": "p_m3ojvdfpn0"
+    },
+    {
+      "at": 1792203151448,
+      "kind": "match.start",
+      "text": "คอร์ต 4: น้ำ, แน็ค, โอม, แนน",
+      "matchId": "m_dbtmk6he1k"
+    },
+    {
+      "at": 1792203163076,
+      "kind": "match.move",
+      "text": "ย้ายเกม #1 จาก คอร์ต 4 ไป คอร์ต 5",
+      "matchId": "m_dbtmk6he1k"
+    },
+    {
+      "at": 1792203205419,
+      "kind": "player.checkin",
+      "text": "แม็ก เช็คอิน",
+      "playerId": "p_3fd83nijoe"
+    },
+    {
+      "at": 1792203206151,
+      "kind": "match.start",
+      "text": "คอร์ต 4: ไว, มิ้นชาย, พี่ฟิว, ชาญนุ",
+      "matchId": "m_s8rucvik93"
+    },
+    {
+      "at": 1792203247425,
+      "kind": "player.checkin",
+      "text": "แบงค์ เช็คอิน",
+      "playerId": "p_vlg61a1abs"
+    },
+    {
+      "at": 1792203265652,
+      "kind": "match.start",
+      "text": "คอร์ต 3: พี่ตี๋, พี่บอม, แบงค์, เน",
+      "matchId": "m_oant7qju5w"
+    },
+    {
+      "at": 1792203296692,
+      "kind": "player.checkin",
+      "text": "หลิน เช็คอิน",
+      "playerId": "p_wse74h0bhl"
+    },
+    {
+      "at": 1792203296710,
+      "kind": "player.checkin",
+      "text": "นน เช็คอิน",
+      "playerId": "p_xf3iqplno6"
+    },
+    {
+      "at": 1792203310626,
+      "kind": "player.checkin",
+      "text": "พรีม เช็คอิน",
+      "playerId": "p_04n5grksuu"
+    },
+    {
+      "at": 1792203461148,
+      "kind": "player.checkin",
+      "text": "พี่เทพ เช็คอิน",
+      "playerId": "p_0aamglvm9a"
+    },
+    {
+      "at": 1792203467383,
+      "kind": "player.checkin",
+      "text": "เบิร์ด เช็คอิน",
+      "playerId": "p_cnm4rzo5t5"
+    },
+    {
+      "at": 1792203602242,
+      "kind": "player.checkin",
+      "text": "เอ เช็คอิน",
+      "playerId": "p_is0bppr1va"
+    },
+    {
+      "at": 1792203702510,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: แม็ก, หลิน, พรีม, เอ"
+    },
+    {
+      "at": 1792203726519,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: แม็ก, หลิน, พรีม, เอ"
+    },
+    {
+      "at": 1792203735169,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: หลิน, แม็ก, พรีม, นน"
+    },
+    {
+      "at": 1792203839402,
+      "kind": "player.checkin",
+      "text": "ยอด เช็คอิน",
+      "playerId": "p_hgw4qts55x"
+    },
+    {
+      "at": 1792203852352,
+      "kind": "match.end",
+      "text": "จบเกม #1 คอร์ต 5",
+      "matchId": "m_dbtmk6he1k"
+    },
+    {
+      "at": 1792203857620,
+      "kind": "match.start",
+      "text": "คอร์ต 5: หลิน, แม็ก, พรีม, นน",
+      "matchId": "m_gagku8wixg"
+    },
+    {
+      "at": 1792203857633,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: หลิน, แม็ก, พรีม, นน"
+    },
+    {
+      "at": 1792203894898,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พี่เทพ, ไว, เบิร์ด, พี่ฟิว"
+    },
+    {
+      "at": 1792203932341,
+      "kind": "player.checkin",
+      "text": "ปาล์ม เช็คอิน",
+      "playerId": "p_3bvix9nerq"
+    },
+    {
+      "at": 1792203968869,
+      "kind": "player.checkin",
+      "text": "เติ้ล เช็คอิน",
+      "playerId": "p_famr27ywr8"
+    },
+    {
+      "at": 1792204096708,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ปาล์ม, เติ้ล, พี่บอม, พี่ตี๋"
+    },
+    {
+      "at": 1792204137152,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: ปาล์ม, เติ้ล, พี่บอม, พี่ตี๋"
+    },
+    {
+      "at": 1792204157938,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: พี่เทพ, ไว, เบิร์ด, พี่ฟิว"
+    },
+    {
+      "at": 1792204186567,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พี่เทพ, ปาล์ม, เบิร์ด, เติ้ล"
+    },
+    {
+      "at": 1792204195408,
+      "kind": "player.checkin",
+      "text": "วิน เช็คอิน",
+      "playerId": "p_hlkq1h3rk3"
+    },
+    {
+      "at": 1792204201071,
+      "kind": "match.end",
+      "text": "จบเกม #3 คอร์ต 3",
+      "matchId": "m_oant7qju5w"
+    },
+    {
+      "at": 1792204201258,
+      "kind": "player.checkin",
+      "text": "กร เช็คอิน",
+      "playerId": "p_5t6kdv3w2i"
+    },
+    {
+      "at": 1792204212293,
+      "kind": "match.start",
+      "text": "คอร์ต 3: พี่เทพ, ปาล์ม, เบิร์ด, เติ้ล",
+      "matchId": "m_eobgwl44lg"
+    },
+    {
+      "at": 1792204212303,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: พี่เทพ, ปาล์ม, เบิร์ด, เติ้ล"
+    },
+    {
+      "at": 1792204279441,
+      "kind": "player.checkin",
+      "text": "ตุ้ย เช็คอิน",
+      "playerId": "p_ej2y8e5kee"
+    },
+    {
+      "at": 1792204344912,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: เอ, ยอด, โอม, แน็ค"
+    },
+    {
+      "at": 1792204354830,
+      "kind": "match.start",
+      "text": "คอร์ต 2: เอ, ยอด, โอม, แน็ค",
+      "matchId": "m_gksras76ku"
+    },
+    {
+      "at": 1792204354839,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: เอ, ยอด, โอม, แน็ค"
+    },
+    {
+      "at": 1792204467390,
+      "kind": "match.end",
+      "text": "จบเกม #2 คอร์ต 4",
+      "matchId": "m_s8rucvik93"
+    },
+    {
+      "at": 1792204523730,
+      "kind": "match.start",
+      "text": "คอร์ต 4: กร, ตุ้ย, เน, ชาญนุ",
+      "matchId": "m_pehi7kaswh"
+    },
+    {
+      "at": 1792204544633,
+      "kind": "player.checkin",
+      "text": "พี่คิง เช็คอิน",
+      "playerId": "p_q165dvkkxi"
+    },
+    {
+      "at": 1792204711960,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ไว, แบงค์, พี่ฟิว, พี่คิง"
+    },
+    {
+      "at": 1792204865203,
+      "kind": "player.checkin",
+      "text": "สุดหล่อ เช็คอิน",
+      "playerId": "p_ecpq3j2g0k"
+    },
+    {
+      "at": 1792204896967,
+      "kind": "player.checkin",
+      "text": "จ๋วย เช็คอิน",
+      "playerId": "p_manw7oisvz"
+    },
+    {
+      "at": 1792204940742,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: แนน, สุดหล่อ, วิน, น้ำ"
+    },
+    {
+      "at": 1792205174705,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792205228108,
+      "kind": "player.checkin",
+      "text": "บัว เช็คอิน",
+      "playerId": "p_amfjf7pwe1"
+    },
+    {
+      "at": 1792205283982,
+      "kind": "match.end",
+      "text": "จบเกม #4 คอร์ต 5",
+      "matchId": "m_gagku8wixg"
+    },
+    {
+      "at": 1792205288431,
+      "kind": "match.start",
+      "text": "คอร์ต 5: แนน, สุดหล่อ, วิน, น้ำ",
+      "matchId": "m_27pzger6y7"
+    },
+    {
+      "at": 1792205288448,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: แนน, สุดหล่อ, วิน, น้ำ"
+    },
+    {
+      "at": 1792205418215,
+      "kind": "match.end",
+      "text": "จบเกม #5 คอร์ต 3",
+      "matchId": "m_eobgwl44lg"
+    },
+    {
+      "at": 1792205420351,
+      "kind": "match.start",
+      "text": "คอร์ต 3: ไว, แบงค์, พี่ฟิว, พี่คิง",
+      "matchId": "m_0jzigyu0qn"
+    },
+    {
+      "at": 1792205420368,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: ไว, แบงค์, พี่ฟิว, พี่คิง"
+    },
+    {
+      "at": 1792205510724,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พี่ตี๋, พี่บอม, แม็ก, จ๋วย"
+    },
+    {
+      "at": 1792205593378,
+      "kind": "player.checkin",
+      "text": "แมว เช็คอิน",
+      "playerId": "p_2kfe5lxq8k"
+    },
+    {
+      "at": 1792205601844,
+      "kind": "player.checkin",
+      "text": "บัวลอย เช็คอิน",
+      "playerId": "p_797m3xxwrp"
+    },
+    {
+      "at": 1792205726265,
+      "kind": "match.end",
+      "text": "จบเกม #6 คอร์ต 2",
+      "matchId": "m_gksras76ku"
+    },
+    {
+      "at": 1792205728811,
+      "kind": "match.start",
+      "text": "คอร์ต 2: พี่ตี๋, พี่บอม, แม็ก, จ๋วย",
+      "matchId": "m_jic85w0mqz"
+    },
+    {
+      "at": 1792205728826,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: พี่ตี๋, พี่บอม, แม็ก, จ๋วย"
+    },
+    {
+      "at": 1792205738917,
+      "kind": "player.checkout",
+      "text": "บัวลอย กลับบ้าน",
+      "playerId": "p_797m3xxwrp"
+    },
+    {
+      "at": 1792205788267,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: หลิน, มิ้นชาย, บัว, แมว"
+    },
+    {
+      "at": 1792205803852,
+      "kind": "match.end",
+      "text": "จบเกม #7 คอร์ต 4",
+      "matchId": "m_pehi7kaswh"
+    },
+    {
+      "at": 1792205804872,
+      "kind": "match.start",
+      "text": "คอร์ต 4: หลิน, มิ้นชาย, บัว, แมว",
+      "matchId": "m_p5d0j229fs"
+    },
+    {
+      "at": 1792205804882,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: หลิน, มิ้นชาย, บัว, แมว"
+    },
+    {
+      "at": 1792205856239,
+      "kind": "player.checkin",
+      "text": "ไกด์ เช็คอิน",
+      "playerId": "p_suzv413d26"
+    },
+    {
+      "at": 1792205867888,
+      "kind": "player.checkin",
+      "text": "พี่นิว เช็คอิน",
+      "playerId": "p_fpacic3m1r"
+    },
+    {
+      "at": 1792205927864,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พี่เทพ, นน, เบิร์ด, พี่นิว"
+    },
+    {
+      "at": 1792205987214,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ชาญนุ, ยอด, เอ, แน็ค"
+    },
+    {
+      "at": 1792206124813,
+      "kind": "player.checkin",
+      "text": "เทียน เช็คอิน",
+      "playerId": "p_i49lweh5l9"
+    },
+    {
+      "at": 1792206191024,
+      "kind": "player.checkin",
+      "text": "ลิงน้อย เช็คอิน",
+      "playerId": "p_7wcobglk7y"
+    },
+    {
+      "at": 1792206214312,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ไกด์, ลิงน้อย, ตุ้ย, เทียน"
+    },
+    {
+      "at": 1792206319272,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ปาล์ม, จ๋วย, กร, เติ้ล"
+    },
+    {
+      "at": 1792206340081,
+      "kind": "player.checkin",
+      "text": "ซัน เช็คอิน",
+      "playerId": "p_2jd5ehh4i6"
+    },
+    {
+      "at": 1792206365675,
+      "kind": "match.end",
+      "text": "จบเกม #8 คอร์ต 5",
+      "matchId": "m_27pzger6y7"
+    },
+    {
+      "at": 1792206378934,
+      "kind": "match.start",
+      "text": "คอร์ต 5: พี่เทพ, นน, เบิร์ด, พี่นิว",
+      "matchId": "m_u49jw5ekdy"
+    },
+    {
+      "at": 1792206378945,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: พี่เทพ, นน, เบิร์ด, พี่นิว"
+    },
+    {
+      "at": 1792206567720,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: เน, พรีม, โอม, ซัน"
+    },
+    {
+      "at": 1792206764446,
+      "kind": "match.end",
+      "text": "จบเกม #10 คอร์ต 2",
+      "matchId": "m_jic85w0mqz"
+    },
+    {
+      "at": 1792206768165,
+      "kind": "match.start",
+      "text": "คอร์ต 2: ชาญนุ, ยอด, เอ, แน็ค",
+      "matchId": "m_gs8w97mwpx"
+    },
+    {
+      "at": 1792206768181,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: ชาญนุ, ยอด, เอ, แน็ค"
+    },
+    {
+      "at": 1792206796076,
+      "kind": "match.end",
+      "text": "จบเกม #11 คอร์ต 4",
+      "matchId": "m_p5d0j229fs"
+    },
+    {
+      "at": 1792206798344,
+      "kind": "match.start",
+      "text": "คอร์ต 4: ไกด์, ลิงน้อย, ตุ้ย, เทียน",
+      "matchId": "m_q169kjnk08"
+    },
+    {
+      "at": 1792206798361,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: ไกด์, ลิงน้อย, ตุ้ย, เทียน"
+    },
+    {
+      "at": 1792206854744,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792207051750,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: วิน, ลิงน้อย, สุดหล่อ, น้ำ"
+    },
+    {
+      "at": 1792207093786,
+      "kind": "match.end",
+      "text": "จบเกม #13 คอร์ต 2",
+      "matchId": "m_gs8w97mwpx"
+    },
+    {
+      "at": 1792207097490,
+      "kind": "match.start",
+      "text": "คอร์ต 2: เน, พรีม, โอม, ซัน",
+      "matchId": "m_dfca0ptytu"
+    },
+    {
+      "at": 1792207097505,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: เน, พรีม, โอม, ซัน"
+    },
+    {
+      "at": 1792207196837,
+      "kind": "match.swap",
+      "text": "สลับ เน ออก สุดหล่อ ลง",
+      "matchId": "m_dfca0ptytu"
+    },
+    {
+      "at": 1792207250145,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: วิน, ลิงน้อย, สุดหล่อ, น้ำ"
+    },
+    {
+      "at": 1792207294152,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: วิน, ลิงน้อย, น้ำ, เน"
+    },
+    {
+      "at": 1792207402390,
+      "kind": "match.end",
+      "text": "จบเกม #12 คอร์ต 5",
+      "matchId": "m_u49jw5ekdy"
+    },
+    {
+      "at": 1792207404066,
+      "kind": "match.start",
+      "text": "คอร์ต 5: ปาล์ม, จ๋วย, กร, เติ้ล",
+      "matchId": "m_yhgbzw0jdu"
+    },
+    {
+      "at": 1792207404081,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: ปาล์ม, จ๋วย, กร, เติ้ล"
+    },
+    {
+      "at": 1792207579145,
+      "kind": "player.checkin",
+      "text": "บอล เช็คอิน",
+      "playerId": "p_m56exs4ags"
+    },
+    {
+      "at": 1792207625499,
+      "kind": "match.end",
+      "text": "จบเกม #9 คอร์ต 3",
+      "matchId": "m_0jzigyu0qn"
+    },
+    {
+      "at": 1792207649877,
+      "kind": "match.start",
+      "text": "คอร์ต 3: ชาญนุ, แน็ค, เอ, ยอด",
+      "matchId": "m_atqsbt5t1x"
+    },
+    {
+      "at": 1792207693027,
+      "kind": "pay",
+      "text": "มิ้นชาย จ่ายแล้ว",
+      "playerId": "p_wkxmea5l6k"
+    },
+    {
+      "at": 1792207693027,
+      "kind": "player.checkout",
+      "text": "มิ้นชาย จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_wkxmea5l6k"
+    },
+    {
+      "at": 1792207704677,
+      "kind": "fee",
+      "text": "มิ้นชาย ไม่คิดเงิน (เอาออกจากบิล)",
+      "playerId": "p_wkxmea5l6k"
+    },
+    {
+      "at": 1792207707509,
+      "kind": "fee",
+      "text": "มิ้นชาย กลับเข้าบิลตามปกติ",
+      "playerId": "p_wkxmea5l6k"
+    },
+    {
+      "at": 1792207757653,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: วิน, ลิงน้อย, น้ำ, เน"
+    },
+    {
+      "at": 1792207772735,
+      "kind": "player.checkin",
+      "text": "เลม่อน เช็คอิน",
+      "playerId": "p_rixt6110zo"
+    },
+    {
+      "at": 1792207799901,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: วิน, เลม่อน, น้ำ, เน"
+    },
+    {
+      "at": 1792207810107,
+      "kind": "player.checkin",
+      "text": "แอนดริว เช็คอิน",
+      "playerId": "p_3rve3mtxq3"
+    },
+    {
+      "at": 1792207828912,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: บอล, แอนดริว, พี่เทพ, เบิร์ด"
+    },
+    {
+      "at": 1792207895123,
+      "kind": "match.start",
+      "text": "คอร์ต 1: วิน, เลม่อน, น้ำ, เน",
+      "matchId": "m_mffid0b2ab"
+    },
+    {
+      "at": 1792207895133,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: วิน, เลม่อน, น้ำ, เน"
+    },
+    {
+      "at": 1792207919725,
+      "kind": "player.checkin",
+      "text": "พอย เช็คอิน",
+      "playerId": "p_3lw85dks0g"
+    },
+    {
+      "at": 1792207927536,
+      "kind": "player.checkin",
+      "text": "พลอยปภัส เช็คอิน",
+      "playerId": "p_0tkx8luk7o"
+    },
+    {
+      "at": 1792207951110,
+      "kind": "player.checkin",
+      "text": "แพทริก เช็คอิน",
+      "playerId": "p_bis0ufc9h8"
+    },
+    {
+      "at": 1792207960875,
+      "kind": "player.checkout",
+      "text": "พอย กลับบ้าน",
+      "playerId": "p_3lw85dks0g"
+    },
+    {
+      "at": 1792208010312,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พี่ตี๋, พี่บอม, นน, แม็ก"
+    },
+    {
+      "at": 1792208020091,
+      "kind": "match.end",
+      "text": "จบเกม #17 คอร์ต 3",
+      "matchId": "m_atqsbt5t1x"
+    },
+    {
+      "at": 1792208021706,
+      "kind": "match.start",
+      "text": "คอร์ต 3: บอล, แอนดริว, พี่เทพ, เบิร์ด",
+      "matchId": "m_ixb1x2dryi"
+    },
+    {
+      "at": 1792208021720,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: บอล, แอนดริว, พี่เทพ, เบิร์ด"
+    },
+    {
+      "at": 1792208025027,
+      "kind": "match.end",
+      "text": "จบเกม #14 คอร์ต 4",
+      "matchId": "m_q169kjnk08"
+    },
+    {
+      "at": 1792208035224,
+      "kind": "match.start",
+      "text": "คอร์ต 4: พี่ตี๋, พี่บอม, นน, แม็ก",
+      "matchId": "m_m8tqkie2e0"
+    },
+    {
+      "at": 1792208035238,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: พี่ตี๋, พี่บอม, นน, แม็ก"
+    },
+    {
+      "at": 1792208099866,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: แบงค์, พี่นิว, แพทริก, พลอยปภัส"
+    },
+    {
+      "at": 1792208182269,
+      "kind": "match.end",
+      "text": "จบเกม #15 คอร์ต 2",
+      "matchId": "m_dfca0ptytu"
+    },
+    {
+      "at": 1792208183806,
+      "kind": "match.start",
+      "text": "คอร์ต 2: แบงค์, พี่นิว, แพทริก, พลอยปภัส",
+      "matchId": "m_2vuqxwh919"
+    },
+    {
+      "at": 1792208183818,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: แบงค์, พี่นิว, แพทริก, พลอยปภัส"
+    },
+    {
+      "at": 1792208263180,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ลิงน้อย, แมว, หลิน, สุดหล่อ"
+    },
+    {
+      "at": 1792208317503,
+      "kind": "player.checkin",
+      "text": "หมิง เช็คอิน",
+      "playerId": "p_gwdzyqk46n"
+    },
+    {
+      "at": 1792208328463,
+      "kind": "player.checkin",
+      "text": "ผิง เช็คอิน",
+      "playerId": "p_zaui6hkcn1"
+    },
+    {
+      "at": 1792208366808,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: แนน, เทียน, ไกด์, เอ"
+    },
+    {
+      "at": 1792208390990,
+      "kind": "match.end",
+      "text": "จบเกม #16 คอร์ต 5",
+      "matchId": "m_yhgbzw0jdu"
+    },
+    {
+      "at": 1792208392757,
+      "kind": "match.start",
+      "text": "คอร์ต 5: ลิงน้อย, แมว, หลิน, สุดหล่อ",
+      "matchId": "m_d6q0q6lq9h"
+    },
+    {
+      "at": 1792208392770,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: ลิงน้อย, แมว, หลิน, สุดหล่อ"
+    },
+    {
+      "at": 1792208465621,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พี่ฟิว, บัว, ไว, พี่คิง"
+    },
+    {
+      "at": 1792208524208,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ตุ้ย, หมิง, ผิง, พรีม"
+    },
+    {
+      "at": 1792208561104,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: โอม, ซัน, ชาญนุ, ยอด"
+    },
+    {
+      "at": 1792208828585,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: จ๋วย, บอล, แอนดริว, แพทริก"
+    },
+    {
+      "at": 1792208957821,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: แนน, เทียน, ไกด์, เอ"
+    },
+    {
+      "at": 1792208991570,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: ตุ้ย, หมิง, ผิง, พรีม"
+    },
+    {
+      "at": 1792209040486,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ผิง, เทียน, เอ, ไกด์"
+    },
+    {
+      "at": 1792209323514,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ตุ้ย, หมิง, แนน, พรีม"
+    },
+    {
+      "at": 1792209369321,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792209370126,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792209370881,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792209393960,
+      "kind": "match.end",
+      "text": "จบเกม #19 คอร์ต 3",
+      "matchId": "m_ixb1x2dryi"
+    },
+    {
+      "at": 1792209395268,
+      "kind": "match.start",
+      "text": "คอร์ต 3: พี่ฟิว, บัว, ไว, พี่คิง",
+      "matchId": "m_v9faxo77t0"
+    },
+    {
+      "at": 1792209395279,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: พี่ฟิว, บัว, ไว, พี่คิง"
+    },
+    {
+      "at": 1792209427630,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: แน็ค, ปาล์ม, เติ้ล, กร"
+    },
+    {
+      "at": 1792209438377,
+      "kind": "match.end",
+      "text": "จบเกม #21 คอร์ต 2",
+      "matchId": "m_2vuqxwh919"
+    },
+    {
+      "at": 1792209439713,
+      "kind": "match.start",
+      "text": "คอร์ต 2: ตุ้ย, หมิง, แนน, พรีม",
+      "matchId": "m_shxqh2863l"
+    },
+    {
+      "at": 1792209439727,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: ตุ้ย, หมิง, แนน, พรีม"
+    },
+    {
+      "at": 1792209486563,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792209487302,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792209487975,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792209524018,
+      "kind": "match.swap",
+      "text": "สลับ แนน ออก กร ลง",
+      "matchId": "m_shxqh2863l"
+    },
+    {
+      "at": 1792209545522,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: แน็ค, ปาล์ม, เติ้ล, กร"
+    },
+    {
+      "at": 1792209594449,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: แน็ค, ปาล์ม, เติ้ล, ซัน"
+    },
+    {
+      "at": 1792209601416,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792209602462,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792209603035,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792209635321,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: โอม, ซัน, ชาญนุ, ยอด"
+    },
+    {
+      "at": 1792209677834,
+      "kind": "pay",
+      "text": "พี่นิว จ่ายแล้ว",
+      "playerId": "p_fpacic3m1r"
+    },
+    {
+      "at": 1792209677834,
+      "kind": "player.checkout",
+      "text": "พี่นิว จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_fpacic3m1r"
+    },
+    {
+      "at": 1792209740828,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: โอม, ชาญนุ, ยอด, พี่เทพ"
+    },
+    {
+      "at": 1792209755124,
+      "kind": "match.end",
+      "text": "จบเกม #20 คอร์ต 4",
+      "matchId": "m_m8tqkie2e0"
+    },
+    {
+      "at": 1792209779868,
+      "kind": "match.start",
+      "text": "คอร์ต 4: แน็ค, ปาล์ม, เติ้ล, ซัน",
+      "matchId": "m_fdctk8fgkc"
+    },
+    {
+      "at": 1792209779877,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: แน็ค, ปาล์ม, เติ้ล, ซัน"
+    },
+    {
+      "at": 1792209811359,
+      "kind": "match.end",
+      "text": "จบเกม #18 คอร์ต 1",
+      "matchId": "m_mffid0b2ab"
+    },
+    {
+      "at": 1792209838627,
+      "kind": "match.start",
+      "text": "คอร์ต 1: เทียน, ผิง, ไกด์, เอ",
+      "matchId": "m_yvotz2gpwj"
+    },
+    {
+      "at": 1792209862514,
+      "kind": "match.end",
+      "text": "จบเกม #22 คอร์ต 5",
+      "matchId": "m_d6q0q6lq9h"
+    },
+    {
+      "at": 1792209864626,
+      "kind": "match.start",
+      "text": "คอร์ต 5: จ๋วย, บอล, แอนดริว, แพทริก",
+      "matchId": "m_uyn9yuh9yq"
+    },
+    {
+      "at": 1792209864644,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: จ๋วย, บอล, แอนดริว, แพทริก"
+    },
+    {
+      "at": 1792209955648,
+      "kind": "pay",
+      "text": "ชาญนุ จ่ายแล้ว",
+      "playerId": "p_4en2989rj3"
+    },
+    {
+      "at": 1792209955648,
+      "kind": "player.checkout",
+      "text": "ชาญนุ จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_4en2989rj3"
+    },
+    {
+      "at": 1792210042079,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: นน, พรีม, หลิน, เติ้ล"
+    },
+    {
+      "at": 1792210115331,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: วิน, ลิงน้อย, เน, แมว"
+    },
+    {
+      "at": 1792210117669,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792210118365,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792210119159,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792210129687,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792210173942,
+      "kind": "match.end",
+      "text": "จบเกม #26 คอร์ต 1",
+      "matchId": "m_yvotz2gpwj"
+    },
+    {
+      "at": 1792210258967,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792210267810,
+      "kind": "match.start",
+      "text": "คอร์ต 1: วิน, ลิงน้อย, เน, แมว",
+      "matchId": "m_kdchbapx2a"
+    },
+    {
+      "at": 1792210267827,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: วิน, ลิงน้อย, เน, แมว"
+    },
+    {
+      "at": 1792210271473,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: ผิง, เทียน, เอ, ไกด์"
+    },
+    {
+      "at": 1792210276472,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792210292214,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: นน, พรีม, หลิน, เติ้ล"
+    },
+    {
+      "at": 1792210292742,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: โอม, ชาญนุ, ยอด, พี่เทพ"
+    },
+    {
+      "at": 1792210342924,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พลอยปภัส, แพทริก, สุดหล่อ, จ๋วย"
+    },
+    {
+      "at": 1792210441198,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: นน, พรีม, หลิน, เติ้ล"
+    },
+    {
+      "at": 1792210532908,
+      "kind": "pay",
+      "text": "ยอด จ่ายแล้ว",
+      "playerId": "p_hgw4qts55x"
+    },
+    {
+      "at": 1792210532908,
+      "kind": "player.checkout",
+      "text": "ยอด จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_hgw4qts55x"
+    },
+    {
+      "at": 1792210568203,
+      "kind": "player.checkout",
+      "text": "แม็ก กลับบ้าน",
+      "playerId": "p_3fd83nijoe"
+    },
+    {
+      "at": 1792210621251,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: โอม, เบิร์ด, พี่เทพ, น้ำ"
+    },
+    {
+      "at": 1792210623898,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792210624514,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792210657053,
+      "kind": "match.end",
+      "text": "จบเกม #27 คอร์ต 5",
+      "matchId": "m_uyn9yuh9yq"
+    },
+    {
+      "at": 1792210659923,
+      "kind": "match.start",
+      "text": "คอร์ต 5: โอม, เบิร์ด, พี่เทพ, น้ำ",
+      "matchId": "m_x6g3zbybmb"
+    },
+    {
+      "at": 1792210659938,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: โอม, เบิร์ด, พี่เทพ, น้ำ"
+    },
+    {
+      "at": 1792210716090,
+      "kind": "match.cancel",
+      "text": "ยกเลิกเกม คอร์ต 5",
+      "matchId": "m_x6g3zbybmb"
+    },
+    {
+      "at": 1792210723489,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: โอม, เบิร์ด, พี่เทพ, น้ำ"
+    },
+    {
+      "at": 1792210725827,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792210726374,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792210849348,
+      "kind": "match.end",
+      "text": "จบเกม #24 คอร์ต 2",
+      "matchId": "m_shxqh2863l"
+    },
+    {
+      "at": 1792210857830,
+      "kind": "match.start",
+      "text": "คอร์ต 2: โอม, เบิร์ด, พี่เทพ, น้ำ",
+      "matchId": "m_ro1htp2kbq"
+    },
+    {
+      "at": 1792210857847,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: โอม, เบิร์ด, พี่เทพ, น้ำ"
+    },
+    {
+      "at": 1792210965918,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พี่ตี๋, พี่บอม, พี่คิง, ตุ้ย"
+    },
+    {
+      "at": 1792210982418,
+      "kind": "player.checkout",
+      "text": "กร กลับบ้าน",
+      "playerId": "p_5t6kdv3w2i"
+    },
+    {
+      "at": 1792210998877,
+      "kind": "match.end",
+      "text": "จบเกม #25 คอร์ต 4",
+      "matchId": "m_fdctk8fgkc"
+    },
+    {
+      "at": 1792211006770,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792211012798,
+      "kind": "match.start",
+      "text": "คอร์ต 4: นน, พรีม, หลิน, เติ้ล",
+      "matchId": "m_mhu2f45vwe"
+    },
+    {
+      "at": 1792211012812,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: นน, พรีม, หลิน, เติ้ล"
+    },
+    {
+      "at": 1792211028069,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792211043653,
+      "kind": "match.end",
+      "text": "จบเกม #23 คอร์ต 3",
+      "matchId": "m_v9faxo77t0"
+    },
+    {
+      "at": 1792211084845,
+      "kind": "match.start",
+      "text": "คอร์ต 3: พี่ตี๋, พี่บอม, พี่คิง, ตุ้ย",
+      "matchId": "m_rpnxdk7fhp"
+    },
+    {
+      "at": 1792211084856,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: พี่ตี๋, พี่บอม, พี่คิง, ตุ้ย"
+    },
+    {
+      "at": 1792211108698,
+      "kind": "match.swap",
+      "text": "สลับ พี่คิง ออก หมิง ลง",
+      "matchId": "m_rpnxdk7fhp"
+    },
+    {
+      "at": 1792211182648,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: เทียน, เอ, ไกด์, ผิง"
+    },
+    {
+      "at": 1792211184778,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792211213840,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: แบงค์, แอนดริว, ปาล์ม, ซัน"
+    },
+    {
+      "at": 1792211219106,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: แบงค์, แอนดริว, ปาล์ม, ซัน"
+    },
+    {
+      "at": 1792211230350,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: แบงค์, แอนดริว, ปาล์ม, พี่ฟิว"
+    },
+    {
+      "at": 1792211234272,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1792211324541,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: เติ้ล, นน, ไว, พี่คิง"
+    },
+    {
+      "at": 1792211385161,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: เทียน, เอ, ไกด์, ผิง"
+    },
+    {
+      "at": 1792211404181,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: เทียน, ผิง, แนน, ไกด์"
+    },
+    {
+      "at": 1792211422178,
+      "kind": "match.start",
+      "text": "คอร์ต 5: แบงค์, แอนดริว, ปาล์ม, พี่ฟิว",
+      "matchId": "m_kt7ledens2"
+    },
+    {
+      "at": 1792211422191,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: แบงค์, แอนดริว, ปาล์ม, พี่ฟิว"
+    },
+    {
+      "at": 1792211457519,
+      "kind": "match.swap",
+      "text": "สลับ แอนดริว ออก พี่คิง ลง",
+      "matchId": "m_kt7ledens2"
+    },
+    {
+      "at": 1792211548380,
+      "kind": "player.checkout",
+      "text": "ไว กลับบ้าน",
+      "playerId": "p_xzrzqm0ok1"
+    },
+    {
+      "at": 1792211599020,
+      "kind": "match.end",
+      "text": "จบเกม #28 คอร์ต 1",
+      "matchId": "m_kdchbapx2a"
+    },
+    {
+      "at": 1792211606899,
+      "kind": "match.start",
+      "text": "คอร์ต 1: พลอยปภัส, แพทริก, สุดหล่อ, จ๋วย",
+      "matchId": "m_m11q95imb7"
+    },
+    {
+      "at": 1792211606911,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: พลอยปภัส, แพทริก, สุดหล่อ, จ๋วย"
+    },
+    {
+      "at": 1792211626699,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: เติ้ล, นน, ไว, พี่คิง"
+    },
+    {
+      "at": 1792211680120,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: บอล, แอนดริว, พี่เทพ, เบิร์ด"
+    },
+    {
+      "at": 1792212055896,
+      "kind": "match.end",
+      "text": "จบเกม #31 คอร์ต 3",
+      "matchId": "m_rpnxdk7fhp"
+    },
+    {
+      "at": 1792212058307,
+      "kind": "match.start",
+      "text": "คอร์ต 3: เทียน, ผิง, แนน, ไกด์",
+      "matchId": "m_byjgemsamb"
+    },
+    {
+      "at": 1792212058323,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: เทียน, ผิง, แนน, ไกด์"
+    },
+    {
+      "at": 1792212077449,
+      "kind": "player.checkout",
+      "text": "พี่ตี๋ กลับบ้าน",
+      "playerId": "p_hwixawkd5d"
+    },
+    {
+      "at": 1792212080424,
+      "kind": "player.checkout",
+      "text": "พี่บอม กลับบ้าน",
+      "playerId": "p_m3ojvdfpn0"
+    },
+    {
+      "at": 1792212205758,
+      "kind": "match.end",
+      "text": "จบเกม #30 คอร์ต 4",
+      "matchId": "m_mhu2f45vwe"
+    },
+    {
+      "at": 1792212271545,
+      "kind": "pay",
+      "text": "บัว จ่ายแล้ว",
+      "playerId": "p_amfjf7pwe1"
+    },
+    {
+      "at": 1792212271545,
+      "kind": "player.checkout",
+      "text": "บัว จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_amfjf7pwe1"
+    },
+    {
+      "at": 1792212334371,
+      "kind": "pay",
+      "text": "น้ำ จ่ายแล้ว",
+      "playerId": "p_oa3k98c1qy"
+    },
+    {
+      "at": 1792212351663,
+      "kind": "pay",
+      "text": "แน็ค จ่ายแล้ว",
+      "playerId": "p_hlqouzbfjc"
+    },
+    {
+      "at": 1792212351663,
+      "kind": "player.checkout",
+      "text": "แน็ค จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_hlqouzbfjc"
+    },
+    {
+      "at": 1792212395028,
+      "kind": "match.end",
+      "text": "จบเกม #29 คอร์ต 2",
+      "matchId": "m_ro1htp2kbq"
+    },
+    {
+      "at": 1792212418181,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: บอล, แอนดริว, พี่เทพ, เบิร์ด"
+    },
+    {
+      "at": 1792212648889,
+      "kind": "pay",
+      "text": "เน จ่ายแล้ว",
+      "playerId": "p_vrlbf0860e"
+    },
+    {
+      "at": 1792212648889,
+      "kind": "player.checkout",
+      "text": "เน จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_vrlbf0860e"
+    },
+    {
+      "at": 1792212906179,
+      "kind": "pay",
+      "text": "พี่ตี๋ จ่ายแล้ว",
+      "playerId": "p_hwixawkd5d"
+    },
+    {
+      "at": 1792212907993,
+      "kind": "pay",
+      "text": "พี่บอม จ่ายแล้ว",
+      "playerId": "p_m3ojvdfpn0"
+    },
+    {
+      "at": 1792213058835,
+      "kind": "pay",
+      "text": "พี่คิง จ่ายแล้ว",
+      "playerId": "p_q165dvkkxi"
+    },
+    {
+      "at": 1792213137790,
+      "kind": "match.end",
+      "text": "จบเกม #33 คอร์ต 1",
+      "matchId": "m_m11q95imb7"
+    },
+    {
+      "at": 1792213139963,
+      "kind": "match.end",
+      "text": "จบเกม #34 คอร์ต 3",
+      "matchId": "m_byjgemsamb"
+    },
+    {
+      "at": 1792213141971,
+      "kind": "match.end",
+      "text": "จบเกม #32 คอร์ต 5",
+      "matchId": "m_kt7ledens2"
+    },
+    {
+      "at": 1792213157204,
+      "kind": "pay",
+      "text": "พี่ฟิว จ่ายแล้ว",
+      "playerId": "p_6y1jo5emkk"
+    },
+    {
+      "at": 1792213157204,
+      "kind": "player.checkout",
+      "text": "พี่ฟิว จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_6y1jo5emkk"
+    },
+    {
+      "at": 1792213178496,
+      "kind": "pay",
+      "text": "แนน จ่ายแล้ว",
+      "playerId": "p_7abt4a6j42"
+    },
+    {
+      "at": 1792213178496,
+      "kind": "player.checkout",
+      "text": "แนน จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_7abt4a6j42"
+    },
+    {
+      "at": 1792213180567,
+      "kind": "pay",
+      "text": "โอม จ่ายแล้ว",
+      "playerId": "p_5pmcrc7d7c"
+    },
+    {
+      "at": 1792213180567,
+      "kind": "player.checkout",
+      "text": "โอม จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_5pmcrc7d7c"
+    },
+    {
+      "at": 1792213195830,
+      "kind": "pay",
+      "text": "ไว จ่ายแล้ว",
+      "playerId": "p_xzrzqm0ok1"
+    },
+    {
+      "at": 1792213240981,
+      "kind": "pay",
+      "text": "ปาล์ม จ่ายแล้ว",
+      "playerId": "p_3bvix9nerq"
+    },
+    {
+      "at": 1792213240981,
+      "kind": "player.checkout",
+      "text": "ปาล์ม จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_3bvix9nerq"
+    },
+    {
+      "at": 1792213256372,
+      "kind": "pay",
+      "text": "ตุ้ย จ่ายแล้ว",
+      "playerId": "p_ej2y8e5kee"
+    },
+    {
+      "at": 1792213256372,
+      "kind": "player.checkout",
+      "text": "ตุ้ย จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_ej2y8e5kee"
+    },
+    {
+      "at": 1792213267237,
+      "kind": "pay",
+      "text": "เทียน จ่ายแล้ว",
+      "playerId": "p_i49lweh5l9"
+    },
+    {
+      "at": 1792213267237,
+      "kind": "player.checkout",
+      "text": "เทียน จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_i49lweh5l9"
+    },
+    {
+      "at": 1792213316658,
+      "kind": "pay",
+      "text": "แม็ก จ่ายแล้ว",
+      "playerId": "p_3fd83nijoe"
+    },
+    {
+      "at": 1792213333534,
+      "kind": "pay",
+      "text": "พี่เทพ จ่ายแล้ว",
+      "playerId": "p_0aamglvm9a"
+    },
+    {
+      "at": 1792213333534,
+      "kind": "player.checkout",
+      "text": "พี่เทพ จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_0aamglvm9a"
+    },
+    {
+      "at": 1792213350385,
+      "kind": "pay",
+      "text": "วิน จ่ายแล้ว",
+      "playerId": "p_hlkq1h3rk3"
+    },
+    {
+      "at": 1792213350385,
+      "kind": "player.checkout",
+      "text": "วิน จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_hlkq1h3rk3"
+    },
+    {
+      "at": 1792213382774,
+      "kind": "pay",
+      "text": "แอนดริว จ่ายแล้ว",
+      "playerId": "p_3rve3mtxq3"
+    },
+    {
+      "at": 1792213382774,
+      "kind": "player.checkout",
+      "text": "แอนดริว จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_3rve3mtxq3"
+    },
+    {
+      "at": 1792213416840,
+      "kind": "pay",
+      "text": "บอล จ่ายแล้ว",
+      "playerId": "p_m56exs4ags"
+    },
+    {
+      "at": 1792213416840,
+      "kind": "player.checkout",
+      "text": "บอล จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_m56exs4ags"
+    },
+    {
+      "at": 1792213448569,
+      "kind": "pay",
+      "text": "แพทริก จ่ายแล้ว",
+      "playerId": "p_bis0ufc9h8"
+    },
+    {
+      "at": 1792213448569,
+      "kind": "player.checkout",
+      "text": "แพทริก จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_bis0ufc9h8"
+    },
+    {
+      "at": 1792213456573,
+      "kind": "pay",
+      "text": "พลอยปภัส จ่ายแล้ว",
+      "playerId": "p_0tkx8luk7o"
+    },
+    {
+      "at": 1792213456573,
+      "kind": "player.checkout",
+      "text": "พลอยปภัส จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_0tkx8luk7o"
+    },
+    {
+      "at": 1792213471613,
+      "kind": "pay",
+      "text": "ไกด์ จ่ายแล้ว",
+      "playerId": "p_suzv413d26"
+    },
+    {
+      "at": 1792213471613,
+      "kind": "player.checkout",
+      "text": "ไกด์ จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_suzv413d26"
+    },
+    {
+      "at": 1792213490593,
+      "kind": "pay",
+      "text": "ซัน จ่ายแล้ว",
+      "playerId": "p_2jd5ehh4i6"
+    },
+    {
+      "at": 1792213490593,
+      "kind": "player.checkout",
+      "text": "ซัน จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_2jd5ehh4i6"
+    },
+    {
+      "at": 1792213500024,
+      "kind": "pay",
+      "text": "แบงค์ จ่ายแล้ว",
+      "playerId": "p_vlg61a1abs"
+    },
+    {
+      "at": 1792213500024,
+      "kind": "player.checkout",
+      "text": "แบงค์ จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_vlg61a1abs"
+    },
+    {
+      "at": 1792213555191,
+      "kind": "pay",
+      "text": "เอ จ่ายแล้ว",
+      "playerId": "p_is0bppr1va"
+    },
+    {
+      "at": 1792213555191,
+      "kind": "player.checkout",
+      "text": "เอ จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_is0bppr1va"
+    },
+    {
+      "at": 1792213556843,
+      "kind": "fee",
+      "text": "เอ ไม่คิดเงิน (เอาออกจากบิล)",
+      "playerId": "p_is0bppr1va"
+    },
+    {
+      "at": 1792213558140,
+      "kind": "fee",
+      "text": "เอ กลับเข้าบิลตามปกติ",
+      "playerId": "p_is0bppr1va"
+    },
+    {
+      "at": 1792213568305,
+      "kind": "pay",
+      "text": "เอ ยกเลิกการจ่าย",
+      "playerId": "p_is0bppr1va"
+    },
+    {
+      "at": 1792213568305,
+      "kind": "player.checkin",
+      "text": "เอ กลับเข้าคิว",
+      "playerId": "p_is0bppr1va"
+    },
+    {
+      "at": 1792213601854,
+      "kind": "pay",
+      "text": "เติ้ล จ่ายแล้ว",
+      "playerId": "p_famr27ywr8"
+    },
+    {
+      "at": 1792213601854,
+      "kind": "player.checkout",
+      "text": "เติ้ล จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_famr27ywr8"
+    },
+    {
+      "at": 1792213607011,
+      "kind": "pay",
+      "text": "นน จ่ายแล้ว",
+      "playerId": "p_xf3iqplno6"
+    },
+    {
+      "at": 1792213607011,
+      "kind": "player.checkout",
+      "text": "นน จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_xf3iqplno6"
+    },
+    {
+      "at": 1792213609111,
+      "kind": "pay",
+      "text": "เบิร์ด จ่ายแล้ว",
+      "playerId": "p_cnm4rzo5t5"
+    },
+    {
+      "at": 1792213609111,
+      "kind": "player.checkout",
+      "text": "เบิร์ด จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_cnm4rzo5t5"
+    },
+    {
+      "at": 1792213613547,
+      "kind": "pay",
+      "text": "พรีม จ่ายแล้ว",
+      "playerId": "p_04n5grksuu"
+    },
+    {
+      "at": 1792213613547,
+      "kind": "player.checkout",
+      "text": "พรีม จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_04n5grksuu"
+    },
+    {
+      "at": 1792213627531,
+      "kind": "pay",
+      "text": "หลิน จ่ายแล้ว",
+      "playerId": "p_wse74h0bhl"
+    },
+    {
+      "at": 1792213627531,
+      "kind": "player.checkout",
+      "text": "หลิน จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_wse74h0bhl"
+    },
+    {
+      "at": 1792213640327,
+      "kind": "pay",
+      "text": "กร จ่ายแล้ว",
+      "playerId": "p_5t6kdv3w2i"
+    },
+    {
+      "at": 1792213652280,
+      "kind": "pay",
+      "text": "ผิง จ่ายแล้ว",
+      "playerId": "p_zaui6hkcn1"
+    },
+    {
+      "at": 1792213652280,
+      "kind": "player.checkout",
+      "text": "ผิง จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_zaui6hkcn1"
+    },
+    {
+      "at": 1792213656360,
+      "kind": "pay",
+      "text": "กร ยกเลิกการจ่าย",
+      "playerId": "p_5t6kdv3w2i"
+    },
+    {
+      "at": 1792213656360,
+      "kind": "player.checkin",
+      "text": "กร กลับเข้าคิว",
+      "playerId": "p_5t6kdv3w2i"
+    },
+    {
+      "at": 1792213706515,
+      "kind": "pay",
+      "text": "หมิง จ่ายแล้ว",
+      "playerId": "p_gwdzyqk46n"
+    },
+    {
+      "at": 1792213706515,
+      "kind": "player.checkout",
+      "text": "หมิง จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_gwdzyqk46n"
+    },
+    {
+      "at": 1792213710720,
+      "kind": "fee",
+      "text": "สุดหล่อ ยกเว้นค่าสนาม",
+      "playerId": "p_ecpq3j2g0k"
+    },
+    {
+      "at": 1792213730520,
+      "kind": "fee",
+      "text": "ลิงน้อย ยกเว้นค่าสนาม",
+      "playerId": "p_7wcobglk7y"
+    },
+    {
+      "at": 1792213737796,
+      "kind": "fee",
+      "text": "เลม่อน ยกเว้นค่าสนาม",
+      "playerId": "p_rixt6110zo"
+    },
+    {
+      "at": 1792213748021,
+      "kind": "fee",
+      "text": "บัวลอย ไม่คิดเงิน (เอาออกจากบิล)",
+      "playerId": "p_797m3xxwrp"
+    },
+    {
+      "at": 1792213752272,
+      "kind": "fee",
+      "text": "พอย ไม่คิดเงิน (เอาออกจากบิล)",
+      "playerId": "p_3lw85dks0g"
+    },
+    {
+      "at": 1792213809754,
+      "kind": "pay",
+      "text": "จ๋วย จ่ายแล้ว",
+      "playerId": "p_manw7oisvz"
+    },
+    {
+      "at": 1792213809754,
+      "kind": "player.checkout",
+      "text": "จ๋วย จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_manw7oisvz"
+    },
+    {
+      "at": 1792213874308,
+      "kind": "pay",
+      "text": "สุดหล่อ จ่ายแล้ว",
+      "playerId": "p_ecpq3j2g0k"
+    },
+    {
+      "at": 1792213874309,
+      "kind": "player.checkout",
+      "text": "สุดหล่อ จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_ecpq3j2g0k"
+    },
+    {
+      "at": 1792213913036,
+      "kind": "pay",
+      "text": "ลิงน้อย จ่ายแล้ว",
+      "playerId": "p_7wcobglk7y"
+    },
+    {
+      "at": 1792213913037,
+      "kind": "player.checkout",
+      "text": "ลิงน้อย จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_7wcobglk7y"
+    },
+    {
+      "at": 1792213975241,
+      "kind": "pay",
+      "text": "เลม่อน จ่ายแล้ว",
+      "playerId": "p_rixt6110zo"
+    },
+    {
+      "at": 1792213975241,
+      "kind": "player.checkout",
+      "text": "เลม่อน จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_rixt6110zo"
+    },
+    {
+      "at": 1792214639773,
+      "kind": "pay",
+      "text": "กร จ่ายแล้ว",
+      "playerId": "p_5t6kdv3w2i"
+    },
+    {
+      "at": 1792214639773,
+      "kind": "player.checkout",
+      "text": "กร จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_5t6kdv3w2i"
+    },
+    {
+      "at": 1792214641026,
+      "kind": "pay",
+      "text": "กร ยกเลิกการจ่าย",
+      "playerId": "p_5t6kdv3w2i"
+    },
+    {
+      "at": 1792214641026,
+      "kind": "player.checkin",
+      "text": "กร กลับเข้าคิว",
+      "playerId": "p_5t6kdv3w2i"
+    },
+    {
+      "at": 1792214645619,
+      "kind": "pay",
+      "text": "เอ จ่ายแล้ว",
+      "playerId": "p_is0bppr1va"
+    },
+    {
+      "at": 1792214645619,
+      "kind": "player.checkout",
+      "text": "เอ จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_is0bppr1va"
+    },
+    {
+      "at": 1792214647529,
+      "kind": "pay",
+      "text": "แมว จ่ายแล้ว",
+      "playerId": "p_2kfe5lxq8k"
+    },
+    {
+      "at": 1792214647529,
+      "kind": "player.checkout",
+      "text": "แมว จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_2kfe5lxq8k"
+    },
+    {
+      "at": 1792223284683,
+      "kind": "session.end",
+      "text": "ปิดก๊วน"
+    },
+    {
+      "at": 1792983901699,
+      "kind": "fee",
+      "text": "หมิง ปรับลูกที่คิดเป็น -1 ลูก",
+      "playerId": "p_gwdzyqk46n"
+    },
+    {
+      "at": 1792983903247,
+      "kind": "fee",
+      "text": "หมิง ปรับลูกที่คิดเป็น 0 ลูก",
+      "playerId": "p_gwdzyqk46n"
+    },
+    {
+      "at": 1793069989045,
+      "kind": "fee",
+      "text": "แน็ค ลดให้ 20 บาท",
+      "playerId": "p_hlqouzbfjc"
+    },
+    {
+      "at": 1793069991397,
+      "kind": "fee",
+      "text": "แน็ค ยกเลิกส่วนลด",
+      "playerId": "p_hlqouzbfjc"
+    },
+    {
+      "at": 1793069993828,
+      "kind": "fee",
+      "text": "แน็ค ลดให้ 50 บาท",
+      "playerId": "p_hlqouzbfjc"
+    },
+    {
+      "at": 1793069995445,
+      "kind": "fee",
+      "text": "แน็ค ลดให้ 70 บาท",
+      "playerId": "p_hlqouzbfjc"
+    },
+    {
+      "at": 1793069998387,
+      "kind": "fee",
+      "text": "แน็ค ยกเลิกส่วนลด",
+      "playerId": "p_hlqouzbfjc"
+    }
+  ],
+  "settings": {
+    "maxLevelGap": 1,
+    "waitWeight": 1,
+    "gamesBehindWeight": 4,
+    "varietyWeight": 6,
+    "levelWeight": 8,
+    "warnWaitMinutes": 8,
+    "dongWaitMinutes": 15,
+    "targetGameMinutes": 20,
+    "defaultMatchType": "auto",
+    "callSound": true
+  },
+  "fees": {
+    "mode": "club",
+    "courtFeePerHead": 70,
+    "shuttlePrice": 25,
+    "shuttleCostTotal": 0,
+    "courtCost": 1288,
+    "extraCost": 0,
+    "roundTo": 1,
+    "promptPay": "นาย ศุภกฤษณ์ วิเศษโสภากุล"
+  },
+  "endAt": 1792223284683
+}
