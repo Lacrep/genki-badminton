@@ -55,8 +55,12 @@ if (!slug) fail(`อ่านชื่อ repo จาก remote ไม่ออ�
 
 // ── 2. repo เป็น private จริงไหม ─────────────────────────────────────────────
 //
-// เช็คแบบไม่ต้องล็อกอิน: repo ที่เป็น public จะตอบ 200 ส่วน private ตอบ 404
-// (คนที่ไม่ได้ล็อกอินมองไม่เห็น) จึงใช้แยกได้แน่นอนโดยไม่ต้องมี token
+// เช็คแบบไม่ต้องล็อกอิน: repo ที่เป็น public ตอบ 200 ส่วน private ตอบ 404
+// (คนที่ไม่ได้ล็อกอินมองไม่เห็น) จึงใช้แยกได้โดยไม่ต้องมี token
+//
+// แต่ดูแค่รหัสตอบกลับอย่างเดียวไม่พอ — บางเครื่องต่อเน็ตผ่าน proxy ที่แนบ credential
+// ให้เอง repo ที่เป็น private เลยตอบ 200 กลับมาด้วย ถ้าเชื่อรหัสอย่างเดียวจะสรุปผิด
+// ว่าเป็น public แล้วบล็อกไม่ให้เซฟทั้งที่ทำถูกแล้ว จึงอ่านค่า private ในเนื้อตอบด้วย
 
 async function visibility() {
   try {
@@ -64,8 +68,13 @@ async function visibility() {
       headers: { "User-Agent": "genki-badminton-save-data", Accept: "application/vnd.github+json" },
       signal: AbortSignal.timeout(10_000),
     })
-    if (res.status === 200) return "public"
     if (res.status === 404) return "private"
+    if (res.status === 200) {
+      const body = await res.json().catch(() => null)
+      if (body && typeof body.private === "boolean") return body.private ? "private" : "public"
+      // อ่านเนื้อตอบไม่ได้ ก็อย่าเดาว่าปลอดภัย ให้ไปถามเจ้าของแทน
+      return "unknown"
+    }
     return "unknown"
   } catch {
     return "offline"
