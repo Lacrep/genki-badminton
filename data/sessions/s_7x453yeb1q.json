@@ -63,15 +63,15 @@
       "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 501063,
-      "waitedMs": 182467,
+      "waitedMs": 188879,
       "longestWaitMs": 96145,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
       "paid": true,
-      "paidAt": 1793349215420,
-      "leftAt": 1793349215420
+      "paidAt": 1793349230899,
+      "leftAt": 1793349230899
     },
     {
       "playerId": "p_cnm4rzo5t5",
@@ -141,15 +141,15 @@
       "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 359563,
-      "waitedMs": 139733,
+      "waitedMs": 143999,
       "longestWaitMs": 73056,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
       "paid": true,
-      "paidAt": 1793349214388,
-      "leftAt": 1793349214388
+      "paidAt": 1793349230058,
+      "leftAt": 1793349230058
     },
     {
       "playerId": "p_0tkx8luk7o",
@@ -158,15 +158,15 @@
       "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 359563,
-      "waitedMs": 141284,
+      "waitedMs": 146737,
       "longestWaitMs": 73056,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
       "paid": true,
-      "paidAt": 1793349214884,
-      "leftAt": 1793349214884
+      "paidAt": 1793349230514,
+      "leftAt": 1793349230514
     },
     {
       "playerId": "p_hwixawkd5d",
@@ -615,6 +615,78 @@
     },
     {
       "at": 1793349215420,
+      "kind": "player.checkout",
+      "text": "พอย จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_3lw85dks0g"
+    },
+    {
+      "at": 1793349224487,
+      "kind": "pay",
+      "text": "พอย ยกเลิกการจ่าย",
+      "playerId": "p_3lw85dks0g"
+    },
+    {
+      "at": 1793349224487,
+      "kind": "player.checkin",
+      "text": "พอย กลับเข้าคิว",
+      "playerId": "p_3lw85dks0g"
+    },
+    {
+      "at": 1793349225061,
+      "kind": "pay",
+      "text": "พลอยปภัส ยกเลิกการจ่าย",
+      "playerId": "p_0tkx8luk7o"
+    },
+    {
+      "at": 1793349225061,
+      "kind": "player.checkin",
+      "text": "พลอยปภัส กลับเข้าคิว",
+      "playerId": "p_0tkx8luk7o"
+    },
+    {
+      "at": 1793349225792,
+      "kind": "pay",
+      "text": "พรฟ้า ยกเลิกการจ่าย",
+      "playerId": "p_ihc1omlql8"
+    },
+    {
+      "at": 1793349225792,
+      "kind": "player.checkin",
+      "text": "พรฟ้า กลับเข้าคิว",
+      "playerId": "p_ihc1omlql8"
+    },
+    {
+      "at": 1793349230059,
+      "kind": "pay",
+      "text": "พรฟ้า จ่ายแล้ว",
+      "playerId": "p_ihc1omlql8"
+    },
+    {
+      "at": 1793349230059,
+      "kind": "player.checkout",
+      "text": "พรฟ้า จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_ihc1omlql8"
+    },
+    {
+      "at": 1793349230514,
+      "kind": "pay",
+      "text": "พลอยปภัส จ่ายแล้ว",
+      "playerId": "p_0tkx8luk7o"
+    },
+    {
+      "at": 1793349230514,
+      "kind": "player.checkout",
+      "text": "พลอยปภัส จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_0tkx8luk7o"
+    },
+    {
+      "at": 1793349230900,
+      "kind": "pay",
+      "text": "พอย จ่ายแล้ว",
+      "playerId": "p_3lw85dks0g"
+    },
+    {
+      "at": 1793349230900,
       "kind": "player.checkout",
       "text": "พอย จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_3lw85dks0g"
