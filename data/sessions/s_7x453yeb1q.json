@@ -10,7 +10,7 @@
     {
       "index": 0,
       "name": "คอร์ต 1",
-      "currentMatchId": null
+      "currentMatchId": "m_778rtrfa6w"
     },
     {
       "index": 1,
@@ -21,13 +21,13 @@
   "players": [
     {
       "playerId": "p_manw7oisvz",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793348527316,
-      "queueSince": 1793348527316,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 23940,
+      "longestWaitMs": 23940,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -51,13 +51,13 @@
     },
     {
       "playerId": "p_3lw85dks0g",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793348527327,
-      "queueSince": 1793348527327,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 23929,
+      "longestWaitMs": 23929,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -66,13 +66,13 @@
     },
     {
       "playerId": "p_cnm4rzo5t5",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793348527333,
-      "queueSince": 1793348527333,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 23923,
+      "longestWaitMs": 23923,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -81,13 +81,13 @@
     },
     {
       "playerId": "p_fpacic3m1r",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793348527339,
-      "queueSince": 1793348527339,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 23917,
+      "longestWaitMs": 23917,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -95,7 +95,27 @@
       "paid": false
     }
   ],
-  "matches": [],
+  "matches": [
+    {
+      "id": "m_778rtrfa6w",
+      "no": 1,
+      "courtIndex": 0,
+      "type": "D",
+      "teamA": [
+        "p_manw7oisvz",
+        "p_3lw85dks0g"
+      ],
+      "teamB": [
+        "p_cnm4rzo5t5",
+        "p_fpacic3m1r"
+      ],
+      "startedAt": 1793348551256,
+      "shuttles": 0,
+      "createdBy": "auto",
+      "levelGap": 0,
+      "maxWaitAtStart": 23940
+    }
+  ],
   "planned": [],
   "events": [
     {
@@ -132,6 +152,12 @@
       "kind": "player.checkin",
       "text": "พี่นิว เช็คอิน",
       "playerId": "p_fpacic3m1r"
+    },
+    {
+      "at": 1793348551257,
+      "kind": "match.start",
+      "text": "คอร์ต 1: จ๋วย, พอย, เบิร์ด, พี่นิว",
+      "matchId": "m_778rtrfa6w"
     }
   ],
   "settings": {
