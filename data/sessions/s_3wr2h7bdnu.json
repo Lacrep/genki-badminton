@@ -10,32 +10,908 @@
     {
       "index": 0,
       "name": "คอร์ต 1",
-      "currentMatchId": null
+      "currentMatchId": "m_tairwoceeb"
     },
     {
       "index": 1,
       "name": "คอร์ต 2",
-      "currentMatchId": null
+      "currentMatchId": "m_ujjrq1cfud"
     },
     {
       "index": 2,
       "name": "คอร์ต 3",
-      "currentMatchId": null
+      "currentMatchId": "m_jxmuolchg8"
     },
     {
       "index": 3,
       "name": "คอร์ต 4",
-      "currentMatchId": null
+      "currentMatchId": "m_g54z43cj4v"
     }
   ],
-  "players": [],
-  "matches": [],
-  "planned": [],
+  "players": [
+    {
+      "playerId": "p_0aamglvm9a",
+      "status": "playing",
+      "checkInAt": 1793350088853,
+      "queueSince": null,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 9376,
+      "longestWaitMs": 9376,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_cnm4rzo5t5",
+      "status": "playing",
+      "checkInAt": 1793350088861,
+      "queueSince": null,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 7493,
+      "longestWaitMs": 7493,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_bis0ufc9h8",
+      "status": "playing",
+      "checkInAt": 1793350088869,
+      "queueSince": null,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 9360,
+      "longestWaitMs": 9360,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_manw7oisvz",
+      "status": "playing",
+      "checkInAt": 1793350088878,
+      "queueSince": null,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 7476,
+      "longestWaitMs": 7476,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_m56exs4ags",
+      "status": "playing",
+      "checkInAt": 1793350088886,
+      "queueSince": null,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 7468,
+      "longestWaitMs": 7468,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_fpacic3m1r",
+      "status": "playing",
+      "checkInAt": 1793350088893,
+      "queueSince": null,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 7461,
+      "longestWaitMs": 7461,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_3rve3mtxq3",
+      "status": "playing",
+      "checkInAt": 1793350088904,
+      "queueSince": null,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 9325,
+      "longestWaitMs": 9325,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_3lw85dks0g",
+      "status": "playing",
+      "checkInAt": 1793350088911,
+      "queueSince": null,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 9318,
+      "longestWaitMs": 9318,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_xz9wud06un",
+      "status": "playing",
+      "checkInAt": 1793350088917,
+      "queueSince": null,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 11395,
+      "longestWaitMs": 11395,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_npi3xmajpe",
+      "status": "playing",
+      "checkInAt": 1793350088924,
+      "queueSince": null,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 11388,
+      "longestWaitMs": 11388,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_xf3iqplno6",
+      "status": "playing",
+      "checkInAt": 1793350088932,
+      "queueSince": null,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 11380,
+      "longestWaitMs": 11380,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_vrlbf0860e",
+      "status": "playing",
+      "checkInAt": 1793350088948,
+      "queueSince": null,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 11364,
+      "longestWaitMs": 11364,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_qi7fu5m1ih",
+      "status": "playing",
+      "checkInAt": 1793350088958,
+      "queueSince": null,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 13537,
+      "longestWaitMs": 13537,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_qe4j6866il",
+      "status": "playing",
+      "checkInAt": 1793350088965,
+      "queueSince": null,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 13530,
+      "longestWaitMs": 13530,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_7wcobglk7y",
+      "status": "playing",
+      "checkInAt": 1793350088973,
+      "queueSince": null,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 13522,
+      "longestWaitMs": 13522,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_hwixawkd5d",
+      "status": "playing",
+      "checkInAt": 1793350088980,
+      "queueSince": null,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 13515,
+      "longestWaitMs": 13515,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_0tkx8luk7o",
+      "status": "queue",
+      "checkInAt": 1793350088986,
+      "queueSince": 1793350088986,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_w2231p1wkm",
+      "status": "queue",
+      "checkInAt": 1793350088993,
+      "queueSince": 1793350088993,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_2jd5ehh4i6",
+      "status": "queue",
+      "checkInAt": 1793350088999,
+      "queueSince": 1793350088999,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_5t6kdv3w2i",
+      "status": "queue",
+      "checkInAt": 1793350089007,
+      "queueSince": 1793350089007,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_ejbwutujai",
+      "status": "queue",
+      "checkInAt": 1793350089016,
+      "queueSince": 1793350089016,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_xzrzqm0ok1",
+      "status": "queue",
+      "checkInAt": 1793350089029,
+      "queueSince": 1793350089029,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_0nqocntg0j",
+      "status": "queue",
+      "checkInAt": 1793350089037,
+      "queueSince": 1793350089037,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_enbk87q4s9",
+      "status": "queue",
+      "checkInAt": 1793350089044,
+      "queueSince": 1793350089044,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_3bvix9nerq",
+      "status": "queue",
+      "checkInAt": 1793350089051,
+      "queueSince": 1793350089051,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_3fd83nijoe",
+      "status": "queue",
+      "checkInAt": 1793350089058,
+      "queueSince": 1793350089058,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_m3ojvdfpn0",
+      "status": "queue",
+      "checkInAt": 1793350089067,
+      "queueSince": 1793350089067,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_q165dvkkxi",
+      "status": "queue",
+      "checkInAt": 1793350089082,
+      "queueSince": 1793350089082,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_wkxmea5l6k",
+      "status": "queue",
+      "checkInAt": 1793350089093,
+      "queueSince": 1793350089093,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_kszf8rzu4d",
+      "status": "queue",
+      "checkInAt": 1793350089100,
+      "queueSince": 1793350089100,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_7abt4a6j42",
+      "status": "queue",
+      "checkInAt": 1793350089108,
+      "queueSince": 1793350089108,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_is0bppr1va",
+      "status": "queue",
+      "checkInAt": 1793350089115,
+      "queueSince": 1793350089115,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_wse74h0bhl",
+      "status": "queue",
+      "checkInAt": 1793350089125,
+      "queueSince": 1793350089125,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    }
+  ],
+  "matches": [
+    {
+      "id": "m_tairwoceeb",
+      "no": 1,
+      "courtIndex": 0,
+      "type": "D",
+      "teamA": [
+        "p_cnm4rzo5t5",
+        "p_manw7oisvz"
+      ],
+      "teamB": [
+        "p_m56exs4ags",
+        "p_fpacic3m1r"
+      ],
+      "startedAt": 1793350096354,
+      "shuttles": 0,
+      "createdBy": "auto",
+      "levelGap": 0,
+      "maxWaitAtStart": 7493
+    },
+    {
+      "id": "m_ujjrq1cfud",
+      "no": 2,
+      "courtIndex": 1,
+      "type": "D",
+      "teamA": [
+        "p_0aamglvm9a",
+        "p_3rve3mtxq3"
+      ],
+      "teamB": [
+        "p_bis0ufc9h8",
+        "p_3lw85dks0g"
+      ],
+      "startedAt": 1793350098229,
+      "shuttles": 0,
+      "createdBy": "auto",
+      "levelGap": 1,
+      "maxWaitAtStart": 9376
+    },
+    {
+      "id": "m_jxmuolchg8",
+      "no": 3,
+      "courtIndex": 2,
+      "type": "D",
+      "teamA": [
+        "p_xz9wud06un",
+        "p_npi3xmajpe"
+      ],
+      "teamB": [
+        "p_xf3iqplno6",
+        "p_vrlbf0860e"
+      ],
+      "startedAt": 1793350100312,
+      "shuttles": 0,
+      "createdBy": "auto",
+      "levelGap": 0,
+      "maxWaitAtStart": 11395
+    },
+    {
+      "id": "m_g54z43cj4v",
+      "no": 4,
+      "courtIndex": 3,
+      "type": "D",
+      "teamA": [
+        "p_qi7fu5m1ih",
+        "p_qe4j6866il"
+      ],
+      "teamB": [
+        "p_7wcobglk7y",
+        "p_hwixawkd5d"
+      ],
+      "startedAt": 1793350102495,
+      "shuttles": 0,
+      "createdBy": "auto",
+      "levelGap": 0,
+      "maxWaitAtStart": 13537
+    }
+  ],
+  "planned": [
+    {
+      "id": "pl_a1dmcwcl4h",
+      "type": "D",
+      "teamA": [
+        "p_2jd5ehh4i6",
+        "p_5t6kdv3w2i"
+      ],
+      "teamB": [
+        "p_ejbwutujai",
+        "p_0nqocntg0j"
+      ],
+      "createdAt": 1793350105073,
+      "createdBy": "auto",
+      "levelGap": 0
+    },
+    {
+      "id": "pl_j9rebpcm9y",
+      "type": "D",
+      "teamA": [
+        "p_enbk87q4s9",
+        "p_3bvix9nerq"
+      ],
+      "teamB": [
+        "p_3fd83nijoe",
+        "p_m3ojvdfpn0"
+      ],
+      "createdAt": 1793350106566,
+      "createdBy": "auto",
+      "levelGap": 0
+    },
+    {
+      "id": "pl_9256qeco25",
+      "type": "D",
+      "teamA": [
+        "p_0tkx8luk7o",
+        "p_w2231p1wkm"
+      ],
+      "teamB": [
+        "p_xzrzqm0ok1",
+        "p_xz9wud06un"
+      ],
+      "createdAt": 1793350108877,
+      "createdBy": "auto",
+      "levelGap": 0
+    },
+    {
+      "id": "pl_f337eocpxh",
+      "type": "D",
+      "teamA": [
+        "p_npi3xmajpe",
+        "p_qi7fu5m1ih"
+      ],
+      "teamB": [
+        "p_xf3iqplno6",
+        "p_7wcobglk7y"
+      ],
+      "createdAt": 1793350111301,
+      "createdBy": "auto",
+      "levelGap": 0
+    }
+  ],
   "events": [
     {
       "at": 1793350048746,
       "kind": "session.start",
       "text": "เปิดก๊วน"
+    },
+    {
+      "at": 1793350088853,
+      "kind": "player.checkin",
+      "text": "พี่เทพ เช็คอิน",
+      "playerId": "p_0aamglvm9a"
+    },
+    {
+      "at": 1793350088861,
+      "kind": "player.checkin",
+      "text": "เบิร์ด เช็คอิน",
+      "playerId": "p_cnm4rzo5t5"
+    },
+    {
+      "at": 1793350088869,
+      "kind": "player.checkin",
+      "text": "แพทริก เช็คอิน",
+      "playerId": "p_bis0ufc9h8"
+    },
+    {
+      "at": 1793350088878,
+      "kind": "player.checkin",
+      "text": "จ๋วย เช็คอิน",
+      "playerId": "p_manw7oisvz"
+    },
+    {
+      "at": 1793350088886,
+      "kind": "player.checkin",
+      "text": "บอล เช็คอิน",
+      "playerId": "p_m56exs4ags"
+    },
+    {
+      "at": 1793350088893,
+      "kind": "player.checkin",
+      "text": "พี่นิว เช็คอิน",
+      "playerId": "p_fpacic3m1r"
+    },
+    {
+      "at": 1793350088904,
+      "kind": "player.checkin",
+      "text": "แอนดริว เช็คอิน",
+      "playerId": "p_3rve3mtxq3"
+    },
+    {
+      "at": 1793350088911,
+      "kind": "player.checkin",
+      "text": "พอย เช็คอิน",
+      "playerId": "p_3lw85dks0g"
+    },
+    {
+      "at": 1793350088917,
+      "kind": "player.checkin",
+      "text": "บูม เช็คอิน",
+      "playerId": "p_xz9wud06un"
+    },
+    {
+      "at": 1793350088924,
+      "kind": "player.checkin",
+      "text": "ธี เช็คอิน",
+      "playerId": "p_npi3xmajpe"
+    },
+    {
+      "at": 1793350088932,
+      "kind": "player.checkin",
+      "text": "นน เช็คอิน",
+      "playerId": "p_xf3iqplno6"
+    },
+    {
+      "at": 1793350088948,
+      "kind": "player.checkin",
+      "text": "เน เช็คอิน",
+      "playerId": "p_vrlbf0860e"
+    },
+    {
+      "at": 1793350088958,
+      "kind": "player.checkin",
+      "text": "น๊อตโตะ เช็คอิน",
+      "playerId": "p_qi7fu5m1ih"
+    },
+    {
+      "at": 1793350088965,
+      "kind": "player.checkin",
+      "text": "พี่อั้ม เช็คอิน",
+      "playerId": "p_qe4j6866il"
+    },
+    {
+      "at": 1793350088973,
+      "kind": "player.checkin",
+      "text": "ลิงน้อย เช็คอิน",
+      "playerId": "p_7wcobglk7y"
+    },
+    {
+      "at": 1793350088980,
+      "kind": "player.checkin",
+      "text": "พี่ตี๋ เช็คอิน",
+      "playerId": "p_hwixawkd5d"
+    },
+    {
+      "at": 1793350088986,
+      "kind": "player.checkin",
+      "text": "พลอยปภัส เช็คอิน",
+      "playerId": "p_0tkx8luk7o"
+    },
+    {
+      "at": 1793350088993,
+      "kind": "player.checkin",
+      "text": "มะปราง เช็คอิน",
+      "playerId": "p_w2231p1wkm"
+    },
+    {
+      "at": 1793350088999,
+      "kind": "player.checkin",
+      "text": "ซัน เช็คอิน",
+      "playerId": "p_2jd5ehh4i6"
+    },
+    {
+      "at": 1793350089007,
+      "kind": "player.checkin",
+      "text": "กร เช็คอิน",
+      "playerId": "p_5t6kdv3w2i"
+    },
+    {
+      "at": 1793350089016,
+      "kind": "player.checkin",
+      "text": "กอล์ฟ เช็คอิน",
+      "playerId": "p_ejbwutujai"
+    },
+    {
+      "at": 1793350089029,
+      "kind": "player.checkin",
+      "text": "ไว เช็คอิน",
+      "playerId": "p_xzrzqm0ok1"
+    },
+    {
+      "at": 1793350089037,
+      "kind": "player.checkin",
+      "text": "เบลชาย เช็คอิน",
+      "playerId": "p_0nqocntg0j"
+    },
+    {
+      "at": 1793350089044,
+      "kind": "player.checkin",
+      "text": "ปัน เช็คอิน",
+      "playerId": "p_enbk87q4s9"
+    },
+    {
+      "at": 1793350089051,
+      "kind": "player.checkin",
+      "text": "ปาล์ม เช็คอิน",
+      "playerId": "p_3bvix9nerq"
+    },
+    {
+      "at": 1793350089058,
+      "kind": "player.checkin",
+      "text": "แม็ก เช็คอิน",
+      "playerId": "p_3fd83nijoe"
+    },
+    {
+      "at": 1793350089067,
+      "kind": "player.checkin",
+      "text": "พี่บอม เช็คอิน",
+      "playerId": "p_m3ojvdfpn0"
+    },
+    {
+      "at": 1793350089082,
+      "kind": "player.checkin",
+      "text": "พี่คิง เช็คอิน",
+      "playerId": "p_q165dvkkxi"
+    },
+    {
+      "at": 1793350089093,
+      "kind": "player.checkin",
+      "text": "มิ้นชาย เช็คอิน",
+      "playerId": "p_wkxmea5l6k"
+    },
+    {
+      "at": 1793350089100,
+      "kind": "player.checkin",
+      "text": "มิกกี้ เช็คอิน",
+      "playerId": "p_kszf8rzu4d"
+    },
+    {
+      "at": 1793350089108,
+      "kind": "player.checkin",
+      "text": "แนน เช็คอิน",
+      "playerId": "p_7abt4a6j42"
+    },
+    {
+      "at": 1793350089116,
+      "kind": "player.checkin",
+      "text": "เอ เช็คอิน",
+      "playerId": "p_is0bppr1va"
+    },
+    {
+      "at": 1793350089125,
+      "kind": "player.checkin",
+      "text": "หลิน เช็คอิน",
+      "playerId": "p_wse74h0bhl"
+    },
+    {
+      "at": 1793350096355,
+      "kind": "match.start",
+      "text": "คอร์ต 1: เบิร์ด, จ๋วย, บอล, พี่นิว",
+      "matchId": "m_tairwoceeb"
+    },
+    {
+      "at": 1793350098229,
+      "kind": "match.start",
+      "text": "คอร์ต 2: พี่เทพ, แอนดริว, แพทริก, พอย",
+      "matchId": "m_ujjrq1cfud"
+    },
+    {
+      "at": 1793350100312,
+      "kind": "match.start",
+      "text": "คอร์ต 3: บูม, ธี, นน, เน",
+      "matchId": "m_jxmuolchg8"
+    },
+    {
+      "at": 1793350102495,
+      "kind": "match.start",
+      "text": "คอร์ต 4: น๊อตโตะ, พี่อั้ม, ลิงน้อย, พี่ตี๋",
+      "matchId": "m_g54z43cj4v"
+    },
+    {
+      "at": 1793350105073,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ซัน, กร, กอล์ฟ, เบลชาย"
+    },
+    {
+      "at": 1793350106566,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ปัน, ปาล์ม, แม็ก, พี่บอม"
+    },
+    {
+      "at": 1793350108877,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พลอยปภัส, มะปราง, ไว, บูม"
+    },
+    {
+      "at": 1793350111301,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ธี, น๊อตโตะ, นน, ลิงน้อย"
     }
   ],
   "settings": {
