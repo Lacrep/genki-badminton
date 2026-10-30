@@ -10,32 +10,32 @@
     {
       "index": 0,
       "name": "คอร์ต 1",
-      "currentMatchId": "m_tairwoceeb"
+      "currentMatchId": null
     },
     {
       "index": 1,
       "name": "คอร์ต 2",
-      "currentMatchId": "m_ujjrq1cfud"
+      "currentMatchId": null
     },
     {
       "index": 2,
       "name": "คอร์ต 3",
-      "currentMatchId": "m_jxmuolchg8"
+      "currentMatchId": null
     },
     {
       "index": 3,
       "name": "คอร์ต 4",
-      "currentMatchId": "m_g54z43cj4v"
+      "currentMatchId": null
     }
   ],
   "players": [
     {
       "playerId": "p_0aamglvm9a",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793350088853,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793350234228,
+      "gamesPlayed": 1,
+      "playedMs": 135999,
       "waitedMs": 9376,
       "longestWaitMs": 9376,
       "wins": 0,
@@ -46,11 +46,11 @@
     },
     {
       "playerId": "p_cnm4rzo5t5",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793350088861,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793350230723,
+      "gamesPlayed": 1,
+      "playedMs": 134369,
       "waitedMs": 7493,
       "longestWaitMs": 7493,
       "wins": 0,
@@ -61,11 +61,11 @@
     },
     {
       "playerId": "p_bis0ufc9h8",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793350088869,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793350234228,
+      "gamesPlayed": 1,
+      "playedMs": 135999,
       "waitedMs": 9360,
       "longestWaitMs": 9360,
       "wins": 0,
@@ -76,11 +76,11 @@
     },
     {
       "playerId": "p_manw7oisvz",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793350088878,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793350230723,
+      "gamesPlayed": 1,
+      "playedMs": 134369,
       "waitedMs": 7476,
       "longestWaitMs": 7476,
       "wins": 0,
@@ -91,11 +91,11 @@
     },
     {
       "playerId": "p_m56exs4ags",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793350088886,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793350230723,
+      "gamesPlayed": 1,
+      "playedMs": 134369,
       "waitedMs": 7468,
       "longestWaitMs": 7468,
       "wins": 0,
@@ -106,11 +106,11 @@
     },
     {
       "playerId": "p_fpacic3m1r",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793350088893,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793350230723,
+      "gamesPlayed": 1,
+      "playedMs": 134369,
       "waitedMs": 7461,
       "longestWaitMs": 7461,
       "wins": 0,
@@ -121,11 +121,11 @@
     },
     {
       "playerId": "p_3rve3mtxq3",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793350088904,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793350234228,
+      "gamesPlayed": 1,
+      "playedMs": 135999,
       "waitedMs": 9325,
       "longestWaitMs": 9325,
       "wins": 0,
@@ -136,11 +136,11 @@
     },
     {
       "playerId": "p_3lw85dks0g",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793350088911,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793350234228,
+      "gamesPlayed": 1,
+      "playedMs": 135999,
       "waitedMs": 9318,
       "longestWaitMs": 9318,
       "wins": 0,
@@ -151,11 +151,11 @@
     },
     {
       "playerId": "p_xz9wud06un",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793350088917,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793350237485,
+      "gamesPlayed": 1,
+      "playedMs": 137173,
       "waitedMs": 11395,
       "longestWaitMs": 11395,
       "wins": 0,
@@ -166,11 +166,11 @@
     },
     {
       "playerId": "p_npi3xmajpe",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793350088924,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793350237485,
+      "gamesPlayed": 1,
+      "playedMs": 137173,
       "waitedMs": 11388,
       "longestWaitMs": 11388,
       "wins": 0,
@@ -181,11 +181,11 @@
     },
     {
       "playerId": "p_xf3iqplno6",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793350088932,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793350237485,
+      "gamesPlayed": 1,
+      "playedMs": 137173,
       "waitedMs": 11380,
       "longestWaitMs": 11380,
       "wins": 0,
@@ -196,11 +196,11 @@
     },
     {
       "playerId": "p_vrlbf0860e",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793350088948,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793350237485,
+      "gamesPlayed": 1,
+      "playedMs": 137173,
       "waitedMs": 11364,
       "longestWaitMs": 11364,
       "wins": 0,
@@ -211,11 +211,11 @@
     },
     {
       "playerId": "p_qi7fu5m1ih",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793350088958,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793350241362,
+      "gamesPlayed": 1,
+      "playedMs": 138867,
       "waitedMs": 13537,
       "longestWaitMs": 13537,
       "wins": 0,
@@ -226,11 +226,11 @@
     },
     {
       "playerId": "p_qe4j6866il",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793350088965,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793350241362,
+      "gamesPlayed": 1,
+      "playedMs": 138867,
       "waitedMs": 13530,
       "longestWaitMs": 13530,
       "wins": 0,
@@ -241,11 +241,11 @@
     },
     {
       "playerId": "p_7wcobglk7y",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793350088973,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793350241362,
+      "gamesPlayed": 1,
+      "playedMs": 138867,
       "waitedMs": 13522,
       "longestWaitMs": 13522,
       "wins": 0,
@@ -256,11 +256,11 @@
     },
     {
       "playerId": "p_hwixawkd5d",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793350088980,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793350241362,
+      "gamesPlayed": 1,
+      "playedMs": 138867,
       "waitedMs": 13515,
       "longestWaitMs": 13515,
       "wins": 0,
@@ -540,10 +540,11 @@
         "p_fpacic3m1r"
       ],
       "startedAt": 1793350096354,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "auto",
       "levelGap": 0,
-      "maxWaitAtStart": 7493
+      "maxWaitAtStart": 7493,
+      "endedAt": 1793350230723
     },
     {
       "id": "m_ujjrq1cfud",
@@ -559,10 +560,11 @@
         "p_3lw85dks0g"
       ],
       "startedAt": 1793350098229,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "auto",
       "levelGap": 1,
-      "maxWaitAtStart": 9376
+      "maxWaitAtStart": 9376,
+      "endedAt": 1793350234228
     },
     {
       "id": "m_jxmuolchg8",
@@ -578,10 +580,11 @@
         "p_vrlbf0860e"
       ],
       "startedAt": 1793350100312,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "auto",
       "levelGap": 0,
-      "maxWaitAtStart": 11395
+      "maxWaitAtStart": 11395,
+      "endedAt": 1793350237485
     },
     {
       "id": "m_g54z43cj4v",
@@ -597,10 +600,11 @@
         "p_hwixawkd5d"
       ],
       "startedAt": 1793350102495,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "auto",
       "levelGap": 0,
-      "maxWaitAtStart": 13537
+      "maxWaitAtStart": 13537,
+      "endedAt": 1793350241362
     }
   ],
   "planned": [
@@ -912,6 +916,30 @@
       "at": 1793350111301,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: ธี, น๊อตโตะ, นน, ลิงน้อย"
+    },
+    {
+      "at": 1793350230724,
+      "kind": "match.end",
+      "text": "จบเกม #1 คอร์ต 1",
+      "matchId": "m_tairwoceeb"
+    },
+    {
+      "at": 1793350234228,
+      "kind": "match.end",
+      "text": "จบเกม #2 คอร์ต 2",
+      "matchId": "m_ujjrq1cfud"
+    },
+    {
+      "at": 1793350237485,
+      "kind": "match.end",
+      "text": "จบเกม #3 คอร์ต 3",
+      "matchId": "m_jxmuolchg8"
+    },
+    {
+      "at": 1793350241362,
+      "kind": "match.end",
+      "text": "จบเกม #4 คอร์ต 4",
+      "matchId": "m_g54z43cj4v"
     }
   ],
   "settings": {
