@@ -1,0 +1,53 @@
+{
+  "id": "s_7x453yeb1q",
+  "name": "เทสเปิดก๊วน",
+  "date": "2026-10-30",
+  "venue": "The 18 Badminton Club",
+  "startAt": 1793348505710,
+  "status": "live",
+  "code": "QST6",
+  "courts": [
+    {
+      "index": 0,
+      "name": "คอร์ต 1",
+      "currentMatchId": null
+    },
+    {
+      "index": 1,
+      "name": "คอร์ต 2",
+      "currentMatchId": null
+    }
+  ],
+  "players": [],
+  "matches": [],
+  "planned": [],
+  "events": [
+    {
+      "at": 1793348505710,
+      "kind": "session.start",
+      "text": "เปิดก๊วน"
+    }
+  ],
+  "settings": {
+    "maxLevelGap": 1,
+    "waitWeight": 1,
+    "gamesBehindWeight": 4,
+    "varietyWeight": 6,
+    "levelWeight": 8,
+    "warnWaitMinutes": 8,
+    "dongWaitMinutes": 15,
+    "targetGameMinutes": 20,
+    "defaultMatchType": "auto",
+    "callSound": true
+  },
+  "fees": {
+    "mode": "club",
+    "courtFeePerHead": 70,
+    "shuttlePrice": 25,
+    "shuttleCostTotal": 0,
+    "courtCost": 0,
+    "extraCost": 0,
+    "roundTo": 1,
+    "promptPay": "นาย ศุภกฤษณ์ วิเศษโสภากุล"
+  }
+}
