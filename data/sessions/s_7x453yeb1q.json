@@ -4,7 +4,7 @@
   "date": "2026-10-30",
   "venue": "The 18 Badminton Club",
   "startAt": 1793348505710,
-  "status": "live",
+  "status": "ended",
   "code": "QST6",
   "courts": [
     {
@@ -43,18 +43,19 @@
     },
     {
       "playerId": "p_0aamglvm9a",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793348527322,
-      "queueSince": 1793349116041,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 359563,
-      "waitedMs": 229156,
-      "longestWaitMs": 156100,
+      "waitedMs": 390363,
+      "longestWaitMs": 161207,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "leftAt": 1793349277248
     },
     {
       "playerId": "p_3lw85dks0g",
@@ -92,48 +93,51 @@
     },
     {
       "playerId": "p_fpacic3m1r",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793348527339,
-      "queueSince": 1793349116041,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 382440,
-      "waitedMs": 206262,
+      "waitedMs": 367469,
       "longestWaitMs": 182345,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "leftAt": 1793349277248
     },
     {
       "playerId": "p_72p7uc1r13",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793348666529,
-      "queueSince": 1793348930896,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 247474,
-      "waitedMs": 16893,
-      "longestWaitMs": 16893,
+      "waitedMs": 363245,
+      "longestWaitMs": 346352,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "leftAt": 1793349277248
     },
     {
       "playerId": "p_vlg61a1abs",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793348666536,
-      "queueSince": 1793349125088,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 312764,
-      "waitedMs": 145788,
-      "longestWaitMs": 145788,
+      "waitedMs": 297948,
+      "longestWaitMs": 152160,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "leftAt": 1793349277248
     },
     {
       "playerId": "p_ihc1omlql8",
@@ -171,63 +175,67 @@
     },
     {
       "playerId": "p_hwixawkd5d",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793348666554,
-      "queueSince": 1793349125088,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 312764,
-      "waitedMs": 145770,
-      "longestWaitMs": 145770,
+      "waitedMs": 297930,
+      "longestWaitMs": 152160,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "leftAt": 1793349277248
     },
     {
       "playerId": "p_6y1jo5emkk",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793348666560,
-      "queueSince": 1793349125088,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 312764,
-      "waitedMs": 145764,
-      "longestWaitMs": 145764,
+      "waitedMs": 297924,
+      "longestWaitMs": 152160,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "leftAt": 1793349277248
     },
     {
       "playerId": "p_w2231p1wkm",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793348666566,
-      "queueSince": 1793349125088,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 312764,
-      "waitedMs": 145758,
-      "longestWaitMs": 145758,
+      "waitedMs": 297918,
+      "longestWaitMs": 152160,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "leftAt": 1793349277248
     },
     {
       "playerId": "p_qe4j6866il",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793348666572,
-      "queueSince": 1793349112245,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 230712,
-      "waitedMs": 214961,
+      "waitedMs": 379964,
       "longestWaitMs": 214961,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "leftAt": 1793349277248
     }
   ],
   "matches": [
@@ -691,6 +699,11 @@
       "kind": "player.checkout",
       "text": "พอย จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_3lw85dks0g"
+    },
+    {
+      "at": 1793349277248,
+      "kind": "session.end",
+      "text": "ปิดก๊วน"
     }
   ],
   "settings": {
@@ -714,5 +727,6 @@
     "extraCost": 0,
     "roundTo": 1,
     "promptPay": "นาย ศุภกฤษณ์ วิเศษโสภากุล"
-  }
+  },
+  "endAt": 1793349277248
 }
