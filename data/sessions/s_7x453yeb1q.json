@@ -71,18 +71,20 @@
     },
     {
       "playerId": "p_cnm4rzo5t5",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793348527333,
-      "queueSince": 1793349112245,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 501063,
-      "waitedMs": 83849,
+      "waitedMs": 136135,
       "longestWaitMs": 59926,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793349164531,
+      "leftAt": 1793349164531
     },
     {
       "playerId": "p_fpacic3m1r",
@@ -131,33 +133,37 @@
     },
     {
       "playerId": "p_ihc1omlql8",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793348666542,
-      "queueSince": 1793349116041,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 359563,
-      "waitedMs": 89936,
+      "waitedMs": 138906,
       "longestWaitMs": 73056,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793349165011,
+      "leftAt": 1793349165011
     },
     {
       "playerId": "p_0tkx8luk7o",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793348666548,
-      "queueSince": 1793349116041,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 359563,
-      "waitedMs": 89930,
+      "waitedMs": 139622,
       "longestWaitMs": 73056,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793349165733,
+      "leftAt": 1793349165733
     },
     {
       "playerId": "p_hwixawkd5d",
@@ -322,23 +328,6 @@
       "endedAt": 1793349116041
     }
   ],
-  "planned": [
-    {
-      "id": "pl_t9wsiallzr",
-      "type": "D",
-      "teamA": [
-        "p_manw7oisvz",
-        "p_cnm4rzo5t5"
-      ],
-      "teamB": [
-        "p_fpacic3m1r",
-        "p_0aamglvm9a"
-      ],
-      "createdAt": 1793348846487,
-      "createdBy": "manual",
-      "levelGap": 1
-    }
-  ],
   "planned": [],
   "events": [
     {
@@ -488,6 +477,42 @@
       "kind": "match.end",
       "text": "จบเกม #3 คอร์ต 3",
       "matchId": "m_8ywgl2kvmt"
+    },
+    {
+      "at": 1793349164531,
+      "kind": "pay",
+      "text": "เบิร์ด จ่ายแล้ว",
+      "playerId": "p_cnm4rzo5t5"
+    },
+    {
+      "at": 1793349164531,
+      "kind": "player.checkout",
+      "text": "เบิร์ด จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_cnm4rzo5t5"
+    },
+    {
+      "at": 1793349165011,
+      "kind": "pay",
+      "text": "พรฟ้า จ่ายแล้ว",
+      "playerId": "p_ihc1omlql8"
+    },
+    {
+      "at": 1793349165011,
+      "kind": "player.checkout",
+      "text": "พรฟ้า จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_ihc1omlql8"
+    },
+    {
+      "at": 1793349165733,
+      "kind": "pay",
+      "text": "พลอยปภัส จ่ายแล้ว",
+      "playerId": "p_0tkx8luk7o"
+    },
+    {
+      "at": 1793349165733,
+      "kind": "player.checkout",
+      "text": "พลอยปภัส จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_0tkx8luk7o"
     }
   ],
   "settings": {
