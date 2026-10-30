@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "node scripts/check-node.cjs && vite",
     "build": "node scripts/check-node.cjs && vite build && node scripts/build-server.mjs",
-    "start": "node dist/boot.js",
+    "start": "node scripts/start.mjs",
     "check": "tsc -b",
     "test": "vitest run",
     "test:watch": "vitest",

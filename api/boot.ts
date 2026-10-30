@@ -11,6 +11,7 @@ import { z } from "zod"
 import { type Level, type MatchType, type RosterPlayer, MAX_LEVEL, buildLabel, displayName, scoreLabel, thaiTime } from "@shared/types"
 import { suggestMatch } from "./matching"
 import { billFilename, billWorkbook } from "./billsheet"
+import { flushBeforeShutdown } from "./git-autosync"
 import {
   type CreateSessionInput,
   StoreError,
@@ -788,4 +789,17 @@ if (process.env.NODE_ENV !== "development") {
     }
     console.log(lines.join("\n"))
   })
+
+  /**
+   * ปิดเครื่องอย่างสุภาพ — สำคัญตอนรันแบบ GIT_AUTOSYNC (เช่นบน Render free)
+   * เพราะดิสก์จะถูกล้างทันทีที่โปรเซสตาย ถ้าไม่รีบบันทึกขึ้น git ก่อน
+   * ข้อมูลล่าสุดในรอบนั้นจะหายไปเลย (ปกติไม่ได้เปิด GIT_AUTOSYNC ก็เป็น no-op ทันที)
+   */
+  const shutdown = async (signal: string) => {
+    console.log(`\n${signal} — กำลังปิดเซิร์ฟเวอร์...`)
+    await flushBeforeShutdown()
+    process.exit(0)
+  }
+  process.on("SIGTERM", () => void shutdown("SIGTERM"))
+  process.on("SIGINT", () => void shutdown("SIGINT"))
 }

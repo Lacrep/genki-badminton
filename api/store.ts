@@ -46,6 +46,7 @@ import {
 } from "@shared/types"
 import { CLUB } from "@shared/club"
 import { forecastQueue } from "./matching"
+import { markDataDirty } from "./git-autosync"
 
 const DATA_DIR = path.resolve(process.cwd(), process.env.DATA_DIR || "./data")
 const ROSTER_FILE = path.join(DATA_DIR, "roster.json")
@@ -137,6 +138,9 @@ function writeJson(file: string, value: unknown) {
   } catch {
     // ระบบไฟล์บางตัว (เช่นบน Windows) fsync โฟลเดอร์ไม่ได้ — ข้ามไป
   }
+
+  // เปิด GIT_AUTOSYNC ไว้เท่านั้นถึงจะทำอะไร (ปกติเป็น no-op) — ดู api/git-autosync.ts
+  markDataDirty()
 }
 
 export function id(prefix = ""): string {
