@@ -994,6 +994,18 @@
       "kind": "player.checkout",
       "text": "พี่เทพ จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_0aamglvm9a"
+    },
+    {
+      "at": 1793350284155,
+      "kind": "fee",
+      "text": "เบิร์ด ปรับลูกที่คิดเป็น +1 ลูก",
+      "playerId": "p_cnm4rzo5t5"
+    },
+    {
+      "at": 1793350285240,
+      "kind": "fee",
+      "text": "เบิร์ด ปรับลูกที่คิดเป็น 0 ลูก",
+      "playerId": "p_cnm4rzo5t5"
     }
   ],
   "settings": {
