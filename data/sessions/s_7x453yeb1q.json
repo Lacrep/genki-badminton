@@ -280,7 +280,23 @@
       "maxWaitAtStart": 145788
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_t9wsiallzr",
+      "type": "D",
+      "teamA": [
+        "p_manw7oisvz",
+        "p_cnm4rzo5t5"
+      ],
+      "teamB": [
+        "p_fpacic3m1r",
+        "p_0aamglvm9a"
+      ],
+      "createdAt": 1793348846487,
+      "createdBy": "manual",
+      "levelGap": 1
+    }
+  ],
   "events": [
     {
       "at": 1793348505710,
@@ -388,6 +404,11 @@
       "kind": "match.end",
       "text": "จบเกม #1 คอร์ต 1",
       "matchId": "m_778rtrfa6w"
+    },
+    {
+      "at": 1793348846487,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: จ๋วย, เบิร์ด, พี่นิว, พี่เทพ"
     }
   ],
   "settings": {
