@@ -71,9 +71,9 @@
     },
     {
       "playerId": "p_cnm4rzo5t5",
-      "status": "left",
+      "status": "queue",
       "checkInAt": 1793348527333,
-      "queueSince": null,
+      "queueSince": 1793349175228,
       "gamesPlayed": 2,
       "playedMs": 501063,
       "waitedMs": 136135,
@@ -83,8 +83,7 @@
       "draws": 0,
       "boost": 0,
       "paid": true,
-      "paidAt": 1793349164531,
-      "leftAt": 1793349164531
+      "paidAt": 1793349164531
     },
     {
       "playerId": "p_fpacic3m1r",
@@ -513,6 +512,12 @@
       "kind": "player.checkout",
       "text": "พลอยปภัส จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_0tkx8luk7o"
+    },
+    {
+      "at": 1793349175229,
+      "kind": "player.checkin",
+      "text": "เบิร์ด เช็คอิน",
+      "playerId": "p_cnm4rzo5t5"
     }
   ],
   "settings": {
