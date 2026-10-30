@@ -31,18 +31,20 @@
   "players": [
     {
       "playerId": "p_0aamglvm9a",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793350088853,
-      "queueSince": 1793350234228,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 135999,
-      "waitedMs": 9376,
-      "longestWaitMs": 9376,
+      "waitedMs": 47750,
+      "longestWaitMs": 38374,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793350272602,
+      "leftAt": 1793350272602
     },
     {
       "playerId": "p_cnm4rzo5t5",
@@ -72,7 +74,8 @@
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "noBill": true
     },
     {
       "playerId": "p_manw7oisvz",
@@ -106,18 +109,20 @@
     },
     {
       "playerId": "p_fpacic3m1r",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793350088893,
-      "queueSince": 1793350230723,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 134369,
-      "waitedMs": 7461,
-      "longestWaitMs": 7461,
+      "waitedMs": 48616,
+      "longestWaitMs": 41155,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793350271878,
+      "leftAt": 1793350271878
     },
     {
       "playerId": "p_3rve3mtxq3",
@@ -237,7 +242,8 @@
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "noBill": true
     },
     {
       "playerId": "p_7wcobglk7y",
@@ -940,6 +946,54 @@
       "kind": "match.end",
       "text": "จบเกม #4 คอร์ต 4",
       "matchId": "m_g54z43cj4v"
+    },
+    {
+      "at": 1793350267173,
+      "kind": "fee",
+      "text": "แพทริก ยกเว้นค่าสนาม",
+      "playerId": "p_bis0ufc9h8"
+    },
+    {
+      "at": 1793350268904,
+      "kind": "fee",
+      "text": "แพทริก กลับมาคิดค่าสนาม",
+      "playerId": "p_bis0ufc9h8"
+    },
+    {
+      "at": 1793350269631,
+      "kind": "fee",
+      "text": "แพทริก ไม่คิดเงิน (เอาออกจากบิล)",
+      "playerId": "p_bis0ufc9h8"
+    },
+    {
+      "at": 1793350271005,
+      "kind": "fee",
+      "text": "พี่อั้ม ไม่คิดเงิน (เอาออกจากบิล)",
+      "playerId": "p_qe4j6866il"
+    },
+    {
+      "at": 1793350271878,
+      "kind": "pay",
+      "text": "พี่นิว จ่ายแล้ว",
+      "playerId": "p_fpacic3m1r"
+    },
+    {
+      "at": 1793350271878,
+      "kind": "player.checkout",
+      "text": "พี่นิว จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_fpacic3m1r"
+    },
+    {
+      "at": 1793350272602,
+      "kind": "pay",
+      "text": "พี่เทพ จ่ายแล้ว",
+      "playerId": "p_0aamglvm9a"
+    },
+    {
+      "at": 1793350272602,
+      "kind": "player.checkout",
+      "text": "พี่เทพ จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_0aamglvm9a"
     }
   ],
   "settings": {
