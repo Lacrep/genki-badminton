@@ -71,19 +71,20 @@
     },
     {
       "playerId": "p_cnm4rzo5t5",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793348527333,
-      "queueSince": 1793349175228,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 501063,
-      "waitedMs": 136135,
+      "waitedMs": 145611,
       "longestWaitMs": 59926,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
       "paid": true,
-      "paidAt": 1793349164531
+      "paidAt": 1793349184704,
+      "leftAt": 1793349184704
     },
     {
       "playerId": "p_fpacic3m1r",
@@ -517,6 +518,24 @@
       "at": 1793349175229,
       "kind": "player.checkin",
       "text": "เบิร์ด เช็คอิน",
+      "playerId": "p_cnm4rzo5t5"
+    },
+    {
+      "at": 1793349183720,
+      "kind": "pay",
+      "text": "เบิร์ด ยกเลิกการจ่าย",
+      "playerId": "p_cnm4rzo5t5"
+    },
+    {
+      "at": 1793349184704,
+      "kind": "pay",
+      "text": "เบิร์ด จ่ายแล้ว",
+      "playerId": "p_cnm4rzo5t5"
+    },
+    {
+      "at": 1793349184704,
+      "kind": "player.checkout",
+      "text": "เบิร์ด จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_cnm4rzo5t5"
     }
   ],
