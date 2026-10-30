@@ -18,7 +18,83 @@
       "currentMatchId": null
     }
   ],
-  "players": [],
+  "players": [
+    {
+      "playerId": "p_manw7oisvz",
+      "status": "queue",
+      "checkInAt": 1793348527316,
+      "queueSince": 1793348527316,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_0aamglvm9a",
+      "status": "queue",
+      "checkInAt": 1793348527322,
+      "queueSince": 1793348527322,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_3lw85dks0g",
+      "status": "queue",
+      "checkInAt": 1793348527327,
+      "queueSince": 1793348527327,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_cnm4rzo5t5",
+      "status": "queue",
+      "checkInAt": 1793348527333,
+      "queueSince": 1793348527333,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_fpacic3m1r",
+      "status": "queue",
+      "checkInAt": 1793348527339,
+      "queueSince": 1793348527339,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    }
+  ],
   "matches": [],
   "planned": [],
   "events": [
@@ -26,6 +102,36 @@
       "at": 1793348505710,
       "kind": "session.start",
       "text": "เปิดก๊วน"
+    },
+    {
+      "at": 1793348527316,
+      "kind": "player.checkin",
+      "text": "จ๋วย เช็คอิน",
+      "playerId": "p_manw7oisvz"
+    },
+    {
+      "at": 1793348527322,
+      "kind": "player.checkin",
+      "text": "พี่เทพ เช็คอิน",
+      "playerId": "p_0aamglvm9a"
+    },
+    {
+      "at": 1793348527327,
+      "kind": "player.checkin",
+      "text": "พอย เช็คอิน",
+      "playerId": "p_3lw85dks0g"
+    },
+    {
+      "at": 1793348527333,
+      "kind": "player.checkin",
+      "text": "เบิร์ด เช็คอิน",
+      "playerId": "p_cnm4rzo5t5"
+    },
+    {
+      "at": 1793348527339,
+      "kind": "player.checkin",
+      "text": "พี่นิว เช็คอิน",
+      "playerId": "p_fpacic3m1r"
     }
   ],
   "settings": {
