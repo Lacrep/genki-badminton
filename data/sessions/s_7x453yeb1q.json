@@ -10,7 +10,7 @@
     {
       "index": 0,
       "name": "คอร์ต 1",
-      "currentMatchId": "m_778rtrfa6w"
+      "currentMatchId": null
     },
     {
       "index": 1,
@@ -26,11 +26,11 @@
   "players": [
     {
       "playerId": "p_manw7oisvz",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793348527316,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793348821607,
+      "gamesPlayed": 1,
+      "playedMs": 270351,
       "waitedMs": 23940,
       "longestWaitMs": 23940,
       "wins": 0,
@@ -56,11 +56,11 @@
     },
     {
       "playerId": "p_3lw85dks0g",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793348527327,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793348821607,
+      "gamesPlayed": 1,
+      "playedMs": 270351,
       "waitedMs": 23929,
       "longestWaitMs": 23929,
       "wins": 0,
@@ -71,11 +71,11 @@
     },
     {
       "playerId": "p_cnm4rzo5t5",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793348527333,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793348821607,
+      "gamesPlayed": 1,
+      "playedMs": 270351,
       "waitedMs": 23923,
       "longestWaitMs": 23923,
       "wins": 0,
@@ -86,11 +86,11 @@
     },
     {
       "playerId": "p_fpacic3m1r",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793348527339,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793348821607,
+      "gamesPlayed": 1,
+      "playedMs": 270351,
       "waitedMs": 23917,
       "longestWaitMs": 23917,
       "wins": 0,
@@ -235,10 +235,11 @@
         "p_fpacic3m1r"
       ],
       "startedAt": 1793348551256,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "auto",
       "levelGap": 0,
-      "maxWaitAtStart": 23940
+      "maxWaitAtStart": 23940,
+      "endedAt": 1793348821607
     },
     {
       "id": "m_22a65fi467",
@@ -381,6 +382,12 @@
       "kind": "match.start",
       "text": "คอร์ต 3: พี่ตี๋, แบงค์, มะปราง, พี่ฟิว",
       "matchId": "m_8ywgl2kvmt"
+    },
+    {
+      "at": 1793348821607,
+      "kind": "match.end",
+      "text": "จบเกม #1 คอร์ต 1",
+      "matchId": "m_778rtrfa6w"
     }
   ],
   "settings": {
