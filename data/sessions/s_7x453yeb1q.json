@@ -93,6 +93,126 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_72p7uc1r13",
+      "status": "queue",
+      "checkInAt": 1793348666529,
+      "queueSince": 1793348666529,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_vlg61a1abs",
+      "status": "queue",
+      "checkInAt": 1793348666536,
+      "queueSince": 1793348666536,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_ihc1omlql8",
+      "status": "queue",
+      "checkInAt": 1793348666542,
+      "queueSince": 1793348666542,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_0tkx8luk7o",
+      "status": "queue",
+      "checkInAt": 1793348666548,
+      "queueSince": 1793348666548,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_hwixawkd5d",
+      "status": "queue",
+      "checkInAt": 1793348666554,
+      "queueSince": 1793348666554,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_6y1jo5emkk",
+      "status": "queue",
+      "checkInAt": 1793348666560,
+      "queueSince": 1793348666560,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_w2231p1wkm",
+      "status": "queue",
+      "checkInAt": 1793348666566,
+      "queueSince": 1793348666566,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_qe4j6866il",
+      "status": "queue",
+      "checkInAt": 1793348666572,
+      "queueSince": 1793348666572,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -158,6 +278,54 @@
       "kind": "match.start",
       "text": "คอร์ต 1: จ๋วย, พอย, เบิร์ด, พี่นิว",
       "matchId": "m_778rtrfa6w"
+    },
+    {
+      "at": 1793348666529,
+      "kind": "player.checkin",
+      "text": "บอมเบ เช็คอิน",
+      "playerId": "p_72p7uc1r13"
+    },
+    {
+      "at": 1793348666536,
+      "kind": "player.checkin",
+      "text": "แบงค์ เช็คอิน",
+      "playerId": "p_vlg61a1abs"
+    },
+    {
+      "at": 1793348666542,
+      "kind": "player.checkin",
+      "text": "พรฟ้า เช็คอิน",
+      "playerId": "p_ihc1omlql8"
+    },
+    {
+      "at": 1793348666548,
+      "kind": "player.checkin",
+      "text": "พลอยปภัส เช็คอิน",
+      "playerId": "p_0tkx8luk7o"
+    },
+    {
+      "at": 1793348666555,
+      "kind": "player.checkin",
+      "text": "พี่ตี๋ เช็คอิน",
+      "playerId": "p_hwixawkd5d"
+    },
+    {
+      "at": 1793348666560,
+      "kind": "player.checkin",
+      "text": "พี่ฟิว เช็คอิน",
+      "playerId": "p_6y1jo5emkk"
+    },
+    {
+      "at": 1793348666566,
+      "kind": "player.checkin",
+      "text": "มะปราง เช็คอิน",
+      "playerId": "p_w2231p1wkm"
+    },
+    {
+      "at": 1793348666572,
+      "kind": "player.checkin",
+      "text": "พี่อั้ม เช็คอิน",
+      "playerId": "p_qe4j6866il"
     }
   ],
   "settings": {
