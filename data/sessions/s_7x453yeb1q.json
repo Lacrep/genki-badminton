@@ -15,7 +15,7 @@
     {
       "index": 1,
       "name": "คอร์ต 2",
-      "currentMatchId": null
+      "currentMatchId": "m_22a65fi467"
     }
   ],
   "players": [
@@ -36,13 +36,13 @@
     },
     {
       "playerId": "p_0aamglvm9a",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793348527322,
-      "queueSince": 1793348527322,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 156100,
+      "longestWaitMs": 156100,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -96,13 +96,13 @@
     },
     {
       "playerId": "p_72p7uc1r13",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793348666529,
-      "queueSince": 1793348666529,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 16893,
+      "longestWaitMs": 16893,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -126,13 +126,13 @@
     },
     {
       "playerId": "p_ihc1omlql8",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793348666542,
-      "queueSince": 1793348666542,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 16880,
+      "longestWaitMs": 16880,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -141,13 +141,13 @@
     },
     {
       "playerId": "p_0tkx8luk7o",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793348666548,
-      "queueSince": 1793348666548,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 16874,
+      "longestWaitMs": 16874,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -234,6 +234,25 @@
       "createdBy": "auto",
       "levelGap": 0,
       "maxWaitAtStart": 23940
+    },
+    {
+      "id": "m_22a65fi467",
+      "no": 2,
+      "courtIndex": 1,
+      "type": "D",
+      "teamA": [
+        "p_0aamglvm9a",
+        "p_0tkx8luk7o"
+      ],
+      "teamB": [
+        "p_ihc1omlql8",
+        "p_72p7uc1r13"
+      ],
+      "startedAt": 1793348683422,
+      "shuttles": 0,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 156100
     }
   ],
   "planned": [],
@@ -326,6 +345,12 @@
       "kind": "player.checkin",
       "text": "พี่อั้ม เช็คอิน",
       "playerId": "p_qe4j6866il"
+    },
+    {
+      "at": 1793348683423,
+      "kind": "match.start",
+      "text": "คอร์ต 2: พี่เทพ, พลอยปภัส, พรฟ้า, บอมเบ",
+      "matchId": "m_22a65fi467"
     }
   ],
   "settings": {
