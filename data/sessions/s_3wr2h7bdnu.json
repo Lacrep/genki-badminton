@@ -1,0 +1,63 @@
+{
+  "id": "s_3wr2h7bdnu",
+  "name": "ก๊วนวันศุกร์",
+  "date": "2026-10-30",
+  "venue": "The 18 Badminton Club",
+  "startAt": 1793350048746,
+  "status": "live",
+  "code": "F34F",
+  "courts": [
+    {
+      "index": 0,
+      "name": "คอร์ต 1",
+      "currentMatchId": null
+    },
+    {
+      "index": 1,
+      "name": "คอร์ต 2",
+      "currentMatchId": null
+    },
+    {
+      "index": 2,
+      "name": "คอร์ต 3",
+      "currentMatchId": null
+    },
+    {
+      "index": 3,
+      "name": "คอร์ต 4",
+      "currentMatchId": null
+    }
+  ],
+  "players": [],
+  "matches": [],
+  "planned": [],
+  "events": [
+    {
+      "at": 1793350048746,
+      "kind": "session.start",
+      "text": "เปิดก๊วน"
+    }
+  ],
+  "settings": {
+    "maxLevelGap": 1,
+    "waitWeight": 1,
+    "gamesBehindWeight": 4,
+    "varietyWeight": 6,
+    "levelWeight": 8,
+    "warnWaitMinutes": 8,
+    "dongWaitMinutes": 15,
+    "targetGameMinutes": 20,
+    "defaultMatchType": "auto",
+    "callSound": true
+  },
+  "fees": {
+    "mode": "club",
+    "courtFeePerHead": 70,
+    "shuttlePrice": 25,
+    "shuttleCostTotal": 0,
+    "courtCost": 0,
+    "extraCost": 0,
+    "roundTo": 1,
+    "promptPay": "นาย ศุภกฤษณ์ วิเศษโสภากุล"
+  }
+}
