@@ -10,12 +10,12 @@
     {
       "index": 0,
       "name": "คอร์ต 1",
-      "currentMatchId": "m_k7xn1mmd19"
+      "currentMatchId": null
     },
     {
       "index": 1,
       "name": "คอร์ต 2",
-      "currentMatchId": "m_ywpvmmozhs"
+      "currentMatchId": null
     },
     {
       "index": 2,
@@ -26,11 +26,11 @@
   "players": [
     {
       "playerId": "p_manw7oisvz",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793348527316,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 270351,
+      "queueSince": 1793349112245,
+      "gamesPlayed": 2,
+      "playedMs": 501063,
       "waitedMs": 83866,
       "longestWaitMs": 59926,
       "wins": 0,
@@ -41,11 +41,11 @@
     },
     {
       "playerId": "p_0aamglvm9a",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793348527322,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 247474,
+      "queueSince": 1793349116041,
+      "gamesPlayed": 2,
+      "playedMs": 359563,
       "waitedMs": 229156,
       "longestWaitMs": 156100,
       "wins": 0,
@@ -56,11 +56,11 @@
     },
     {
       "playerId": "p_3lw85dks0g",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793348527327,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 270351,
+      "queueSince": 1793349112245,
+      "gamesPlayed": 2,
+      "playedMs": 501063,
       "waitedMs": 83855,
       "longestWaitMs": 59926,
       "wins": 0,
@@ -71,11 +71,11 @@
     },
     {
       "playerId": "p_cnm4rzo5t5",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793348527333,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 270351,
+      "queueSince": 1793349112245,
+      "gamesPlayed": 2,
+      "playedMs": 501063,
       "waitedMs": 83849,
       "longestWaitMs": 59926,
       "wins": 0,
@@ -86,11 +86,11 @@
     },
     {
       "playerId": "p_fpacic3m1r",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793348527339,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 270351,
+      "queueSince": 1793349116041,
+      "gamesPlayed": 2,
+      "playedMs": 382440,
       "waitedMs": 206262,
       "longestWaitMs": 182345,
       "wins": 0,
@@ -131,11 +131,11 @@
     },
     {
       "playerId": "p_ihc1omlql8",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793348666542,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 247474,
+      "queueSince": 1793349116041,
+      "gamesPlayed": 2,
+      "playedMs": 359563,
       "waitedMs": 89936,
       "longestWaitMs": 73056,
       "wins": 0,
@@ -146,11 +146,11 @@
     },
     {
       "playerId": "p_0tkx8luk7o",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793348666548,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 247474,
+      "queueSince": 1793349116041,
+      "gamesPlayed": 2,
+      "playedMs": 359563,
       "waitedMs": 89930,
       "longestWaitMs": 73056,
       "wins": 0,
@@ -206,11 +206,11 @@
     },
     {
       "playerId": "p_qe4j6866il",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793348666572,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793349112245,
+      "gamesPlayed": 1,
+      "playedMs": 230712,
       "waitedMs": 214961,
       "longestWaitMs": 214961,
       "wins": 0,
@@ -294,10 +294,11 @@
         "p_cnm4rzo5t5"
       ],
       "startedAt": 1793348881533,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 1,
-      "maxWaitAtStart": 214961
+      "maxWaitAtStart": 214961,
+      "endedAt": 1793349112245
     },
     {
       "id": "m_ywpvmmozhs",
@@ -313,10 +314,11 @@
         "p_ihc1omlql8"
       ],
       "startedAt": 1793349003952,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 2,
-      "maxWaitAtStart": 182345
+      "maxWaitAtStart": 182345,
+      "endedAt": 1793349116041
     }
   ],
   "planned": [
@@ -465,6 +467,18 @@
       "at": 1793349003952,
       "kind": "match.start",
       "text": "คอร์ต 2: พลอยปภัส, พี่เทพ, พี่นิว, พรฟ้า",
+      "matchId": "m_ywpvmmozhs"
+    },
+    {
+      "at": 1793349112245,
+      "kind": "match.end",
+      "text": "จบเกม #4 คอร์ต 1",
+      "matchId": "m_k7xn1mmd19"
+    },
+    {
+      "at": 1793349116041,
+      "kind": "match.end",
+      "text": "จบเกม #5 คอร์ต 2",
       "matchId": "m_ywpvmmozhs"
     }
   ],
