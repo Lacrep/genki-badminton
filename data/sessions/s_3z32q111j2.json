@@ -1216,6 +1216,21 @@
   ],
   "planned": [
     {
+      "id": "pl_uvcm9nxuxw",
+      "type": "D",
+      "teamA": [
+        "p_y1a4x6164v",
+        "p_ch56wx3x3j"
+      ],
+      "teamB": [
+        "p_xscgffmd12",
+        "p_x5deq395fp"
+      ],
+      "createdAt": 1793418282212,
+      "createdBy": "manual",
+      "levelGap": 2
+    },
+    {
       "id": "pl_nw3y4khkb4",
       "type": "D",
       "teamA": [
@@ -2085,6 +2100,16 @@
       "at": 1793418172793,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: ภูมิ, จา, ไนท์, เน"
+    },
+    {
+      "at": 1793418282212,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: โซระ, โอ๊ต, เล็ก, เวฟ"
+    },
+    {
+      "at": 1793418283927,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
     }
   ],
   "settings": {
