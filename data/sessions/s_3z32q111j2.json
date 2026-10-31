@@ -400,6 +400,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_jwgpsjxb3h",
+      "status": "queue",
+      "checkInAt": 1793413217652,
+      "queueSince": 1793413217652,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -656,6 +671,12 @@
       "kind": "player.checkin",
       "text": "ปริม เช็คอิน",
       "playerId": "p_dqmf83x2h9"
+    },
+    {
+      "at": 1793413217653,
+      "kind": "player.checkin",
+      "text": "ไนท์ เช็คอิน",
+      "playerId": "p_jwgpsjxb3h"
     }
   ],
   "settings": {
