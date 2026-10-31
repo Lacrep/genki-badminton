@@ -32,7 +32,7 @@
     {
       "index": 4,
       "name": "คอร์ต 5",
-      "currentMatchId": "m_jkastrx7td"
+      "currentMatchId": null
     },
     {
       "index": 5,
@@ -73,11 +73,11 @@
     },
     {
       "playerId": "p_7abt4a6j42",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793411936816,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 1178180,
+      "queueSince": 1793416199868,
+      "gamesPlayed": 2,
+      "playedMs": 2485040,
       "waitedMs": 1778012,
       "longestWaitMs": 1202399,
       "wins": 0,
@@ -148,11 +148,11 @@
     },
     {
       "playerId": "p_x3znla8qn9",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412071401,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 1178180,
+      "queueSince": 1793416199868,
+      "gamesPlayed": 2,
+      "playedMs": 2485040,
       "waitedMs": 1643427,
       "longestWaitMs": 1202399,
       "wins": 0,
@@ -418,11 +418,11 @@
     },
     {
       "playerId": "p_zaui6hkcn1",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793413330680,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793416199868,
+      "gamesPlayed": 1,
+      "playedMs": 1306860,
       "waitedMs": 1562328,
       "longestWaitMs": 1562328,
       "wins": 0,
@@ -478,11 +478,11 @@
     },
     {
       "playerId": "p_suzv413d26",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793414253255,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793416199868,
+      "gamesPlayed": 1,
+      "playedMs": 1306860,
       "waitedMs": 639753,
       "longestWaitMs": 639753,
       "wins": 0,
@@ -783,10 +783,11 @@
         "p_zaui6hkcn1"
       ],
       "startedAt": 1793414893008,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 1,
-      "maxWaitAtStart": 1562328
+      "maxWaitAtStart": 1562328,
+      "endedAt": 1793416199868
     },
     {
       "id": "m_bzunkpxe9w",
@@ -1489,6 +1490,12 @@
       "at": 1793415996941,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: จา, โอ๊ต, ไกด์การบิน, เวฟ"
+    },
+    {
+      "at": 1793416199868,
+      "kind": "match.end",
+      "text": "จบเกม #8 คอร์ต 5",
+      "matchId": "m_jkastrx7td"
     }
   ],
   "settings": {
