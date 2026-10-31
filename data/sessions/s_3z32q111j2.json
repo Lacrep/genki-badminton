@@ -389,18 +389,21 @@
     },
     {
       "playerId": "p_04n5grksuu",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793413016839,
-      "queueSince": 1793423442115,
+      "queueSince": null,
       "gamesPlayed": 5,
       "playedMs": 6332520,
-      "waitedMs": 4092756,
+      "waitedMs": 4200189,
       "longestWaitMs": 1291489,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "shuttleAdjust": -1,
+      "paidAt": 1793423549548,
+      "leftAt": 1793423549548
     },
     {
       "playerId": "p_g6x4u5tabq",
@@ -419,18 +422,20 @@
     },
     {
       "playerId": "p_xlhr79w0ne",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793413157456,
-      "queueSince": 1793423444602,
+      "queueSince": null,
       "gamesPlayed": 5,
       "playedMs": 6278195,
-      "waitedMs": 4008951,
+      "waitedMs": 4119951,
       "longestWaitMs": 1337904,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793423555602,
+      "leftAt": 1793423555602
     },
     {
       "playerId": "p_dqmf83x2h9",
@@ -3478,6 +3483,36 @@
       "kind": "pay",
       "text": "พี่อ๋อง จ่ายแล้ว",
       "playerId": "p_ej0cyelb18"
+    },
+    {
+      "at": 1793423543485,
+      "kind": "fee",
+      "text": "พรีม ปรับลูกที่คิดเป็น -1 ลูก",
+      "playerId": "p_04n5grksuu"
+    },
+    {
+      "at": 1793423549548,
+      "kind": "pay",
+      "text": "พรีม จ่ายแล้ว",
+      "playerId": "p_04n5grksuu"
+    },
+    {
+      "at": 1793423549548,
+      "kind": "player.checkout",
+      "text": "พรีม จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_04n5grksuu"
+    },
+    {
+      "at": 1793423555602,
+      "kind": "pay",
+      "text": "ต้า จ่ายแล้ว",
+      "playerId": "p_xlhr79w0ne"
+    },
+    {
+      "at": 1793423555602,
+      "kind": "player.checkout",
+      "text": "ต้า จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_xlhr79w0ne"
     }
   ],
   "settings": {
