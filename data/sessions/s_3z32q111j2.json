@@ -1338,23 +1338,7 @@
       "maxWaitAtStart": 1387885
     }
   ],
-  "planned": [
-    {
-      "id": "pl_u95a21hv0h",
-      "type": "D",
-      "teamA": [
-        "p_7abt4a6j42",
-        "p_ihc1omlql8"
-      ],
-      "teamB": [
-        "p_zaui6hkcn1",
-        "p_ecpq3j2g0k"
-      ],
-      "createdAt": 1793419215425,
-      "createdBy": "manual",
-      "levelGap": 3
-    }
-  ],
+  "planned": [],
   "events": [
     {
       "at": 1793411712254,
@@ -2388,6 +2372,11 @@
       "kind": "player.checkout",
       "text": "ภูมิ จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_clsy13kb33"
+    },
+    {
+      "at": 1793419641434,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: แนน, พรฟ้า, ผิง, สุดหล่อ"
     }
   ],
   "settings": {
