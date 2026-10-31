@@ -566,23 +566,7 @@
       "maxWaitAtStart": 1068667
     }
   ],
-  "planned": [
-    {
-      "id": "pl_oozg3lcjrh",
-      "type": "D",
-      "teamA": [
-        "p_zaui6hkcn1",
-        "p_5pmcrc7d7c"
-      ],
-      "teamB": [
-        "p_gwdzyqk46n",
-        "p_x3znla8qn9"
-      ],
-      "createdAt": 1793413928717,
-      "createdBy": "manual",
-      "levelGap": 2
-    }
-  ],
+  "planned": [],
   "events": [
     {
       "at": 1793411712254,
@@ -849,6 +833,11 @@
       "at": 1793413928717,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: ผิง, โอม, หมิง, อีฟ"
+    },
+    {
+      "at": 1793413937072,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: ผิง, โอม, หมิง, อีฟ"
     }
   ],
   "settings": {
