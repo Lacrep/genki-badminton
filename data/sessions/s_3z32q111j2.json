@@ -480,19 +480,21 @@
     },
     {
       "playerId": "p_zaui6hkcn1",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793413330680,
-      "queueSince": 1793423444602,
+      "queueSince": null,
       "gamesPlayed": 3,
       "playedMs": 3640995,
-      "waitedMs": 6472927,
+      "waitedMs": 7820182,
       "longestWaitMs": 3817246,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false,
-      "shuttleAdjust": 1
+      "paid": true,
+      "shuttleAdjust": 1,
+      "paidAt": 1793424791857,
+      "leftAt": 1793424791857
     },
     {
       "playerId": "p_53y43qzll8",
@@ -3646,6 +3648,18 @@
       "kind": "player.checkout",
       "text": "สุดหล่อ จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_ecpq3j2g0k"
+    },
+    {
+      "at": 1793424791857,
+      "kind": "pay",
+      "text": "ผิง จ่ายแล้ว",
+      "playerId": "p_zaui6hkcn1"
+    },
+    {
+      "at": 1793424791857,
+      "kind": "player.checkout",
+      "text": "ผิง จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_zaui6hkcn1"
     }
   ],
   "settings": {
