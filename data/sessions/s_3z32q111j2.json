@@ -32,7 +32,7 @@
     {
       "index": 4,
       "name": "คอร์ต 5",
-      "currentMatchId": "m_mycygbljke"
+      "currentMatchId": null
     },
     {
       "index": 5,
@@ -48,11 +48,11 @@
   "players": [
     {
       "playerId": "p_vlg61a1abs",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793411851283,
-      "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 2068018,
+      "queueSince": 1793418772636,
+      "gamesPlayed": 3,
+      "playedMs": 3133056,
       "waitedMs": 3788297,
       "longestWaitMs": 1792711,
       "wins": 0,
@@ -183,11 +183,11 @@
     },
     {
       "playerId": "p_54w3lucivg",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412247952,
-      "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 3070395,
+      "queueSince": 1793418772636,
+      "gamesPlayed": 3,
+      "playedMs": 4135433,
       "waitedMs": 2389251,
       "longestWaitMs": 1273059,
       "wins": 0,
@@ -243,11 +243,11 @@
     },
     {
       "playerId": "p_xf3iqplno6",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412728836,
-      "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 2068018,
+      "queueSince": 1793418772636,
+      "gamesPlayed": 3,
+      "playedMs": 3133056,
       "waitedMs": 2910744,
       "longestWaitMs": 1162773,
       "wins": 0,
@@ -708,11 +708,11 @@
     },
     {
       "playerId": "p_m56exs4ags",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793417079171,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793418772636,
+      "gamesPlayed": 1,
+      "playedMs": 1065038,
       "waitedMs": 628427,
       "longestWaitMs": 628427,
       "wins": 0,
@@ -1153,10 +1153,11 @@
         "p_54w3lucivg"
       ],
       "startedAt": 1793417707598,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 1,
-      "maxWaitAtStart": 1162773
+      "maxWaitAtStart": 1162773,
+      "endedAt": 1793418772636
     },
     {
       "id": "m_jpkcjoqvgt",
@@ -2209,6 +2210,12 @@
       "at": 1793418700565,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: ปาล์ม, ไอซ์, พี่เทพ, Top"
+    },
+    {
+      "at": 1793418772636,
+      "kind": "match.end",
+      "text": "จบเกม #21 คอร์ต 5",
+      "matchId": "m_mycygbljke"
     }
   ],
   "settings": {
