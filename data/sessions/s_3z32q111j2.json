@@ -1069,6 +1069,21 @@
       "createdAt": 1793416917950,
       "createdBy": "manual",
       "levelGap": 3
+    },
+    {
+      "id": "pl_iykm7l4xrq",
+      "type": "D",
+      "teamA": [
+        "p_5pmcrc7d7c",
+        "p_zaui6hkcn1"
+      ],
+      "teamB": [
+        "p_jw88ens36l",
+        "p_suzv413d26"
+      ],
+      "createdAt": 1793416932854,
+      "createdBy": "auto",
+      "levelGap": 0
     }
   ],
   "events": [
@@ -1744,6 +1759,11 @@
       "at": 1793416917950,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: พี่อั้ม, พี่เทพ, ปาล์ม, ที"
+    },
+    {
+      "at": 1793416932854,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: โอม, ผิง, ปลาวาฬ, ไกด์"
     }
   ],
   "settings": {
