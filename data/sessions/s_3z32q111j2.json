@@ -200,6 +200,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_clsy13kb33",
+      "status": "queue",
+      "checkInAt": 1793412611107,
+      "queueSince": 1793412611107,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -332,6 +347,12 @@
       "kind": "player.checkin",
       "text": "เน เช็คอิน",
       "playerId": "p_vrlbf0860e"
+    },
+    {
+      "at": 1793412611107,
+      "kind": "player.checkin",
+      "text": "ภูมิ เช็คอิน",
+      "playerId": "p_clsy13kb33"
     }
   ],
   "settings": {
