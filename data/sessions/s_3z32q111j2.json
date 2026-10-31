@@ -267,18 +267,20 @@
     },
     {
       "playerId": "p_wse74h0bhl",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793412728841,
-      "queueSince": 1793420655300,
+      "queueSince": null,
       "gamesPlayed": 3,
       "playedMs": 4436959,
-      "waitedMs": 3489500,
+      "waitedMs": 4744717,
       "longestWaitMs": 1387885,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793421910517,
+      "leftAt": 1793421910517
     },
     {
       "playerId": "p_kszf8rzu4d",
@@ -2971,6 +2973,18 @@
       "kind": "player.checkout",
       "text": "แบม จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_dyw8ikn9wu"
+    },
+    {
+      "at": 1793421910517,
+      "kind": "pay",
+      "text": "หลิน จ่ายแล้ว",
+      "playerId": "p_wse74h0bhl"
+    },
+    {
+      "at": 1793421910517,
+      "kind": "player.checkout",
+      "text": "หลิน จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_wse74h0bhl"
     }
   ],
   "settings": {
