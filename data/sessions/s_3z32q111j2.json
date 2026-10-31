@@ -185,6 +185,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_vrlbf0860e",
+      "status": "queue",
+      "checkInAt": 1793412598120,
+      "queueSince": 1793412598120,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -311,6 +326,12 @@
       "kind": "match.start",
       "text": "คอร์ต 4: อีฟ, พี่ตี๋, โอม, แนน",
       "matchId": "m_z83xtvi6y5"
+    },
+    {
+      "at": 1793412598120,
+      "kind": "player.checkin",
+      "text": "เน เช็คอิน",
+      "playerId": "p_vrlbf0860e"
     }
   ],
   "settings": {
