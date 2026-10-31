@@ -969,7 +969,23 @@
       "maxWaitAtStart": 1072942
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_uxozezvr7y",
+      "type": "D",
+      "teamA": [
+        "p_53y43qzll8",
+        "p_cw75mksxo7"
+      ],
+      "teamB": [
+        "p_l3p08u33jg",
+        "p_hwixawkd5d"
+      ],
+      "createdAt": 1793416504462,
+      "createdBy": "manual",
+      "levelGap": 1
+    }
+  ],
   "events": [
     {
       "at": 1793411712254,
@@ -1573,6 +1589,11 @@
       "kind": "player.checkin",
       "text": "Top เช็คอิน",
       "playerId": "p_cw75mksxo7"
+    },
+    {
+      "at": 1793416504462,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ฟลุ๊คสาว, Top, ไอซ์, พี่ตี๋"
     }
   ],
   "settings": {
