@@ -150,8 +150,9 @@
       "losses": 0,
       "draws": 1,
       "boost": 0,
-      "paid": false,
-      "leftAt": 1793419942119
+      "paid": true,
+      "leftAt": 1793419942119,
+      "paidAt": 1793420068577
     },
     {
       "playerId": "p_x3znla8qn9",
@@ -736,6 +737,21 @@
       "playedMs": 1247121,
       "waitedMs": 1378308,
       "longestWaitMs": 892510,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_72p7uc1r13",
+      "status": "queue",
+      "checkInAt": 1793420062446,
+      "queueSince": 1793420062446,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -2496,6 +2512,18 @@
       "at": 1793420039734,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: แบม, ฟิว, แป้ง, พี่อ๋อง"
+    },
+    {
+      "at": 1793420062446,
+      "kind": "player.checkin",
+      "text": "บอมเบ เช็คอิน",
+      "playerId": "p_72p7uc1r13"
+    },
+    {
+      "at": 1793420068577,
+      "kind": "pay",
+      "text": "ที จ่ายแล้ว",
+      "playerId": "p_8ft5fb76ef"
     }
   ],
   "settings": {
