@@ -27,7 +27,7 @@
     {
       "index": 3,
       "name": "คอร์ต 4",
-      "currentMatchId": "m_z83xtvi6y5"
+      "currentMatchId": null
     },
     {
       "index": 4,
@@ -73,11 +73,11 @@
     },
     {
       "playerId": "p_7abt4a6j42",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793411936816,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793413690609,
+      "gamesPlayed": 1,
+      "playedMs": 1178180,
       "waitedMs": 575613,
       "longestWaitMs": 575613,
       "wins": 0,
@@ -88,11 +88,11 @@
     },
     {
       "playerId": "p_5pmcrc7d7c",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793411945965,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793413690609,
+      "gamesPlayed": 1,
+      "playedMs": 1178180,
       "waitedMs": 566464,
       "longestWaitMs": 566464,
       "wins": 0,
@@ -103,11 +103,11 @@
     },
     {
       "playerId": "p_hwixawkd5d",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793411956806,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793413690609,
+      "gamesPlayed": 1,
+      "playedMs": 1178180,
       "waitedMs": 555623,
       "longestWaitMs": 555623,
       "wins": 0,
@@ -148,11 +148,11 @@
     },
     {
       "playerId": "p_x3znla8qn9",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412071401,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793413690609,
+      "gamesPlayed": 1,
+      "playedMs": 1178180,
       "waitedMs": 441028,
       "longestWaitMs": 441028,
       "wins": 0,
@@ -430,6 +430,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_53y43qzll8",
+      "status": "queue",
+      "checkInAt": 1793413684599,
+      "queueSince": 1793413684599,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -468,10 +483,11 @@
         "p_7abt4a6j42"
       ],
       "startedAt": 1793412512429,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 3,
-      "maxWaitAtStart": 575613
+      "maxWaitAtStart": 575613,
+      "endedAt": 1793413690609
     },
     {
       "id": "m_ypi2gfolno",
@@ -776,6 +792,18 @@
       "at": 1793413644001,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: แบงค์, นน, ไนท์, ต้า"
+    },
+    {
+      "at": 1793413684599,
+      "kind": "player.checkin",
+      "text": "ฟลุ๊คสาว เช็คอิน",
+      "playerId": "p_53y43qzll8"
+    },
+    {
+      "at": 1793413690609,
+      "kind": "match.end",
+      "text": "จบเกม #2 คอร์ต 4",
+      "matchId": "m_z83xtvi6y5"
     }
   ],
   "settings": {
