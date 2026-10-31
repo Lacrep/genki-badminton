@@ -671,7 +671,9 @@
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "noCourtFee": true,
+      "paidAt": 1793423336653
     },
     {
       "playerId": "p_x5deq395fp",
@@ -3421,6 +3423,18 @@
       "kind": "player.checkout",
       "text": "พี่อั้ม จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_qe4j6866il"
+    },
+    {
+      "at": 1793423330272,
+      "kind": "fee",
+      "text": "สุดหล่อ ยกเว้นค่าสนาม",
+      "playerId": "p_ecpq3j2g0k"
+    },
+    {
+      "at": 1793423336653,
+      "kind": "pay",
+      "text": "สุดหล่อ จ่ายแล้ว",
+      "playerId": "p_ecpq3j2g0k"
     }
   ],
   "settings": {
