@@ -170,6 +170,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_54w3lucivg",
+      "status": "queue",
+      "checkInAt": 1793412247952,
+      "queueSince": 1793412247952,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [],
@@ -233,6 +248,12 @@
       "kind": "player.checkin",
       "text": "หมิง เช็คอิน",
       "playerId": "p_gwdzyqk46n"
+    },
+    {
+      "at": 1793412247952,
+      "kind": "player.checkin",
+      "text": "เบิร์ด(ตี๋) เช็คอิน",
+      "playerId": "p_54w3lucivg"
     }
   ],
   "settings": {
