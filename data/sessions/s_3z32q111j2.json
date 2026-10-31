@@ -1039,7 +1039,23 @@
       "maxWaitAtStart": 1032948
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_i7bwnd2e96",
+      "type": "D",
+      "teamA": [
+        "p_dqmf83x2h9",
+        "p_ecpq3j2g0k"
+      ],
+      "teamB": [
+        "p_dyw8ikn9wu",
+        "p_gwdzyqk46n"
+      ],
+      "createdAt": 1793416814250,
+      "createdBy": "manual",
+      "levelGap": 2
+    }
+  ],
   "events": [
     {
       "at": 1793411712254,
@@ -1693,6 +1709,11 @@
       "kind": "player.checkin",
       "text": "ฟิว เช็คอิน",
       "playerId": "p_zy0kpu0v0s"
+    },
+    {
+      "at": 1793416814250,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ปริม, สุดหล่อ, แบม, หมิง"
     }
   ],
   "settings": {
