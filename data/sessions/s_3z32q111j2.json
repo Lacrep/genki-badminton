@@ -78,9 +78,9 @@
     },
     {
       "playerId": "p_7abt4a6j42",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793411936816,
-      "queueSince": null,
+      "queueSince": 1793418143022,
       "gamesPlayed": 2,
       "playedMs": 2485040,
       "waitedMs": 3534445,
@@ -333,12 +333,12 @@
     },
     {
       "playerId": "p_tygwg9sjq3",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793412995553,
-      "queueSince": 1793417286035,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 1486059,
-      "waitedMs": 2804423,
+      "waitedMs": 3661410,
       "longestWaitMs": 2804423,
       "wins": 0,
       "losses": 0,
@@ -1162,7 +1162,7 @@
       "type": "D",
       "teamA": [
         "p_g6x4u5tabq",
-        "p_7abt4a6j42"
+        "p_tygwg9sjq3"
       ],
       "teamB": [
         "p_x3znla8qn9",
@@ -2057,6 +2057,12 @@
       "kind": "match.end",
       "text": "จบเกม #17 คอร์ต 2",
       "matchId": "m_owcpfhztbt"
+    },
+    {
+      "at": 1793418143022,
+      "kind": "match.swap",
+      "text": "สลับ แนน ออก แป้ง ลง",
+      "matchId": "m_jpkcjoqvgt"
     }
   ],
   "settings": {
