@@ -670,33 +670,38 @@
     },
     {
       "playerId": "p_jw88ens36l",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793416333354,
-      "queueSince": 1793422117784,
+      "queueSince": null,
       "gamesPlayed": 3,
       "playedMs": 3640287,
-      "waitedMs": 2144143,
+      "waitedMs": 2399512,
       "longestWaitMs": 1114838,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "shuttleAdjust": -3,
+      "paidAt": 1793422373153,
+      "leftAt": 1793422373153
     },
     {
       "playerId": "p_5t6kdv3w2i",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793416362054,
-      "queueSince": 1793422117784,
+      "queueSince": null,
       "gamesPlayed": 3,
       "playedMs": 4185879,
-      "waitedMs": 1569851,
+      "waitedMs": 1816409,
       "longestWaitMs": 795263,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793422364342,
+      "leftAt": 1793422364342
     },
     {
       "playerId": "p_cw75mksxo7",
@@ -3160,6 +3165,48 @@
       "kind": "player.checkout",
       "text": "พี่เทพ จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_0aamglvm9a"
+    },
+    {
+      "at": 1793422364342,
+      "kind": "pay",
+      "text": "กร จ่ายแล้ว",
+      "playerId": "p_5t6kdv3w2i"
+    },
+    {
+      "at": 1793422364342,
+      "kind": "player.checkout",
+      "text": "กร จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_5t6kdv3w2i"
+    },
+    {
+      "at": 1793422370505,
+      "kind": "fee",
+      "text": "ปลาวาฬ ปรับลูกที่คิดเป็น -1 ลูก",
+      "playerId": "p_jw88ens36l"
+    },
+    {
+      "at": 1793422370638,
+      "kind": "fee",
+      "text": "ปลาวาฬ ปรับลูกที่คิดเป็น -2 ลูก",
+      "playerId": "p_jw88ens36l"
+    },
+    {
+      "at": 1793422371062,
+      "kind": "fee",
+      "text": "ปลาวาฬ ปรับลูกที่คิดเป็น -3 ลูก",
+      "playerId": "p_jw88ens36l"
+    },
+    {
+      "at": 1793422373154,
+      "kind": "pay",
+      "text": "ปลาวาฬ จ่ายแล้ว",
+      "playerId": "p_jw88ens36l"
+    },
+    {
+      "at": 1793422373154,
+      "kind": "player.checkout",
+      "text": "ปลาวาฬ จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_jw88ens36l"
     }
   ],
   "settings": {
