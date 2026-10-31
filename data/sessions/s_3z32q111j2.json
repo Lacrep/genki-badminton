@@ -22,7 +22,7 @@
     {
       "index": 2,
       "name": "คอร์ต 3",
-      "currentMatchId": "m_kypopzcntx"
+      "currentMatchId": null
     },
     {
       "index": 3,
@@ -93,11 +93,11 @@
     },
     {
       "playerId": "p_5pmcrc7d7c",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793411945965,
-      "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 2183383,
+      "queueSince": 1793418310438,
+      "gamesPlayed": 3,
+      "playedMs": 3200600,
       "waitedMs": 3163873,
       "longestWaitMs": 1386638,
       "wins": 0,
@@ -423,11 +423,11 @@
     },
     {
       "playerId": "p_zaui6hkcn1",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793413330680,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 1306860,
+      "queueSince": 1793418310438,
+      "gamesPlayed": 2,
+      "playedMs": 2324077,
       "waitedMs": 2655681,
       "longestWaitMs": 1562328,
       "wins": 0,
@@ -483,11 +483,11 @@
     },
     {
       "playerId": "p_suzv413d26",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793414253255,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 1306860,
+      "queueSince": 1793418310438,
+      "gamesPlayed": 2,
+      "playedMs": 2324077,
       "waitedMs": 1733106,
       "longestWaitMs": 1093353,
       "wins": 0,
@@ -633,11 +633,11 @@
     },
     {
       "playerId": "p_jw88ens36l",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793416333354,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793418310438,
+      "gamesPlayed": 1,
+      "playedMs": 1017217,
       "waitedMs": 959867,
       "longestWaitMs": 959867,
       "wins": 0,
@@ -1132,10 +1132,11 @@
         "p_suzv413d26"
       ],
       "startedAt": 1793417293221,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "auto",
       "levelGap": 0,
-      "maxWaitAtStart": 1386638
+      "maxWaitAtStart": 1386638,
+      "endedAt": 1793418310438
     },
     {
       "id": "m_mycygbljke",
@@ -2125,6 +2126,12 @@
       "at": 1793418293557,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: โซระ, โอ๊ต, เล็ก, เวฟ"
+    },
+    {
+      "at": 1793418310439,
+      "kind": "match.end",
+      "text": "จบเกม #20 คอร์ต 3",
+      "matchId": "m_kypopzcntx"
     }
   ],
   "settings": {
