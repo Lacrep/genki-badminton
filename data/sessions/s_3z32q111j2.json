@@ -16,7 +16,7 @@
     {
       "index": 1,
       "name": "คอร์ต 2",
-      "currentMatchId": "m_i7eoqalelz",
+      "currentMatchId": null,
       "disabled": false
     },
     {
@@ -50,11 +50,11 @@
   "players": [
     {
       "playerId": "p_vlg61a1abs",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793411851283,
-      "queueSince": null,
-      "gamesPlayed": 3,
-      "playedMs": 3133056,
+      "queueSince": 1793422189785,
+      "gamesPlayed": 4,
+      "playedMs": 4262434,
       "waitedMs": 6076068,
       "longestWaitMs": 2287771,
       "wins": 0,
@@ -462,11 +462,11 @@
     },
     {
       "playerId": "p_53y43qzll8",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793413684599,
-      "queueSince": null,
-      "gamesPlayed": 3,
-      "playedMs": 3780444,
+      "queueSince": 1793422189785,
+      "gamesPlayed": 4,
+      "playedMs": 4909822,
       "waitedMs": 3595364,
       "longestWaitMs": 1383438,
       "wins": 0,
@@ -573,11 +573,11 @@
     },
     {
       "playerId": "p_0aamglvm9a",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793414544382,
-      "queueSince": null,
-      "gamesPlayed": 3,
-      "playedMs": 3208934,
+      "queueSince": 1793422189785,
+      "gamesPlayed": 4,
+      "playedMs": 4338312,
       "waitedMs": 3307091,
       "longestWaitMs": 1069025,
       "wins": 0,
@@ -739,11 +739,11 @@
     },
     {
       "playerId": "p_m56exs4ags",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793417079171,
-      "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 2210009,
+      "queueSince": 1793422189785,
+      "gamesPlayed": 3,
+      "playedMs": 3339387,
       "waitedMs": 1771227,
       "longestWaitMs": 628427,
       "wins": 0,
@@ -1538,10 +1538,11 @@
         "p_53y43qzll8"
       ],
       "startedAt": 1793421060407,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 2,
-      "maxWaitAtStart": 2287771
+      "maxWaitAtStart": 2287771,
+      "endedAt": 1793422189785
     },
     {
       "id": "m_sk2izlox7v",
@@ -3104,6 +3105,12 @@
       "at": 1793422127692,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: ผิง, มิกกี้, พี่อ๋อง, ต้า"
+    },
+    {
+      "at": 1793422189785,
+      "kind": "match.end",
+      "text": "จบเกม #38 คอร์ต 2",
+      "matchId": "m_i7eoqalelz"
     }
   ],
   "settings": {
