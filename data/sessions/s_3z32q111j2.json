@@ -595,6 +595,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_ecpq3j2g0k",
+      "status": "queue",
+      "checkInAt": 1793415427399,
+      "queueSince": 1793415427399,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -1276,6 +1291,12 @@
       "kind": "player.checkin",
       "text": "ไกด์การบิน เช็คอิน",
       "playerId": "p_5kyiacbijt"
+    },
+    {
+      "at": 1793415427399,
+      "kind": "player.checkin",
+      "text": "สุดหล่อ เช็คอิน",
+      "playerId": "p_ecpq3j2g0k"
     }
   ],
   "settings": {
