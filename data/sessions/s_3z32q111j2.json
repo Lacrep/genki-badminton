@@ -761,6 +761,21 @@
       "createdAt": 1793414930155,
       "createdBy": "manual",
       "levelGap": 3
+    },
+    {
+      "id": "pl_545mec0anx",
+      "type": "D",
+      "teamA": [
+        "p_0tkx8luk7o",
+        "p_28qfvskn0s"
+      ],
+      "teamB": [
+        "p_vrlbf0860e",
+        "p_54w3lucivg"
+      ],
+      "createdAt": 1793415036669,
+      "createdBy": "manual",
+      "levelGap": 2
     }
   ],
   "events": [
@@ -1174,6 +1189,11 @@
       "at": 1793414956975,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: พี่เทพ, เน, แบงค์, ปาล์ม"
+    },
+    {
+      "at": 1793415036669,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พลอยปภัส, กาย, เน, เบิร์ด(ตี๋)"
     }
   ],
   "settings": {
