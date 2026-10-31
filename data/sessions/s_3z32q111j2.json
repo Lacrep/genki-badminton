@@ -1519,7 +1519,23 @@
       "maxWaitAtStart": 2287771
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_z6z60nmlvx",
+      "type": "D",
+      "teamA": [
+        "p_fgphe06utu",
+        "p_3bvix9nerq"
+      ],
+      "teamB": [
+        "p_cw75mksxo7",
+        "p_gwdzyqk46n"
+      ],
+      "createdAt": 1793421116493,
+      "createdBy": "manual",
+      "levelGap": 1
+    }
+  ],
   "events": [
     {
       "at": 1793411712254,
@@ -2785,6 +2801,11 @@
       "kind": "player.checkout",
       "text": "คิม กลับบ้าน",
       "playerId": "p_qt563yr8cn"
+    },
+    {
+      "at": 1793421116493,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: จา, ปาล์ม, Top, หมิง"
     }
   ],
   "settings": {
