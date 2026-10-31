@@ -11,13 +11,13 @@
       "index": 0,
       "name": "คอร์ต 1",
       "currentMatchId": null,
-      "disabled": true
+      "disabled": false
     },
     {
       "index": 1,
       "name": "คอร์ต 2",
       "currentMatchId": null,
-      "disabled": true
+      "disabled": false
     },
     {
       "index": 2,
