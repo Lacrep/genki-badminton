@@ -1159,6 +1159,21 @@
       "createdAt": 1793417453825,
       "createdBy": "manual",
       "levelGap": 1
+    },
+    {
+      "id": "pl_nw3y4khkb4",
+      "type": "D",
+      "teamA": [
+        "p_0tkx8luk7o",
+        "p_28qfvskn0s"
+      ],
+      "teamB": [
+        "p_2jd5ehh4i6",
+        "p_qt563yr8cn"
+      ],
+      "createdAt": 1793417521936,
+      "createdBy": "manual",
+      "levelGap": 2
     }
   ],
   "events": [
@@ -1916,6 +1931,11 @@
       "at": 1793417453825,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: เอกกี้, แนน, อีฟ, พรีม"
+    },
+    {
+      "at": 1793417521936,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พลอยปภัส, กาย, ซัน, คิม"
     }
   ],
   "settings": {
