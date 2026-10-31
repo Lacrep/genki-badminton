@@ -138,18 +138,19 @@
     },
     {
       "playerId": "p_8ft5fb76ef",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793411998510,
-      "queueSince": 1793419929475,
+      "queueSince": null,
       "gamesPlayed": 4,
       "playedMs": 4561081,
-      "waitedMs": 3369884,
+      "waitedMs": 3382528,
       "longestWaitMs": 1312592,
       "wins": 0,
       "losses": 0,
       "draws": 1,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "leftAt": 1793419942119
     },
     {
       "playerId": "p_x3znla8qn9",
@@ -2464,6 +2465,12 @@
       "kind": "match.end",
       "text": "จบเกม #27 คอร์ต 6",
       "matchId": "m_hm23za23q1"
+    },
+    {
+      "at": 1793419942119,
+      "kind": "player.checkout",
+      "text": "ที กลับบ้าน",
+      "playerId": "p_8ft5fb76ef"
     }
   ],
   "settings": {
