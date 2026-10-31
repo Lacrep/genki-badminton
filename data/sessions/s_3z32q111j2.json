@@ -27,7 +27,7 @@
     {
       "index": 3,
       "name": "คอร์ต 4",
-      "currentMatchId": "m_gswvo5vii6"
+      "currentMatchId": null
     },
     {
       "index": 4,
@@ -123,11 +123,11 @@
     },
     {
       "playerId": "p_fgphe06utu",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793411983512,
-      "queueSince": null,
-      "gamesPlayed": 3,
-      "playedMs": 3808246,
+      "queueSince": 1793419489689,
+      "gamesPlayed": 4,
+      "playedMs": 5125154,
       "waitedMs": 2381023,
       "longestWaitMs": 869811,
       "wins": 0,
@@ -199,11 +199,11 @@
     },
     {
       "playerId": "p_vrlbf0860e",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412598120,
-      "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 3070395,
+      "queueSince": 1793419489689,
+      "gamesPlayed": 3,
+      "playedMs": 4387303,
       "waitedMs": 2504266,
       "longestWaitMs": 1273059,
       "wins": 0,
@@ -214,11 +214,11 @@
     },
     {
       "playerId": "p_clsy13kb33",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412611107,
-      "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 3130146,
+      "queueSince": 1793419489689,
+      "gamesPlayed": 3,
+      "playedMs": 4447054,
       "waitedMs": 2431528,
       "longestWaitMs": 1344461,
       "wins": 0,
@@ -409,11 +409,11 @@
     },
     {
       "playerId": "p_jwgpsjxb3h",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793413217652,
-      "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 2253545,
+      "queueSince": 1793419489689,
+      "gamesPlayed": 3,
+      "playedMs": 3570453,
       "waitedMs": 2701584,
       "longestWaitMs": 1160716,
       "wins": 0,
@@ -1214,10 +1214,11 @@
         "p_vrlbf0860e"
       ],
       "startedAt": 1793418172781,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 2,
-      "maxWaitAtStart": 1114526
+      "maxWaitAtStart": 1114526,
+      "endedAt": 1793419489689
     },
     {
       "id": "m_telag1y3ow",
@@ -2355,6 +2356,24 @@
       "kind": "match.end",
       "text": "จบเกม #26 คอร์ต 3",
       "matchId": "m_vqd6e1zjls"
+    },
+    {
+      "at": 1793419489689,
+      "kind": "match.end",
+      "text": "จบเกม #24 คอร์ต 4",
+      "matchId": "m_gswvo5vii6"
+    },
+    {
+      "at": 1793419493079,
+      "kind": "fee",
+      "text": "ภูมิ ปรับลูกที่คิดเป็น +1 ลูก",
+      "playerId": "p_clsy13kb33"
+    },
+    {
+      "at": 1793419494060,
+      "kind": "fee",
+      "text": "ภูมิ ปรับลูกที่คิดเป็น 0 ลูก",
+      "playerId": "p_clsy13kb33"
     }
   ],
   "settings": {
