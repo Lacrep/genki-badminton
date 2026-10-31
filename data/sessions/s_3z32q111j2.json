@@ -312,18 +312,20 @@
     },
     {
       "playerId": "p_dyw8ikn9wu",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793412749561,
-      "queueSince": 1793421206948,
+      "queueSince": null,
       "gamesPlayed": 3,
       "playedMs": 4189468,
-      "waitedMs": 4267919,
+      "waitedMs": 4882021,
       "longestWaitMs": 1744250,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793421821050,
+      "leftAt": 1793421821050
     },
     {
       "playerId": "p_qt563yr8cn",
@@ -2957,6 +2959,18 @@
       "at": 1793421789658,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: ผิง, มิกกี้, หลิน, ปริม"
+    },
+    {
+      "at": 1793421821051,
+      "kind": "pay",
+      "text": "แบม จ่ายแล้ว",
+      "playerId": "p_dyw8ikn9wu"
+    },
+    {
+      "at": 1793421821051,
+      "kind": "player.checkout",
+      "text": "แบม จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_dyw8ikn9wu"
     }
   ],
   "settings": {
