@@ -194,8 +194,9 @@
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false,
-      "leftAt": 1793418895530
+      "paid": true,
+      "leftAt": 1793418895530,
+      "paidAt": 1793419530888
     },
     {
       "playerId": "p_vrlbf0860e",
