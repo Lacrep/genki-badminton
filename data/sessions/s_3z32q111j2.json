@@ -1359,23 +1359,7 @@
       "maxWaitAtStart": 1698244
     }
   ],
-  "planned": [
-    {
-      "id": "pl_60k1thuf3y",
-      "type": "D",
-      "teamA": [
-        "p_0tkx8luk7o",
-        "p_28qfvskn0s"
-      ],
-      "teamB": [
-        "p_2jd5ehh4i6",
-        "p_fgphe06utu"
-      ],
-      "createdAt": 1793419801342,
-      "createdBy": "manual",
-      "levelGap": 2
-    }
-  ],
+  "planned": [],
   "events": [
     {
       "at": 1793411712254,
@@ -2447,6 +2431,11 @@
       "at": 1793419801342,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: พลอยปภัส, กาย, ซัน, จา"
+    },
+    {
+      "at": 1793419896073,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: พลอยปภัส, กาย, ซัน, จา"
     }
   ],
   "settings": {
