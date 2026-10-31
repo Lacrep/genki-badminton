@@ -736,7 +736,8 @@
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793423065072
     },
     {
       "playerId": "p_ihc1omlql8",
@@ -3372,6 +3373,12 @@
       "kind": "pay",
       "text": "ปาล์ม จ่ายแล้ว",
       "playerId": "p_3bvix9nerq"
+    },
+    {
+      "at": 1793423065072,
+      "kind": "pay",
+      "text": "Top จ่ายแล้ว",
+      "playerId": "p_cw75mksxo7"
     }
   ],
   "settings": {
