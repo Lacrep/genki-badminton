@@ -782,8 +782,9 @@
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false,
-      "noCourtFee": true
+      "paid": true,
+      "noCourtFee": true,
+      "paidAt": 1793424069837
     },
     {
       "playerId": "p_zy0kpu0v0s",
@@ -3601,6 +3602,12 @@
       "at": 1793424016958,
       "kind": "fee",
       "text": "พรฟ้า ปรับลูกที่คิดเป็น 0 ลูก",
+      "playerId": "p_ihc1omlql8"
+    },
+    {
+      "at": 1793424069838,
+      "kind": "pay",
+      "text": "พรฟ้า จ่ายแล้ว",
       "playerId": "p_ihc1omlql8"
     }
   ],
