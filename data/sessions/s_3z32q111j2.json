@@ -10,7 +10,7 @@
     {
       "index": 0,
       "name": "คอร์ต 1",
-      "currentMatchId": "m_uw2dfpcnof",
+      "currentMatchId": null,
       "disabled": false
     },
     {
@@ -43,11 +43,11 @@
   "players": [
     {
       "playerId": "p_vlg61a1abs",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793411851283,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 1136600,
+      "queueSince": 1793416544825,
+      "gamesPlayed": 2,
+      "playedMs": 2068018,
       "waitedMs": 2625524,
       "longestWaitMs": 1792711,
       "wins": 0,
@@ -238,11 +238,11 @@
     },
     {
       "playerId": "p_xf3iqplno6",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412728836,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 1136600,
+      "queueSince": 1793416544825,
+      "gamesPlayed": 2,
+      "playedMs": 2068018,
       "waitedMs": 1747971,
       "longestWaitMs": 915158,
       "wins": 0,
@@ -283,11 +283,11 @@
     },
     {
       "playerId": "p_3bvix9nerq",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412749307,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 1517934,
+      "queueSince": 1793416544825,
+      "gamesPlayed": 2,
+      "playedMs": 2449352,
       "waitedMs": 1346166,
       "longestWaitMs": 725871,
       "wins": 0,
@@ -538,11 +538,11 @@
     },
     {
       "playerId": "p_0aamglvm9a",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793414544382,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793416544825,
+      "gamesPlayed": 1,
+      "playedMs": 931418,
       "waitedMs": 1069025,
       "longestWaitMs": 1069025,
       "wins": 0,
@@ -868,10 +868,11 @@
         "p_xf3iqplno6"
       ],
       "startedAt": 1793415613407,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 3,
-      "maxWaitAtStart": 1069025
+      "maxWaitAtStart": 1069025,
+      "endedAt": 1793416544825
     },
     {
       "id": "m_2wow1rcon4",
@@ -1594,6 +1595,12 @@
       "at": 1793416504462,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: ฟลุ๊คสาว, Top, ไอซ์, พี่ตี๋"
+    },
+    {
+      "at": 1793416544825,
+      "kind": "match.end",
+      "text": "จบเกม #10 คอร์ต 1",
+      "matchId": "m_uw2dfpcnof"
     }
   ],
   "settings": {
