@@ -1551,21 +1551,6 @@
   ],
   "planned": [
     {
-      "id": "pl_607sb9txlk",
-      "type": "D",
-      "teamA": [
-        "p_zaui6hkcn1",
-        "p_kszf8rzu4d"
-      ],
-      "teamB": [
-        "p_wse74h0bhl",
-        "p_dqmf83x2h9"
-      ],
-      "createdAt": 1793421458264,
-      "createdBy": "manual",
-      "levelGap": 1
-    },
-    {
       "id": "pl_jj0jvewk22",
       "type": "D",
       "teamA": [
@@ -2962,6 +2947,16 @@
       "at": 1793421580682,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: ฟิว, เอกกี้, สุดหล่อ, พรีม"
+    },
+    {
+      "at": 1793421787545,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1793421789658,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: ผิง, มิกกี้, หลิน, ปริม"
     }
   ],
   "settings": {
