@@ -581,7 +581,23 @@
       "maxWaitAtStart": 1068667
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_0ak6f5eu56",
+      "type": "D",
+      "teamA": [
+        "p_l3p08u33jg",
+        "p_qe4j6866il"
+      ],
+      "teamB": [
+        "p_53y43qzll8",
+        "p_fgphe06utu"
+      ],
+      "createdAt": 1793414035482,
+      "createdBy": "manual",
+      "levelGap": 1
+    }
+  ],
   "events": [
     {
       "at": 1793411712254,
@@ -859,6 +875,11 @@
       "kind": "player.checkin",
       "text": "พี่อั้ม เช็คอิน",
       "playerId": "p_qe4j6866il"
+    },
+    {
+      "at": 1793414035483,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ไอซ์, พี่อั้ม, ฟลุ๊คสาว, จา"
     }
   ],
   "settings": {
