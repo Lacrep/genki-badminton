@@ -610,6 +610,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_x5deq395fp",
+      "status": "queue",
+      "checkInAt": 1793415449804,
+      "queueSince": 1793415449804,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -804,6 +819,21 @@
         "p_xf3iqplno6"
       ],
       "createdAt": 1793414930155,
+      "createdBy": "manual",
+      "levelGap": 3
+    },
+    {
+      "id": "pl_1v3e8j967v",
+      "type": "D",
+      "teamA": [
+        "p_ej0cyelb18",
+        "p_ecpq3j2g0k"
+      ],
+      "teamB": [
+        "p_04n5grksuu",
+        "p_xlhr79w0ne"
+      ],
+      "createdAt": 1793415450811,
       "createdBy": "manual",
       "levelGap": 3
     },
@@ -1297,6 +1327,52 @@
       "kind": "player.checkin",
       "text": "สุดหล่อ เช็คอิน",
       "playerId": "p_ecpq3j2g0k"
+    },
+    {
+      "at": 1793415449804,
+      "kind": "player.checkin",
+      "text": "เวฟ เช็คอิน",
+      "playerId": "p_x5deq395fp"
+    },
+    {
+      "at": 1793415450811,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พี่อ๋อง, สุดหล่อ, พรีม, ต้า"
+    },
+    {
+      "at": 1793415454035,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1793415454637,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1793415456283,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1793415456938,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1793415457751,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1793415458530,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1793415462048,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
     }
   ],
   "settings": {
