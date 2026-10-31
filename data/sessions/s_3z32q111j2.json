@@ -10,7 +10,7 @@
     {
       "index": 0,
       "name": "คอร์ต 1",
-      "currentMatchId": "m_qwv9ic6lk1",
+      "currentMatchId": null,
       "disabled": false
     },
     {
@@ -22,17 +22,17 @@
     {
       "index": 2,
       "name": "คอร์ต 3",
-      "currentMatchId": "m_t8vttk8a4k"
+      "currentMatchId": null
     },
     {
       "index": 3,
       "name": "คอร์ต 4",
-      "currentMatchId": "m_ajgm4gi22u"
+      "currentMatchId": null
     },
     {
       "index": 4,
       "name": "คอร์ต 5",
-      "currentMatchId": "m_sk2izlox7v"
+      "currentMatchId": null
     },
     {
       "index": 5,
@@ -119,11 +119,11 @@
     },
     {
       "playerId": "p_hwixawkd5d",
-      "status": "playing",
+      "status": "left",
       "checkInAt": 1793411956806,
       "queueSince": null,
-      "gamesPlayed": 4,
-      "playedMs": 4973441,
+      "gamesPlayed": 5,
+      "playedMs": 7516035,
       "waitedMs": 3973951,
       "longestWaitMs": 1210771,
       "wins": 0,
@@ -131,15 +131,16 @@
       "draws": 0,
       "boost": 0,
       "paid": true,
-      "paidAt": 1793422310623
+      "paidAt": 1793422310623,
+      "leftAt": 1793423446792
     },
     {
       "playerId": "p_fgphe06utu",
-      "status": "playing",
+      "status": "left",
       "checkInAt": 1793411983512,
       "queueSince": null,
-      "gamesPlayed": 4,
-      "playedMs": 5125154,
+      "gamesPlayed": 5,
+      "playedMs": 7349891,
       "waitedMs": 4115824,
       "longestWaitMs": 1734801,
       "wins": 0,
@@ -148,7 +149,8 @@
       "boost": 0,
       "paid": true,
       "shuttleAdjust": 1,
-      "paidAt": 1793422506446
+      "paidAt": 1793422506446,
+      "leftAt": 1793423449227
     },
     {
       "playerId": "p_8ft5fb76ef",
@@ -186,11 +188,11 @@
     },
     {
       "playerId": "p_gwdzyqk46n",
-      "status": "playing",
+      "status": "left",
       "checkInAt": 1793412174124,
       "queueSince": null,
-      "gamesPlayed": 4,
-      "playedMs": 4643147,
+      "gamesPlayed": 5,
+      "playedMs": 6867884,
       "waitedMs": 4407219,
       "longestWaitMs": 1312592,
       "wins": 0,
@@ -198,7 +200,8 @@
       "draws": 1,
       "boost": 0,
       "paid": true,
-      "paidAt": 1793422871708
+      "paidAt": 1793422871708,
+      "leftAt": 1793423449227
     },
     {
       "playerId": "p_54w3lucivg",
@@ -304,11 +307,11 @@
     },
     {
       "playerId": "p_kszf8rzu4d",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412728847,
-      "queueSince": null,
-      "gamesPlayed": 3,
-      "playedMs": 4374367,
+      "queueSince": 1793423444602,
+      "gamesPlayed": 4,
+      "playedMs": 5691285,
       "waitedMs": 5024470,
       "longestWaitMs": 1698244,
       "wins": 0,
@@ -319,11 +322,11 @@
     },
     {
       "playerId": "p_3bvix9nerq",
-      "status": "playing",
+      "status": "left",
       "checkInAt": 1793412749307,
       "queueSince": null,
-      "gamesPlayed": 4,
-      "playedMs": 4726868,
+      "gamesPlayed": 5,
+      "playedMs": 6951605,
       "waitedMs": 3748315,
       "longestWaitMs": 1113801,
       "wins": 0,
@@ -331,7 +334,8 @@
       "draws": 0,
       "boost": 0,
       "paid": true,
-      "paidAt": 1793423034963
+      "paidAt": 1793423034963,
+      "leftAt": 1793423449227
     },
     {
       "playerId": "p_dyw8ikn9wu",
@@ -385,11 +389,11 @@
     },
     {
       "playerId": "p_04n5grksuu",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793413016839,
-      "queueSince": null,
-      "gamesPlayed": 4,
-      "playedMs": 4939589,
+      "queueSince": 1793423442115,
+      "gamesPlayed": 5,
+      "playedMs": 6332520,
       "waitedMs": 4092756,
       "longestWaitMs": 1291489,
       "wins": 0,
@@ -400,11 +404,11 @@
     },
     {
       "playerId": "p_g6x4u5tabq",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793413030028,
-      "queueSince": null,
-      "gamesPlayed": 4,
-      "playedMs": 4942225,
+      "queueSince": 1793423442115,
+      "gamesPlayed": 5,
+      "playedMs": 6335156,
       "waitedMs": 4076931,
       "longestWaitMs": 1053774,
       "wins": 0,
@@ -415,11 +419,11 @@
     },
     {
       "playerId": "p_xlhr79w0ne",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793413157456,
-      "queueSince": null,
-      "gamesPlayed": 4,
-      "playedMs": 4961277,
+      "queueSince": 1793423444602,
+      "gamesPlayed": 5,
+      "playedMs": 6278195,
       "waitedMs": 4008951,
       "longestWaitMs": 1337904,
       "wins": 0,
@@ -462,11 +466,11 @@
     },
     {
       "playerId": "p_zaui6hkcn1",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793413330680,
-      "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 2324077,
+      "queueSince": 1793423444602,
+      "gamesPlayed": 3,
+      "playedMs": 3640995,
       "waitedMs": 6472927,
       "longestWaitMs": 3817246,
       "wins": 0,
@@ -563,11 +567,11 @@
     },
     {
       "playerId": "p_ej0cyelb18",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793414337316,
-      "queueSince": null,
-      "gamesPlayed": 3,
-      "playedMs": 3365598,
+      "queueSince": 1793423444602,
+      "gamesPlayed": 4,
+      "playedMs": 4682516,
       "waitedMs": 4424770,
       "longestWaitMs": 1337904,
       "wins": 0,
@@ -580,11 +584,11 @@
     },
     {
       "playerId": "p_y1a4x6164v",
-      "status": "playing",
+      "status": "left",
       "checkInAt": 1793414517433,
       "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 2983125,
+      "gamesPlayed": 3,
+      "playedMs": 5525719,
       "waitedMs": 3403640,
       "longestWaitMs": 1282543,
       "wins": 0,
@@ -593,7 +597,8 @@
       "boost": 0,
       "paid": true,
       "shuttleAdjust": 1,
-      "paidAt": 1793422923296
+      "paidAt": 1793422923296,
+      "leftAt": 1793423446792
     },
     {
       "playerId": "p_0aamglvm9a",
@@ -631,11 +636,11 @@
     },
     {
       "playerId": "p_ch56wx3x3j",
-      "status": "playing",
+      "status": "left",
       "checkInAt": 1793415205718,
       "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 2860507,
+      "gamesPlayed": 3,
+      "playedMs": 5403101,
       "waitedMs": 2837973,
       "longestWaitMs": 1113581,
       "wins": 0,
@@ -643,7 +648,8 @@
       "draws": 0,
       "boost": 0,
       "paid": true,
-      "paidAt": 1793422658685
+      "paidAt": 1793422658685,
+      "leftAt": 1793423446792
     },
     {
       "playerId": "p_5kyiacbijt",
@@ -664,11 +670,11 @@
     },
     {
       "playerId": "p_ecpq3j2g0k",
-      "status": "playing",
+      "status": "left",
       "checkInAt": 1793415427399,
       "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 2307945,
+      "gamesPlayed": 3,
+      "playedMs": 3700876,
       "waitedMs": 4313840,
       "longestWaitMs": 3654806,
       "wins": 0,
@@ -677,7 +683,8 @@
       "boost": 0,
       "paid": true,
       "noCourtFee": true,
-      "paidAt": 1793423336653
+      "paidAt": 1793423336653,
+      "leftAt": 1793423442115
     },
     {
       "playerId": "p_x5deq395fp",
@@ -733,11 +740,11 @@
     },
     {
       "playerId": "p_cw75mksxo7",
-      "status": "playing",
+      "status": "left",
       "checkInAt": 1793416372861,
       "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 2661828,
+      "gamesPlayed": 3,
+      "playedMs": 4886565,
       "waitedMs": 2189801,
       "longestWaitMs": 1113801,
       "wins": 0,
@@ -745,7 +752,8 @@
       "draws": 0,
       "boost": 0,
       "paid": true,
-      "paidAt": 1793423065072
+      "paidAt": 1793423065072,
+      "leftAt": 1793423449227
     },
     {
       "playerId": "p_ihc1omlql8",
@@ -765,11 +773,11 @@
     },
     {
       "playerId": "p_zy0kpu0v0s",
-      "status": "playing",
+      "status": "left",
       "checkInAt": 1793416742678,
       "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 2315441,
+      "gamesPlayed": 3,
+      "playedMs": 3708372,
       "waitedMs": 2991065,
       "longestWaitMs": 1260038,
       "wins": 0,
@@ -777,7 +785,8 @@
       "draws": 0,
       "boost": 0,
       "paid": true,
-      "paidAt": 1793423006241
+      "paidAt": 1793423006241,
+      "leftAt": 1793423442115
     },
     {
       "playerId": "p_m56exs4ags",
@@ -815,11 +824,11 @@
     },
     {
       "playerId": "p_72p7uc1r13",
-      "status": "playing",
+      "status": "left",
       "checkInAt": 1793420062446,
       "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "gamesPlayed": 1,
+      "playedMs": 2542594,
       "waitedMs": 841752,
       "longestWaitMs": 841752,
       "wins": 0,
@@ -827,7 +836,8 @@
       "draws": 0,
       "boost": 0,
       "paid": true,
-      "paidAt": 1793423354423
+      "paidAt": 1793423354423,
+      "leftAt": 1793423446792
     }
   ],
   "matches": [
@@ -1566,10 +1576,11 @@
         "p_ch56wx3x3j"
       ],
       "startedAt": 1793420904198,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 2,
-      "maxWaitAtStart": 1113581
+      "maxWaitAtStart": 1113581,
+      "endedAt": 1793423446792
     },
     {
       "id": "m_i7eoqalelz",
@@ -1605,10 +1616,11 @@
         "p_gwdzyqk46n"
       ],
       "startedAt": 1793421224490,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 1,
-      "maxWaitAtStart": 1734801
+      "maxWaitAtStart": 1734801,
+      "endedAt": 1793423449227
     },
     {
       "id": "m_qwv9ic6lk1",
@@ -1624,10 +1636,11 @@
         "p_04n5grksuu"
       ],
       "startedAt": 1793422049184,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 2,
-      "maxWaitAtStart": 3654806
+      "maxWaitAtStart": 3654806,
+      "endedAt": 1793423442115
     },
     {
       "id": "m_t8vttk8a4k",
@@ -1643,10 +1656,11 @@
         "p_xlhr79w0ne"
       ],
       "startedAt": 1793422127684,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 1,
-      "maxWaitAtStart": 3817246
+      "maxWaitAtStart": 3817246,
+      "endedAt": 1793423444602
     }
   ],
   "planned": [],
