@@ -328,7 +328,8 @@
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793423034963
     },
     {
       "playerId": "p_dyw8ikn9wu",
@@ -3353,6 +3354,24 @@
       "kind": "pay",
       "text": "ฟิว จ่ายแล้ว",
       "playerId": "p_zy0kpu0v0s"
+    },
+    {
+      "at": 1793423026330,
+      "kind": "pay",
+      "text": "ปาล์ม จ่ายแล้ว",
+      "playerId": "p_3bvix9nerq"
+    },
+    {
+      "at": 1793423027485,
+      "kind": "pay",
+      "text": "ปาล์ม ยกเลิกการจ่าย",
+      "playerId": "p_3bvix9nerq"
+    },
+    {
+      "at": 1793423034963,
+      "kind": "pay",
+      "text": "ปาล์ม จ่ายแล้ว",
+      "playerId": "p_3bvix9nerq"
     }
   ],
   "settings": {
