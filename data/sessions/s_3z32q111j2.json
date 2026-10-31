@@ -737,6 +737,21 @@
       "createdAt": 1793414520439,
       "createdBy": "manual",
       "levelGap": 1
+    },
+    {
+      "id": "pl_0wppizt2ux",
+      "type": "D",
+      "teamA": [
+        "p_0aamglvm9a",
+        "p_vrlbf0860e"
+      ],
+      "teamB": [
+        "p_vlg61a1abs",
+        "p_3bvix9nerq"
+      ],
+      "createdAt": 1793414699961,
+      "createdBy": "manual",
+      "levelGap": 3
     }
   ],
   "events": [
