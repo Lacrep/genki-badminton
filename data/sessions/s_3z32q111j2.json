@@ -550,6 +550,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_2jd5ehh4i6",
+      "status": "queue",
+      "checkInAt": 1793414639270,
+      "queueSince": 1793414639270,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -1078,6 +1093,12 @@
       "kind": "player.checkin",
       "text": "พี่เทพ เช็คอิน",
       "playerId": "p_0aamglvm9a"
+    },
+    {
+      "at": 1793414639270,
+      "kind": "player.checkin",
+      "text": "ซัน เช็คอิน",
+      "playerId": "p_2jd5ehh4i6"
     }
   ],
   "settings": {
