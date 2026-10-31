@@ -648,18 +648,20 @@
     },
     {
       "playerId": "p_x5deq395fp",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793415449804,
-      "queueSince": 1793422117784,
+      "queueSince": null,
       "gamesPlayed": 3,
       "playedMs": 4253553,
-      "waitedMs": 2414427,
+      "waitedMs": 2524682,
       "longestWaitMs": 934121,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793422228039,
+      "leftAt": 1793422228039
     },
     {
       "playerId": "p_jw88ens36l",
@@ -3111,6 +3113,18 @@
       "kind": "match.end",
       "text": "จบเกม #38 คอร์ต 2",
       "matchId": "m_i7eoqalelz"
+    },
+    {
+      "at": 1793422228039,
+      "kind": "pay",
+      "text": "เวฟ จ่ายแล้ว",
+      "playerId": "p_x5deq395fp"
+    },
+    {
+      "at": 1793422228039,
+      "kind": "player.checkout",
+      "text": "เวฟ จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_x5deq395fp"
     }
   ],
   "settings": {
