@@ -305,6 +305,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_qt563yr8cn",
+      "status": "queue",
+      "checkInAt": 1793412934158,
+      "queueSince": 1793412934158,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -504,6 +519,12 @@
       "kind": "match.start",
       "text": "คอร์ต 3: เล็ก, เน, เบิร์ด(ตี๋), ภูมิ",
       "matchId": "m_ypi2gfolno"
+    },
+    {
+      "at": 1793412934158,
+      "kind": "player.checkin",
+      "text": "คิม เช็คอิน",
+      "playerId": "p_qt563yr8cn"
     }
   ],
   "settings": {
