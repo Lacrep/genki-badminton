@@ -671,7 +671,9 @@
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "noCourtFee": true,
+      "paidAt": 1793423336653
     },
     {
       "playerId": "p_x5deq395fp",
