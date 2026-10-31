@@ -270,18 +270,20 @@
     },
     {
       "playerId": "p_xf3iqplno6",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793412728836,
-      "queueSince": 1793422076497,
+      "queueSince": null,
       "gamesPlayed": 5,
       "playedMs": 5550006,
-      "waitedMs": 3797655,
-      "longestWaitMs": 1162773,
+      "waitedMs": 5149645,
+      "longestWaitMs": 1351990,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793423428487,
+      "leftAt": 1793423428487
     },
     {
       "playerId": "p_wse74h0bhl",
@@ -3430,6 +3432,18 @@
       "kind": "pay",
       "text": "บอมเบ จ่ายแล้ว",
       "playerId": "p_72p7uc1r13"
+    },
+    {
+      "at": 1793423428487,
+      "kind": "pay",
+      "text": "นน จ่ายแล้ว",
+      "playerId": "p_xf3iqplno6"
+    },
+    {
+      "at": 1793423428487,
+      "kind": "player.checkout",
+      "text": "นน จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_xf3iqplno6"
     }
   ],
   "settings": {
