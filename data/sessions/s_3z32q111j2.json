@@ -493,18 +493,20 @@
     },
     {
       "playerId": "p_qe4j6866il",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793413992017,
-      "queueSince": 1793422076497,
+      "queueSince": null,
       "gamesPlayed": 4,
       "playedMs": 4668111,
-      "waitedMs": 3416369,
+      "waitedMs": 4508194,
       "longestWaitMs": 1446969,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793423168322,
+      "leftAt": 1793423168322
     },
     {
       "playerId": "p_0tkx8luk7o",
@@ -3407,6 +3409,18 @@
       "kind": "player.checkout",
       "text": "บอล จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_m56exs4ags"
+    },
+    {
+      "at": 1793423168323,
+      "kind": "pay",
+      "text": "พี่อั้ม จ่ายแล้ว",
+      "playerId": "p_qe4j6866il"
+    },
+    {
+      "at": 1793423168323,
+      "kind": "player.checkout",
+      "text": "พี่อั้ม จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_qe4j6866il"
     }
   ],
   "settings": {
