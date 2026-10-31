@@ -10,7 +10,7 @@
     {
       "index": 0,
       "name": "คอร์ต 1",
-      "currentMatchId": "m_w7ealu8ly2",
+      "currentMatchId": null,
       "disabled": false
     },
     {
@@ -80,19 +80,21 @@
     },
     {
       "playerId": "p_7abt4a6j42",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793411936816,
-      "queueSince": 1793418143022,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 2485040,
-      "waitedMs": 3534445,
-      "longestWaitMs": 1756433,
+      "waitedMs": 7378648,
+      "longestWaitMs": 3844203,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false,
-      "shuttleAdjust": 1
+      "paid": true,
+      "shuttleAdjust": 2,
+      "paidAt": 1793421987225,
+      "leftAt": 1793421987225
     },
     {
       "playerId": "p_5pmcrc7d7c",
@@ -158,18 +160,20 @@
     },
     {
       "playerId": "p_x3znla8qn9",
-      "status": "playing",
+      "status": "left",
       "checkInAt": 1793412071401,
       "queueSince": null,
-      "gamesPlayed": 3,
-      "playedMs": 3788218,
-      "waitedMs": 4603767,
+      "gamesPlayed": 4,
+      "playedMs": 5315617,
+      "waitedMs": 4611003,
       "longestWaitMs": 1756433,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793421998021,
+      "leftAt": 1793421998021
     },
     {
       "playerId": "p_gwdzyqk46n",
@@ -237,11 +241,11 @@
     },
     {
       "playerId": "p_xscgffmd12",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412706948,
-      "queueSince": null,
-      "gamesPlayed": 3,
-      "playedMs": 4627212,
+      "queueSince": 1793421990785,
+      "gamesPlayed": 4,
+      "playedMs": 6154611,
       "waitedMs": 3129226,
       "longestWaitMs": 1344461,
       "wins": 0,
@@ -394,11 +398,11 @@
     },
     {
       "playerId": "p_xlhr79w0ne",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793413157456,
-      "queueSince": null,
-      "gamesPlayed": 3,
-      "playedMs": 3433878,
+      "queueSince": 1793421990785,
+      "gamesPlayed": 4,
+      "playedMs": 4961277,
       "waitedMs": 3872052,
       "longestWaitMs": 1337904,
       "wins": 0,
@@ -581,11 +585,11 @@
     },
     {
       "playerId": "p_2jd5ehh4i6",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793414639270,
-      "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 2210079,
+      "queueSince": 1793421990785,
+      "gamesPlayed": 3,
+      "playedMs": 3737478,
       "waitedMs": 3614037,
       "longestWaitMs": 1302577,
       "wins": 0,
@@ -1452,10 +1456,11 @@
         "p_xscgffmd12"
       ],
       "startedAt": 1793420463386,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 2,
-      "maxWaitAtStart": 1213549
+      "maxWaitAtStart": 1213549,
+      "endedAt": 1793421990785
     },
     {
       "id": "m_m2r1sce7lu",
@@ -2985,6 +2990,42 @@
       "kind": "player.checkout",
       "text": "หลิน จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_wse74h0bhl"
+    },
+    {
+      "at": 1793421985146,
+      "kind": "fee",
+      "text": "แนน ปรับลูกที่คิดเป็น +2 ลูก",
+      "playerId": "p_7abt4a6j42"
+    },
+    {
+      "at": 1793421987225,
+      "kind": "pay",
+      "text": "แนน จ่ายแล้ว",
+      "playerId": "p_7abt4a6j42"
+    },
+    {
+      "at": 1793421987225,
+      "kind": "player.checkout",
+      "text": "แนน จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_7abt4a6j42"
+    },
+    {
+      "at": 1793421990785,
+      "kind": "match.end",
+      "text": "จบเกม #34 คอร์ต 1",
+      "matchId": "m_w7ealu8ly2"
+    },
+    {
+      "at": 1793421998021,
+      "kind": "pay",
+      "text": "อีฟ จ่ายแล้ว",
+      "playerId": "p_x3znla8qn9"
+    },
+    {
+      "at": 1793421998021,
+      "kind": "player.checkout",
+      "text": "อีฟ จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_x3znla8qn9"
     }
   ],
   "settings": {
