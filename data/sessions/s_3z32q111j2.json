@@ -1499,7 +1499,23 @@
       "maxWaitAtStart": 1113581
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_9peceujj8i",
+      "type": "D",
+      "teamA": [
+        "p_0aamglvm9a",
+        "p_vlg61a1abs"
+      ],
+      "teamB": [
+        "p_m56exs4ags",
+        "p_53y43qzll8"
+      ],
+      "createdAt": 1793420973090,
+      "createdBy": "manual",
+      "levelGap": 2
+    }
+  ],
   "events": [
     {
       "at": 1793411712254,
