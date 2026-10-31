@@ -27,7 +27,7 @@
     {
       "index": 3,
       "name": "คอร์ต 4",
-      "currentMatchId": null
+      "currentMatchId": "m_57awrft0er"
     },
     {
       "index": 4,
@@ -277,13 +277,13 @@
     },
     {
       "playerId": "p_kszf8rzu4d",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793412728847,
-      "queueSince": 1793418037391,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 3206935,
-      "waitedMs": 2101609,
-      "longestWaitMs": 1068661,
+      "waitedMs": 3799853,
+      "longestWaitMs": 1698244,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -397,12 +397,12 @@
     },
     {
       "playerId": "p_dqmf83x2h9",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793413206487,
-      "queueSince": 1793418394378,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 3121148,
-      "waitedMs": 2066743,
+      "waitedMs": 3408000,
       "longestWaitMs": 1475722,
       "wins": 0,
       "losses": 0,
@@ -487,13 +487,13 @@
     },
     {
       "playerId": "p_suzv413d26",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793414253255,
-      "queueSince": 1793418310438,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 2324077,
-      "waitedMs": 1733106,
-      "longestWaitMs": 1093353,
+      "waitedMs": 3158303,
+      "longestWaitMs": 1425197,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -727,12 +727,12 @@
     },
     {
       "playerId": "p_ijcgyu8qlz",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793417110206,
-      "queueSince": 1793419249837,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 1247121,
-      "waitedMs": 892510,
+      "waitedMs": 1378308,
       "longestWaitMs": 892510,
       "wins": 0,
       "losses": 0,
@@ -1337,11 +1337,11 @@
       "createdBy": "manual",
       "levelGap": 1,
       "maxWaitAtStart": 1387885
-    }
-  ],
-  "planned": [
+    },
     {
-      "id": "pl_ww1bzos0py",
+      "id": "m_57awrft0er",
+      "no": 31,
+      "courtIndex": 3,
       "type": "D",
       "teamA": [
         "p_kszf8rzu4d",
@@ -1351,11 +1351,14 @@
         "p_dqmf83x2h9",
         "p_ijcgyu8qlz"
       ],
-      "createdAt": 1793419689382,
+      "startedAt": 1793419735635,
+      "shuttles": 0,
       "createdBy": "manual",
-      "levelGap": 1
+      "levelGap": 1,
+      "maxWaitAtStart": 1698244
     }
   ],
+  "planned": [],
   "events": [
     {
       "at": 1793411712254,
@@ -2399,6 +2402,23 @@
       "at": 1793419689382,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: มิกกี้, ไกด์, ปริม, กบ"
+    },
+    {
+      "at": 1793419735635,
+      "kind": "match.start",
+      "text": "คอร์ต 3: มิกกี้, ไกด์, ปริม, กบ",
+      "matchId": "m_57awrft0er"
+    },
+    {
+      "at": 1793419735644,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: มิกกี้, ไกด์, ปริม, กบ"
+    },
+    {
+      "at": 1793419738974,
+      "kind": "match.move",
+      "text": "ย้ายเกม #31 จาก คอร์ต 3 ไป คอร์ต 4",
+      "matchId": "m_57awrft0er"
     }
   ],
   "settings": {
