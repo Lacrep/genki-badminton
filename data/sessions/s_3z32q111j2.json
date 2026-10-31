@@ -820,7 +820,8 @@
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793423354423
     }
   ],
   "matches": [
@@ -3421,6 +3422,12 @@
       "kind": "player.checkout",
       "text": "พี่อั้ม จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_qe4j6866il"
+    },
+    {
+      "at": 1793423354424,
+      "kind": "pay",
+      "text": "บอมเบ จ่ายแล้ว",
+      "playerId": "p_72p7uc1r13"
     }
   ],
   "settings": {
