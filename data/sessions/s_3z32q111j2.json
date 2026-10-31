@@ -670,6 +670,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_ihc1omlql8",
+      "status": "queue",
+      "checkInAt": 1793416534414,
+      "queueSince": 1793416534414,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -1594,6 +1609,12 @@
       "at": 1793416504462,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: ฟลุ๊คสาว, Top, ไอซ์, พี่ตี๋"
+    },
+    {
+      "at": 1793416534414,
+      "kind": "player.checkin",
+      "text": "พรฟ้า เช็คอิน",
+      "playerId": "p_ihc1omlql8"
     }
   ],
   "settings": {
