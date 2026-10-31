@@ -547,23 +547,7 @@
       "maxWaitAtStart": 1792711
     }
   ],
-  "planned": [
-    {
-      "id": "pl_xe3dex5u5d",
-      "type": "D",
-      "teamA": [
-        "p_dqmf83x2h9",
-        "p_jwgpsjxb3h"
-      ],
-      "teamB": [
-        "p_xlhr79w0ne",
-        "p_wse74h0bhl"
-      ],
-      "createdAt": 1793413615585,
-      "createdBy": "manual",
-      "levelGap": 2
-    }
-  ],
+  "planned": [],
   "events": [
     {
       "at": 1793411712254,
@@ -804,6 +788,11 @@
       "kind": "match.end",
       "text": "จบเกม #2 คอร์ต 4",
       "matchId": "m_z83xtvi6y5"
+    },
+    {
+      "at": 1793413711666,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: ปริม, ไนท์, ต้า, หลิน"
     }
   ],
   "settings": {
