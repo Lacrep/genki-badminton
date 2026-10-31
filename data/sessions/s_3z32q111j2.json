@@ -98,18 +98,20 @@
     },
     {
       "playerId": "p_5pmcrc7d7c",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793411945965,
-      "queueSince": 1793420655300,
+      "queueSince": null,
       "gamesPlayed": 4,
       "playedMs": 4430624,
-      "waitedMs": 4278711,
+      "waitedMs": 5631261,
       "longestWaitMs": 1386638,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793422007850,
+      "leftAt": 1793422007850
     },
     {
       "playerId": "p_hwixawkd5d",
@@ -3026,6 +3028,18 @@
       "kind": "player.checkout",
       "text": "อีฟ จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_x3znla8qn9"
+    },
+    {
+      "at": 1793422007850,
+      "kind": "pay",
+      "text": "โอม จ่ายแล้ว",
+      "playerId": "p_5pmcrc7d7c"
+    },
+    {
+      "at": 1793422007850,
+      "kind": "player.checkout",
+      "text": "โอม จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_5pmcrc7d7c"
     }
   ],
   "settings": {
