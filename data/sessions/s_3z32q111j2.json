@@ -385,6 +385,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_dqmf83x2h9",
+      "status": "queue",
+      "checkInAt": 1793413206487,
+      "queueSince": 1793413206487,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -635,6 +650,12 @@
       "kind": "player.checkin",
       "text": "ต้า เช็คอิน",
       "playerId": "p_xlhr79w0ne"
+    },
+    {
+      "at": 1793413206487,
+      "kind": "player.checkin",
+      "text": "ปริม เช็คอิน",
+      "playerId": "p_dqmf83x2h9"
     }
   ],
   "settings": {
