@@ -32,7 +32,7 @@
     {
       "index": 4,
       "name": "คอร์ต 5",
-      "currentMatchId": "m_cok5txgm0x"
+      "currentMatchId": null
     },
     {
       "index": 5,
@@ -58,16 +58,16 @@
     },
     {
       "playerId": "p_l3p08u33jg",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793411888287,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793413588788,
+      "gamesPlayed": 1,
+      "playedMs": 1150132,
       "waitedMs": 550369,
       "longestWaitMs": 550369,
       "wins": 0,
       "losses": 0,
-      "draws": 0,
+      "draws": 1,
       "boost": 0,
       "paid": false
     },
@@ -118,31 +118,31 @@
     },
     {
       "playerId": "p_fgphe06utu",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793411983512,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793413588788,
+      "gamesPlayed": 1,
+      "playedMs": 1150132,
       "waitedMs": 455144,
       "longestWaitMs": 455144,
       "wins": 0,
       "losses": 0,
-      "draws": 0,
+      "draws": 1,
       "boost": 0,
       "paid": false
     },
     {
       "playerId": "p_8ft5fb76ef",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793411998510,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793413588788,
+      "gamesPlayed": 1,
+      "playedMs": 1150132,
       "waitedMs": 440146,
       "longestWaitMs": 440146,
       "wins": 0,
       "losses": 0,
-      "draws": 0,
+      "draws": 1,
       "boost": 0,
       "paid": false
     },
@@ -163,16 +163,16 @@
     },
     {
       "playerId": "p_gwdzyqk46n",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412174124,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793413588788,
+      "gamesPlayed": 1,
+      "playedMs": 1150132,
       "waitedMs": 264532,
       "longestWaitMs": 264532,
       "wins": 0,
       "losses": 0,
-      "draws": 0,
+      "draws": 1,
       "boost": 0,
       "paid": false
     },
@@ -447,10 +447,12 @@
         "p_8ft5fb76ef"
       ],
       "startedAt": 1793412438656,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 2,
-      "maxWaitAtStart": 550369
+      "maxWaitAtStart": 550369,
+      "endedAt": 1793413588788,
+      "winner": "draw"
     },
     {
       "id": "m_z83xtvi6y5",
@@ -733,6 +735,12 @@
       "at": 1793413529735,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: แบงค์, นน, ไนท์, ต้า"
+    },
+    {
+      "at": 1793413588788,
+      "kind": "match.end",
+      "text": "จบเกม #1 คอร์ต 5",
+      "matchId": "m_cok5txgm0x"
     }
   ],
   "settings": {
