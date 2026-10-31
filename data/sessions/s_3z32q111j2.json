@@ -79,8 +79,9 @@
       "losses": 0,
       "draws": 1,
       "boost": 0,
-      "paid": false,
-      "leftAt": 1793420166667
+      "paid": true,
+      "leftAt": 1793420166667,
+      "paidAt": 1793423745098
     },
     {
       "playerId": "p_7abt4a6j42",
@@ -3563,6 +3564,12 @@
       "kind": "player.checkout",
       "text": "ไนท์ จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_jwgpsjxb3h"
+    },
+    {
+      "at": 1793423745099,
+      "kind": "pay",
+      "text": "ไอซ์ จ่ายแล้ว",
+      "playerId": "p_l3p08u33jg"
     }
   ],
   "settings": {
