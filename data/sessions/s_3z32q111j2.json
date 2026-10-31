@@ -625,6 +625,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_jw88ens36l",
+      "status": "queue",
+      "checkInAt": 1793416333354,
+      "queueSince": 1793416333354,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -1510,6 +1525,12 @@
       "at": 1793416278668,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: จา, โอ๊ต, ไกด์การบิน, เวฟ"
+    },
+    {
+      "at": 1793416333354,
+      "kind": "player.checkin",
+      "text": "ปลาวาฬ เช็คอิน",
+      "playerId": "p_jw88ens36l"
     }
   ],
   "settings": {
