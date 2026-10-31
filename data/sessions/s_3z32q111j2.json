@@ -32,7 +32,7 @@
     {
       "index": 4,
       "name": "คอร์ต 5",
-      "currentMatchId": "m_wd0ik71nd1"
+      "currentMatchId": null
     },
     {
       "index": 5,
@@ -91,7 +91,8 @@
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "shuttleAdjust": 1
     },
     {
       "playerId": "p_5pmcrc7d7c",
@@ -311,11 +312,11 @@
     },
     {
       "playerId": "p_dyw8ikn9wu",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412749561,
-      "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 3121148,
+      "queueSince": 1793421206948,
+      "gamesPlayed": 3,
+      "playedMs": 4189468,
       "waitedMs": 4267919,
       "longestWaitMs": 1744250,
       "wins": 0,
@@ -359,11 +360,11 @@
     },
     {
       "playerId": "p_04n5grksuu",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793413016839,
-      "queueSince": null,
-      "gamesPlayed": 3,
-      "playedMs": 3871269,
+      "queueSince": 1793421206948,
+      "gamesPlayed": 4,
+      "playedMs": 4939589,
       "waitedMs": 3250520,
       "longestWaitMs": 1291489,
       "wins": 0,
@@ -445,7 +446,8 @@
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "shuttleAdjust": 1
     },
     {
       "playerId": "p_53y43qzll8",
@@ -524,11 +526,11 @@
     },
     {
       "playerId": "p_ej0cyelb18",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793414337316,
-      "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 2297278,
+      "queueSince": 1793421206948,
+      "gamesPlayed": 3,
+      "playedMs": 3365598,
       "waitedMs": 3504034,
       "longestWaitMs": 1337904,
       "wins": 0,
@@ -704,11 +706,11 @@
     },
     {
       "playerId": "p_zy0kpu0v0s",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793416742678,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 1247121,
+      "queueSince": 1793421206948,
+      "gamesPlayed": 2,
+      "playedMs": 2315441,
       "waitedMs": 2148829,
       "longestWaitMs": 1260038,
       "wins": 0,
@@ -1419,10 +1421,11 @@
         "p_zy0kpu0v0s"
       ],
       "startedAt": 1793420138628,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 1,
-      "maxWaitAtStart": 1744250
+      "maxWaitAtStart": 1744250,
+      "endedAt": 1793421206948
     },
     {
       "id": "m_w7ealu8ly2",
@@ -2813,6 +2816,36 @@
       "kind": "pay",
       "text": "คิม จ่ายแล้ว",
       "playerId": "p_qt563yr8cn"
+    },
+    {
+      "at": 1793421201569,
+      "kind": "fee",
+      "text": "แนน ปรับลูกที่คิดเป็น +1 ลูก",
+      "playerId": "p_7abt4a6j42"
+    },
+    {
+      "at": 1793421202163,
+      "kind": "fee",
+      "text": "แนน ปรับลูกที่คิดเป็น +2 ลูก",
+      "playerId": "p_7abt4a6j42"
+    },
+    {
+      "at": 1793421203049,
+      "kind": "fee",
+      "text": "แนน ปรับลูกที่คิดเป็น +1 ลูก",
+      "playerId": "p_7abt4a6j42"
+    },
+    {
+      "at": 1793421206948,
+      "kind": "match.end",
+      "text": "จบเกม #33 คอร์ต 5",
+      "matchId": "m_wd0ik71nd1"
+    },
+    {
+      "at": 1793421213081,
+      "kind": "fee",
+      "text": "ผิง ปรับลูกที่คิดเป็น +1 ลูก",
+      "playerId": "p_zaui6hkcn1"
     }
   ],
   "settings": {
