@@ -50,19 +50,21 @@
   "players": [
     {
       "playerId": "p_vlg61a1abs",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793411851283,
-      "queueSince": 1793422189785,
+      "queueSince": null,
       "gamesPlayed": 4,
       "playedMs": 4262434,
-      "waitedMs": 6076068,
+      "waitedMs": 6849735,
       "longestWaitMs": 2287771,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false,
-      "shuttleAdjust": -2
+      "paid": true,
+      "shuttleAdjust": -2,
+      "paidAt": 1793422963452,
+      "leftAt": 1793422963452
     },
     {
       "playerId": "p_l3p08u33jg",
@@ -3331,6 +3333,18 @@
       "at": 1793422949910,
       "kind": "fee",
       "text": "แบงค์ ปรับลูกที่คิดเป็น -2 ลูก",
+      "playerId": "p_vlg61a1abs"
+    },
+    {
+      "at": 1793422963453,
+      "kind": "pay",
+      "text": "แบงค์ จ่ายแล้ว",
+      "playerId": "p_vlg61a1abs"
+    },
+    {
+      "at": 1793422963453,
+      "kind": "player.checkout",
+      "text": "แบงค์ จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_vlg61a1abs"
     }
   ],
