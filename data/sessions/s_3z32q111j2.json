@@ -33,6 +33,11 @@
       "index": 4,
       "name": "คอร์ต 5",
       "currentMatchId": "m_cok5txgm0x"
+    },
+    {
+      "index": 5,
+      "name": "คอร์ต 6",
+      "currentMatchId": null
     }
   ],
   "players": [
@@ -365,6 +370,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_xlhr79w0ne",
+      "status": "queue",
+      "checkInAt": 1793413157456,
+      "queueSince": 1793413157456,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -609,6 +629,12 @@
       "at": 1793413129819,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: คิม, เอกกี้, ปาล์ม, พรีม"
+    },
+    {
+      "at": 1793413157457,
+      "kind": "player.checkin",
+      "text": "ต้า เช็คอิน",
+      "playerId": "p_xlhr79w0ne"
     }
   ],
   "settings": {
