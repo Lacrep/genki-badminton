@@ -42,7 +42,7 @@
     {
       "index": 6,
       "name": "คอร์ต 7",
-      "currentMatchId": "m_mgmk1srva4"
+      "currentMatchId": null
     }
   ],
   "players": [
@@ -379,11 +379,11 @@
     },
     {
       "playerId": "p_xlhr79w0ne",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793413157456,
-      "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 2186757,
+      "queueSince": 1793419249837,
+      "gamesPlayed": 3,
+      "playedMs": 3433878,
       "waitedMs": 2658503,
       "longestWaitMs": 1337904,
       "wins": 0,
@@ -514,11 +514,11 @@
     },
     {
       "playerId": "p_ej0cyelb18",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793414337316,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 1050157,
+      "queueSince": 1793419249837,
+      "gamesPlayed": 2,
+      "playedMs": 2297278,
       "waitedMs": 2615243,
       "longestWaitMs": 1337904,
       "wins": 0,
@@ -694,11 +694,11 @@
     },
     {
       "playerId": "p_zy0kpu0v0s",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793416742678,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793419249837,
+      "gamesPlayed": 1,
+      "playedMs": 1247121,
       "waitedMs": 1260038,
       "longestWaitMs": 1260038,
       "wins": 0,
@@ -724,11 +724,11 @@
     },
     {
       "playerId": "p_ijcgyu8qlz",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793417110206,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793419249837,
+      "gamesPlayed": 1,
+      "playedMs": 1247121,
       "waitedMs": 892510,
       "longestWaitMs": 892510,
       "wins": 0,
@@ -1193,10 +1193,11 @@
         "p_ijcgyu8qlz"
       ],
       "startedAt": 1793418002716,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "auto",
       "levelGap": 1,
-      "maxWaitAtStart": 1337904
+      "maxWaitAtStart": 1337904,
+      "endedAt": 1793419249837
     },
     {
       "id": "m_gswvo5vii6",
@@ -2298,6 +2299,12 @@
       "at": 1793419215425,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: แนน, พรฟ้า, ผิง, สุดหล่อ"
+    },
+    {
+      "at": 1793419249837,
+      "kind": "match.end",
+      "text": "จบเกม #23 คอร์ต 7",
+      "matchId": "m_mgmk1srva4"
     }
   ],
   "settings": {
