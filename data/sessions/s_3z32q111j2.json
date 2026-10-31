@@ -437,7 +437,8 @@
       "boost": 0,
       "paid": true,
       "paidAt": 1793423555602,
-      "leftAt": 1793423555602
+      "leftAt": 1793423555602,
+      "shuttleAdjust": -1
     },
     {
       "playerId": "p_dqmf83x2h9",
