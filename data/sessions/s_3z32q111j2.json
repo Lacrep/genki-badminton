@@ -32,7 +32,7 @@
     {
       "index": 4,
       "name": "คอร์ต 5",
-      "currentMatchId": "m_kekjr66g2i"
+      "currentMatchId": null
     },
     {
       "index": 5,
@@ -43,11 +43,11 @@
   "players": [
     {
       "playerId": "p_vlg61a1abs",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793411851283,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793414780594,
+      "gamesPlayed": 1,
+      "playedMs": 1136600,
       "waitedMs": 1792711,
       "longestWaitMs": 1792711,
       "wins": 0,
@@ -238,11 +238,11 @@
     },
     {
       "playerId": "p_xf3iqplno6",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412728836,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793414780594,
+      "gamesPlayed": 1,
+      "playedMs": 1136600,
       "waitedMs": 915158,
       "longestWaitMs": 915158,
       "wins": 0,
@@ -373,11 +373,11 @@
     },
     {
       "playerId": "p_xlhr79w0ne",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793413157456,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793414780594,
+      "gamesPlayed": 1,
+      "playedMs": 1136600,
       "waitedMs": 486538,
       "longestWaitMs": 486538,
       "wins": 0,
@@ -403,11 +403,11 @@
     },
     {
       "playerId": "p_jwgpsjxb3h",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793413217652,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793414780594,
+      "gamesPlayed": 1,
+      "playedMs": 1136600,
       "waitedMs": 426342,
       "longestWaitMs": 426342,
       "wins": 0,
@@ -662,10 +662,11 @@
         "p_xlhr79w0ne"
       ],
       "startedAt": 1793413643994,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 1,
-      "maxWaitAtStart": 1792711
+      "maxWaitAtStart": 1792711,
+      "endedAt": 1793414780594
     },
     {
       "id": "m_sbwa279qit",
@@ -1099,6 +1100,12 @@
       "kind": "player.checkin",
       "text": "ซัน เช็คอิน",
       "playerId": "p_2jd5ehh4i6"
+    },
+    {
+      "at": 1793414780594,
+      "kind": "match.end",
+      "text": "จบเกม #5 คอร์ต 5",
+      "matchId": "m_kekjr66g2i"
     }
   ],
   "settings": {
