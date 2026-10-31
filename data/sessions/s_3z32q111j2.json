@@ -183,18 +183,19 @@
     },
     {
       "playerId": "p_54w3lucivg",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793412247952,
-      "queueSince": 1793418772636,
+      "queueSince": null,
       "gamesPlayed": 3,
       "playedMs": 4135433,
-      "waitedMs": 2389251,
+      "waitedMs": 2512145,
       "longestWaitMs": 1273059,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "leftAt": 1793418895530
     },
     {
       "playerId": "p_vrlbf0860e",
@@ -2251,6 +2252,12 @@
       "at": 1793418847287,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: หลิน, โอม, ปลาวาฬ, หมิง"
+    },
+    {
+      "at": 1793418895530,
+      "kind": "player.checkout",
+      "text": "เบิร์ด(ตี๋) กลับบ้าน",
+      "playerId": "p_54w3lucivg"
     }
   ],
   "settings": {
