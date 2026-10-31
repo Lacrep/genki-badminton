@@ -95,6 +95,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_hwixawkd5d",
+      "status": "queue",
+      "checkInAt": 1793411956806,
+      "queueSince": 1793411956806,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [],
@@ -128,6 +143,12 @@
       "kind": "player.checkin",
       "text": "โอม เช็คอิน",
       "playerId": "p_5pmcrc7d7c"
+    },
+    {
+      "at": 1793411956806,
+      "kind": "player.checkin",
+      "text": "พี่ตี๋ เช็คอิน",
+      "playerId": "p_hwixawkd5d"
     }
   ],
   "settings": {
