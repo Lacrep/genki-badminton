@@ -1144,6 +1144,21 @@
       "createdAt": 1793417308585,
       "createdBy": "manual",
       "levelGap": 1
+    },
+    {
+      "id": "pl_w881a5g3r5",
+      "type": "D",
+      "teamA": [
+        "p_g6x4u5tabq",
+        "p_7abt4a6j42"
+      ],
+      "teamB": [
+        "p_x3znla8qn9",
+        "p_04n5grksuu"
+      ],
+      "createdAt": 1793417453825,
+      "createdBy": "manual",
+      "levelGap": 1
     }
   ],
   "events": [
@@ -1896,6 +1911,11 @@
       "at": 1793417408521,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: อีฟ, เอกกี้, แนน, โซระ"
+    },
+    {
+      "at": 1793417453825,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: เอกกี้, แนน, อีฟ, พรีม"
     }
   ],
   "settings": {
