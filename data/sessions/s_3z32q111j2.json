@@ -32,12 +32,12 @@
     {
       "index": 4,
       "name": "คอร์ต 5",
-      "currentMatchId": null
+      "currentMatchId": "m_jkastrx7td"
     },
     {
       "index": 5,
       "name": "คอร์ต 6",
-      "currentMatchId": "m_hv6nyb0kci"
+      "currentMatchId": "m_bzunkpxe9w"
     }
   ],
   "players": [
@@ -73,13 +73,13 @@
     },
     {
       "playerId": "p_7abt4a6j42",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793411936816,
-      "queueSince": 1793413690609,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 1178180,
-      "waitedMs": 575613,
-      "longestWaitMs": 575613,
+      "waitedMs": 1778012,
+      "longestWaitMs": 1202399,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -88,13 +88,13 @@
     },
     {
       "playerId": "p_5pmcrc7d7c",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793411945965,
-      "queueSince": 1793413690609,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 1178180,
-      "waitedMs": 566464,
-      "longestWaitMs": 566464,
+      "waitedMs": 1777235,
+      "longestWaitMs": 1210771,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -103,13 +103,13 @@
     },
     {
       "playerId": "p_hwixawkd5d",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793411956806,
-      "queueSince": 1793413690609,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 1178180,
-      "waitedMs": 555623,
-      "longestWaitMs": 555623,
+      "waitedMs": 1766394,
+      "longestWaitMs": 1210771,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -133,13 +133,13 @@
     },
     {
       "playerId": "p_8ft5fb76ef",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793411998510,
-      "queueSince": 1793413588788,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 1150132,
-      "waitedMs": 440146,
-      "longestWaitMs": 440146,
+      "waitedMs": 1752738,
+      "longestWaitMs": 1312592,
       "wins": 0,
       "losses": 0,
       "draws": 1,
@@ -148,13 +148,13 @@
     },
     {
       "playerId": "p_x3znla8qn9",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793412071401,
-      "queueSince": 1793413690609,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 1178180,
-      "waitedMs": 441028,
-      "longestWaitMs": 441028,
+      "waitedMs": 1643427,
+      "longestWaitMs": 1202399,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -163,13 +163,13 @@
     },
     {
       "playerId": "p_gwdzyqk46n",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793412174124,
-      "queueSince": 1793413588788,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 1150132,
-      "waitedMs": 264532,
-      "longestWaitMs": 264532,
+      "waitedMs": 1577124,
+      "longestWaitMs": 1312592,
       "wins": 0,
       "losses": 0,
       "draws": 1,
@@ -283,11 +283,11 @@
     },
     {
       "playerId": "p_3bvix9nerq",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412749307,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793414887536,
+      "gamesPlayed": 1,
+      "playedMs": 1517934,
       "waitedMs": 620295,
       "longestWaitMs": 620295,
       "wins": 0,
@@ -313,11 +313,11 @@
     },
     {
       "playerId": "p_qt563yr8cn",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412934158,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793414887536,
+      "gamesPlayed": 1,
+      "playedMs": 1517934,
       "waitedMs": 435444,
       "longestWaitMs": 435444,
       "wins": 0,
@@ -343,11 +343,11 @@
     },
     {
       "playerId": "p_04n5grksuu",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793413016839,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793414887536,
+      "gamesPlayed": 1,
+      "playedMs": 1517934,
       "waitedMs": 352763,
       "longestWaitMs": 352763,
       "wins": 0,
@@ -358,11 +358,11 @@
     },
     {
       "playerId": "p_g6x4u5tabq",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793413030028,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1793414887536,
+      "gamesPlayed": 1,
+      "playedMs": 1517934,
       "waitedMs": 339574,
       "longestWaitMs": 339574,
       "wins": 0,
@@ -418,13 +418,13 @@
     },
     {
       "playerId": "p_zaui6hkcn1",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793413330680,
-      "queueSince": 1793413330680,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 1562328,
+      "longestWaitMs": 1562328,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -478,13 +478,13 @@
     },
     {
       "playerId": "p_suzv413d26",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793414253255,
-      "queueSince": 1793414253255,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 639753,
+      "longestWaitMs": 639753,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -643,10 +643,11 @@
         "p_04n5grksuu"
       ],
       "startedAt": 1793413369602,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 1,
-      "maxWaitAtStart": 620295
+      "maxWaitAtStart": 620295,
+      "endedAt": 1793414887536
     },
     {
       "id": "m_kekjr66g2i",
@@ -705,26 +706,11 @@
       "createdBy": "manual",
       "levelGap": 1,
       "maxWaitAtStart": 869811
-    }
-  ],
-  "planned": [
-    {
-      "id": "pl_ycwxienqb2",
-      "type": "D",
-      "teamA": [
-        "p_hwixawkd5d",
-        "p_gwdzyqk46n"
-      ],
-      "teamB": [
-        "p_8ft5fb76ef",
-        "p_5pmcrc7d7c"
-      ],
-      "createdAt": 1793414450414,
-      "createdBy": "manual",
-      "levelGap": 2
     },
     {
-      "id": "pl_2vs56np8c7",
+      "id": "m_jkastrx7td",
+      "no": 8,
+      "courtIndex": 4,
       "type": "D",
       "teamA": [
         "p_7abt4a6j42",
@@ -734,10 +720,33 @@
         "p_x3znla8qn9",
         "p_zaui6hkcn1"
       ],
-      "createdAt": 1793414520439,
+      "startedAt": 1793414893008,
+      "shuttles": 0,
       "createdBy": "manual",
-      "levelGap": 1
+      "levelGap": 1,
+      "maxWaitAtStart": 1562328
     },
+    {
+      "id": "m_bzunkpxe9w",
+      "no": 9,
+      "courtIndex": 5,
+      "type": "D",
+      "teamA": [
+        "p_hwixawkd5d",
+        "p_gwdzyqk46n"
+      ],
+      "teamB": [
+        "p_8ft5fb76ef",
+        "p_5pmcrc7d7c"
+      ],
+      "startedAt": 1793414901380,
+      "shuttles": 0,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 1312592
+    }
+  ],
+  "planned": [
     {
       "id": "pl_0wppizt2ux",
       "type": "D",
@@ -1121,6 +1130,40 @@
       "kind": "match.end",
       "text": "จบเกม #5 คอร์ต 5",
       "matchId": "m_kekjr66g2i"
+    },
+    {
+      "at": 1793414887536,
+      "kind": "match.end",
+      "text": "จบเกม #4 คอร์ต 6",
+      "matchId": "m_hv6nyb0kci"
+    },
+    {
+      "at": 1793414893009,
+      "kind": "match.start",
+      "text": "คอร์ต 6: แนน, ไกด์, อีฟ, ผิง",
+      "matchId": "m_jkastrx7td"
+    },
+    {
+      "at": 1793414893018,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: แนน, ไกด์, อีฟ, ผิง"
+    },
+    {
+      "at": 1793414894678,
+      "kind": "match.move",
+      "text": "ย้ายเกม #8 จาก คอร์ต 6 ไป คอร์ต 5",
+      "matchId": "m_jkastrx7td"
+    },
+    {
+      "at": 1793414901380,
+      "kind": "match.start",
+      "text": "คอร์ต 6: พี่ตี๋, หมิง, ที, โอม",
+      "matchId": "m_bzunkpxe9w"
+    },
+    {
+      "at": 1793414901388,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: พี่ตี๋, หมิง, ที, โอม"
     }
   ],
   "settings": {
