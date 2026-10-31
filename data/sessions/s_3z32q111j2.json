@@ -783,7 +783,8 @@
       "draws": 0,
       "boost": 0,
       "paid": false,
-      "noCourtFee": true
+      "noCourtFee": true,
+      "shuttleAdjust": 1
     },
     {
       "playerId": "p_zy0kpu0v0s",
@@ -3570,6 +3571,12 @@
       "kind": "pay",
       "text": "ไอซ์ จ่ายแล้ว",
       "playerId": "p_l3p08u33jg"
+    },
+    {
+      "at": 1793423839643,
+      "kind": "fee",
+      "text": "พรฟ้า ปรับลูกที่คิดเป็น +1 ลูก",
+      "playerId": "p_ihc1omlql8"
     }
   ],
   "settings": {
