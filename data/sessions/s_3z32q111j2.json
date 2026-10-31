@@ -581,8 +581,9 @@
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false,
-      "shuttleAdjust": 1
+      "paid": true,
+      "shuttleAdjust": 1,
+      "paidAt": 1793422923296
     },
     {
       "playerId": "p_0aamglvm9a",
@@ -3311,6 +3312,12 @@
       "at": 1793422911334,
       "kind": "fee",
       "text": "โซระ ปรับลูกที่คิดเป็น +1 ลูก",
+      "playerId": "p_y1a4x6164v"
+    },
+    {
+      "at": 1793422923296,
+      "kind": "pay",
+      "text": "โซระ จ่ายแล้ว",
       "playerId": "p_y1a4x6164v"
     }
   ],
