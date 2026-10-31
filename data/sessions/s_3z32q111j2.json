@@ -416,18 +416,20 @@
     },
     {
       "playerId": "p_dqmf83x2h9",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793413206487,
-      "queueSince": 1793420903067,
+      "queueSince": null,
       "gamesPlayed": 3,
       "playedMs": 4288580,
-      "waitedMs": 3408000,
+      "waitedMs": 4772555,
       "longestWaitMs": 1475722,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793422267622,
+      "leftAt": 1793422267622
     },
     {
       "playerId": "p_jwgpsjxb3h",
@@ -3125,6 +3127,18 @@
       "kind": "player.checkout",
       "text": "เวฟ จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_x5deq395fp"
+    },
+    {
+      "at": 1793422267623,
+      "kind": "pay",
+      "text": "ปริม จ่ายแล้ว",
+      "playerId": "p_dqmf83x2h9"
+    },
+    {
+      "at": 1793422267623,
+      "kind": "player.checkout",
+      "text": "ปริม จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_dqmf83x2h9"
     }
   ],
   "settings": {
