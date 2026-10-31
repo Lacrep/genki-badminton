@@ -685,6 +685,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_zy0kpu0v0s",
+      "status": "queue",
+      "checkInAt": 1793416742678,
+      "queueSince": 1793416742678,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -1672,6 +1687,12 @@
       "at": 1793416693825,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: หลิน, พรฟ้า, กร, มิกกี้"
+    },
+    {
+      "at": 1793416742678,
+      "kind": "player.checkin",
+      "text": "ฟิว เช็คอิน",
+      "playerId": "p_zy0kpu0v0s"
     }
   ],
   "settings": {
