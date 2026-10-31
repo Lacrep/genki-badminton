@@ -1254,7 +1254,23 @@
       "maxWaitAtStart": 1302577
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_3547d714c1",
+      "type": "D",
+      "teamA": [
+        "p_5kyiacbijt",
+        "p_5t6kdv3w2i"
+      ],
+      "teamB": [
+        "p_hwixawkd5d",
+        "p_8ft5fb76ef"
+      ],
+      "createdAt": 1793418434353,
+      "createdBy": "manual",
+      "levelGap": 1
+    }
+  ],
   "events": [
     {
       "at": 1793411712254,
@@ -2153,6 +2169,11 @@
       "kind": "match.end",
       "text": "จบเกม #18 คอร์ต 6",
       "matchId": "m_agbwp99b1k"
+    },
+    {
+      "at": 1793418434353,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ไกด์การบิน, กร, พี่ตี๋, ที"
     }
   ],
   "settings": {
