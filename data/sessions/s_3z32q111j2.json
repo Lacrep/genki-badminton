@@ -1273,7 +1273,23 @@
       "maxWaitAtStart": 838116
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_096ojp6tqt",
+      "type": "D",
+      "teamA": [
+        "p_3bvix9nerq",
+        "p_l3p08u33jg"
+      ],
+      "teamB": [
+        "p_0aamglvm9a",
+        "p_cw75mksxo7"
+      ],
+      "createdAt": 1793418700565,
+      "createdBy": "manual",
+      "levelGap": 3
+    }
+  ],
   "events": [
     {
       "at": 1793411712254,
@@ -2188,6 +2204,11 @@
       "at": 1793418480225,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: ไกด์การบิน, กร, พี่ตี๋, ที"
+    },
+    {
+      "at": 1793418700565,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ปาล์ม, ไอซ์, พี่เทพ, Top"
     }
   ],
   "settings": {
