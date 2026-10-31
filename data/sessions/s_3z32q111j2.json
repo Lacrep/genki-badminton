@@ -565,6 +565,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_ch56wx3x3j",
+      "status": "queue",
+      "checkInAt": 1793415205718,
+      "queueSince": 1793415205718,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -1234,6 +1249,12 @@
       "at": 1793415136997,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: ซัน, คิม, เอกกี้, ไนท์"
+    },
+    {
+      "at": 1793415205718,
+      "kind": "player.checkin",
+      "text": "โอ๊ต เช็คอิน",
+      "playerId": "p_ch56wx3x3j"
     }
   ],
   "settings": {
