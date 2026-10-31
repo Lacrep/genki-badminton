@@ -16,7 +16,7 @@
     {
       "index": 1,
       "name": "คอร์ต 2",
-      "currentMatchId": null,
+      "currentMatchId": "m_telag1y3ow",
       "disabled": false
     },
     {
@@ -228,12 +228,12 @@
     },
     {
       "playerId": "p_xscgffmd12",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793412706948,
-      "queueSince": 1793417286035,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 3130146,
-      "waitedMs": 1448941,
+      "waitedMs": 2456457,
       "longestWaitMs": 1344461,
       "wins": 0,
       "losses": 0,
@@ -528,12 +528,12 @@
     },
     {
       "playerId": "p_y1a4x6164v",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793414517433,
-      "queueSince": 1793417286035,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 1486059,
-      "waitedMs": 1282543,
+      "waitedMs": 2290059,
       "longestWaitMs": 1282543,
       "wins": 0,
       "losses": 0,
@@ -573,12 +573,12 @@
     },
     {
       "playerId": "p_ch56wx3x3j",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793415205718,
-      "queueSince": 1793417642101,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 1363441,
-      "waitedMs": 1072942,
+      "waitedMs": 1724392,
       "longestWaitMs": 1072942,
       "wins": 0,
       "losses": 0,
@@ -618,12 +618,12 @@
     },
     {
       "playerId": "p_x5deq395fp",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793415449804,
-      "queueSince": 1793417642101,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 1363441,
-      "waitedMs": 828856,
+      "waitedMs": 1480306,
       "longestWaitMs": 828856,
       "wins": 0,
       "losses": 0,
@@ -1212,11 +1212,11 @@
       "createdBy": "manual",
       "levelGap": 2,
       "maxWaitAtStart": 1114526
-    }
-  ],
-  "planned": [
+    },
     {
-      "id": "pl_uvcm9nxuxw",
+      "id": "m_telag1y3ow",
+      "no": 25,
+      "courtIndex": 1,
       "type": "D",
       "teamA": [
         "p_y1a4x6164v",
@@ -1226,10 +1226,14 @@
         "p_xscgffmd12",
         "p_x5deq395fp"
       ],
-      "createdAt": 1793418282212,
+      "startedAt": 1793418293551,
+      "shuttles": 0,
       "createdBy": "manual",
-      "levelGap": 2
-    },
+      "levelGap": 2,
+      "maxWaitAtStart": 1007516
+    }
+  ],
+  "planned": [
     {
       "id": "pl_nw3y4khkb4",
       "type": "D",
@@ -2110,6 +2114,17 @@
       "at": 1793418283927,
       "kind": "plan.move",
       "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1793418293552,
+      "kind": "match.start",
+      "text": "คอร์ต 2: โซระ, โอ๊ต, เล็ก, เวฟ",
+      "matchId": "m_telag1y3ow"
+    },
+    {
+      "at": 1793418293557,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: โซระ, โอ๊ต, เล็ก, เวฟ"
     }
   ],
   "settings": {
