@@ -410,18 +410,20 @@
     },
     {
       "playerId": "p_g6x4u5tabq",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793413030028,
-      "queueSince": 1793423442115,
+      "queueSince": null,
       "gamesPlayed": 5,
       "playedMs": 6335156,
-      "waitedMs": 4076931,
+      "waitedMs": 4361208,
       "longestWaitMs": 1053774,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793423726392,
+      "leftAt": 1793423726392
     },
     {
       "playerId": "p_xlhr79w0ne",
@@ -460,18 +462,20 @@
     },
     {
       "playerId": "p_jwgpsjxb3h",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793413217652,
-      "queueSince": 1793422117784,
+      "queueSince": null,
       "gamesPlayed": 4,
       "playedMs": 4963499,
-      "waitedMs": 3936633,
-      "longestWaitMs": 1235049,
+      "waitedMs": 5552400,
+      "longestWaitMs": 1615767,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793423733551,
+      "leftAt": 1793423733551
     },
     {
       "playerId": "p_zaui6hkcn1",
@@ -3535,6 +3539,30 @@
       "kind": "pay",
       "text": "แป้ง จ่ายแล้ว",
       "playerId": "p_tygwg9sjq3"
+    },
+    {
+      "at": 1793423726393,
+      "kind": "pay",
+      "text": "เอกกี้ จ่ายแล้ว",
+      "playerId": "p_g6x4u5tabq"
+    },
+    {
+      "at": 1793423726393,
+      "kind": "player.checkout",
+      "text": "เอกกี้ จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_g6x4u5tabq"
+    },
+    {
+      "at": 1793423733551,
+      "kind": "pay",
+      "text": "ไนท์ จ่ายแล้ว",
+      "playerId": "p_jwgpsjxb3h"
+    },
+    {
+      "at": 1793423733551,
+      "kind": "player.checkout",
+      "text": "ไนท์ จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_jwgpsjxb3h"
     }
   ],
   "settings": {
