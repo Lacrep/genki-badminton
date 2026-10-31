@@ -337,8 +337,9 @@
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false,
-      "leftAt": 1793421098929
+      "paid": true,
+      "leftAt": 1793421098929,
+      "paidAt": 1793421132361
     },
     {
       "playerId": "p_tygwg9sjq3",
@@ -2806,6 +2807,12 @@
       "at": 1793421116493,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: จา, ปาล์ม, Top, หมิง"
+    },
+    {
+      "at": 1793421132362,
+      "kind": "pay",
+      "text": "คิม จ่ายแล้ว",
+      "playerId": "p_qt563yr8cn"
     }
   ],
   "settings": {
