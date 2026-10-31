@@ -689,7 +689,7 @@
       "queueSince": null,
       "gamesPlayed": 3,
       "playedMs": 3700876,
-      "waitedMs": 4313840,
+      "waitedMs": 4319173,
       "longestWaitMs": 3654806,
       "wins": 0,
       "losses": 0,
@@ -697,8 +697,9 @@
       "boost": 0,
       "paid": true,
       "noCourtFee": true,
-      "paidAt": 1793423336653,
-      "leftAt": 1793423442115
+      "shuttleAdjust": -1,
+      "paidAt": 1793424441632,
+      "leftAt": 1793424441632
     },
     {
       "playerId": "p_x5deq395fp",
@@ -3609,6 +3610,42 @@
       "kind": "pay",
       "text": "พรฟ้า จ่ายแล้ว",
       "playerId": "p_ihc1omlql8"
+    },
+    {
+      "at": 1793424436012,
+      "kind": "fee",
+      "text": "สุดหล่อ ปรับลูกที่คิดเป็น -1 ลูก",
+      "playerId": "p_ecpq3j2g0k"
+    },
+    {
+      "at": 1793424436032,
+      "kind": "fee",
+      "text": "สุดหล่อ ปรับลูกที่คิดเป็น -1 ลูก",
+      "playerId": "p_ecpq3j2g0k"
+    },
+    {
+      "at": 1793424436299,
+      "kind": "pay",
+      "text": "สุดหล่อ ยกเลิกการจ่าย",
+      "playerId": "p_ecpq3j2g0k"
+    },
+    {
+      "at": 1793424436299,
+      "kind": "player.checkin",
+      "text": "สุดหล่อ กลับเข้าคิว",
+      "playerId": "p_ecpq3j2g0k"
+    },
+    {
+      "at": 1793424441632,
+      "kind": "pay",
+      "text": "สุดหล่อ จ่ายแล้ว",
+      "playerId": "p_ecpq3j2g0k"
+    },
+    {
+      "at": 1793424441633,
+      "kind": "player.checkout",
+      "text": "สุดหล่อ จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_ecpq3j2g0k"
     }
   ],
   "settings": {
