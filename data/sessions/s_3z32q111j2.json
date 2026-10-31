@@ -509,8 +509,9 @@
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false,
-      "leftAt": 1793421324126
+      "paid": true,
+      "leftAt": 1793421324126,
+      "paidAt": 1793421350199
     },
     {
       "playerId": "p_28qfvskn0s",
@@ -2907,6 +2908,12 @@
       "kind": "player.checkout",
       "text": "พลอยปภัส จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_0tkx8luk7o"
+    },
+    {
+      "at": 1793421350200,
+      "kind": "pay",
+      "text": "ไกด์ จ่ายแล้ว",
+      "playerId": "p_suzv413d26"
     }
   ],
   "settings": {
