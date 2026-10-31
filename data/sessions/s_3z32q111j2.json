@@ -320,6 +320,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_04n5grksuu",
+      "status": "queue",
+      "checkInAt": 1793412968448,
+      "queueSince": 1793412968448,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -525,6 +540,12 @@
       "kind": "player.checkin",
       "text": "คิม เช็คอิน",
       "playerId": "p_qt563yr8cn"
+    },
+    {
+      "at": 1793412968448,
+      "kind": "player.checkin",
+      "text": "พรีม เช็คอิน",
+      "playerId": "p_04n5grksuu"
     }
   ],
   "settings": {
