@@ -213,18 +213,20 @@
     },
     {
       "playerId": "p_vrlbf0860e",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793412598120,
-      "queueSince": 1793422076497,
+      "queueSince": null,
       "gamesPlayed": 4,
       "playedMs": 5659282,
-      "waitedMs": 3819095,
+      "waitedMs": 4159139,
       "longestWaitMs": 1314829,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793422416541,
+      "leftAt": 1793422416541
     },
     {
       "playerId": "p_clsy13kb33",
@@ -3221,6 +3223,18 @@
       "kind": "player.checkout",
       "text": "ฟลุ๊คสาว จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_53y43qzll8"
+    },
+    {
+      "at": 1793422416542,
+      "kind": "pay",
+      "text": "เน จ่ายแล้ว",
+      "playerId": "p_vrlbf0860e"
+    },
+    {
+      "at": 1793422416542,
+      "kind": "player.checkout",
+      "text": "เน จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_vrlbf0860e"
     }
   ],
   "settings": {
