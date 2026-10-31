@@ -490,6 +490,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_gn0dqdjqwn",
+      "status": "queue",
+      "checkInAt": 1793414264573,
+      "queueSince": 1793414264573,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -932,6 +947,12 @@
       "kind": "player.checkin",
       "text": "ไกด์ เช็คอิน",
       "playerId": "p_suzv413d26"
+    },
+    {
+      "at": 1793414264573,
+      "kind": "player.checkin",
+      "text": "กาย เช็คอิน",
+      "playerId": "p_gn0dqdjqwn"
     }
   ],
   "settings": {
