@@ -10,12 +10,14 @@
     {
       "index": 0,
       "name": "คอร์ต 1",
-      "currentMatchId": null
+      "currentMatchId": null,
+      "disabled": true
     },
     {
       "index": 1,
       "name": "คอร์ต 2",
-      "currentMatchId": null
+      "currentMatchId": null,
+      "disabled": true
     },
     {
       "index": 2,
