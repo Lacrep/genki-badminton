@@ -748,21 +748,6 @@
   ],
   "planned": [
     {
-      "id": "pl_0wppizt2ux",
-      "type": "D",
-      "teamA": [
-        "p_0aamglvm9a",
-        "p_vrlbf0860e"
-      ],
-      "teamB": [
-        "p_vlg61a1abs",
-        "p_3bvix9nerq"
-      ],
-      "createdAt": 1793414699961,
-      "createdBy": "manual",
-      "levelGap": 3
-    },
-    {
       "id": "pl_bfdzkby0h7",
       "type": "D",
       "teamA": [
@@ -1184,6 +1169,11 @@
       "at": 1793414930156,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: พี่เทพ, แบงค์, ปาล์ม, นน"
+    },
+    {
+      "at": 1793414956975,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: พี่เทพ, เน, แบงค์, ปาล์ม"
     }
   ],
   "settings": {
