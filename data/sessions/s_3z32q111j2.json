@@ -852,7 +852,9 @@
       "boost": 0,
       "paid": true,
       "paidAt": 1793423354423,
-      "leftAt": 1793423446792
+      "leftAt": 1793423446792,
+      "shuttleAdjust": 2,
+      "noCourtFee": true
     }
   ],
   "matches": [
@@ -3577,6 +3579,24 @@
       "kind": "fee",
       "text": "พรฟ้า ปรับลูกที่คิดเป็น +1 ลูก",
       "playerId": "p_ihc1omlql8"
+    },
+    {
+      "at": 1793423907863,
+      "kind": "fee",
+      "text": "บอมเบ ปรับลูกที่คิดเป็น +1 ลูก",
+      "playerId": "p_72p7uc1r13"
+    },
+    {
+      "at": 1793423908195,
+      "kind": "fee",
+      "text": "บอมเบ ปรับลูกที่คิดเป็น +2 ลูก",
+      "playerId": "p_72p7uc1r13"
+    },
+    {
+      "at": 1793423910638,
+      "kind": "fee",
+      "text": "บอมเบ ยกเว้นค่าสนาม",
+      "playerId": "p_72p7uc1r13"
     }
   ],
   "settings": {
