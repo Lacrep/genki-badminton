@@ -783,8 +783,7 @@
       "draws": 0,
       "boost": 0,
       "paid": false,
-      "noCourtFee": true,
-      "shuttleAdjust": 1
+      "noCourtFee": true
     },
     {
       "playerId": "p_zy0kpu0v0s",
@@ -3597,6 +3596,12 @@
       "kind": "fee",
       "text": "บอมเบ ยกเว้นค่าสนาม",
       "playerId": "p_72p7uc1r13"
+    },
+    {
+      "at": 1793424016958,
+      "kind": "fee",
+      "text": "พรฟ้า ปรับลูกที่คิดเป็น 0 ลูก",
+      "playerId": "p_ihc1omlql8"
     }
   ],
   "settings": {
