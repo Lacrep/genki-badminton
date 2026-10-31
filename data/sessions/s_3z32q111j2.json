@@ -230,6 +230,51 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_xf3iqplno6",
+      "status": "queue",
+      "checkInAt": 1793412728836,
+      "queueSince": 1793412728836,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_wse74h0bhl",
+      "status": "queue",
+      "checkInAt": 1793412728841,
+      "queueSince": 1793412728841,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_kszf8rzu4d",
+      "status": "queue",
+      "checkInAt": 1793412728847,
+      "queueSince": 1793412728847,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -374,6 +419,24 @@
       "kind": "player.checkin",
       "text": "เล็ก เช็คอิน",
       "playerId": "p_xscgffmd12"
+    },
+    {
+      "at": 1793412728836,
+      "kind": "player.checkin",
+      "text": "นน เช็คอิน",
+      "playerId": "p_xf3iqplno6"
+    },
+    {
+      "at": 1793412728841,
+      "kind": "player.checkin",
+      "text": "หลิน เช็คอิน",
+      "playerId": "p_wse74h0bhl"
+    },
+    {
+      "at": 1793412728847,
+      "kind": "player.checkin",
+      "text": "มิกกี้ เช็คอิน",
+      "playerId": "p_kszf8rzu4d"
     }
   ],
   "settings": {
