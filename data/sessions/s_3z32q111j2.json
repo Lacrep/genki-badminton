@@ -631,18 +631,20 @@
     },
     {
       "playerId": "p_5kyiacbijt",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793415414545,
-      "queueSince": 1793422076497,
+      "queueSince": null,
       "gamesPlayed": 3,
       "playedMs": 4084678,
-      "waitedMs": 2577274,
+      "waitedMs": 3096028,
       "longestWaitMs": 875043,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793422595251,
+      "leftAt": 1793422595251
     },
     {
       "playerId": "p_ecpq3j2g0k",
@@ -3263,6 +3265,18 @@
       "kind": "pay",
       "text": "จา จ่ายแล้ว",
       "playerId": "p_fgphe06utu"
+    },
+    {
+      "at": 1793422595252,
+      "kind": "pay",
+      "text": "ไกด์การบิน จ่ายแล้ว",
+      "playerId": "p_5kyiacbijt"
+    },
+    {
+      "at": 1793422595252,
+      "kind": "player.checkout",
+      "text": "ไกด์การบิน จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_5kyiacbijt"
     }
   ],
   "settings": {
