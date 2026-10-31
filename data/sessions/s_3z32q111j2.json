@@ -776,6 +776,21 @@
       "createdAt": 1793415036669,
       "createdBy": "manual",
       "levelGap": 2
+    },
+    {
+      "id": "pl_1mjp1b0mkj",
+      "type": "D",
+      "teamA": [
+        "p_tygwg9sjq3",
+        "p_y1a4x6164v"
+      ],
+      "teamB": [
+        "p_clsy13kb33",
+        "p_xscgffmd12"
+      ],
+      "createdAt": 1793415052099,
+      "createdBy": "manual",
+      "levelGap": 1
     }
   ],
   "events": [
@@ -1194,6 +1209,11 @@
       "at": 1793415036669,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: พลอยปภัส, กาย, เน, เบิร์ด(ตี๋)"
+    },
+    {
+      "at": 1793415052099,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: แป้ง, โซระ, ภูมิ, เล็ก"
     }
   ],
   "settings": {
