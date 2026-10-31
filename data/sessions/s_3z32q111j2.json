@@ -27,7 +27,7 @@
     {
       "index": 3,
       "name": "คอร์ต 4",
-      "currentMatchId": "m_ftiei8ao36"
+      "currentMatchId": null
     },
     {
       "index": 4,
@@ -138,11 +138,11 @@
     },
     {
       "playerId": "p_8ft5fb76ef",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793411998510,
-      "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 2155335,
+      "queueSince": 1793418156729,
+      "gamesPlayed": 3,
+      "playedMs": 3111823,
       "waitedMs": 3046396,
       "longestWaitMs": 1312592,
       "wins": 0,
@@ -288,11 +288,11 @@
     },
     {
       "playerId": "p_3bvix9nerq",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412749307,
-      "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 2449352,
+      "queueSince": 1793418156729,
+      "gamesPlayed": 3,
+      "playedMs": 3405840,
       "waitedMs": 2001582,
       "longestWaitMs": 725871,
       "wins": 0,
@@ -453,11 +453,11 @@
     },
     {
       "playerId": "p_qe4j6866il",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793413992017,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 1294673,
+      "queueSince": 1793418156729,
+      "gamesPlayed": 2,
+      "playedMs": 2251161,
       "waitedMs": 1913551,
       "longestWaitMs": 1446969,
       "wins": 0,
@@ -543,11 +543,11 @@
     },
     {
       "playerId": "p_0aamglvm9a",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793414544382,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 931418,
+      "queueSince": 1793418156729,
+      "gamesPlayed": 2,
+      "playedMs": 1887906,
       "waitedMs": 1724441,
       "longestWaitMs": 1069025,
       "wins": 0,
@@ -1112,10 +1112,11 @@
         "p_8ft5fb76ef"
       ],
       "startedAt": 1793417200241,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 3,
-      "maxWaitAtStart": 1446969
+      "maxWaitAtStart": 1446969,
+      "endedAt": 1793418156729
     },
     {
       "id": "m_kypopzcntx",
@@ -2063,6 +2064,12 @@
       "kind": "match.swap",
       "text": "สลับ แนน ออก แป้ง ลง",
       "matchId": "m_jpkcjoqvgt"
+    },
+    {
+      "at": 1793418156729,
+      "kind": "match.end",
+      "text": "จบเกม #19 คอร์ต 4",
+      "matchId": "m_ftiei8ao36"
     }
   ],
   "settings": {
