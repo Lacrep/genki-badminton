@@ -736,6 +736,21 @@
       "createdAt": 1793414520439,
       "createdBy": "manual",
       "levelGap": 1
+    },
+    {
+      "id": "pl_0wppizt2ux",
+      "type": "D",
+      "teamA": [
+        "p_0aamglvm9a",
+        "p_vrlbf0860e"
+      ],
+      "teamB": [
+        "p_vlg61a1abs",
+        "p_3bvix9nerq"
+      ],
+      "createdAt": 1793414699961,
+      "createdBy": "manual",
+      "levelGap": 3
     }
   ],
   "events": [
@@ -1099,6 +1114,11 @@
       "kind": "player.checkin",
       "text": "ซัน เช็คอิน",
       "playerId": "p_2jd5ehh4i6"
+    },
+    {
+      "at": 1793414699961,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พี่เทพ, เน, แบงค์, ปาล์ม"
     }
   ],
   "settings": {
