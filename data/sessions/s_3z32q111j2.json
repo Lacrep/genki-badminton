@@ -1498,7 +1498,23 @@
       "maxWaitAtStart": 1113581
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_9peceujj8i",
+      "type": "D",
+      "teamA": [
+        "p_0aamglvm9a",
+        "p_vlg61a1abs"
+      ],
+      "teamB": [
+        "p_m56exs4ags",
+        "p_53y43qzll8"
+      ],
+      "createdAt": 1793420973090,
+      "createdBy": "manual",
+      "levelGap": 2
+    }
+  ],
   "events": [
     {
       "at": 1793411712254,
@@ -2741,6 +2757,11 @@
       "at": 1793420904203,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: โซระ, บอมเบ, พี่ตี๋, โอ๊ต"
+    },
+    {
+      "at": 1793420973090,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พี่เทพ, แบงค์, บอล, ฟลุ๊คสาว"
     }
   ],
   "settings": {
