@@ -140,6 +140,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_x3znla8qn9",
+      "status": "queue",
+      "checkInAt": 1793412071401,
+      "queueSince": 1793412071401,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [],
@@ -191,6 +206,12 @@
       "kind": "player.checkin",
       "text": "ที เช็คอิน",
       "playerId": "p_8ft5fb76ef"
+    },
+    {
+      "at": 1793412071401,
+      "kind": "player.checkin",
+      "text": "อีฟ เช็คอิน",
+      "playerId": "p_x3znla8qn9"
     }
   ],
   "settings": {
