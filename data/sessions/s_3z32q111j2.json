@@ -1129,7 +1129,23 @@
       "maxWaitAtStart": 1386638
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_z8vtmeczop",
+      "type": "D",
+      "teamA": [
+        "p_vlg61a1abs",
+        "p_m56exs4ags"
+      ],
+      "teamB": [
+        "p_xf3iqplno6",
+        "p_54w3lucivg"
+      ],
+      "createdAt": 1793417308585,
+      "createdBy": "manual",
+      "levelGap": 1
+    }
+  ],
   "events": [
     {
       "at": 1793411712254,
@@ -1865,6 +1881,11 @@
       "at": 1793417293235,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: โอม, ผิง, ปลาวาฬ, ไกด์"
+    },
+    {
+      "at": 1793417308585,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: แบงค์, บอล, นน, เบิร์ด(ตี๋)"
     }
   ],
   "settings": {
