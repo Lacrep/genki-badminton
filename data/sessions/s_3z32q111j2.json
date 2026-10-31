@@ -435,7 +435,8 @@
       "boost": 0,
       "paid": true,
       "paidAt": 1793423555602,
-      "leftAt": 1793423555602
+      "leftAt": 1793423555602,
+      "shuttleAdjust": -1
     },
     {
       "playerId": "p_dqmf83x2h9",
@@ -3512,6 +3513,12 @@
       "at": 1793423555602,
       "kind": "player.checkout",
       "text": "ต้า จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_xlhr79w0ne"
+    },
+    {
+      "at": 1793423565399,
+      "kind": "fee",
+      "text": "ต้า ปรับลูกที่คิดเป็น -1 ลูก",
       "playerId": "p_xlhr79w0ne"
     }
   ],
