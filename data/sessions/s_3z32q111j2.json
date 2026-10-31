@@ -37,7 +37,7 @@
     {
       "index": 5,
       "name": "คอร์ต 6",
-      "currentMatchId": "m_agbwp99b1k"
+      "currentMatchId": null
     },
     {
       "index": 6,
@@ -168,11 +168,11 @@
     },
     {
       "playerId": "p_gwdzyqk46n",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412174124,
-      "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 2155335,
+      "queueSince": 1793418394378,
+      "gamesPlayed": 3,
+      "playedMs": 3413123,
       "waitedMs": 2807131,
       "longestWaitMs": 1312592,
       "wins": 0,
@@ -303,11 +303,11 @@
     },
     {
       "playerId": "p_dyw8ikn9wu",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412749561,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 1863360,
+      "queueSince": 1793418394378,
+      "gamesPlayed": 2,
+      "playedMs": 3121148,
       "waitedMs": 2523669,
       "longestWaitMs": 1475722,
       "wins": 0,
@@ -393,11 +393,11 @@
     },
     {
       "playerId": "p_dqmf83x2h9",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793413206487,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 1863360,
+      "queueSince": 1793418394378,
+      "gamesPlayed": 2,
+      "playedMs": 3121148,
       "waitedMs": 2066743,
       "longestWaitMs": 1475722,
       "wins": 0,
@@ -603,11 +603,11 @@
     },
     {
       "playerId": "p_ecpq3j2g0k",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793415427399,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 1050157,
+      "queueSince": 1793418394378,
+      "gamesPlayed": 2,
+      "playedMs": 2307945,
       "waitedMs": 659034,
       "longestWaitMs": 471778,
       "wins": 0,
@@ -1093,10 +1093,11 @@
         "p_gwdzyqk46n"
       ],
       "startedAt": 1793417136590,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 2,
-      "maxWaitAtStart": 1475722
+      "maxWaitAtStart": 1475722,
+      "endedAt": 1793418394378
     },
     {
       "id": "m_ftiei8ao36",
@@ -2146,6 +2147,12 @@
       "at": 1793418360836,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: พลอยปภัส, กาย, ซัน, คิม"
+    },
+    {
+      "at": 1793418394379,
+      "kind": "match.end",
+      "text": "จบเกม #18 คอร์ต 6",
+      "matchId": "m_agbwp99b1k"
     }
   ],
   "settings": {
