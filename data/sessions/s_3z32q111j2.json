@@ -773,33 +773,37 @@
     },
     {
       "playerId": "p_m56exs4ags",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793417079171,
-      "queueSince": 1793422189785,
+      "queueSince": null,
       "gamesPlayed": 3,
       "playedMs": 3339387,
-      "waitedMs": 1771227,
-      "longestWaitMs": 628427,
+      "waitedMs": 2692851,
+      "longestWaitMs": 921624,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793423111409,
+      "leftAt": 1793423111409
     },
     {
       "playerId": "p_ijcgyu8qlz",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793417110206,
-      "queueSince": 1793420903067,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 2414553,
-      "waitedMs": 1378308,
-      "longestWaitMs": 892510,
+      "waitedMs": 3585846,
+      "longestWaitMs": 2207538,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793423110605,
+      "leftAt": 1793423110605
     },
     {
       "playerId": "p_72p7uc1r13",
@@ -3379,6 +3383,30 @@
       "kind": "pay",
       "text": "Top จ่ายแล้ว",
       "playerId": "p_cw75mksxo7"
+    },
+    {
+      "at": 1793423110606,
+      "kind": "pay",
+      "text": "กบ จ่ายแล้ว",
+      "playerId": "p_ijcgyu8qlz"
+    },
+    {
+      "at": 1793423110606,
+      "kind": "player.checkout",
+      "text": "กบ จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_ijcgyu8qlz"
+    },
+    {
+      "at": 1793423111409,
+      "kind": "pay",
+      "text": "บอล จ่ายแล้ว",
+      "playerId": "p_m56exs4ags"
+    },
+    {
+      "at": 1793423111410,
+      "kind": "player.checkout",
+      "text": "บอล จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_m56exs4ags"
     }
   ],
   "settings": {
