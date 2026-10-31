@@ -4,7 +4,7 @@
   "date": "2026-10-31",
   "venue": "The 18 Badminton Club",
   "startAt": 1793411712254,
-  "status": "live",
+  "status": "ended",
   "code": "VFJT",
   "courts": [
     {
@@ -583,20 +583,21 @@
     },
     {
       "playerId": "p_ej0cyelb18",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793414337316,
-      "queueSince": 1793423444602,
+      "queueSince": null,
       "gamesPlayed": 4,
       "playedMs": 4682516,
-      "waitedMs": 4424770,
-      "longestWaitMs": 1337904,
+      "waitedMs": 5828902,
+      "longestWaitMs": 1404132,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
       "paid": true,
       "shuttleAdjust": 2,
-      "paidAt": 1793423496030
+      "paidAt": 1793423496030,
+      "leftAt": 1793424848734
     },
     {
       "playerId": "p_y1a4x6164v",
@@ -774,7 +775,7 @@
     },
     {
       "playerId": "p_ihc1omlql8",
-      "status": "playing",
+      "status": "left",
       "checkInAt": 1793416534414,
       "queueSince": null,
       "gamesPlayed": 1,
@@ -787,7 +788,8 @@
       "boost": 0,
       "paid": true,
       "noCourtFee": true,
-      "paidAt": 1793424069837
+      "paidAt": 1793424069837,
+      "leftAt": 1793424848734
     },
     {
       "playerId": "p_zy0kpu0v0s",
@@ -3660,6 +3662,11 @@
       "kind": "player.checkout",
       "text": "ผิง จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_zaui6hkcn1"
+    },
+    {
+      "at": 1793424848734,
+      "kind": "session.end",
+      "text": "ปิดก๊วน"
     }
   ],
   "settings": {
@@ -3683,5 +3690,6 @@
     "extraCost": 0,
     "roundTo": 1,
     "promptPay": "นาย ศุภกฤษณ์ วิเศษโสภากุล"
-  }
+  },
+  "endAt": 1793424848734
 }
