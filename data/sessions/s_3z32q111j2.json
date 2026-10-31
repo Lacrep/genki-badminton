@@ -37,12 +37,13 @@
     {
       "index": 5,
       "name": "คอร์ต 6",
-      "currentMatchId": null
+      "currentMatchId": "m_550f9nmcxp"
     },
     {
       "index": 6,
       "name": "คอร์ต 7",
-      "currentMatchId": "m_550f9nmcxp"
+      "currentMatchId": null,
+      "disabled": true
     }
   ],
   "players": [
@@ -1325,7 +1326,7 @@
     {
       "id": "m_550f9nmcxp",
       "no": 30,
-      "courtIndex": 6,
+      "courtIndex": 5,
       "type": "D",
       "teamA": [
         "p_wse74h0bhl",
