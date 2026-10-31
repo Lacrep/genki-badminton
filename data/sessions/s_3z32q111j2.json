@@ -80,6 +80,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_5pmcrc7d7c",
+      "status": "queue",
+      "checkInAt": 1793411945965,
+      "queueSince": 1793411945965,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [],
@@ -107,6 +122,12 @@
       "kind": "player.checkin",
       "text": "แนน เช็คอิน",
       "playerId": "p_7abt4a6j42"
+    },
+    {
+      "at": 1793411945965,
+      "kind": "player.checkin",
+      "text": "โอม เช็คอิน",
+      "playerId": "p_5pmcrc7d7c"
     }
   ],
   "settings": {
