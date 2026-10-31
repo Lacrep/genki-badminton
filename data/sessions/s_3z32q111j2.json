@@ -574,7 +574,9 @@
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "shuttleAdjust": 2,
+      "paidAt": 1793423496030
     },
     {
       "playerId": "p_y1a4x6164v",
@@ -3444,6 +3446,24 @@
       "kind": "player.checkout",
       "text": "นน จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_xf3iqplno6"
+    },
+    {
+      "at": 1793423484996,
+      "kind": "fee",
+      "text": "พี่อ๋อง ปรับลูกที่คิดเป็น +1 ลูก",
+      "playerId": "p_ej0cyelb18"
+    },
+    {
+      "at": 1793423488036,
+      "kind": "fee",
+      "text": "พี่อ๋อง ปรับลูกที่คิดเป็น +2 ลูก",
+      "playerId": "p_ej0cyelb18"
+    },
+    {
+      "at": 1793423496030,
+      "kind": "pay",
+      "text": "พี่อ๋อง จ่ายแล้ว",
+      "playerId": "p_ej0cyelb18"
     }
   ],
   "settings": {
