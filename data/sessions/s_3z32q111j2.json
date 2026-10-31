@@ -326,18 +326,19 @@
     },
     {
       "playerId": "p_qt563yr8cn",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793412934158,
-      "queueSince": 1793421019995,
+      "queueSince": null,
       "gamesPlayed": 4,
       "playedMs": 4732181,
-      "waitedMs": 3353656,
+      "waitedMs": 3432590,
       "longestWaitMs": 1302577,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "leftAt": 1793421098929
     },
     {
       "playerId": "p_tygwg9sjq3",
@@ -2778,6 +2779,12 @@
       "at": 1793421060412,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: พี่เทพ, แบงค์, บอล, ฟลุ๊คสาว"
+    },
+    {
+      "at": 1793421098929,
+      "kind": "player.checkout",
+      "text": "คิม กลับบ้าน",
+      "playerId": "p_qt563yr8cn"
     }
   ],
   "settings": {
