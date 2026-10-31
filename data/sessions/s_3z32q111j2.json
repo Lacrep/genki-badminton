@@ -426,7 +426,23 @@
       "maxWaitAtStart": 563476
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_ylm60kvfbv",
+      "type": "D",
+      "teamA": [
+        "p_qt563yr8cn",
+        "p_g6x4u5tabq"
+      ],
+      "teamB": [
+        "p_3bvix9nerq",
+        "p_04n5grksuu"
+      ],
+      "createdAt": 1793413129819,
+      "createdBy": "manual",
+      "levelGap": 1
+    }
+  ],
   "events": [
     {
       "at": 1793411712254,
@@ -588,6 +604,11 @@
       "kind": "player.checkin",
       "text": "เอกกี้ เช็คอิน",
       "playerId": "p_g6x4u5tabq"
+    },
+    {
+      "at": 1793413129819,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: คิม, เอกกี้, ปาล์ม, พรีม"
     }
   ],
   "settings": {
