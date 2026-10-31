@@ -791,6 +791,21 @@
       "createdAt": 1793415052099,
       "createdBy": "manual",
       "levelGap": 1
+    },
+    {
+      "id": "pl_f3me1u2g2t",
+      "type": "D",
+      "teamA": [
+        "p_2jd5ehh4i6",
+        "p_qt563yr8cn"
+      ],
+      "teamB": [
+        "p_g6x4u5tabq",
+        "p_jwgpsjxb3h"
+      ],
+      "createdAt": 1793415136997,
+      "createdBy": "manual",
+      "levelGap": 1
     }
   ],
   "events": [
@@ -1214,6 +1229,11 @@
       "at": 1793415052099,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: แป้ง, โซระ, ภูมิ, เล็ก"
+    },
+    {
+      "at": 1793415136997,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ซัน, คิม, เอกกี้, ไนท์"
     }
   ],
   "settings": {
