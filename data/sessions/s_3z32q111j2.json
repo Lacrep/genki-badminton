@@ -445,6 +445,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_qe4j6866il",
+      "status": "queue",
+      "checkInAt": 1793413992017,
+      "queueSince": 1793413992017,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -838,6 +853,12 @@
       "at": 1793413937072,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: ผิง, โอม, หมิง, อีฟ"
+    },
+    {
+      "at": 1793413992018,
+      "kind": "player.checkin",
+      "text": "พี่อั้ม เช็คอิน",
+      "playerId": "p_qe4j6866il"
     }
   ],
   "settings": {
