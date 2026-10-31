@@ -341,18 +341,19 @@
     },
     {
       "playerId": "p_tygwg9sjq3",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793412995553,
-      "queueSince": 1793419259479,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 2789237,
-      "waitedMs": 3661410,
+      "waitedMs": 4744400,
       "longestWaitMs": 2804423,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "leftAt": 1793420342469
     },
     {
       "playerId": "p_04n5grksuu",
@@ -2579,6 +2580,12 @@
       "kind": "player.checkout",
       "text": "ไอซ์ กลับบ้าน",
       "playerId": "p_l3p08u33jg"
+    },
+    {
+      "at": 1793420342469,
+      "kind": "player.checkout",
+      "text": "แป้ง กลับบ้าน",
+      "playerId": "p_tygwg9sjq3"
     }
   ],
   "settings": {
