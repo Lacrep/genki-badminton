@@ -904,7 +904,23 @@
       "maxWaitAtStart": 1302040
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_7yinwbkvm5",
+      "type": "D",
+      "teamA": [
+        "p_fgphe06utu",
+        "p_ch56wx3x3j"
+      ],
+      "teamB": [
+        "p_5kyiacbijt",
+        "p_x5deq395fp"
+      ],
+      "createdAt": 1793415996941,
+      "createdBy": "manual",
+      "levelGap": 2
+    }
+  ],
   "events": [
     {
       "at": 1793411712254,
@@ -1468,6 +1484,11 @@
       "at": 1793415941318,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: ซัน, คิม, เอกกี้, ไนท์"
+    },
+    {
+      "at": 1793415996941,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: จา, โอ๊ต, ไกด์การบิน, เวฟ"
     }
   ],
   "settings": {
