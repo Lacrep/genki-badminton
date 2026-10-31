@@ -527,6 +527,21 @@
       "createdAt": 1793413529735,
       "createdBy": "manual",
       "levelGap": 1
+    },
+    {
+      "id": "pl_xe3dex5u5d",
+      "type": "D",
+      "teamA": [
+        "p_dqmf83x2h9",
+        "p_jwgpsjxb3h"
+      ],
+      "teamB": [
+        "p_xlhr79w0ne",
+        "p_wse74h0bhl"
+      ],
+      "createdAt": 1793413615585,
+      "createdBy": "manual",
+      "levelGap": 2
     }
   ],
   "events": [
@@ -741,6 +756,11 @@
       "kind": "match.end",
       "text": "จบเกม #1 คอร์ต 5",
       "matchId": "m_cok5txgm0x"
+    },
+    {
+      "at": 1793413615585,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ปริม, ไนท์, ต้า, หลิน"
     }
   ],
   "settings": {
