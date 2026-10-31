@@ -32,7 +32,7 @@
     {
       "index": 4,
       "name": "คอร์ต 5",
-      "currentMatchId": null
+      "currentMatchId": "m_cok5txgm0x"
     }
   ],
   "players": [
@@ -53,13 +53,13 @@
     },
     {
       "playerId": "p_l3p08u33jg",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793411888287,
-      "queueSince": 1793411888287,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 550369,
+      "longestWaitMs": 550369,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -113,13 +113,13 @@
     },
     {
       "playerId": "p_fgphe06utu",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793411983512,
-      "queueSince": 1793411983512,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 455144,
+      "longestWaitMs": 455144,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -128,13 +128,13 @@
     },
     {
       "playerId": "p_8ft5fb76ef",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793411998510,
-      "queueSince": 1793411998510,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 440146,
+      "longestWaitMs": 440146,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -158,13 +158,13 @@
     },
     {
       "playerId": "p_gwdzyqk46n",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793412174124,
-      "queueSince": 1793412174124,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 264532,
+      "longestWaitMs": 264532,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -187,7 +187,27 @@
       "paid": false
     }
   ],
-  "matches": [],
+  "matches": [
+    {
+      "id": "m_cok5txgm0x",
+      "no": 1,
+      "courtIndex": 4,
+      "type": "D",
+      "teamA": [
+        "p_l3p08u33jg",
+        "p_gwdzyqk46n"
+      ],
+      "teamB": [
+        "p_fgphe06utu",
+        "p_8ft5fb76ef"
+      ],
+      "startedAt": 1793412438656,
+      "shuttles": 0,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 550369
+    }
+  ],
   "planned": [],
   "events": [
     {
@@ -254,6 +274,18 @@
       "kind": "player.checkin",
       "text": "เบิร์ด(ตี๋) เช็คอิน",
       "playerId": "p_54w3lucivg"
+    },
+    {
+      "at": 1793412438657,
+      "kind": "match.start",
+      "text": "คอร์ต 3: ไอซ์, หมิง, จา, ที",
+      "matchId": "m_cok5txgm0x"
+    },
+    {
+      "at": 1793412442593,
+      "kind": "match.move",
+      "text": "ย้ายเกม #1 จาก คอร์ต 3 ไป คอร์ต 5",
+      "matchId": "m_cok5txgm0x"
     }
   ],
   "settings": {
