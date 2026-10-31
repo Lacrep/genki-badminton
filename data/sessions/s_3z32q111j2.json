@@ -640,6 +640,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_5t6kdv3w2i",
+      "status": "queue",
+      "checkInAt": 1793416362054,
+      "queueSince": 1793416362054,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -1531,6 +1546,12 @@
       "kind": "player.checkin",
       "text": "ปลาวาฬ เช็คอิน",
       "playerId": "p_jw88ens36l"
+    },
+    {
+      "at": 1793416362054,
+      "kind": "player.checkin",
+      "text": "กร เช็คอิน",
+      "playerId": "p_5t6kdv3w2i"
     }
   ],
   "settings": {
