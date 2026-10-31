@@ -1324,6 +1324,21 @@
       "createdAt": 1793419053100,
       "createdBy": "manual",
       "levelGap": 1
+    },
+    {
+      "id": "pl_u95a21hv0h",
+      "type": "D",
+      "teamA": [
+        "p_7abt4a6j42",
+        "p_ihc1omlql8"
+      ],
+      "teamB": [
+        "p_zaui6hkcn1",
+        "p_ecpq3j2g0k"
+      ],
+      "createdAt": 1793419215425,
+      "createdBy": "manual",
+      "levelGap": 3
     }
   ],
   "events": [
@@ -2278,6 +2293,11 @@
       "at": 1793419053100,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: บอล, พี่อั้ม, ฟลุ๊คสาว, นน"
+    },
+    {
+      "at": 1793419215425,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: แนน, พรฟ้า, ผิง, สุดหล่อ"
     }
   ],
   "settings": {
