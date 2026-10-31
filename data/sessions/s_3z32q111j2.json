@@ -27,7 +27,7 @@
     {
       "index": 3,
       "name": "คอร์ต 4",
-      "currentMatchId": null
+      "currentMatchId": "m_ftiei8ao36"
     },
     {
       "index": 4,
@@ -133,12 +133,12 @@
     },
     {
       "playerId": "p_8ft5fb76ef",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793411998510,
-      "queueSince": 1793415906583,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 2155335,
-      "waitedMs": 1752738,
+      "waitedMs": 3046396,
       "longestWaitMs": 1312592,
       "wins": 0,
       "losses": 0,
@@ -283,12 +283,12 @@
     },
     {
       "playerId": "p_3bvix9nerq",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793412749307,
-      "queueSince": 1793416544825,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 2449352,
-      "waitedMs": 1346166,
+      "waitedMs": 2001582,
       "longestWaitMs": 725871,
       "wins": 0,
       "losses": 0,
@@ -448,13 +448,13 @@
     },
     {
       "playerId": "p_qe4j6866il",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793413992017,
-      "queueSince": 1793415753272,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 1294673,
-      "waitedMs": 466582,
-      "longestWaitMs": 466582,
+      "waitedMs": 1913551,
+      "longestWaitMs": 1446969,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -538,12 +538,12 @@
     },
     {
       "playerId": "p_0aamglvm9a",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793414544382,
-      "queueSince": 1793416544825,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 931418,
-      "waitedMs": 1069025,
+      "waitedMs": 1724441,
       "longestWaitMs": 1069025,
       "wins": 0,
       "losses": 0,
@@ -1088,11 +1088,11 @@
       "createdBy": "manual",
       "levelGap": 2,
       "maxWaitAtStart": 1475722
-    }
-  ],
-  "planned": [
+    },
     {
-      "id": "pl_ihg1zk4m9q",
+      "id": "m_ftiei8ao36",
+      "no": 19,
+      "courtIndex": 3,
       "type": "D",
       "teamA": [
         "p_qe4j6866il",
@@ -1102,10 +1102,14 @@
         "p_3bvix9nerq",
         "p_8ft5fb76ef"
       ],
-      "createdAt": 1793416917950,
+      "startedAt": 1793417200241,
+      "shuttles": 0,
       "createdBy": "manual",
-      "levelGap": 3
-    },
+      "levelGap": 3,
+      "maxWaitAtStart": 1446969
+    }
+  ],
+  "planned": [
     {
       "id": "pl_iykm7l4xrq",
       "type": "D",
@@ -1829,6 +1833,17 @@
       "kind": "match.end",
       "text": "จบเกม #12 คอร์ต 4",
       "matchId": "m_041p4yf4ji"
+    },
+    {
+      "at": 1793417200242,
+      "kind": "match.start",
+      "text": "คอร์ต 4: พี่อั้ม, พี่เทพ, ปาล์ม, ที",
+      "matchId": "m_ftiei8ao36"
+    },
+    {
+      "at": 1793417200253,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: พี่อั้ม, พี่เทพ, ปาล์ม, ที"
     }
   ],
   "settings": {
