@@ -505,6 +505,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_ej0cyelb18",
+      "status": "queue",
+      "checkInAt": 1793414337316,
+      "queueSince": 1793414337316,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -953,6 +968,12 @@
       "kind": "player.checkin",
       "text": "กาย เช็คอิน",
       "playerId": "p_28qfvskn0s"
+    },
+    {
+      "at": 1793414337316,
+      "kind": "player.checkin",
+      "text": "พี่อ๋อง เช็คอิน",
+      "playerId": "p_ej0cyelb18"
     }
   ],
   "settings": {
