@@ -520,6 +520,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_y1a4x6164v",
+      "status": "queue",
+      "checkInAt": 1793414517433,
+      "queueSince": 1793414517433,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -676,6 +691,21 @@
       "createdAt": 1793414450414,
       "createdBy": "manual",
       "levelGap": 2
+    },
+    {
+      "id": "pl_2vs56np8c7",
+      "type": "D",
+      "teamA": [
+        "p_7abt4a6j42",
+        "p_suzv413d26"
+      ],
+      "teamB": [
+        "p_x3znla8qn9",
+        "p_zaui6hkcn1"
+      ],
+      "createdAt": 1793414520439,
+      "createdBy": "manual",
+      "levelGap": 1
     }
   ],
   "events": [
@@ -1016,6 +1046,17 @@
       "at": 1793414458606,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: ไอซ์, พี่อั้ม, ฟลุ๊คสาว, จา"
+    },
+    {
+      "at": 1793414517433,
+      "kind": "player.checkin",
+      "text": "โซระ เช็คอิน",
+      "playerId": "p_y1a4x6164v"
+    },
+    {
+      "at": 1793414520439,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: แนน, ไกด์, อีฟ, ผิง"
     }
   ],
   "settings": {
