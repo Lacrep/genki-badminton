@@ -1564,6 +1564,21 @@
       "createdAt": 1793421458264,
       "createdBy": "manual",
       "levelGap": 1
+    },
+    {
+      "id": "pl_jj0jvewk22",
+      "type": "D",
+      "teamA": [
+        "p_zy0kpu0v0s",
+        "p_g6x4u5tabq"
+      ],
+      "teamB": [
+        "p_ecpq3j2g0k",
+        "p_04n5grksuu"
+      ],
+      "createdAt": 1793421580682,
+      "createdBy": "manual",
+      "levelGap": 2
     }
   ],
   "events": [
@@ -2942,6 +2957,11 @@
       "kind": "fee",
       "text": "พรฟ้า ยกเว้นค่าสนาม",
       "playerId": "p_ihc1omlql8"
+    },
+    {
+      "at": 1793421580682,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ฟิว, เอกกี้, สุดหล่อ, พรีม"
     }
   ],
   "settings": {
