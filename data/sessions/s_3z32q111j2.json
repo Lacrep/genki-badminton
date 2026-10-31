@@ -275,6 +275,36 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_3bvix9nerq",
+      "status": "queue",
+      "checkInAt": 1793412749307,
+      "queueSince": 1793412749307,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_dyw8ikn9wu",
+      "status": "queue",
+      "checkInAt": 1793412749561,
+      "queueSince": 1793412749561,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -437,6 +467,18 @@
       "kind": "player.checkin",
       "text": "มิกกี้ เช็คอิน",
       "playerId": "p_kszf8rzu4d"
+    },
+    {
+      "at": 1793412749307,
+      "kind": "player.checkin",
+      "text": "ปาล์ม เช็คอิน",
+      "playerId": "p_3bvix9nerq"
+    },
+    {
+      "at": 1793412749561,
+      "kind": "player.checkin",
+      "text": "แบม เช็คอิน",
+      "playerId": "p_dyw8ikn9wu"
     }
   ],
   "settings": {
