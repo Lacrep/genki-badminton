@@ -35,7 +35,23 @@
       "currentMatchId": null
     }
   ],
-  "players": [],
+  "players": [
+    {
+      "playerId": "p_vlg61a1abs",
+      "status": "queue",
+      "checkInAt": 1793411851283,
+      "queueSince": 1793411851283,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    }
+  ],
   "matches": [],
   "planned": [],
   "events": [
@@ -43,6 +59,12 @@
       "at": 1793411712254,
       "kind": "session.start",
       "text": "เปิดก๊วน"
+    },
+    {
+      "at": 1793411851283,
+      "kind": "player.checkin",
+      "text": "แบงค์ เช็คอิน",
+      "playerId": "p_vlg61a1abs"
     }
   ],
   "settings": {
