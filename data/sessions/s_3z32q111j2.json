@@ -143,7 +143,8 @@
       "losses": 0,
       "draws": 1,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "shuttleAdjust": 1
     },
     {
       "playerId": "p_8ft5fb76ef",
@@ -3249,6 +3250,12 @@
       "kind": "player.checkout",
       "text": "เล็ก จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_xscgffmd12"
+    },
+    {
+      "at": 1793422489565,
+      "kind": "fee",
+      "text": "จา ปรับลูกที่คิดเป็น +1 ลูก",
+      "playerId": "p_fgphe06utu"
     }
   ],
   "settings": {
