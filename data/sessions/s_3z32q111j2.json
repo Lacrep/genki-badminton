@@ -125,6 +125,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_8ft5fb76ef",
+      "status": "queue",
+      "checkInAt": 1793411998510,
+      "queueSince": 1793411998510,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [],
@@ -170,6 +185,12 @@
       "kind": "player.checkin",
       "text": "จา เช็คอิน",
       "playerId": "p_fgphe06utu"
+    },
+    {
+      "at": 1793411998510,
+      "kind": "player.checkin",
+      "text": "ที เช็คอิน",
+      "playerId": "p_8ft5fb76ef"
     }
   ],
   "settings": {
