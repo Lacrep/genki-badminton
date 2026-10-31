@@ -481,48 +481,53 @@
     },
     {
       "playerId": "p_0tkx8luk7o",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793414248147,
-      "queueSince": 1793421019995,
+      "queueSince": null,
       "gamesPlayed": 3,
       "playedMs": 3523610,
-      "waitedMs": 3248238,
+      "waitedMs": 3555875,
       "longestWaitMs": 1480427,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793421327632,
+      "leftAt": 1793421327632
     },
     {
       "playerId": "p_suzv413d26",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793414253255,
-      "queueSince": 1793420903067,
+      "queueSince": null,
       "gamesPlayed": 3,
       "playedMs": 3491509,
-      "waitedMs": 3158303,
+      "waitedMs": 3579362,
       "longestWaitMs": 1425197,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "leftAt": 1793421324126
     },
     {
       "playerId": "p_28qfvskn0s",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793414306200,
-      "queueSince": 1793421019995,
+      "queueSince": null,
       "gamesPlayed": 3,
       "playedMs": 3523610,
-      "waitedMs": 3190185,
+      "waitedMs": 3485574,
       "longestWaitMs": 1422374,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793421315384,
+      "leftAt": 1793421315384
     },
     {
       "playerId": "p_ej0cyelb18",
@@ -2860,6 +2865,48 @@
       "at": 1793421224496,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: จา, ปาล์ม, Top, หมิง"
+    },
+    {
+      "at": 1793421315384,
+      "kind": "pay",
+      "text": "กาย จ่ายแล้ว",
+      "playerId": "p_28qfvskn0s"
+    },
+    {
+      "at": 1793421315384,
+      "kind": "player.checkout",
+      "text": "กาย จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_28qfvskn0s"
+    },
+    {
+      "at": 1793421320752,
+      "kind": "fee",
+      "text": "พลอยปภัส ปรับลูกที่คิดเป็น +1 ลูก",
+      "playerId": "p_0tkx8luk7o"
+    },
+    {
+      "at": 1793421321889,
+      "kind": "fee",
+      "text": "พลอยปภัส ปรับลูกที่คิดเป็น 0 ลูก",
+      "playerId": "p_0tkx8luk7o"
+    },
+    {
+      "at": 1793421324126,
+      "kind": "player.checkout",
+      "text": "ไกด์ กลับบ้าน",
+      "playerId": "p_suzv413d26"
+    },
+    {
+      "at": 1793421327632,
+      "kind": "pay",
+      "text": "พลอยปภัส จ่ายแล้ว",
+      "playerId": "p_0tkx8luk7o"
+    },
+    {
+      "at": 1793421327632,
+      "kind": "player.checkout",
+      "text": "พลอยปภัส จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_0tkx8luk7o"
     }
   ],
   "settings": {
