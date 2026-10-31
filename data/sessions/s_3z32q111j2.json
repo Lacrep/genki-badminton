@@ -715,6 +715,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_ijcgyu8qlz",
+      "status": "queue",
+      "checkInAt": 1793417110206,
+      "queueSince": 1793417110206,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -1786,6 +1801,12 @@
       "kind": "player.checkin",
       "text": "บอล เช็คอิน",
       "playerId": "p_m56exs4ags"
+    },
+    {
+      "at": 1793417110206,
+      "kind": "player.checkin",
+      "text": "กบ เช็คอิน",
+      "playerId": "p_ijcgyu8qlz"
     }
   ],
   "settings": {
