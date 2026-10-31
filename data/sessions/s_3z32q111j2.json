@@ -35,7 +35,23 @@
       "currentMatchId": null
     }
   ],
-  "players": [],
+  "players": [
+    {
+      "playerId": "p_l3p08u33jg",
+      "status": "queue",
+      "checkInAt": 1793411808179,
+      "queueSince": 1793411808179,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    }
+  ],
   "matches": [],
   "planned": [],
   "events": [
@@ -43,6 +59,12 @@
       "at": 1793411712254,
       "kind": "session.start",
       "text": "เปิดก๊วน"
+    },
+    {
+      "at": 1793411808179,
+      "kind": "player.checkin",
+      "text": "ไอซ์ เช็คอิน",
+      "playerId": "p_l3p08u33jg"
     }
   ],
   "settings": {
