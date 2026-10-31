@@ -1548,7 +1548,23 @@
       "maxWaitAtStart": 1734801
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_607sb9txlk",
+      "type": "D",
+      "teamA": [
+        "p_zaui6hkcn1",
+        "p_kszf8rzu4d"
+      ],
+      "teamB": [
+        "p_wse74h0bhl",
+        "p_dqmf83x2h9"
+      ],
+      "createdAt": 1793421458264,
+      "createdBy": "manual",
+      "levelGap": 1
+    }
+  ],
   "events": [
     {
       "at": 1793411712254,
@@ -2914,6 +2930,11 @@
       "kind": "pay",
       "text": "ไกด์ จ่ายแล้ว",
       "playerId": "p_suzv413d26"
+    },
+    {
+      "at": 1793421458264,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ผิง, มิกกี้, หลิน, ปริม"
     }
   ],
   "settings": {
