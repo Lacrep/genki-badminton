@@ -581,7 +581,8 @@
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "shuttleAdjust": 1
     },
     {
       "playerId": "p_0aamglvm9a",
@@ -3305,6 +3306,12 @@
       "kind": "pay",
       "text": "หมิง จ่ายแล้ว",
       "playerId": "p_gwdzyqk46n"
+    },
+    {
+      "at": 1793422911334,
+      "kind": "fee",
+      "text": "โซระ ปรับลูกที่คิดเป็น +1 ลูก",
+      "playerId": "p_y1a4x6164v"
     }
   ],
   "settings": {
