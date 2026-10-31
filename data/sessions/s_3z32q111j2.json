@@ -214,18 +214,20 @@
     },
     {
       "playerId": "p_clsy13kb33",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793412611107,
-      "queueSince": 1793419489689,
+      "queueSince": null,
       "gamesPlayed": 3,
       "playedMs": 4447054,
-      "waitedMs": 2431528,
+      "waitedMs": 2448819,
       "longestWaitMs": 1344461,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793419506980,
+      "leftAt": 1793419506980
     },
     {
       "playerId": "p_xscgffmd12",
@@ -2373,6 +2375,18 @@
       "at": 1793419494060,
       "kind": "fee",
       "text": "ภูมิ ปรับลูกที่คิดเป็น 0 ลูก",
+      "playerId": "p_clsy13kb33"
+    },
+    {
+      "at": 1793419506980,
+      "kind": "pay",
+      "text": "ภูมิ จ่ายแล้ว",
+      "playerId": "p_clsy13kb33"
+    },
+    {
+      "at": 1793419506980,
+      "kind": "player.checkout",
+      "text": "ภูมิ จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_clsy13kb33"
     }
   ],
