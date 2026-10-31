@@ -1419,7 +1419,23 @@
       "maxWaitAtStart": 1744250
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_ij5ccf6qte",
+      "type": "D",
+      "teamA": [
+        "p_x3znla8qn9",
+        "p_2jd5ehh4i6"
+      ],
+      "teamB": [
+        "p_xlhr79w0ne",
+        "p_xscgffmd12"
+      ],
+      "createdAt": 1793420376386,
+      "createdBy": "manual",
+      "levelGap": 2
+    }
+  ],
   "events": [
     {
       "at": 1793411712254,
@@ -2586,6 +2602,11 @@
       "kind": "player.checkout",
       "text": "แป้ง กลับบ้าน",
       "playerId": "p_tygwg9sjq3"
+    },
+    {
+      "at": 1793420376386,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: อีฟ, ซัน, ต้า, เล็ก"
     }
   ],
   "settings": {
