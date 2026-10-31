@@ -535,6 +535,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_0aamglvm9a",
+      "status": "queue",
+      "checkInAt": 1793414544382,
+      "queueSince": 1793414544382,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -1057,6 +1072,12 @@
       "at": 1793414520439,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: แนน, ไกด์, อีฟ, ผิง"
+    },
+    {
+      "at": 1793414544382,
+      "kind": "player.checkin",
+      "text": "พี่เทพ เช็คอิน",
+      "playerId": "p_0aamglvm9a"
     }
   ],
   "settings": {
