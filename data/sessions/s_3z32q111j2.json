@@ -22,7 +22,7 @@
     {
       "index": 2,
       "name": "คอร์ต 3",
-      "currentMatchId": null
+      "currentMatchId": "m_ypi2gfolno"
     },
     {
       "index": 3,
@@ -173,13 +173,13 @@
     },
     {
       "playerId": "p_54w3lucivg",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793412247952,
-      "queueSince": 1793412247952,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 563476,
+      "longestWaitMs": 563476,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -188,13 +188,13 @@
     },
     {
       "playerId": "p_vrlbf0860e",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793412598120,
-      "queueSince": 1793412598120,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 213308,
+      "longestWaitMs": 213308,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -203,13 +203,13 @@
     },
     {
       "playerId": "p_clsy13kb33",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793412611107,
-      "queueSince": 1793412611107,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 200321,
+      "longestWaitMs": 200321,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -218,13 +218,13 @@
     },
     {
       "playerId": "p_xscgffmd12",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793412706948,
-      "queueSince": 1793412706948,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 104480,
+      "longestWaitMs": 104480,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -345,6 +345,25 @@
       "createdBy": "manual",
       "levelGap": 3,
       "maxWaitAtStart": 575613
+    },
+    {
+      "id": "m_ypi2gfolno",
+      "no": 3,
+      "courtIndex": 2,
+      "type": "D",
+      "teamA": [
+        "p_xscgffmd12",
+        "p_vrlbf0860e"
+      ],
+      "teamB": [
+        "p_54w3lucivg",
+        "p_clsy13kb33"
+      ],
+      "startedAt": 1793412811428,
+      "shuttles": 0,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 563476
     }
   ],
   "planned": [],
@@ -479,6 +498,12 @@
       "kind": "player.checkin",
       "text": "แบม เช็คอิน",
       "playerId": "p_dyw8ikn9wu"
+    },
+    {
+      "at": 1793412811428,
+      "kind": "match.start",
+      "text": "คอร์ต 3: เล็ก, เน, เบิร์ด(ตี๋), ภูมิ",
+      "matchId": "m_ypi2gfolno"
     }
   ],
   "settings": {
