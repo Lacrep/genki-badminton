@@ -386,8 +386,9 @@
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false,
-      "leftAt": 1793420342469
+      "paid": true,
+      "leftAt": 1793420342469,
+      "paidAt": 1793423647408
     },
     {
       "playerId": "p_04n5grksuu",
@@ -3528,6 +3529,12 @@
       "kind": "player.checkout",
       "text": "มิกกี้ จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_kszf8rzu4d"
+    },
+    {
+      "at": 1793423647408,
+      "kind": "pay",
+      "text": "แป้ง จ่ายแล้ว",
+      "playerId": "p_tygwg9sjq3"
     }
   ],
   "settings": {
