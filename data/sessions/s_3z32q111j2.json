@@ -194,8 +194,9 @@
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false,
-      "leftAt": 1793418895530
+      "paid": true,
+      "leftAt": 1793418895530,
+      "paidAt": 1793419530888
     },
     {
       "playerId": "p_vrlbf0860e",
@@ -1338,23 +1339,7 @@
       "maxWaitAtStart": 1387885
     }
   ],
-  "planned": [
-    {
-      "id": "pl_u95a21hv0h",
-      "type": "D",
-      "teamA": [
-        "p_7abt4a6j42",
-        "p_ihc1omlql8"
-      ],
-      "teamB": [
-        "p_zaui6hkcn1",
-        "p_ecpq3j2g0k"
-      ],
-      "createdAt": 1793419215425,
-      "createdBy": "manual",
-      "levelGap": 3
-    }
-  ],
+  "planned": [],
   "events": [
     {
       "at": 1793411712254,
@@ -2388,6 +2373,17 @@
       "kind": "player.checkout",
       "text": "ภูมิ จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_clsy13kb33"
+    },
+    {
+      "at": 1793419530889,
+      "kind": "pay",
+      "text": "เบิร์ด(ตี๋) จ่ายแล้ว",
+      "playerId": "p_54w3lucivg"
+    },
+    {
+      "at": 1793419533772,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: แนน, พรฟ้า, ผิง, สุดหล่อ"
     }
   ],
   "settings": {
