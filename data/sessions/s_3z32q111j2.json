@@ -37,7 +37,7 @@
     {
       "index": 5,
       "name": "คอร์ต 6",
-      "currentMatchId": "m_550f9nmcxp"
+      "currentMatchId": null
     },
     {
       "index": 6,
@@ -95,11 +95,11 @@
     },
     {
       "playerId": "p_5pmcrc7d7c",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793411945965,
-      "queueSince": null,
-      "gamesPlayed": 3,
-      "playedMs": 3200600,
+      "queueSince": 1793420655300,
+      "gamesPlayed": 4,
+      "playedMs": 4430624,
       "waitedMs": 4278711,
       "longestWaitMs": 1386638,
       "wins": 0,
@@ -172,11 +172,11 @@
     },
     {
       "playerId": "p_gwdzyqk46n",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412174124,
-      "queueSince": null,
-      "gamesPlayed": 3,
-      "playedMs": 3413123,
+      "queueSince": 1793420655300,
+      "gamesPlayed": 4,
+      "playedMs": 4643147,
       "waitedMs": 3838029,
       "longestWaitMs": 1312592,
       "wins": 0,
@@ -266,11 +266,11 @@
     },
     {
       "playerId": "p_wse74h0bhl",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793412728841,
-      "queueSince": null,
-      "gamesPlayed": 2,
-      "playedMs": 3206935,
+      "queueSince": 1793420655300,
+      "gamesPlayed": 3,
+      "playedMs": 4436959,
       "waitedMs": 3489500,
       "longestWaitMs": 1387885,
       "wins": 0,
@@ -642,11 +642,11 @@
     },
     {
       "playerId": "p_jw88ens36l",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1793416333354,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 1017217,
+      "queueSince": 1793420655300,
+      "gamesPlayed": 2,
+      "playedMs": 2247241,
       "waitedMs": 2074705,
       "longestWaitMs": 1114838,
       "wins": 0,
@@ -1357,10 +1357,11 @@
         "p_gwdzyqk46n"
       ],
       "startedAt": 1793419425276,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 1,
-      "maxWaitAtStart": 1387885
+      "maxWaitAtStart": 1387885,
+      "endedAt": 1793420655300
     },
     {
       "id": "m_57awrft0er",
