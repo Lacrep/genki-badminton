@@ -460,6 +460,36 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_0tkx8luk7o",
+      "status": "queue",
+      "checkInAt": 1793414248147,
+      "queueSince": 1793414248147,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_suzv413d26",
+      "status": "queue",
+      "checkInAt": 1793414253255,
+      "queueSince": 1793414253255,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -890,6 +920,18 @@
       "at": 1793414098297,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: ไอซ์, พี่อั้ม, จา, ฟลุ๊คสาว"
+    },
+    {
+      "at": 1793414248147,
+      "kind": "player.checkin",
+      "text": "พลอยปภัส เช็คอิน",
+      "playerId": "p_0tkx8luk7o"
+    },
+    {
+      "at": 1793414253255,
+      "kind": "player.checkin",
+      "text": "ไกด์ เช็คอิน",
+      "playerId": "p_suzv413d26"
     }
   ],
   "settings": {
