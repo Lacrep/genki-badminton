@@ -1054,6 +1054,21 @@
       "createdAt": 1793416814250,
       "createdBy": "manual",
       "levelGap": 2
+    },
+    {
+      "id": "pl_m441gx3tkx",
+      "type": "D",
+      "teamA": [
+        "p_qe4j6866il",
+        "p_0aamglvm9a"
+      ],
+      "teamB": [
+        "p_3bvix9nerq",
+        "p_xf3iqplno6"
+      ],
+      "createdAt": 1793416880769,
+      "createdBy": "manual",
+      "levelGap": 3
     }
   ],
   "events": [
@@ -1714,6 +1729,11 @@
       "at": 1793416814250,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: ปริม, สุดหล่อ, แบม, หมิง"
+    },
+    {
+      "at": 1793416880769,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พี่อั้ม, พี่เทพ, ปาล์ม, นน"
     }
   ],
   "settings": {
