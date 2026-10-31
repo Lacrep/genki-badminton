@@ -465,18 +465,20 @@
     },
     {
       "playerId": "p_53y43qzll8",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793413684599,
-      "queueSince": 1793422189785,
+      "queueSince": null,
       "gamesPlayed": 4,
       "playedMs": 4909822,
-      "waitedMs": 3595364,
+      "waitedMs": 3797664,
       "longestWaitMs": 1383438,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793422392085,
+      "leftAt": 1793422392085
     },
     {
       "playerId": "p_qe4j6866il",
@@ -3207,6 +3209,18 @@
       "kind": "player.checkout",
       "text": "ปลาวาฬ จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_jw88ens36l"
+    },
+    {
+      "at": 1793422392085,
+      "kind": "pay",
+      "text": "ฟลุ๊คสาว จ่ายแล้ว",
+      "playerId": "p_53y43qzll8"
+    },
+    {
+      "at": 1793422392085,
+      "kind": "player.checkout",
+      "text": "ฟลุ๊คสาว จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_53y43qzll8"
     }
   ],
   "settings": {
