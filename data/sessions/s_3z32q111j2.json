@@ -335,6 +335,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_04n5grksuu",
+      "status": "queue",
+      "checkInAt": 1793413016839,
+      "queueSince": 1793413016839,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -546,6 +561,12 @@
       "kind": "player.checkin",
       "text": "แป้ง เช็คอิน",
       "playerId": "p_tygwg9sjq3"
+    },
+    {
+      "at": 1793413016839,
+      "kind": "player.checkin",
+      "text": "พรีม เช็คอิน",
+      "playerId": "p_04n5grksuu"
     }
   ],
   "settings": {
