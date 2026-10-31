@@ -22,7 +22,7 @@
     {
       "index": 2,
       "name": "คอร์ต 3",
-      "currentMatchId": null
+      "currentMatchId": "m_m2r1sce7lu"
     },
     {
       "index": 3,
@@ -417,13 +417,13 @@
     },
     {
       "playerId": "p_jwgpsjxb3h",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793413217652,
-      "queueSince": 1793419489689,
+      "queueSince": null,
       "gamesPlayed": 3,
       "playedMs": 3570453,
-      "waitedMs": 2701584,
-      "longestWaitMs": 1160716,
+      "waitedMs": 3936633,
+      "longestWaitMs": 1235049,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -627,13 +627,13 @@
     },
     {
       "playerId": "p_x5deq395fp",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793415449804,
-      "queueSince": 1793419790617,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 2860507,
-      "waitedMs": 1480306,
-      "longestWaitMs": 828856,
+      "waitedMs": 2414427,
+      "longestWaitMs": 934121,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -642,12 +642,12 @@
     },
     {
       "playerId": "p_jw88ens36l",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793416333354,
-      "queueSince": 1793420655300,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 2247241,
-      "waitedMs": 2074705,
+      "waitedMs": 2144143,
       "longestWaitMs": 1114838,
       "wins": 0,
       "losses": 0,
@@ -657,13 +657,13 @@
     },
     {
       "playerId": "p_5t6kdv3w2i",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1793416362054,
-      "queueSince": 1793419929475,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 2792833,
-      "waitedMs": 774588,
-      "longestWaitMs": 442826,
+      "waitedMs": 1569851,
+      "longestWaitMs": 795263,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -1438,11 +1438,11 @@
       "createdBy": "manual",
       "levelGap": 2,
       "maxWaitAtStart": 1213549
-    }
-  ],
-  "planned": [
+    },
     {
-      "id": "pl_kv9k29dhd2",
+      "id": "m_m2r1sce7lu",
+      "no": 35,
+      "courtIndex": 2,
       "type": "D",
       "teamA": [
         "p_5t6kdv3w2i",
@@ -1452,11 +1452,14 @@
         "p_x5deq395fp",
         "p_jwgpsjxb3h"
       ],
-      "createdAt": 1793420690726,
+      "startedAt": 1793420724738,
+      "shuttles": 0,
       "createdBy": "manual",
-      "levelGap": 1
+      "levelGap": 1,
+      "maxWaitAtStart": 1235049
     }
   ],
+  "planned": [],
   "events": [
     {
       "at": 1793411712254,
@@ -2650,6 +2653,17 @@
       "at": 1793420690726,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: กร, ปลาวาฬ, เวฟ, ไนท์"
+    },
+    {
+      "at": 1793420724738,
+      "kind": "match.start",
+      "text": "คอร์ต 3: กร, ปลาวาฬ, เวฟ, ไนท์",
+      "matchId": "m_m2r1sce7lu"
+    },
+    {
+      "at": 1793420724747,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: กร, ปลาวาฬ, เวฟ, ไนท์"
     }
   ],
   "settings": {
