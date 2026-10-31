@@ -1459,7 +1459,23 @@
       "maxWaitAtStart": 1235049
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_3aqjxsfhbe",
+      "type": "D",
+      "teamA": [
+        "p_5kyiacbijt",
+        "p_xf3iqplno6"
+      ],
+      "teamB": [
+        "p_vrlbf0860e",
+        "p_qe4j6866il"
+      ],
+      "createdAt": 1793420783978,
+      "createdBy": "manual",
+      "levelGap": 1
+    }
+  ],
   "events": [
     {
       "at": 1793411712254,
@@ -2664,6 +2680,11 @@
       "at": 1793420724747,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: กร, ปลาวาฬ, เวฟ, ไนท์"
+    },
+    {
+      "at": 1793420783978,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ไกด์การบิน, นน, เน, พี่อั้ม"
     }
   ],
   "settings": {
