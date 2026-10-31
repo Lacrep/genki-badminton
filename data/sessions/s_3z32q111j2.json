@@ -64,18 +64,19 @@
     },
     {
       "playerId": "p_l3p08u33jg",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793411888287,
-      "queueSince": 1793420110689,
+      "queueSince": null,
       "gamesPlayed": 4,
       "playedMs": 5106633,
-      "waitedMs": 3115769,
+      "waitedMs": 3171747,
       "longestWaitMs": 869811,
       "wins": 0,
       "losses": 0,
       "draws": 1,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "leftAt": 1793420166667
     },
     {
       "playerId": "p_7abt4a6j42",
@@ -2572,6 +2573,12 @@
       "kind": "match.move",
       "text": "ย้ายเกม #33 จาก คอร์ต 3 ไป คอร์ต 5",
       "matchId": "m_wd0ik71nd1"
+    },
+    {
+      "at": 1793420166668,
+      "kind": "player.checkout",
+      "text": "ไอซ์ กลับบ้าน",
+      "playerId": "p_l3p08u33jg"
     }
   ],
   "settings": {
