@@ -247,18 +247,20 @@
     },
     {
       "playerId": "p_xscgffmd12",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1793412706948,
-      "queueSince": 1793421990785,
+      "queueSince": null,
       "gamesPlayed": 4,
       "playedMs": 6154611,
-      "waitedMs": 3129226,
+      "waitedMs": 3595566,
       "longestWaitMs": 1344461,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1793422457125,
+      "leftAt": 1793422457125
     },
     {
       "playerId": "p_xf3iqplno6",
@@ -3235,6 +3237,18 @@
       "kind": "player.checkout",
       "text": "เน จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_vrlbf0860e"
+    },
+    {
+      "at": 1793422457125,
+      "kind": "pay",
+      "text": "เล็ก จ่ายแล้ว",
+      "playerId": "p_xscgffmd12"
+    },
+    {
+      "at": 1793422457125,
+      "kind": "player.checkout",
+      "text": "เล็ก จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_xscgffmd12"
     }
   ],
   "settings": {
