@@ -754,7 +754,8 @@
       "boost": 0,
       "paid": true,
       "paidAt": 1793422364342,
-      "leftAt": 1793422364342
+      "leftAt": 1793422364342,
+      "shuttleAdjust": -3
     },
     {
       "playerId": "p_cw75mksxo7",
@@ -3667,6 +3668,24 @@
       "at": 1793424848734,
       "kind": "session.end",
       "text": "ปิดก๊วน"
+    },
+    {
+      "at": 1793545777988,
+      "kind": "fee",
+      "text": "กร ปรับลูกที่คิดเป็น -1 ลูก",
+      "playerId": "p_5t6kdv3w2i"
+    },
+    {
+      "at": 1793545779011,
+      "kind": "fee",
+      "text": "กร ปรับลูกที่คิดเป็น -2 ลูก",
+      "playerId": "p_5t6kdv3w2i"
+    },
+    {
+      "at": 1793545779766,
+      "kind": "fee",
+      "text": "กร ปรับลูกที่คิดเป็น -3 ลูก",
+      "playerId": "p_5t6kdv3w2i"
     }
   ],
   "settings": {
