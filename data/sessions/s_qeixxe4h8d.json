@@ -10,7 +10,7 @@
     {
       "index": 0,
       "name": "คอร์ต 6",
-      "currentMatchId": "m_koufclffxj",
+      "currentMatchId": null,
       "disabled": false
     },
     {
@@ -33,11 +33,11 @@
   "players": [
     {
       "playerId": "p_q165dvkkxi",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1794016627620,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 1380779,
+      "queueSince": 1794021676846,
+      "gamesPlayed": 2,
+      "playedMs": 2652531,
       "waitedMs": 2396695,
       "longestWaitMs": 1700715,
       "wins": 0,
@@ -183,11 +183,11 @@
     },
     {
       "playerId": "p_xscgffmd12",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1794017018305,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 1579939,
+      "queueSince": 1794021676846,
+      "gamesPlayed": 2,
+      "playedMs": 2851691,
       "waitedMs": 1806850,
       "longestWaitMs": 1500050,
       "wins": 0,
@@ -348,11 +348,11 @@
     },
     {
       "playerId": "p_5pmcrc7d7c",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1794018723369,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1794021676846,
+      "gamesPlayed": 1,
+      "playedMs": 1271752,
       "waitedMs": 1681725,
       "longestWaitMs": 1681725,
       "wins": 0,
@@ -408,11 +408,11 @@
     },
     {
       "playerId": "p_4lsi8bz1sj",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1794019640282,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1794021676846,
+      "gamesPlayed": 1,
+      "playedMs": 1271752,
       "waitedMs": 764812,
       "longestWaitMs": 764812,
       "wins": 0,
@@ -637,10 +637,11 @@
         "p_4lsi8bz1sj"
       ],
       "startedAt": 1794020405094,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 1,
-      "maxWaitAtStart": 1700715
+      "maxWaitAtStart": 1700715,
+      "endedAt": 1794021676846
     },
     {
       "id": "m_dvf2c5j0v8",
@@ -1181,6 +1182,12 @@
       "kind": "player.checkin",
       "text": "ใบเตย เช็คอิน",
       "playerId": "p_pg7son4v6d"
+    },
+    {
+      "at": 1794021676846,
+      "kind": "match.end",
+      "text": "จบเกม #8 คอร์ต 6",
+      "matchId": "m_koufclffxj"
     }
   ],
   "settings": {
