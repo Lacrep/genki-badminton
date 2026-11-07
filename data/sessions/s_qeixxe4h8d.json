@@ -541,6 +541,21 @@
       "createdAt": 1794019259100,
       "createdBy": "manual",
       "levelGap": 1
+    },
+    {
+      "id": "pl_fdr4xtvy0r",
+      "type": "D",
+      "teamA": [
+        "p_cm8qiwl1ah",
+        "p_iw7mr828yz"
+      ],
+      "teamB": [
+        "p_5lctadee35",
+        "p_gwdzyqk46n"
+      ],
+      "createdAt": 1794019495419,
+      "createdBy": "manual",
+      "levelGap": 1
     }
   ],
   "events": [
@@ -807,6 +822,11 @@
       "at": 1794019259100,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: พี่ตี๋, พี่บอม, นน, เติ้ล"
+    },
+    {
+      "at": 1794019495419,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ต้อม, เต๋าเต้ย, ไวน์, หมิง"
     }
   ],
   "settings": {
