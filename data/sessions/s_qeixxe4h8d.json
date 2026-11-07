@@ -128,18 +128,19 @@
     },
     {
       "playerId": "p_qea345cort",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1794016917360,
-      "queueSince": 1794023339027,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 2912482,
-      "waitedMs": 3210112,
+      "waitedMs": 3432911,
       "longestWaitMs": 1886825,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": false,
+      "leftAt": 1794023561826
     },
     {
       "playerId": "p_kw43d5e5x2",
@@ -1582,6 +1583,12 @@
       "at": 1794023457275,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: ฟลุ๊คสาว, สุดหล่อ, แจง, แบงค์"
+    },
+    {
+      "at": 1794023561826,
+      "kind": "player.checkout",
+      "text": "หนุ่ม กลับบ้าน",
+      "playerId": "p_qea345cort"
     }
   ],
   "settings": {
