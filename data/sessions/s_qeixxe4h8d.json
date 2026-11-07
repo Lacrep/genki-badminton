@@ -968,6 +968,21 @@
       "createdAt": 1794024193248,
       "createdBy": "manual",
       "levelGap": 2
+    },
+    {
+      "id": "pl_14wqjdpuio",
+      "type": "D",
+      "teamA": [
+        "p_0tkx8luk7o",
+        "p_28qfvskn0s"
+      ],
+      "teamB": [
+        "p_2jd5ehh4i6",
+        "p_hgw4qts55x"
+      ],
+      "createdAt": 1794024249792,
+      "createdBy": "manual",
+      "levelGap": 2
     }
   ],
   "events": [
@@ -1711,6 +1726,11 @@
       "at": 1794024193249,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: พลอยปภัส, กาย, ยอด, ซัน"
+    },
+    {
+      "at": 1794024249792,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พลอยปภัส, กาย, ซัน, ยอด"
     }
   ],
   "settings": {
