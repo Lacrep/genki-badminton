@@ -128,9 +128,9 @@
     },
     {
       "playerId": "p_qea345cort",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1794016917360,
-      "queueSince": null,
+      "queueSince": 1794023339027,
       "gamesPlayed": 2,
       "playedMs": 2912482,
       "waitedMs": 3210112,
@@ -218,12 +218,12 @@
     },
     {
       "playerId": "p_ftg725indj",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1794017195487,
-      "queueSince": 1794023027328,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 2554506,
-      "waitedMs": 3277335,
+      "waitedMs": 3589034,
       "longestWaitMs": 1745582,
       "wins": 0,
       "losses": 0,
@@ -846,7 +846,7 @@
       "courtIndex": 4,
       "type": "D",
       "teamA": [
-        "p_qea345cort",
+        "p_ftg725indj",
         "p_kw43d5e5x2"
       ],
       "teamB": [
@@ -1520,6 +1520,12 @@
       "at": 1794023243473,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: นาว, พี่บูม, นน, ไกด์"
+    },
+    {
+      "at": 1794023339027,
+      "kind": "match.swap",
+      "text": "สลับ หนุ่ม ออก ธี(หมิง) ลง",
+      "matchId": "m_mx72c4zx02"
     }
   ],
   "settings": {
