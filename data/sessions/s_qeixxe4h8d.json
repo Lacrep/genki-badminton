@@ -420,6 +420,36 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_0tkx8luk7o",
+      "status": "queue",
+      "checkInAt": 1794020152857,
+      "queueSince": 1794020152857,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_28qfvskn0s",
+      "status": "queue",
+      "checkInAt": 1794020152860,
+      "queueSince": 1794020152860,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -905,6 +935,18 @@
       "at": 1794020028701,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: พี่ตี๋, พี่บอม, นน, เติ้ล"
+    },
+    {
+      "at": 1794020152857,
+      "kind": "player.checkin",
+      "text": "พลอยปภัส เช็คอิน",
+      "playerId": "p_0tkx8luk7o"
+    },
+    {
+      "at": 1794020152860,
+      "kind": "player.checkin",
+      "text": "กาย เช็คอิน",
+      "playerId": "p_28qfvskn0s"
     }
   ],
   "settings": {
