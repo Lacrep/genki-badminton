@@ -16,7 +16,7 @@
     {
       "index": 1,
       "name": "คอร์ต 3",
-      "currentMatchId": "m_2obdtponxp",
+      "currentMatchId": null,
       "disabled": false
     },
     {
@@ -93,11 +93,11 @@
     },
     {
       "playerId": "p_vlg61a1abs",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1794016808175,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1794020770523,
+      "gamesPlayed": 1,
+      "playedMs": 1614766,
       "waitedMs": 2347582,
       "longestWaitMs": 2347582,
       "wins": 0,
@@ -108,11 +108,11 @@
     },
     {
       "playerId": "p_laxlf4aob4",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1794016823447,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 1491921,
+      "queueSince": 1794020770523,
+      "gamesPlayed": 2,
+      "playedMs": 3106687,
       "waitedMs": 840389,
       "longestWaitMs": 828069,
       "wins": 0,
@@ -138,11 +138,11 @@
     },
     {
       "playerId": "p_kw43d5e5x2",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1794016986235,
-      "queueSince": null,
-      "gamesPlayed": 1,
-      "playedMs": 1579939,
+      "queueSince": 1794020770523,
+      "gamesPlayed": 2,
+      "playedMs": 3194705,
       "waitedMs": 589583,
       "longestWaitMs": 338870,
       "wins": 0,
@@ -273,11 +273,11 @@
     },
     {
       "playerId": "p_7y8kivu7ip",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1794017734808,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1794020770523,
+      "gamesPlayed": 1,
+      "playedMs": 1614766,
       "waitedMs": 1420949,
       "longestWaitMs": 1420949,
       "wins": 0,
@@ -582,10 +582,11 @@
         "p_laxlf4aob4"
       ],
       "startedAt": 1794019155757,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 3,
-      "maxWaitAtStart": 2347582
+      "maxWaitAtStart": 2347582,
+      "endedAt": 1794020770523
     },
     {
       "id": "m_wugn2l7dhw",
@@ -1052,6 +1053,12 @@
       "kind": "match.end",
       "text": "จบเกม #7 คอร์ต 4",
       "matchId": "m_wugn2l7dhw"
+    },
+    {
+      "at": 1794020770523,
+      "kind": "match.end",
+      "text": "จบเกม #6 คอร์ต 3",
+      "matchId": "m_2obdtponxp"
     }
   ],
   "settings": {
