@@ -834,6 +834,21 @@
       "createdAt": 1794022781078,
       "createdBy": "manual",
       "levelGap": 1
+    },
+    {
+      "id": "pl_n32axdw2w0",
+      "type": "D",
+      "teamA": [
+        "p_qea345cort",
+        "p_kw43d5e5x2"
+      ],
+      "teamB": [
+        "p_5t6kdv3w2i",
+        "p_pg7son4v6d"
+      ],
+      "createdAt": 1794022860960,
+      "createdBy": "manual",
+      "levelGap": 1
     }
   ],
   "events": [
@@ -1420,6 +1435,11 @@
       "at": 1794022791430,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: พี่คิง, กร, หมิง, ซัน"
+    },
+    {
+      "at": 1794022860960,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: หนุ่ม, ยุทธ์, กร, ใบเตย"
     }
   ],
   "settings": {
