@@ -300,6 +300,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_czjbfz3yxc",
+      "status": "queue",
+      "checkInAt": 1794018190232,
+      "queueSince": 1794018190232,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -534,6 +549,12 @@
       "at": 1794017972282,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: ยอด, ผิง, ธี(หมิง), ไกด์"
+    },
+    {
+      "at": 1794018190232,
+      "kind": "player.checkin",
+      "text": "นาว เช็คอิน",
+      "playerId": "p_czjbfz3yxc"
     }
   ],
   "settings": {
