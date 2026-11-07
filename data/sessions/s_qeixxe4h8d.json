@@ -543,21 +543,6 @@
   ],
   "planned": [
     {
-      "id": "pl_xo14spqvoc",
-      "type": "D",
-      "teamA": [
-        "p_hwixawkd5d",
-        "p_m3ojvdfpn0"
-      ],
-      "teamB": [
-        "p_xf3iqplno6",
-        "p_famr27ywr8"
-      ],
-      "createdAt": 1794019259100,
-      "createdBy": "manual",
-      "levelGap": 1
-    },
-    {
       "id": "pl_wimkg0yb0j",
       "type": "D",
       "teamA": [
@@ -569,6 +554,21 @@
         "p_5pmcrc7d7c"
       ],
       "createdAt": 1794019605571,
+      "createdBy": "manual",
+      "levelGap": 1
+    },
+    {
+      "id": "pl_xo14spqvoc",
+      "type": "D",
+      "teamA": [
+        "p_hwixawkd5d",
+        "p_m3ojvdfpn0"
+      ],
+      "teamB": [
+        "p_xf3iqplno6",
+        "p_famr27ywr8"
+      ],
+      "createdAt": 1794019259100,
       "createdBy": "manual",
       "levelGap": 1
     },
@@ -863,6 +863,21 @@
       "kind": "player.checkin",
       "text": "ปอ เช็คอิน",
       "playerId": "p_4lsi8bz1sj"
+    },
+    {
+      "at": 1794019664870,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1794019666148,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1794019667899,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
     }
   ],
   "settings": {
