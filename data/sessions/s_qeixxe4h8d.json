@@ -502,6 +502,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_ecpq3j2g0k",
+      "status": "queue",
+      "checkInAt": 1794023439713,
+      "queueSince": 1794023439713,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -1540,6 +1555,12 @@
       "kind": "player.checkout",
       "text": "ทิพย์ จ่ายเงินแล้วกลับบ้าน",
       "playerId": "p_irrc1nb90w"
+    },
+    {
+      "at": 1794023439713,
+      "kind": "player.checkin",
+      "text": "สุดหล่อ เช็คอิน",
+      "playerId": "p_ecpq3j2g0k"
     }
   ],
   "settings": {
