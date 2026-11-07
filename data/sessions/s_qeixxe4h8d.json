@@ -896,7 +896,23 @@
       "maxWaitAtStart": 940027
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_u0hew78v0b",
+      "type": "D",
+      "teamA": [
+        "p_53y43qzll8",
+        "p_ecpq3j2g0k"
+      ],
+      "teamB": [
+        "p_7y8kivu7ip",
+        "p_vlg61a1abs"
+      ],
+      "createdAt": 1794023457275,
+      "createdBy": "manual",
+      "levelGap": 2
+    }
+  ],
   "events": [
     {
       "at": 1794016534333,
@@ -1561,6 +1577,11 @@
       "kind": "player.checkin",
       "text": "สุดหล่อ เช็คอิน",
       "playerId": "p_ecpq3j2g0k"
+    },
+    {
+      "at": 1794023457275,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ฟลุ๊คสาว, สุดหล่อ, แจง, แบงค์"
     }
   ],
   "settings": {
