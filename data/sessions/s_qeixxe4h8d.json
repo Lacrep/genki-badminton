@@ -666,7 +666,23 @@
       "maxWaitAtStart": 1886825
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_dmhdiyoir9",
+      "type": "D",
+      "teamA": [
+        "p_53y43qzll8",
+        "p_xf3iqplno6"
+      ],
+      "teamB": [
+        "p_3bvix9nerq",
+        "p_czjbfz3yxc"
+      ],
+      "createdAt": 1794020828662,
+      "createdBy": "manual",
+      "levelGap": 2
+    }
+  ],
   "events": [
     {
       "at": 1794016534333,
@@ -1083,6 +1099,11 @@
       "at": 1794020791883,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: พลอยปภัส, กาย, ซัน, หนุ่ม"
+    },
+    {
+      "at": 1794020828662,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ฟลุ๊คสาว, นน, ปาล์ม, นาว"
     }
   ],
   "settings": {
