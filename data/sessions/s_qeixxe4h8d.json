@@ -912,6 +912,21 @@
       "createdAt": 1794023457275,
       "createdBy": "manual",
       "levelGap": 2
+    },
+    {
+      "id": "pl_dq93a5btv2",
+      "type": "D",
+      "teamA": [
+        "p_m3ojvdfpn0",
+        "p_hwixawkd5d"
+      ],
+      "teamB": [
+        "p_3bvix9nerq",
+        "p_5lctadee35"
+      ],
+      "createdAt": 1794023595758,
+      "createdBy": "manual",
+      "levelGap": 1
     }
   ],
   "events": [
@@ -1589,6 +1604,11 @@
       "kind": "player.checkout",
       "text": "หนุ่ม กลับบ้าน",
       "playerId": "p_qea345cort"
+    },
+    {
+      "at": 1794023595758,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พี่บอม, พี่ตี๋, ปาล์ม, ไวน์"
     }
   ],
   "settings": {
