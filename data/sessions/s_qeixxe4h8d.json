@@ -315,6 +315,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_irrc1nb90w",
+      "status": "queue",
+      "checkInAt": 1794018529912,
+      "queueSince": 1794018529912,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -575,6 +590,12 @@
       "at": 1794018269178,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: ยุทธ์, แจง, แบงค์, บอม"
+    },
+    {
+      "at": 1794018529912,
+      "kind": "player.checkin",
+      "text": "ทิพย์ เช็คอิน",
+      "playerId": "p_irrc1nb90w"
     }
   ],
   "settings": {
