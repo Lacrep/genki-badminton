@@ -16,7 +16,7 @@
     {
       "index": 1,
       "name": "คอร์ต 3",
-      "currentMatchId": null,
+      "currentMatchId": "m_2obdtponxp",
       "disabled": false
     },
     {
@@ -93,13 +93,13 @@
     },
     {
       "playerId": "p_vlg61a1abs",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1794016808175,
-      "queueSince": 1794016808175,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 2347582,
+      "longestWaitMs": 2347582,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -108,12 +108,12 @@
     },
     {
       "playerId": "p_laxlf4aob4",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1794016823447,
-      "queueSince": 1794019143437,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 1491921,
-      "waitedMs": 828069,
+      "waitedMs": 840389,
       "longestWaitMs": 828069,
       "wins": 0,
       "losses": 0,
@@ -138,12 +138,12 @@
     },
     {
       "playerId": "p_kw43d5e5x2",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1794016986235,
-      "queueSince": 1794018905044,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 1579939,
-      "waitedMs": 338870,
+      "waitedMs": 589583,
       "longestWaitMs": 338870,
       "wins": 0,
       "losses": 0,
@@ -273,13 +273,13 @@
     },
     {
       "playerId": "p_7y8kivu7ip",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1794017734808,
-      "queueSince": 1794017734808,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 1420949,
+      "longestWaitMs": 1420949,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -366,6 +366,36 @@
       "status": "queue",
       "checkInAt": 1794019018341,
       "queueSince": 1794019018341,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_xf3iqplno6",
+      "status": "queue",
+      "checkInAt": 1794019157766,
+      "queueSince": 1794019157766,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_famr27ywr8",
+      "status": "queue",
+      "checkInAt": 1794019157773,
+      "queueSince": 1794019157773,
       "gamesPlayed": 0,
       "playedMs": 0,
       "waitedMs": 0,
@@ -475,11 +505,11 @@
       "createdBy": "manual",
       "levelGap": 3,
       "maxWaitAtStart": 947614
-    }
-  ],
-  "planned": [
+    },
     {
-      "id": "pl_ftqeu25nui",
+      "id": "m_2obdtponxp",
+      "no": 6,
+      "courtIndex": 1,
       "type": "D",
       "teamA": [
         "p_kw43d5e5x2",
@@ -489,11 +519,14 @@
         "p_vlg61a1abs",
         "p_laxlf4aob4"
       ],
-      "createdAt": 1794018269178,
+      "startedAt": 1794019155757,
+      "shuttles": 0,
       "createdBy": "manual",
-      "levelGap": 3
+      "levelGap": 3,
+      "maxWaitAtStart": 2347582
     }
   ],
+  "planned": [],
   "events": [
     {
       "at": 1794016534333,
@@ -730,6 +763,29 @@
       "kind": "match.end",
       "text": "จบเกม #3 คอร์ต 3",
       "matchId": "m_jcvcbqsf98"
+    },
+    {
+      "at": 1794019155758,
+      "kind": "match.start",
+      "text": "คอร์ต 3: ยุทธ์, แจง, แบงค์, บอม",
+      "matchId": "m_2obdtponxp"
+    },
+    {
+      "at": 1794019155765,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: ยุทธ์, แจง, แบงค์, บอม"
+    },
+    {
+      "at": 1794019157766,
+      "kind": "player.checkin",
+      "text": "นน เช็คอิน",
+      "playerId": "p_xf3iqplno6"
+    },
+    {
+      "at": 1794019157773,
+      "kind": "player.checkin",
+      "text": "เติ้ล เช็คอิน",
+      "playerId": "p_famr27ywr8"
     }
   ],
   "settings": {
