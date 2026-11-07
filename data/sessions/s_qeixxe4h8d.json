@@ -465,6 +465,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_pg7son4v6d",
+      "status": "queue",
+      "checkInAt": 1794021591261,
+      "queueSince": 1794021591261,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -1160,6 +1175,12 @@
       "at": 1794021580826,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: ไกด์, ทิพย์, ผิง, พี่บูม"
+    },
+    {
+      "at": 1794021591261,
+      "kind": "player.checkin",
+      "text": "ใบเตย เช็คอิน",
+      "playerId": "p_pg7son4v6d"
     }
   ],
   "settings": {
