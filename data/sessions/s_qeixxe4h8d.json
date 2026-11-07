@@ -22,7 +22,7 @@
     {
       "index": 2,
       "name": "คอร์ต 4",
-      "currentMatchId": "m_559ln7fhah"
+      "currentMatchId": null
     },
     {
       "index": 3,
@@ -213,11 +213,11 @@
     },
     {
       "playerId": "p_ftg725indj",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1794017195487,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1794019984516,
+      "gamesPlayed": 1,
+      "playedMs": 1257276,
       "waitedMs": 1531753,
       "longestWaitMs": 1531753,
       "wins": 0,
@@ -243,11 +243,11 @@
     },
     {
       "playerId": "p_hgw4qts55x",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1794017466757,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1794019984516,
+      "gamesPlayed": 1,
+      "playedMs": 1257276,
       "waitedMs": 1260483,
       "longestWaitMs": 1260483,
       "wins": 0,
@@ -258,11 +258,11 @@
     },
     {
       "playerId": "p_suzv413d26",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1794017667419,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1794019984516,
+      "gamesPlayed": 1,
+      "playedMs": 1257276,
       "waitedMs": 1059821,
       "longestWaitMs": 1059821,
       "wins": 0,
@@ -288,11 +288,11 @@
     },
     {
       "playerId": "p_zaui6hkcn1",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1794017928288,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1794019984516,
+      "gamesPlayed": 1,
+      "playedMs": 1257276,
       "waitedMs": 798952,
       "longestWaitMs": 798952,
       "wins": 0,
@@ -497,10 +497,11 @@
         "p_suzv413d26"
       ],
       "startedAt": 1794018727240,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 0,
-      "maxWaitAtStart": 1531753
+      "maxWaitAtStart": 1531753,
+      "endedAt": 1794019984516
     },
     {
       "id": "m_gi1nsroa46",
@@ -878,6 +879,12 @@
       "at": 1794019667899,
       "kind": "plan.move",
       "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1794019984516,
+      "kind": "match.end",
+      "text": "จบเกม #4 คอร์ต 4",
+      "matchId": "m_559ln7fhah"
     }
   ],
   "settings": {
