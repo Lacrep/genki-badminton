@@ -485,6 +485,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_5t6kdv3w2i",
+      "status": "queue",
+      "checkInAt": 1794022601408,
+      "queueSince": 1794022601408,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -1379,6 +1394,12 @@
       "at": 1794022554256,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: ซัน, พี่คิง, หมิง, เล็ก"
+    },
+    {
+      "at": 1794022601408,
+      "kind": "player.checkin",
+      "text": "กร เช็คอิน",
+      "playerId": "p_5t6kdv3w2i"
     }
   ],
   "settings": {
