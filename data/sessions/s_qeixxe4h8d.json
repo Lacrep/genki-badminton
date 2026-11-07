@@ -330,6 +330,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_v0c446f7v6",
+      "status": "queue",
+      "checkInAt": 1794018715033,
+      "queueSince": 1794018715033,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -603,6 +618,12 @@
       "kind": "match.end",
       "text": "จบเกม #1 คอร์ต 4",
       "matchId": "m_nq7a56le8g"
+    },
+    {
+      "at": 1794018715033,
+      "kind": "player.checkin",
+      "text": "พี่บูม เช็คอิน",
+      "playerId": "p_v0c446f7v6"
     }
   ],
   "settings": {
