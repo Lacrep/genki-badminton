@@ -740,7 +740,23 @@
       "maxWaitAtStart": 1745582
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_ndt47t9vwh",
+      "type": "D",
+      "teamA": [
+        "p_vlg61a1abs",
+        "p_5lctadee35"
+      ],
+      "teamB": [
+        "p_hwixawkd5d",
+        "p_m3ojvdfpn0"
+      ],
+      "createdAt": 1794021825473,
+      "createdBy": "manual",
+      "levelGap": 1
+    }
+  ],
   "events": [
     {
       "at": 1794016534333,
@@ -1223,6 +1239,11 @@
       "at": 1794021730105,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: แจง, ธี(หมิง), ยุทธ์, ใบเตย"
+    },
+    {
+      "at": 1794021825473,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: แบงค์, ไวน์, พี่ตี๋, พี่บอม"
     }
   ],
   "settings": {
