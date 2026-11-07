@@ -30,7 +30,53 @@
       "currentMatchId": null
     }
   ],
-  "players": [],
+  "players": [
+    {
+      "playerId": "p_q165dvkkxi",
+      "status": "queue",
+      "checkInAt": 1794016627620,
+      "queueSince": 1794016627620,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_hwixawkd5d",
+      "status": "queue",
+      "checkInAt": 1794016632668,
+      "queueSince": 1794016632668,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_m3ojvdfpn0",
+      "status": "queue",
+      "checkInAt": 1794016637722,
+      "queueSince": 1794016637722,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    }
+  ],
   "matches": [],
   "planned": [],
   "events": [
@@ -38,6 +84,24 @@
       "at": 1794016534333,
       "kind": "session.start",
       "text": "เปิดก๊วน"
+    },
+    {
+      "at": 1794016627620,
+      "kind": "player.checkin",
+      "text": "พี่คิง เช็คอิน",
+      "playerId": "p_q165dvkkxi"
+    },
+    {
+      "at": 1794016632668,
+      "kind": "player.checkin",
+      "text": "พี่ตี๋ เช็คอิน",
+      "playerId": "p_hwixawkd5d"
+    },
+    {
+      "at": 1794016637722,
+      "kind": "player.checkin",
+      "text": "พี่บอม เช็คอิน",
+      "playerId": "p_m3ojvdfpn0"
     }
   ],
   "settings": {
