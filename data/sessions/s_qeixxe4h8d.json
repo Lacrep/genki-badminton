@@ -16,7 +16,7 @@
     {
       "index": 1,
       "name": "คอร์ต 3",
-      "currentMatchId": null,
+      "currentMatchId": "m_jcvcbqsf98",
       "disabled": false
     },
     {
@@ -78,13 +78,13 @@
     },
     {
       "playerId": "p_53y43qzll8",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1794016808171,
-      "queueSince": 1794016808171,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 843345,
+      "longestWaitMs": 843345,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -108,13 +108,13 @@
     },
     {
       "playerId": "p_laxlf4aob4",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1794016823447,
-      "queueSince": 1794016823447,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 828069,
+      "longestWaitMs": 828069,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -153,13 +153,13 @@
     },
     {
       "playerId": "p_5lctadee35",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1794016996821,
-      "queueSince": 1794016996821,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 654695,
+      "longestWaitMs": 654695,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -228,13 +228,13 @@
     },
     {
       "playerId": "p_cm8qiwl1ah",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1794017306837,
-      "queueSince": 1794017306837,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 344679,
+      "longestWaitMs": 344679,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -295,6 +295,25 @@
       "createdBy": "manual",
       "levelGap": 1,
       "maxWaitAtStart": 407745
+    },
+    {
+      "id": "m_jcvcbqsf98",
+      "no": 3,
+      "courtIndex": 1,
+      "type": "D",
+      "teamA": [
+        "p_laxlf4aob4",
+        "p_cm8qiwl1ah"
+      ],
+      "teamB": [
+        "p_53y43qzll8",
+        "p_5lctadee35"
+      ],
+      "startedAt": 1794017651516,
+      "shuttles": 0,
+      "createdBy": "manual",
+      "levelGap": 2,
+      "maxWaitAtStart": 843345
     }
   ],
   "planned": [],
@@ -425,6 +444,12 @@
       "kind": "player.checkin",
       "text": "ยอด เช็คอิน",
       "playerId": "p_hgw4qts55x"
+    },
+    {
+      "at": 1794017651516,
+      "kind": "match.start",
+      "text": "คอร์ต 3: บอม, ต้อม, ฟลุ๊คสาว, ไวน์",
+      "matchId": "m_jcvcbqsf98"
     }
   ],
   "settings": {
