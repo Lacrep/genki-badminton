@@ -150,6 +150,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_5lctadee35",
+      "status": "queue",
+      "checkInAt": 1794016996821,
+      "queueSince": 1794016996821,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [],
@@ -207,6 +222,12 @@
       "kind": "player.checkin",
       "text": "ยุทธ์ เช็คอิน",
       "playerId": "p_kw43d5e5x2"
+    },
+    {
+      "at": 1794016996821,
+      "kind": "player.checkin",
+      "text": "ไวน์ เช็คอิน",
+      "playerId": "p_5lctadee35"
     }
   ],
   "settings": {
