@@ -755,6 +755,21 @@
       "createdAt": 1794021825473,
       "createdBy": "manual",
       "levelGap": 1
+    },
+    {
+      "id": "pl_dp38o5b755",
+      "type": "D",
+      "teamA": [
+        "p_cm8qiwl1ah",
+        "p_famr27ywr8"
+      ],
+      "teamB": [
+        "p_laxlf4aob4",
+        "p_4lsi8bz1sj"
+      ],
+      "createdAt": 1794021886697,
+      "createdBy": "manual",
+      "levelGap": 2
     }
   ],
   "events": [
@@ -1244,6 +1259,11 @@
       "at": 1794021825473,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: แบงค์, ไวน์, พี่ตี๋, พี่บอม"
+    },
+    {
+      "at": 1794021886697,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ต้อม, เติ้ล, บอม, ปอ"
     }
   ],
   "settings": {
