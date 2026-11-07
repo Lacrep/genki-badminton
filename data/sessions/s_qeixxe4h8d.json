@@ -834,6 +834,21 @@
       "createdAt": 1794022730372,
       "createdBy": "manual",
       "levelGap": 0
+    },
+    {
+      "id": "pl_vuvu00ud92",
+      "type": "D",
+      "teamA": [
+        "p_q165dvkkxi",
+        "p_2jd5ehh4i6"
+      ],
+      "teamB": [
+        "p_gwdzyqk46n",
+        "p_xscgffmd12"
+      ],
+      "createdAt": 1794022781078,
+      "createdBy": "manual",
+      "levelGap": 1
     }
   ],
   "events": [
@@ -1410,6 +1425,11 @@
       "at": 1794022730372,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: พี่คิง, กร, หมิง, ซัน"
+    },
+    {
+      "at": 1794022781078,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พี่คิง, ซัน, หมิง, เล็ก"
     }
   ],
   "settings": {
