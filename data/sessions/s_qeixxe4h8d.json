@@ -195,6 +195,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_gwdzyqk46n",
+      "status": "queue",
+      "checkInAt": 1794017134492,
+      "queueSince": 1794017134492,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [],
@@ -291,6 +306,12 @@
       "at": 1794017049945,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: พี่ตี๋, พี่บอม, ปาล์ม, พี่คิง"
+    },
+    {
+      "at": 1794017134492,
+      "kind": "player.checkin",
+      "text": "หมิง เช็คอิน",
+      "playerId": "p_gwdzyqk46n"
     }
   ],
   "settings": {
