@@ -721,7 +721,23 @@
       "maxWaitAtStart": 1596303
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_nqh0us7krb",
+      "type": "D",
+      "teamA": [
+        "p_7y8kivu7ip",
+        "p_ftg725indj"
+      ],
+      "teamB": [
+        "p_kw43d5e5x2",
+        "p_pg7son4v6d"
+      ],
+      "createdAt": 1794021717719,
+      "createdBy": "manual",
+      "levelGap": 4
+    }
+  ],
   "events": [
     {
       "at": 1794016534333,
@@ -1188,6 +1204,11 @@
       "kind": "match.end",
       "text": "จบเกม #8 คอร์ต 6",
       "matchId": "m_koufclffxj"
+    },
+    {
+      "at": 1794021717719,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: แจง, ธี(หมิง), ยุทธ์, ใบเตย"
     }
   ],
   "settings": {
