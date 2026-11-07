@@ -27,7 +27,7 @@
     {
       "index": 3,
       "name": "คอร์ต 5",
-      "currentMatchId": "m_1mdjkrlfe9"
+      "currentMatchId": null
     }
   ],
   "players": [
@@ -123,11 +123,11 @@
     },
     {
       "playerId": "p_qea345cort",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1794016917360,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1794018905044,
+      "gamesPlayed": 1,
+      "playedMs": 1579939,
       "waitedMs": 407745,
       "longestWaitMs": 407745,
       "wins": 0,
@@ -138,11 +138,11 @@
     },
     {
       "playerId": "p_kw43d5e5x2",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1794016986235,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1794018905044,
+      "gamesPlayed": 1,
+      "playedMs": 1579939,
       "waitedMs": 338870,
       "longestWaitMs": 338870,
       "wins": 0,
@@ -183,11 +183,11 @@
     },
     {
       "playerId": "p_xscgffmd12",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1794017018305,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1794018905044,
+      "gamesPlayed": 1,
+      "playedMs": 1579939,
       "waitedMs": 306800,
       "longestWaitMs": 306800,
       "wins": 0,
@@ -198,11 +198,11 @@
     },
     {
       "playerId": "p_gwdzyqk46n",
-      "status": "playing",
+      "status": "queue",
       "checkInAt": 1794017134492,
-      "queueSince": null,
-      "gamesPlayed": 0,
-      "playedMs": 0,
+      "queueSince": 1794018905044,
+      "gamesPlayed": 1,
+      "playedMs": 1579939,
       "waitedMs": 190613,
       "longestWaitMs": 190613,
       "wins": 0,
@@ -397,10 +397,11 @@
         "p_xscgffmd12"
       ],
       "startedAt": 1794017325105,
-      "shuttles": 0,
+      "shuttles": 1,
       "createdBy": "manual",
       "levelGap": 1,
-      "maxWaitAtStart": 407745
+      "maxWaitAtStart": 407745,
+      "endedAt": 1794018905044
     },
     {
       "id": "m_jcvcbqsf98",
@@ -660,6 +661,12 @@
       "at": 1794018727247,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: ยอด, ผิง, ธี(หมิง), ไกด์"
+    },
+    {
+      "at": 1794018905044,
+      "kind": "match.end",
+      "text": "จบเกม #2 คอร์ต 5",
+      "matchId": "m_1mdjkrlfe9"
     }
   ],
   "settings": {
