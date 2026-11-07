@@ -543,6 +543,21 @@
       "levelGap": 1
     },
     {
+      "id": "pl_wimkg0yb0j",
+      "type": "D",
+      "teamA": [
+        "p_q165dvkkxi",
+        "p_qea345cort"
+      ],
+      "teamB": [
+        "p_xscgffmd12",
+        "p_5pmcrc7d7c"
+      ],
+      "createdAt": 1794019605571,
+      "createdBy": "manual",
+      "levelGap": 1
+    },
+    {
       "id": "pl_fdr4xtvy0r",
       "type": "D",
       "teamA": [
@@ -827,6 +842,16 @@
       "at": 1794019495419,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: ต้อม, เต๋าเต้ย, ไวน์, หมิง"
+    },
+    {
+      "at": 1794019605571,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พี่คิง, หนุ่ม, เล็ก, โอม"
+    },
+    {
+      "at": 1794019607993,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
     }
   ],
   "settings": {
