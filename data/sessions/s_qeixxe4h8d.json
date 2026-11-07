@@ -75,6 +75,36 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_53y43qzll8",
+      "status": "queue",
+      "checkInAt": 1794016808171,
+      "queueSince": 1794016808171,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_vlg61a1abs",
+      "status": "queue",
+      "checkInAt": 1794016808175,
+      "queueSince": 1794016808175,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [],
@@ -102,6 +132,18 @@
       "kind": "player.checkin",
       "text": "พี่บอม เช็คอิน",
       "playerId": "p_m3ojvdfpn0"
+    },
+    {
+      "at": 1794016808172,
+      "kind": "player.checkin",
+      "text": "ฟลุ๊คสาว เช็คอิน",
+      "playerId": "p_53y43qzll8"
+    },
+    {
+      "at": 1794016808175,
+      "kind": "player.checkin",
+      "text": "แบงค์ เช็คอิน",
+      "playerId": "p_vlg61a1abs"
     }
   ],
   "settings": {
