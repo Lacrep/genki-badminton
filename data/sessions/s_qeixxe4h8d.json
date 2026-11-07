@@ -937,7 +937,23 @@
       "maxWaitAtStart": 1378013
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_qi3s3dh6pc",
+      "type": "D",
+      "teamA": [
+        "p_5pmcrc7d7c",
+        "p_4lsi8bz1sj"
+      ],
+      "teamB": [
+        "p_famr27ywr8",
+        "p_cm8qiwl1ah"
+      ],
+      "createdAt": 1794023845680,
+      "createdBy": "manual",
+      "levelGap": 2
+    }
+  ],
   "events": [
     {
       "at": 1794016534333,
@@ -1652,6 +1668,11 @@
       "at": 1794023681260,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: พี่บอม, พี่ตี๋, ปาล์ม, ไวน์"
+    },
+    {
+      "at": 1794023845680,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: โอม, ปอ, เติ้ล, ต้อม"
     }
   ],
   "settings": {
