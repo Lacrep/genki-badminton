@@ -593,17 +593,17 @@
   ],
   "planned": [
     {
-      "id": "pl_wimkg0yb0j",
+      "id": "pl_kau4nzc18p",
       "type": "D",
       "teamA": [
-        "p_q165dvkkxi",
-        "p_qea345cort"
+        "p_xscgffmd12",
+        "p_q165dvkkxi"
       ],
       "teamB": [
-        "p_xscgffmd12",
-        "p_5pmcrc7d7c"
+        "p_5pmcrc7d7c",
+        "p_4lsi8bz1sj"
       ],
-      "createdAt": 1794019605571,
+      "createdAt": 1794020246089,
       "createdBy": "manual",
       "levelGap": 1
     },
@@ -947,6 +947,26 @@
       "kind": "player.checkin",
       "text": "กาย เช็คอิน",
       "playerId": "p_28qfvskn0s"
+    },
+    {
+      "at": 1794020246089,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: เล็ก, พี่คิง, โอม, ปอ"
+    },
+    {
+      "at": 1794020251136,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1794020251858,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
+    },
+    {
+      "at": 1794020258808,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: พี่คิง, หนุ่ม, เล็ก, โอม"
     }
   ],
   "settings": {
