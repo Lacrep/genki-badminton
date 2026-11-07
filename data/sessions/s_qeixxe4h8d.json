@@ -10,7 +10,7 @@
     {
       "index": 0,
       "name": "คอร์ต 2",
-      "currentMatchId": "m_kp3gw57ub6",
+      "currentMatchId": null,
       "disabled": false
     },
     {
@@ -32,7 +32,7 @@
     {
       "index": 4,
       "name": "คอร์ต 6",
-      "currentMatchId": null
+      "currentMatchId": "m_kp3gw57ub6"
     }
   ],
   "players": [
@@ -730,7 +730,7 @@
     {
       "id": "m_kp3gw57ub6",
       "no": 13,
-      "courtIndex": 0,
+      "courtIndex": 4,
       "type": "D",
       "teamA": [
         "p_7y8kivu7ip",
@@ -1338,6 +1338,12 @@
       "at": 1794022317593,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: ต้อม, เติ้ล, บอม, ปอ"
+    },
+    {
+      "at": 1794022347956,
+      "kind": "match.move",
+      "text": "ย้ายเกม #13 จาก คอร์ต 2 ไป คอร์ต 6",
+      "matchId": "m_kp3gw57ub6"
     }
   ],
   "settings": {
