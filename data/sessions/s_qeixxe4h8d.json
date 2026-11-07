@@ -526,7 +526,23 @@
       "maxWaitAtStart": 2347582
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_xo14spqvoc",
+      "type": "D",
+      "teamA": [
+        "p_hwixawkd5d",
+        "p_m3ojvdfpn0"
+      ],
+      "teamB": [
+        "p_xf3iqplno6",
+        "p_famr27ywr8"
+      ],
+      "createdAt": 1794019259100,
+      "createdBy": "manual",
+      "levelGap": 1
+    }
+  ],
   "events": [
     {
       "at": 1794016534333,
@@ -786,6 +802,11 @@
       "kind": "player.checkin",
       "text": "เติ้ล เช็คอิน",
       "playerId": "p_famr27ywr8"
+    },
+    {
+      "at": 1794019259100,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พี่ตี๋, พี่บอม, นน, เติ้ล"
     }
   ],
   "settings": {
