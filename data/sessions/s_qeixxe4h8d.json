@@ -22,7 +22,7 @@
     {
       "index": 2,
       "name": "คอร์ต 4",
-      "currentMatchId": null
+      "currentMatchId": "m_559ln7fhah"
     },
     {
       "index": 3,
@@ -213,13 +213,13 @@
     },
     {
       "playerId": "p_ftg725indj",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1794017195487,
-      "queueSince": 1794017195487,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 1531753,
+      "longestWaitMs": 1531753,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -243,13 +243,13 @@
     },
     {
       "playerId": "p_hgw4qts55x",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1794017466757,
-      "queueSince": 1794017466757,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 1260483,
+      "longestWaitMs": 1260483,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -258,13 +258,13 @@
     },
     {
       "playerId": "p_suzv413d26",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1794017667419,
-      "queueSince": 1794017667419,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 1059821,
+      "longestWaitMs": 1059821,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -288,13 +288,13 @@
     },
     {
       "playerId": "p_zaui6hkcn1",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1794017928288,
-      "queueSince": 1794017928288,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 798952,
+      "longestWaitMs": 798952,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -336,6 +336,21 @@
       "status": "queue",
       "checkInAt": 1794018715033,
       "queueSince": 1794018715033,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_5pmcrc7d7c",
+      "status": "queue",
+      "checkInAt": 1794018723369,
+      "queueSince": 1794018723369,
       "gamesPlayed": 0,
       "playedMs": 0,
       "waitedMs": 0,
@@ -405,11 +420,11 @@
       "createdBy": "manual",
       "levelGap": 2,
       "maxWaitAtStart": 843345
-    }
-  ],
-  "planned": [
+    },
     {
-      "id": "pl_ounnrfzare",
+      "id": "m_559ln7fhah",
+      "no": 4,
+      "courtIndex": 2,
       "type": "D",
       "teamA": [
         "p_hgw4qts55x",
@@ -419,10 +434,14 @@
         "p_ftg725indj",
         "p_suzv413d26"
       ],
-      "createdAt": 1794017972282,
+      "startedAt": 1794018727240,
+      "shuttles": 0,
       "createdBy": "manual",
-      "levelGap": 0
-    },
+      "levelGap": 0,
+      "maxWaitAtStart": 1531753
+    }
+  ],
+  "planned": [
     {
       "id": "pl_ftqeu25nui",
       "type": "D",
@@ -624,6 +643,23 @@
       "kind": "player.checkin",
       "text": "พี่บูม เช็คอิน",
       "playerId": "p_v0c446f7v6"
+    },
+    {
+      "at": 1794018723369,
+      "kind": "player.checkin",
+      "text": "โอม เช็คอิน",
+      "playerId": "p_5pmcrc7d7c"
+    },
+    {
+      "at": 1794018727241,
+      "kind": "match.start",
+      "text": "คอร์ต 4: ยอด, ผิง, ธี(หมิง), ไกด์",
+      "matchId": "m_559ln7fhah"
+    },
+    {
+      "at": 1794018727247,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: ยอด, ผิง, ธี(หมิง), ไกด์"
     }
   ],
   "settings": {
