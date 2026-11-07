@@ -405,6 +405,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_4lsi8bz1sj",
+      "status": "queue",
+      "checkInAt": 1794019640282,
+      "queueSince": 1794019640282,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -827,6 +842,12 @@
       "at": 1794019495419,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: ต้อม, เต๋าเต้ย, ไวน์, หมิง"
+    },
+    {
+      "at": 1794019640282,
+      "kind": "player.checkin",
+      "text": "ปอ เช็คอิน",
+      "playerId": "p_4lsi8bz1sj"
     }
   ],
   "settings": {
