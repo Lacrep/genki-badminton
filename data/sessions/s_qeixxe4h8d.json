@@ -210,6 +210,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_ftg725indj",
+      "status": "queue",
+      "checkInAt": 1794017195487,
+      "queueSince": 1794017195487,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [],
@@ -312,6 +327,12 @@
       "kind": "player.checkin",
       "text": "หมิง เช็คอิน",
       "playerId": "p_gwdzyqk46n"
+    },
+    {
+      "at": 1794017195487,
+      "kind": "player.checkin",
+      "text": "ธี(หมิง) เช็คอิน",
+      "playerId": "p_ftg725indj"
     }
   ],
   "settings": {
