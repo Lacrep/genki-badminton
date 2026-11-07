@@ -361,7 +361,23 @@
       "maxWaitAtStart": 843345
     }
   ],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_ounnrfzare",
+      "type": "D",
+      "teamA": [
+        "p_hgw4qts55x",
+        "p_zaui6hkcn1"
+      ],
+      "teamB": [
+        "p_ftg725indj",
+        "p_suzv413d26"
+      ],
+      "createdAt": 1794017972282,
+      "createdBy": "manual",
+      "levelGap": 0
+    }
+  ],
   "events": [
     {
       "at": 1794016534333,
@@ -513,6 +529,11 @@
       "kind": "player.checkin",
       "text": "ผิง เช็คอิน",
       "playerId": "p_zaui6hkcn1"
+    },
+    {
+      "at": 1794017972282,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ยอด, ผิง, ธี(หมิง), ไกด์"
     }
   ],
   "settings": {
