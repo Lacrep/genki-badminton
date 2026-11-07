@@ -9,22 +9,24 @@
   "courts": [
     {
       "index": 0,
-      "name": "คอร์ต 1",
-      "currentMatchId": null
+      "name": "คอร์ต 2",
+      "currentMatchId": null,
+      "disabled": true
     },
     {
       "index": 1,
-      "name": "คอร์ต 2",
-      "currentMatchId": null
+      "name": "คอร์ต 3",
+      "currentMatchId": null,
+      "disabled": true
     },
     {
       "index": 2,
-      "name": "คอร์ต 3",
+      "name": "คอร์ต 4",
       "currentMatchId": null
     },
     {
       "index": 3,
-      "name": "คอร์ต 4",
+      "name": "คอร์ต 5",
       "currentMatchId": null
     }
   ],
