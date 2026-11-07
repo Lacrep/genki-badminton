@@ -391,6 +391,21 @@
       "createdAt": 1794017972282,
       "createdBy": "manual",
       "levelGap": 0
+    },
+    {
+      "id": "pl_ftqeu25nui",
+      "type": "D",
+      "teamA": [
+        "p_kw43d5e5x2",
+        "p_7y8kivu7ip"
+      ],
+      "teamB": [
+        "p_vlg61a1abs",
+        "p_laxlf4aob4"
+      ],
+      "createdAt": 1794018269178,
+      "createdBy": "manual",
+      "levelGap": 3
     }
   ],
   "events": [
@@ -555,6 +570,11 @@
       "kind": "player.checkin",
       "text": "นาว เช็คอิน",
       "playerId": "p_czjbfz3yxc"
+    },
+    {
+      "at": 1794018269178,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ยุทธ์, แจง, แบงค์, บอม"
     }
   ],
   "settings": {
