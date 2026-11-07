@@ -240,6 +240,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_hgw4qts55x",
+      "status": "queue",
+      "checkInAt": 1794017466757,
+      "queueSince": 1794017466757,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -404,6 +419,12 @@
       "at": 1794017325112,
       "kind": "plan.remove",
       "text": "เอาเกมออกจากคิว: ยุทธ์, หนุ่ม, หมิง, เล็ก"
+    },
+    {
+      "at": 1794017466757,
+      "kind": "player.checkin",
+      "text": "ยอด เช็คอิน",
+      "playerId": "p_hgw4qts55x"
     }
   ],
   "settings": {
