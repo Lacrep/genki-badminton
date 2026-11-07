@@ -821,21 +821,6 @@
   ],
   "planned": [
     {
-      "id": "pl_bfnavmta4k",
-      "type": "D",
-      "teamA": [
-        "p_q165dvkkxi",
-        "p_5t6kdv3w2i"
-      ],
-      "teamB": [
-        "p_gwdzyqk46n",
-        "p_2jd5ehh4i6"
-      ],
-      "createdAt": 1794022730372,
-      "createdBy": "manual",
-      "levelGap": 0
-    },
-    {
       "id": "pl_vuvu00ud92",
       "type": "D",
       "teamA": [
@@ -1430,6 +1415,11 @@
       "at": 1794022781078,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: พี่คิง, ซัน, หมิง, เล็ก"
+    },
+    {
+      "at": 1794022791430,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: พี่คิง, กร, หมิง, ซัน"
     }
   ],
   "settings": {
