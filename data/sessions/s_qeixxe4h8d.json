@@ -255,6 +255,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_suzv413d26",
+      "status": "queue",
+      "checkInAt": 1794017667419,
+      "queueSince": 1794017667419,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -450,6 +465,12 @@
       "kind": "match.start",
       "text": "คอร์ต 3: บอม, ต้อม, ฟลุ๊คสาว, ไวน์",
       "matchId": "m_jcvcbqsf98"
+    },
+    {
+      "at": 1794017667419,
+      "kind": "player.checkin",
+      "text": "ไกด์ เช็คอิน",
+      "playerId": "p_suzv413d26"
     }
   ],
   "settings": {
