@@ -950,7 +950,11 @@
       "shuttles": 0,
       "createdBy": "manual",
       "levelGap": 2,
-      "maxWaitAtStart": 357948
+      "maxWaitAtStart": 357948,
+      "teamB": [
+        "p_4lsi8bz1sj",
+        "p_5pmcrc7d7c"
+      ]
     }
   ],
   "planned": [
