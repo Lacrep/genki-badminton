@@ -835,6 +835,21 @@
       "createdAt": 1794022781078,
       "createdBy": "manual",
       "levelGap": 1
+    },
+    {
+      "id": "pl_n32axdw2w0",
+      "type": "D",
+      "teamA": [
+        "p_qea345cort",
+        "p_kw43d5e5x2"
+      ],
+      "teamB": [
+        "p_5t6kdv3w2i",
+        "p_pg7son4v6d"
+      ],
+      "createdAt": 1794022860960,
+      "createdBy": "manual",
+      "levelGap": 1
     }
   ],
   "events": [
