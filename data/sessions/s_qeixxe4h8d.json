@@ -9,7 +9,7 @@
   "courts": [
     {
       "index": 0,
-      "name": "คอร์ต 6",
+      "name": "คอร์ต 2",
       "currentMatchId": "m_kp3gw57ub6",
       "disabled": false
     },
@@ -28,6 +28,11 @@
       "index": 3,
       "name": "คอร์ต 5",
       "currentMatchId": "m_a9dnki4n4j"
+    },
+    {
+      "index": 4,
+      "name": "คอร์ต 6",
+      "currentMatchId": null
     }
   ],
   "players": [
