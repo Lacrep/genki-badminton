@@ -819,23 +819,7 @@
       "maxWaitAtStart": 786078
     }
   ],
-  "planned": [
-    {
-      "id": "pl_kvl64mpi8g",
-      "type": "D",
-      "teamA": [
-        "p_2jd5ehh4i6",
-        "p_q165dvkkxi"
-      ],
-      "teamB": [
-        "p_gwdzyqk46n",
-        "p_xscgffmd12"
-      ],
-      "createdAt": 1794022554256,
-      "createdBy": "manual",
-      "levelGap": 1
-    }
-  ],
+  "planned": [],
   "events": [
     {
       "at": 1794016534333,
@@ -1400,6 +1384,11 @@
       "kind": "player.checkin",
       "text": "กร เช็คอิน",
       "playerId": "p_5t6kdv3w2i"
+    },
+    {
+      "at": 1794022703763,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: ซัน, พี่คิง, หมิง, เล็ก"
     }
   ],
   "settings": {
