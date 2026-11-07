@@ -165,6 +165,36 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_3bvix9nerq",
+      "status": "queue",
+      "checkInAt": 1794017012094,
+      "queueSince": 1794017012094,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
+    },
+    {
+      "playerId": "p_xscgffmd12",
+      "status": "queue",
+      "checkInAt": 1794017018305,
+      "queueSince": 1794017018305,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [],
@@ -228,6 +258,18 @@
       "kind": "player.checkin",
       "text": "ไวน์ เช็คอิน",
       "playerId": "p_5lctadee35"
+    },
+    {
+      "at": 1794017012094,
+      "kind": "player.checkin",
+      "text": "ปาล์ม เช็คอิน",
+      "playerId": "p_3bvix9nerq"
+    },
+    {
+      "at": 1794017018305,
+      "kind": "player.checkin",
+      "text": "เล็ก เช็คอิน",
+      "playerId": "p_xscgffmd12"
     }
   ],
   "settings": {
