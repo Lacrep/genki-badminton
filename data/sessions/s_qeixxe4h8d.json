@@ -225,6 +225,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_cm8qiwl1ah",
+      "status": "queue",
+      "checkInAt": 1794017306837,
+      "queueSince": 1794017306837,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [],
@@ -353,6 +368,12 @@
       "at": 1794017280696,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: ยุทธ์, หนุ่ม, หมิง, เล็ก"
+    },
+    {
+      "at": 1794017306837,
+      "kind": "player.checkin",
+      "text": "ต้อม เช็คอิน",
+      "playerId": "p_cm8qiwl1ah"
     }
   ],
   "settings": {
