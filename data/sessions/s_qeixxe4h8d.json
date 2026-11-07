@@ -360,6 +360,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_iw7mr828yz",
+      "status": "queue",
+      "checkInAt": 1794019018341,
+      "queueSince": 1794019018341,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -455,6 +470,21 @@
         "p_laxlf4aob4"
       ],
       "createdAt": 1794018269178,
+      "createdBy": "manual",
+      "levelGap": 3
+    },
+    {
+      "id": "pl_7qhzwklpz0",
+      "type": "D",
+      "teamA": [
+        "p_czjbfz3yxc",
+        "p_v0c446f7v6"
+      ],
+      "teamB": [
+        "p_3bvix9nerq",
+        "p_irrc1nb90w"
+      ],
+      "createdAt": 1794019018428,
       "createdBy": "manual",
       "levelGap": 3
     }
@@ -667,6 +697,17 @@
       "kind": "match.end",
       "text": "จบเกม #2 คอร์ต 5",
       "matchId": "m_1mdjkrlfe9"
+    },
+    {
+      "at": 1794019018341,
+      "kind": "player.checkin",
+      "text": "เต๋าเต้ย เช็คอิน",
+      "playerId": "p_iw7mr828yz"
+    },
+    {
+      "at": 1794019018428,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: นาว, พี่บูม, ปาล์ม, ทิพย์"
     }
   ],
   "settings": {
