@@ -757,6 +757,21 @@
       "levelGap": 1
     },
     {
+      "id": "pl_ikn9yncdst",
+      "type": "D",
+      "teamA": [
+        "p_cm8qiwl1ah",
+        "p_famr27ywr8"
+      ],
+      "teamB": [
+        "p_laxlf4aob4",
+        "p_4lsi8bz1sj"
+      ],
+      "createdAt": 1794021941981,
+      "createdBy": "manual",
+      "levelGap": 2
+    },
+    {
       "id": "pl_s4k23vbykk",
       "type": "D",
       "teamA": [
@@ -1264,6 +1279,16 @@
       "at": 1794021922244,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: กาย, พลอยปภัส, โอม, เต๋าเต้ย"
+    },
+    {
+      "at": 1794021941981,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ต้อม, เติ้ล, บอม, ปอ"
+    },
+    {
+      "at": 1794021943142,
+      "kind": "plan.move",
+      "text": "สลับลำดับคิวเกม"
     }
   ],
   "settings": {
