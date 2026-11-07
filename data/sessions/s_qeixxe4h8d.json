@@ -198,7 +198,23 @@
     }
   ],
   "matches": [],
-  "planned": [],
+  "planned": [
+    {
+      "id": "pl_g4zcobfj2x",
+      "type": "D",
+      "teamA": [
+        "p_hwixawkd5d",
+        "p_m3ojvdfpn0"
+      ],
+      "teamB": [
+        "p_3bvix9nerq",
+        "p_q165dvkkxi"
+      ],
+      "createdAt": 1794017049945,
+      "createdBy": "manual",
+      "levelGap": 1
+    }
+  ],
   "events": [
     {
       "at": 1794016534333,
@@ -270,6 +286,11 @@
       "kind": "player.checkin",
       "text": "เล็ก เช็คอิน",
       "playerId": "p_xscgffmd12"
+    },
+    {
+      "at": 1794017049945,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พี่ตี๋, พี่บอม, ปาล์ม, พี่คิง"
     }
   ],
   "settings": {
