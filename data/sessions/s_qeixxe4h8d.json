@@ -243,6 +243,21 @@
       "createdAt": 1794017049945,
       "createdBy": "manual",
       "levelGap": 1
+    },
+    {
+      "id": "pl_h9xv79kh4o",
+      "type": "D",
+      "teamA": [
+        "p_kw43d5e5x2",
+        "p_qea345cort"
+      ],
+      "teamB": [
+        "p_gwdzyqk46n",
+        "p_xscgffmd12"
+      ],
+      "createdAt": 1794017280696,
+      "createdBy": "manual",
+      "levelGap": 1
     }
   ],
   "events": [
@@ -333,6 +348,11 @@
       "kind": "player.checkin",
       "text": "ธี(หมิง) เช็คอิน",
       "playerId": "p_ftg725indj"
+    },
+    {
+      "at": 1794017280696,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ยุทธ์, หนุ่ม, หมิง, เล็ก"
     }
   ],
   "settings": {
