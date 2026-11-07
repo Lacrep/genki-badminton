@@ -323,18 +323,20 @@
     },
     {
       "playerId": "p_irrc1nb90w",
-      "status": "queue",
+      "status": "left",
       "checkInAt": 1794018529912,
-      "queueSince": 1794022915649,
+      "queueSince": null,
       "gamesPlayed": 2,
       "playedMs": 2725062,
-      "waitedMs": 1660675,
+      "waitedMs": 2154472,
       "longestWaitMs": 1052741,
       "wins": 0,
       "losses": 0,
       "draws": 0,
       "boost": 0,
-      "paid": false
+      "paid": true,
+      "paidAt": 1794023409446,
+      "leftAt": 1794023409446
     },
     {
       "playerId": "p_v0c446f7v6",
@@ -1526,6 +1528,18 @@
       "kind": "match.swap",
       "text": "สลับ หนุ่ม ออก ธี(หมิง) ลง",
       "matchId": "m_mx72c4zx02"
+    },
+    {
+      "at": 1794023409447,
+      "kind": "pay",
+      "text": "ทิพย์ จ่ายแล้ว",
+      "playerId": "p_irrc1nb90w"
+    },
+    {
+      "at": 1794023409447,
+      "kind": "player.checkout",
+      "text": "ทิพย์ จ่ายเงินแล้วกลับบ้าน",
+      "playerId": "p_irrc1nb90w"
     }
   ],
   "settings": {
