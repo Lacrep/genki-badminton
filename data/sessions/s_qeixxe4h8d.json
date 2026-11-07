@@ -9,9 +9,9 @@
   "courts": [
     {
       "index": 0,
-      "name": "คอร์ต 2",
+      "name": "คอร์ต 6",
       "currentMatchId": null,
-      "disabled": true
+      "disabled": false
     },
     {
       "index": 1,
