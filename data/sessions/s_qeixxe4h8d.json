@@ -16,7 +16,7 @@
     {
       "index": 1,
       "name": "คอร์ต 3",
-      "currentMatchId": null,
+      "currentMatchId": "m_tnnpyenqda",
       "disabled": false
     },
     {
@@ -123,13 +123,13 @@
     },
     {
       "playerId": "p_qea345cort",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1794016917360,
-      "queueSince": 1794018905044,
+      "queueSince": null,
       "gamesPlayed": 1,
       "playedMs": 1579939,
-      "waitedMs": 407745,
-      "longestWaitMs": 407745,
+      "waitedMs": 2294570,
+      "longestWaitMs": 1886825,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -423,13 +423,13 @@
     },
     {
       "playerId": "p_0tkx8luk7o",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1794020152857,
-      "queueSince": 1794020152857,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 639012,
+      "longestWaitMs": 639012,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -438,13 +438,13 @@
     },
     {
       "playerId": "p_28qfvskn0s",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1794020152860,
-      "queueSince": 1794020152860,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 639009,
+      "longestWaitMs": 639009,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -453,13 +453,13 @@
     },
     {
       "playerId": "p_2jd5ehh4i6",
-      "status": "queue",
+      "status": "playing",
       "checkInAt": 1794020616410,
-      "queueSince": 1794020616410,
+      "queueSince": null,
       "gamesPlayed": 0,
       "playedMs": 0,
-      "waitedMs": 0,
-      "longestWaitMs": 0,
+      "waitedMs": 175459,
+      "longestWaitMs": 175459,
       "wins": 0,
       "losses": 0,
       "draws": 0,
@@ -645,25 +645,28 @@
       "createdBy": "manual",
       "levelGap": 1,
       "maxWaitAtStart": 1667152
-    }
-  ],
-  "planned": [
+    },
     {
-      "id": "pl_25pto0hqvc",
+      "id": "m_tnnpyenqda",
+      "no": 10,
+      "courtIndex": 1,
       "type": "D",
       "teamA": [
         "p_0tkx8luk7o",
         "p_28qfvskn0s"
       ],
       "teamB": [
-        "p_qea345cort",
-        "p_famr27ywr8"
+        "p_2jd5ehh4i6",
+        "p_qea345cort"
       ],
-      "createdAt": 1794020512584,
+      "startedAt": 1794020791869,
+      "shuttles": 0,
       "createdBy": "manual",
-      "levelGap": 2
+      "levelGap": 2,
+      "maxWaitAtStart": 1886825
     }
   ],
+  "planned": [],
   "events": [
     {
       "at": 1794016534333,
@@ -1059,6 +1062,27 @@
       "kind": "match.end",
       "text": "จบเกม #6 คอร์ต 3",
       "matchId": "m_2obdtponxp"
+    },
+    {
+      "at": 1794020782255,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: พลอยปภัส, กาย, ซัน, หนุ่ม"
+    },
+    {
+      "at": 1794020784455,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: พลอยปภัส, กาย, หนุ่ม, เติ้ล"
+    },
+    {
+      "at": 1794020791870,
+      "kind": "match.start",
+      "text": "คอร์ต 3: พลอยปภัส, กาย, ซัน, หนุ่ม",
+      "matchId": "m_tnnpyenqda"
+    },
+    {
+      "at": 1794020791883,
+      "kind": "plan.remove",
+      "text": "เอาเกมออกจากคิว: พลอยปภัส, กาย, ซัน, หนุ่ม"
     }
   ],
   "settings": {
