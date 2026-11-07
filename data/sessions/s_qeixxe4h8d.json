@@ -681,6 +681,21 @@
       "createdAt": 1794020828662,
       "createdBy": "manual",
       "levelGap": 2
+    },
+    {
+      "id": "pl_w6p5vtvaw0",
+      "type": "D",
+      "teamA": [
+        "p_suzv413d26",
+        "p_irrc1nb90w"
+      ],
+      "teamB": [
+        "p_zaui6hkcn1",
+        "p_v0c446f7v6"
+      ],
+      "createdAt": 1794021145056,
+      "createdBy": "manual",
+      "levelGap": 1
     }
   ],
   "events": [
@@ -1104,6 +1119,11 @@
       "at": 1794020828662,
       "kind": "plan.add",
       "text": "จัดเกมเข้าคิว: ฟลุ๊คสาว, นน, ปาล์ม, นาว"
+    },
+    {
+      "at": 1794021145056,
+      "kind": "plan.add",
+      "text": "จัดเกมเข้าคิว: ไกด์, ทิพย์, ผิง, พี่บูม"
     }
   ],
   "settings": {
