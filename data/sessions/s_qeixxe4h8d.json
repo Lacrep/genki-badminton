@@ -285,6 +285,21 @@
       "draws": 0,
       "boost": 0,
       "paid": false
+    },
+    {
+      "playerId": "p_zaui6hkcn1",
+      "status": "queue",
+      "checkInAt": 1794017928288,
+      "queueSince": 1794017928288,
+      "gamesPlayed": 0,
+      "playedMs": 0,
+      "waitedMs": 0,
+      "longestWaitMs": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "boost": 0,
+      "paid": false
     }
   ],
   "matches": [
@@ -492,6 +507,12 @@
       "kind": "player.checkin",
       "text": "แจง เช็คอิน",
       "playerId": "p_7y8kivu7ip"
+    },
+    {
+      "at": 1794017928288,
+      "kind": "player.checkin",
+      "text": "ผิง เช็คอิน",
+      "playerId": "p_zaui6hkcn1"
     }
   ],
   "settings": {
